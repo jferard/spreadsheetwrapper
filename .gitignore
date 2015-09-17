@@ -1,0 +1,14 @@
+# top level files
+.project
+.classpath
+.pmd
+.ruleset
+
+# old and ignoreme
+*.old
+ignoreme
+
+# directories
+.settings
+target
+reports
