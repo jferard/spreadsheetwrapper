@@ -54,7 +54,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(final Workbook workbook,
-			final OutputStream outputStream) throws SpreadsheetException {
+			final /*@Nullable*/ OutputStream outputStream) throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, workbook, outputStream);
 	}
 

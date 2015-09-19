@@ -31,6 +31,8 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 public abstract class AbstractBasicDocumentFactory implements
 		SpreadsheetDocumentFactory {
 
@@ -48,6 +50,9 @@ public abstract class AbstractBasicDocumentFactory implements
 	@Override
 	public SpreadsheetDocumentWriter create(final/*@Nullable*/File outputFile)
 			throws SpreadsheetException {
+		if (outputFile == null)
+			return this.create();
+
 		try {
 			final FileOutputStream fileOutputStream = new FileOutputStream(
 					outputFile);
@@ -62,6 +67,9 @@ public abstract class AbstractBasicDocumentFactory implements
 	@Deprecated
 	public SpreadsheetDocumentWriter create(final/*@Nullable*/URL outputURL)
 			throws SpreadsheetException {
+		if (outputURL == null)
+			return this.create();
+		
 		try {
 			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
 					.getOutputStream(outputURL);

@@ -65,7 +65,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final OutputStream outputStream)
+			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
 		return this.createWriter(document, outputStream);
@@ -91,7 +91,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @throws SpreadsheetException
 	 */
 	protected abstract SpreadsheetDocumentWriter createWriter(R document,
-			OutputStream outputStream) throws SpreadsheetException;
+			/*@Nullable*/ OutputStream outputStream) throws SpreadsheetException;
 
 	/**
 	 * @param inputStream
@@ -108,7 +108,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @return the *internal* document
 	 * @throws SpreadsheetException
 	 */
-	protected abstract R newSpreadsheetDocument(OutputStream outputStream)
+	protected abstract R newSpreadsheetDocument(/*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException;
 
 }

@@ -44,7 +44,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 		/** {inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
-		/*>>> @UnknownInitialization XlsPoiDocumentR this, */final Sheet sheet) {
+		/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
 			return new XlsPoiReader(sheet);
 		}
 	}

@@ -6,6 +6,7 @@
 
 # old and ignoreme
 *.old
+*.db
 ignoreme
 
 # directories

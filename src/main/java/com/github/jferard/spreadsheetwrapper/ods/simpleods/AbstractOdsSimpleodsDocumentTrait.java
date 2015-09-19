@@ -94,7 +94,11 @@ public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
-	private Table getTable(final int index) {
+	private Table getTable(
+			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentTrait<T> this, */final int index) {
+		if (this.file == null)
+			throw new IllegalStateException();
+		
 		return (Table) this.file.getContent().getTableQueue().get(index);
 	}
 

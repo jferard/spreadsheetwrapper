@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 
-/*>>> import checkers.nullness.quals.Nullable;*/
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 		implements SpreadsheetDocumentFactory {
@@ -57,8 +57,11 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter create(final File f)
+	public SpreadsheetDocumentWriter create(final /*@Nullable*/ File f)
 			throws SpreadsheetException {
+		if (f == null)
+			return this.create();
+		
 		final OdsFile file = new OdsFile(f.getPath());
 		OutputStream outputStream;
 		try {
@@ -71,15 +74,19 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	}
 
 	@Override
-	public SpreadsheetDocumentWriter create(final OutputStream outputStream)
+	public SpreadsheetDocumentWriter create(final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter create(final URL outputURL)
+	@Deprecated
+	public SpreadsheetDocumentWriter create(final /*@Nullable*/ URL outputURL)
 			throws SpreadsheetException {
+		if (outputURL == null)
+			return this.create();
+		
 		try {
 			final File f = new File(outputURL.toURI());
 			return this.create(f);
@@ -104,12 +111,13 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final OutputStream outputStream)
+			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
+	@Deprecated
 	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
 			final URL outputURL) throws SpreadsheetException {
 		throw new UnsupportedOperationException();

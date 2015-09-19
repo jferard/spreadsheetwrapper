@@ -52,7 +52,7 @@ AbstractDocumentFactory<SpreadsheetDocument> implements
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final SpreadsheetDocument document, final OutputStream outputStream)
+			final SpreadsheetDocument document, final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
 		return new OdsSimpleodfDocumentWriter(this.logger, document,
 				outputStream);
@@ -76,7 +76,7 @@ AbstractDocumentFactory<SpreadsheetDocument> implements
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocument newSpreadsheetDocument(
-			final OutputStream outputStream) throws SpreadsheetException {
+			final /*@Nullable*/ OutputStream outputStream) throws SpreadsheetException {
 		SpreadsheetDocument document;
 		try {
 			document = SpreadsheetDocument.newSpreadsheetDocument();

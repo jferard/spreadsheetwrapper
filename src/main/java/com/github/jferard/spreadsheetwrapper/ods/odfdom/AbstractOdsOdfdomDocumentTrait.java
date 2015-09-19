@@ -104,7 +104,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * @return the reader/writer
 	 */
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractOdsOdfdomDocument<T> this, */final OdfTable table);
+			/*>>> @UnknownInitialization AbstractOdsOdfdomDocumentTrait<T> this, */final OdfTable table);
 
 	/** {@inheritDoc} */
 	@Override

@@ -43,7 +43,7 @@ SpreadsheetWriter {
 
 	/**
 	 */
-	XlsPoiWriter(final Sheet sheet, final CellStyle dateCellStyle) {
+	XlsPoiWriter(final Sheet sheet, final /*@Nullable*/ CellStyle dateCellStyle) {
 		super(new XlsPoiReader(sheet));
 		this.preader = (XlsPoiReader) this.reader;
 		this.dateCellStyle = dateCellStyle;

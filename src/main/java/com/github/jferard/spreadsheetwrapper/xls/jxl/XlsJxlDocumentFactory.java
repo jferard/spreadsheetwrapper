@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 
-/*>>> import checkers.nullness.quals.Nullable;*/
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		implements SpreadsheetDocumentFactory {
@@ -59,8 +59,12 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter create(final OutputStream outputStream)
+	public SpreadsheetDocumentWriter create(
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
+		if (outputStream == null)
+			return this.create();
+		
 		try {
 			final WritableWorkbook writableWorkbook = Workbook
 					.createWorkbook(outputStream);
@@ -91,8 +95,11 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final OutputStream outputStream)
+			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
+		if (outputStream == null)
+			throw new SpreadsheetException("Specify an output stream");
+		
 		try {
 			final Workbook workbook = Workbook.getWorkbook(inputStream);
 			final WorkbookSettings settings = new WorkbookSettings();
@@ -112,6 +119,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
 			throws SpreadsheetException {
 		throw new UnsupportedOperationException();

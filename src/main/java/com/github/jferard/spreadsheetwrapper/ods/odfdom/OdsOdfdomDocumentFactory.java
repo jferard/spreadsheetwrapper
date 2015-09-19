@@ -33,8 +33,8 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsOdfdomDocumentFactory extends
-AbstractDocumentFactory<OdfSpreadsheetDocument> implements
-SpreadsheetDocumentFactory {
+		AbstractDocumentFactory<OdfSpreadsheetDocument> implements
+		SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
 
@@ -63,7 +63,7 @@ SpreadsheetDocumentFactory {
 	protected SpreadsheetDocumentWriter createWriter(
 			final OdfSpreadsheetDocument document,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new OdsOdfdomDocumentWriter(this.logger, document, outputStream);
 	}
 
@@ -81,11 +81,13 @@ SpreadsheetDocumentFactory {
 
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
-			final OutputStream outputStream) throws SpreadsheetException {
+			final/*@Nullable*/ OutputStream outputStream)
+			throws SpreadsheetException {
 		OdfSpreadsheetDocument document;
 		try {
 			document = OdfSpreadsheetDocument.newSpreadsheetDocument();
-			document.getTableList().get(0).remove(); // a sheet is already present
+			document.getTableList().get(0).remove(); // a sheet is already
+														// present
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:04
 			throw new SpreadsheetException(e);
 		}

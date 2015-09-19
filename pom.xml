@@ -2,6 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spreadsheetwrapper</artifactId>
+	<groupId>com.github.jferard</groupId>
+	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>spreadsheetwrapper</name>
 	<url>http://maven.apache.org</url>
@@ -37,17 +39,26 @@
 		</pluginRepository>
 	</pluginRepositories>
 
-	<parent>
-		<groupId>ferardjulien</groupId>
-		<artifactId>global</artifactId>
-		<version>1.0-SNAPSHOT</version>
-		<relativePath>../../global/pom.xml</relativePath>
-	</parent>
-
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
+			<version>2.6.12</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -55,6 +66,7 @@
 			<groupId>org.odftoolkit</groupId>
 			<artifactId>simple-odf</artifactId>
 			<version>0.6.6</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -62,6 +74,7 @@
 			<groupId>org.simpleods</groupId>
 			<artifactId>simpleODS</artifactId>
 			<version>0.5.3</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -70,6 +83,7 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
 			<version>3.10-FINAL</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -77,6 +91,7 @@
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.10-FINAL</version>
+			<scope>compile</scope>
 			<optional>true</optional>
 		</dependency>
 
@@ -89,13 +104,28 @@
 
 	<build>
 		<plugins>
-			<!-- <plugin> <groupId>org.checkerframework</groupId> <artifactId>checkerframework-maven-plugin</artifactId> 
-				<version>1.9.3</version> <executions> <execution> <phase>process-classes</phase> 
-				<goals> <goal>check</goal> </goals> </execution> </executions> <configuration> 
-				<processors> <processor>org.checkerframework.checker.nullness.NullnessChecker</processor> 
-				</processors> <checkerFrameworkVersion>1.9.3</checkerFrameworkVersion> <failOnError>false</failOnError> 
-				<procOnly>false</procOnly> <javaParams>-Xdebug</javaParams> </configuration> 
-				</plugin> -->
+			<plugin>
+				<groupId>org.checkerframework</groupId>
+				<artifactId>checkerframework-maven-plugin</artifactId>
+				<version>1.9.3</version>
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<processors>
+						<processor>org.checkerframework.checker.nullness.NullnessChecker</processor>
+					</processors>
+					<checkerFrameworkVersion>1.9.3</checkerFrameworkVersion>
+					<failOnError>false</failOnError>
+					<procOnly>false</procOnly>
+					<javaParams>-Xdebug</javaParams>
+				</configuration>
+			</plugin>
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -112,7 +142,24 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.1</version>
+				<configuration>
+					<altDeploymentRepository>
+						internal.repo::default::file://${project.build.directory}/mvn-repo
+					</altDeploymentRepository>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
+
+	<distributionManagement>
+		<repository>
+			<id>internal.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo</url>
+		</repository>
+	</distributionManagement>
 
 </project>

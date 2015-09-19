@@ -29,6 +29,8 @@ import java.util.logging.Logger;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 public abstract class AbstractSpreadsheetDocumentWriter implements
 SpreadsheetDocumentWriter {
 
@@ -36,7 +38,7 @@ SpreadsheetDocumentWriter {
 	private final Logger logger;
 
 	/** where to write */
-	protected OutputStream outputStream;
+	protected /*@Nullable*/ OutputStream outputStream;
 
 	public AbstractSpreadsheetDocumentWriter(final Logger logger,
 			final/*@Nullable*/OutputStream outputStream) {
@@ -74,6 +76,7 @@ SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public void saveAs(final URL outputURL) throws SpreadsheetException {
 		OutputStream outputStream;
 		try {

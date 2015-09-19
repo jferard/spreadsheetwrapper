@@ -22,6 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
  * A factory to create documents writers and readers
  */
@@ -52,7 +54,7 @@ public interface SpreadsheetDocumentFactory {
 	 *            the stream to write to
 	 * @return the writer
 	 * */
-	SpreadsheetDocumentWriter create(final OutputStream outputStream)
+	SpreadsheetDocumentWriter create(final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException;
 
 	/**
@@ -147,7 +149,7 @@ public interface SpreadsheetDocumentFactory {
 	 *             if can't open the writer
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
-			final OutputStream outputStream) throws SpreadsheetException;
+			final /*@Nullable*/ OutputStream outputStream) throws SpreadsheetException;
 
 	/**
 	 * Open a workbook writer from a existing workbook with no output (use

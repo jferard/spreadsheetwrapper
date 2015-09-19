@@ -154,8 +154,12 @@ public class OdsSimpleodsDocumentWriter extends
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (!this.file.save(this.outputStream))
+		if (this.outputStream == null)
 			throw new SpreadsheetException(
-					"this.spreadsheetDocument.save() not ok");
+					"this.spreadsheetDocument.save() not ok : use saveAs");
+			
+		if (!this.file.save(this.outputStream))
+			throw new SpreadsheetException(String.format(
+					"this.spreadsheetDocument.save(%s) not ok", this.outputStream));
 	}
 }
