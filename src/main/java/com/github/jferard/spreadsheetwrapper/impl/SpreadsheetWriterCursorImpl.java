@@ -135,7 +135,7 @@ implements SpreadsheetWriterCursor {
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName() {
-		return this.writer.getStyle(this.cursor.getR(), this.cursor.getC());
+		return this.writer.getStyleName(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
@@ -189,59 +189,59 @@ implements SpreadsheetWriterCursor {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCellContent(final Object content) {
-		this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
+	public Object setCellContent(final Object content) {
+		return this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
 				content);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCellContent(final Object content, final String styleName) {
-		this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
+	public Object setCellContent(final Object content, final String styleName) {
+		return this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
 				content, styleName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDate(final Date date) {
-		this.writer.setDate(this.cursor.getR(), this.cursor.getC(), date);
+	public Date setDate(final Date date) {
+		return this.writer.setDate(this.cursor.getR(), this.cursor.getC(), date);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDouble(final Double value) {
-		this.writer.setDouble(this.cursor.getR(), this.cursor.getC(), value);
+	public Double setDouble(final Number value) {
+		return this.writer.setDouble(this.cursor.getR(), this.cursor.getC(), value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFormula(final String text) {
-		this.writer.setFormula(this.cursor.getR(), this.cursor.getC(), text);
+	public String setFormula(final String text) {
+		return this.writer.setFormula(this.cursor.getR(), this.cursor.getC(), text);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setInteger(final Integer value) {
-		this.writer.setInteger(this.cursor.getR(), this.cursor.getC(), value);
+	public Integer setInteger(final Number value) {
+		return this.writer.setInteger(this.cursor.getR(), this.cursor.getC(), value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setStyleName(final String styleName) {
-		this.writer.setStyle(this.cursor.getR(), this.cursor.getC(), styleName);
+	public boolean setStyleName(final String styleName) {
+		return this.writer.setStyleName(this.cursor.getR(), this.cursor.getC(), styleName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setStyleString(final String styleString) {
-		this.writer.setStyleString(this.cursor.getR(), this.cursor.getC(),
+	public boolean setStyleString(final String styleString) {
+		return this.writer.setStyleString(this.cursor.getR(), this.cursor.getC(),
 				styleString);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setText(final String text) {
-		this.writer.setText(this.cursor.getR(), this.cursor.getC(), text);
+	public String setText(final String text) {
+		return this.writer.setText(this.cursor.getR(), this.cursor.getC(), text);
 	}
 
 	/** {@inheritDoc} */

@@ -19,10 +19,13 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
+import org.simpleods.ObjectQueue;
 import org.simpleods.Table;
 import org.simpleods.TableCell;
+import org.simpleods.TableRow;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
@@ -35,6 +38,7 @@ SpreadsheetWriter {
 
 	/** the reader for delegation */
 	private final OdsSimpleodsReader preader;
+	private Table table;
 
 	/**
 	 * @param table
@@ -42,52 +46,106 @@ SpreadsheetWriter {
 	 */
 	OdsSimpleodsWriter(final Table table) {
 		super(new OdsSimpleodsReader(table));
+		this.table = table;
 		this.preader = (OdsSimpleodsReader) this.reader;
 
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setBoolean(final int r, final int c, final Boolean value) {
+	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		throw new UnsupportedOperationException();
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setDate(final int r, final int c, final Date date) {
+	public Date setDate(final int r, final int c, final Date date) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
 		final TimeZone timeZone = TimeZone.getTimeZone("UTC");
 		final Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTime(date);
 		cell.setDateValue(cal);
+		return date;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setDouble(final int r, final int c, final Double value) {
+	public Double setDouble(final int r, final int c, final Number value) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
-		cell.setValue(value.toString());
+		double retValue = value.doubleValue();
+		cell.setValue(Double.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
+		return retValue;
+	}
+
+	/** {@inheritDoc} 
+	 * @return */
+	@Override
+	public String setFormula(final int r, final int c, final String formula) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} 
+	 * @return */
+	@Override
+	public Integer setInteger(final int r, final int c, final Number value) {
+		final TableCell cell = this.preader.getSimpleCell(r, c);
+		int retValue = value.intValue();
+		cell.setValue(Integer.valueOf(retValue).toString());
+		cell.setValueType(TableCell.STYLE_FLOAT);
+		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFormula(final int r, final int c, final String formula) {
+	public String setText(final int r, final int c, final String text) {
+		final TableCell cell = this.preader.getSimpleCell(r, c);
+		cell.setText(text);
+		return text;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertCol(int c) {
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setInteger(final int r, final int c, final Integer value) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
-		cell.setValue(value.toString());
-		cell.setValueType(TableCell.STYLE_FLOAT);
+	public void insertRow(int r) {
+		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setText(final int r, final int c, final String text) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
-		cell.setText(text);
+	public List<Object> removeCol(int c) {
+		throw new UnsupportedOperationException();
 	}
+
+	@Override
+	public List<Object> removeRow(int r) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(int r, int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(int r, int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(int r, int c, String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

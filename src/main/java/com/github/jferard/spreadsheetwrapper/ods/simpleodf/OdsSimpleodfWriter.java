@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
@@ -40,26 +41,32 @@ SpreadsheetWriter {
 	/** the reader for delegation */
 	private final OdsSimpleodfReader preader;
 
+	private Table table;
+
 	/**
 	 * @param table
 	 *            the *internal* table
 	 */
 	OdsSimpleodfWriter(final Table table) {
 		super(new OdsSimpleodfReader(table));
+		this.table = table;
 		this.preader = (OdsSimpleodfReader) this.reader;
 
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setBoolean(final int r, final int c, final Boolean value) {
+	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
 		cell.setBooleanValue(value);
+		return value;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setDate(final int r, final int c, final Date date) {
+	public Date setDate(final int r, final int c, final Date date) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
@@ -69,34 +76,93 @@ SpreadsheetWriter {
 				"yyyy-MM-dd'T'HH:mm:ss", Locale.US);
 		final String svalue = simpleFormat.format(date);
 		odfElement.setOfficeDateValueAttribute(svalue);
+		Date retDate = new Date();
+		retDate.setTime(date.getTime()/1000 * 1000);
+		return retDate;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setDouble(final int r, final int c, final Double value) {
+	public Double setDouble(final int r, final int c, final Number value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
-		cell.setDoubleValue(value.doubleValue());
+		final double retValue = value.doubleValue();
+		cell.setDoubleValue(retValue);
+		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFormula(final int r, final int c, final String formula) {
+	public String setFormula(final int r, final int c, final String formula) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
 		cell.setFormula("=" + formula);
+		return formula;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setInteger(final int r, final int c, final Integer value) {
+	public Integer setInteger(final int r, final int c, final Number value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
-		cell.setDoubleValue(value.doubleValue());
+		int retValue = value.intValue();
+		cell.setDoubleValue(Double.valueOf(retValue));
 		cell.setFormatString(OdsSimpleodfWriter.INT_FORMAT_STR);
+		return retValue;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setText(final int r, final int c, final String text) {
+	public String setText(final int r, final int c, final String text) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
 		cell.setStringValue(text);
+		return text;
 	}
+	
+	@Override
+	public void insertCol(int c) {
+		this.table.insertColumnsBefore(c, 1);
+	}
+
+	@Override
+	public void insertRow(int r) {
+		this.table.insertRowsBefore(r, 1);
+	}
+
+	@Override
+	public List<Object> removeCol(int c) {
+		List<Object> retValue = this.getColContents(c);
+		this.table.removeColumnsByIndex(c, 1);
+		return retValue;
+	}
+
+	@Override
+	public List<Object> removeRow(int r) {
+		List<Object> retValue = this.getRowContents(r);
+		this.table.removeRowsByIndex(r, 1);
+		return retValue;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(int r, int c) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		return cell.getCellStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(int r, int c) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		return cell.getCellStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(int r, int c, String styleName) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		cell.setCellStyleName(styleName);
+		return true;
+	}
+	
+
 }

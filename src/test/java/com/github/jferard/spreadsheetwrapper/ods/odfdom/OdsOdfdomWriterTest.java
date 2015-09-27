@@ -19,6 +19,8 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.util.logging.Logger;
 
+import org.junit.Test;
+
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterTest;
 
@@ -32,45 +34,4 @@ public class OdsOdfdomWriterTest extends SpreadsheetWriterTest {
 	protected SpreadsheetDocumentFactory getFactory() {
 		return new OdsOdfdomDocumentFactory(Logger.getGlobal());
 	}
-
-	// @Rule
-	// public TestName name = new TestName();
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @Before
-	// public void setUp() {
-	// this.factory = new OdsOdfdomDocumentFactory(Logger.getGlobal());
-	// try {
-	// final InputStream inputStream = this.getClass().getResource(
-	// "/VilleMTP_MTP_MonumentsHist.ods").openStream();
-	// this.sdw = this.factory.openCopyOf(inputStream);
-	// this.sdr = this.sdw;
-	// Assert.assertEquals(1, this.sdw.getSheetCount());
-	// this.sw = this.sdw.getSpreadsheet(0);
-	// this.sr = this.sw;
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @After
-	// public void tearDown() {
-	// try {
-	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
-	// .getSimpleName(), this.name.getMethodName(), "ods");
-	// this.sdw.saveAs(outputFile);
-	// this.sdw.close();
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-
 }

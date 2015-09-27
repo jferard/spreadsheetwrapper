@@ -71,13 +71,6 @@ public class OdsSimpleodsWriter2Test extends SpreadsheetWriter2Test {
 	/** {@inheritDoc} */
 	@Override
 	@Test
-	public void testDateSecond() {
-		//
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Test
 	public void testFormula() {
 		//
 	}
@@ -97,5 +90,10 @@ public class OdsSimpleodsWriter2Test extends SpreadsheetWriter2Test {
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
 		return new OdsSimpleodsDocumentFactory(Logger.getGlobal());
+	}
+
+	@Override
+	public void testDateSecond() {
+		// 
 	}
 }

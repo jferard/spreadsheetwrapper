@@ -76,21 +76,23 @@ public abstract class SpreadsheetWriter2Test {
 	@Test
 	public void testDateDay() {
 		final Date d = new Date(52 * 86400000L);
-		this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d, this.sw.getDate(2, 2));
+		final Date d2 = this.sw.setDate(2, 2, d);
+		Assert.assertEquals(d2, this.sw.getDate(2, 2));
 
-		this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d, this.sw.getCellContent(2, 2));
+		Object o2 = this.sw.setCellContent(2, 2, d);
+		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
+		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
 	}
 
 	@Test
 	public void testDateSecond() {
 		final Date d = new Date(5234597000L);
-		this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d, this.sw.getDate(2, 2));
+		final Date d2 = this.sw.setDate(2, 2, d);
+		Assert.assertEquals(d2, this.sw.getDate(2, 2));
 
-		this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d, this.sw.getCellContent(2, 2));
+		Object o2 = this.sw.setCellContent(2, 2, d);
+		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
+		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
 	}
 
 	@Test

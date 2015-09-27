@@ -97,7 +97,7 @@ public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public final String getStyle(final int r, final int c) {
+	public final String getStyleName(final int r, final int c) {
 		throw new UnsupportedOperationException();
 	}
 

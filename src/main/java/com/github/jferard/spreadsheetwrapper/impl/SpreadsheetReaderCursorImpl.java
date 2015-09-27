@@ -130,7 +130,7 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName() {
-		return this.reader.getStyle(this.cursor.getR(), this.cursor.getC());
+		return this.reader.getStyleName(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */

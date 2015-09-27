@@ -32,17 +32,6 @@ import java.util.List;
  */
 public interface SpreadsheetWriter extends SpreadsheetReader {
 
-	/**
-	 * Creates a new style
-	 *
-	 * @param styleName
-	 *            the name of the style
-	 * @param styleString
-	 *            the style string (format to be defined)
-	 * @return false if fails
-	 */
-	boolean createStyle(String styleName, String styleString);
-
 	/** {@inheritDoc} */
 	@Override
 	SpreadsheetWriterCursor getNewCursor();
@@ -63,13 +52,13 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param c
 	 *            index (0..) of the column to be removed
 	 */
-	void removeCol(int c);
+	List<Object> removeCol(int c);
 
 	/**
 	 * @param r
 	 *            index (0..) of the column to be removed
 	 */
-	void removeRow(int r);
+	List<Object> removeRow(int r);
 
 	/**
 	 * @param r
@@ -79,7 +68,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param bool
 	 *            the boolean value to put
 	 */
-	void setBoolean(int r, int c, Boolean bool);
+	Boolean setBoolean(int r, int c, Boolean bool);
 
 	/**
 	 * @param r
@@ -91,7 +80,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the name of the style to use
 	 */
-	void setBoolean(int r, int c, Boolean bool, String styleName);
+	Boolean setBoolean(int r, int c, Boolean bool, String styleName);
 
 	/**
 	 * @param r
@@ -101,7 +90,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param content
 	 *            the content to put in the cell
 	 */
-	void setCellContent(int r, int c, Object content);
+	Object setCellContent(int r, int c, Object content);
 
 	/**
 	 * @param r
@@ -113,7 +102,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style name
 	 */
-	void setCellContent(int r, int c, Object content, String styleName);
+	Object setCellContent(int r, int c, Object content, String styleName);
 
 	/**
 	 * @param c
@@ -121,7 +110,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param contents
 	 *            the contents value to put in the cell
 	 */
-	void setColContents(int c, List<Object> contents);
+	List<Object> setColContents(int c, List<Object> contents);
 
 	/**
 	 * @param r
@@ -131,7 +120,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param date
 	 *            the date to put in the cell
 	 */
-	void setDate(int r, int c, Date date);
+	Date setDate(int r, int c, Date date);
 
 	/**
 	 * @param r
@@ -143,7 +132,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style name
 	 */
-	void setDate(int r, int c, Date date, String styleName);
+	Date setDate(int r, int c, Date date, String styleName);
 
 	/**
 	 * @param r
@@ -153,7 +142,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param value
 	 *            the double value to put in the cell
 	 */
-	void setDouble(int r, int c, Double value);
+	Double setDouble(int r, int c, Number value);
 
 	/**
 	 * @param r
@@ -165,7 +154,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style name
 	 */
-	void setDouble(int r, int c, Double value, String styleName);
+	Double setDouble(int r, int c, Number value, String styleName);
 
 	/**
 	 * @param r
@@ -176,7 +165,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 *            the formulaa as a string. There is no test if such a formula
 	 *            will have any meaning.
 	 */
-	void setFormula(int r, int c, String formula);
+	String setFormula(int r, int c, String formula);
 
 	/**
 	 * @param r
@@ -189,7 +178,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style
 	 */
-	void setFormula(int r, int c, String formula, String styleName);
+	String setFormula(int r, int c, String formula, String styleName);
 
 	/**
 	 * @param r
@@ -199,7 +188,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param value
 	 *            the integer
 	 */
-	void setInteger(int r, int c, Integer value);
+	Integer setInteger(int r, int c, Number value);
 
 	/**
 	 * @param r
@@ -211,7 +200,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style
 	 */
-	void setInteger(int r, int c, Integer value, String styleName);
+	Integer setInteger(int r, int c, Number value, String styleName);
 
 	/**
 	 * @param r
@@ -219,7 +208,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param contents
 	 *            the contents value to put in the cell
 	 */
-	void setRowContents(int r, List<Object> contents);
+	List<Object> setRowContents(int r, List<Object> contents);
 
 	/**
 	 * @param r
@@ -230,7 +219,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 *            the name of the style (@see createStyle)
 	 * @return false if failed
 	 */
-	boolean setStyle(int r, int c, String styleName);
+	boolean setStyleName(int r, int c, String styleName);
 
 	/**
 	 * @param r
@@ -251,7 +240,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param text
 	 *            the text to put in the cell
 	 */
-	void setText(int r, int c, String text);
+	String setText(int r, int c, String text);
 
 	/**
 	 * @param r
@@ -263,5 +252,15 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param styleName
 	 *            the style name
 	 */
-	void setText(int r, int c, String text, String styleName);
+	String setText(int r, int c, String text, String styleName);
+	
+	/**
+	 * @param r
+	 *            row index (0..)
+	 * @param c
+	 *            column index (0..)
+	 * @param dataWrapper
+	 *            the data to put
+	 */
+	boolean writeDataFrom(int r, int c, DataWrapper dataWrapper);
 }

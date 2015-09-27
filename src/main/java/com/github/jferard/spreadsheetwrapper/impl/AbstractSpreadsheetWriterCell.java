@@ -29,37 +29,37 @@ SpreadsheetWriterCursor {
 
 	/** {@inheritDoc  */
 	@Override
-	public void setDate(final Date date, final String styleName) {
-		this.setDate(date);
+	public Date setDate(final Date date, final String styleName) {
 		this.setStyleName(styleName);
+		return this.setDate(date);
 	}
 
 	/** {@inheritDoc  */
 	@Override
-	public void setDouble(final Double value, final String styleName) {
-		this.setDouble(value);
+	public Double setDouble(final Number value, final String styleName) {
 		this.setStyleName(styleName);
+		return this.setDouble(value);
 	}
 
 	/** {@inheritDoc  */
 	@Override
-	public void setFormula(final String formula, final String styleName) {
-		this.setFormula(formula);
+	public String setFormula(final String formula, final String styleName) {
 		this.setStyleName(styleName);
+		return this.setFormula(formula);
 	}
 
 	/** {@inheritDoc  */
 	@Override
-	public void setInteger(final Integer value, final String styleName) {
-		this.setInteger(value);
+	public Integer setInteger(final Number value, final String styleName) {
 		this.setStyleName(styleName);
+		return this.setInteger(value);
 	}
 
 	/** {@inheritDoc  */
 	@Override
-	public void setText(final String text, final String styleName) {
-		this.setText(text);
+	public String setText(final String text, final String styleName) {
 		this.setStyleName(styleName);
+		return this.setText(text);
 	}
 
 }

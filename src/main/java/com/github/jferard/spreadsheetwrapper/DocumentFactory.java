@@ -17,6 +17,9 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+import java.io.File;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.logging.Logger;
 
@@ -42,163 +45,347 @@ public class DocumentFactory {
 	}
 
 	/**
+	 * Creates a workbook writer
+	 *
+	 * @param outputFile
+	 *            the file to write
+	 * @return the writer
+	 * */
+	public SpreadsheetDocumentWriter create(final File outputFile)
+			throws SpreadsheetException {
+		return this.create(outputFile, this.getExtension(outputFile.getPath()));
+	}
+
+	/**
+	 * Creates a workbook writer
+	 *
+	 * @param outputFile
+	 *            the file to write
+	 * @return the writer
+	 * */
+	public SpreadsheetDocumentWriter create(final File outputFile,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.create(outputFile);
+	}
+
+	/**
+	 * Creates a workbook writer
+	 *
+	 * @param outputStream
+	 *            the stream to write to
+	 * @return the writer
+	 * */
+	public SpreadsheetDocumentWriter create(
+			final/*@Nullable*/OutputStream outputStream, final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.create(outputStream);
+	}
+
+	/**
+	 * Creates a workbook writer with no output (use saveAs). May throw
+	 * UnsupportedOperationException
+	 */
+	public SpreadsheetDocumentWriter create(final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.create();
+	}
+
+	/**
 	 * @param outputURL
 	 * @return
 	 * @throws SpreadsheetException
+	 * @deprecated
 	 */
 	@Deprecated
 	public SpreadsheetDocumentWriter create(final URL outputURL)
 			throws SpreadsheetException {
-		final String fileName = outputURL.getPath();
-		final int dotIndex = fileName.lastIndexOf('.');
-		if (dotIndex == -1)
-			throw new SpreadsheetException(
-					"Can't find extension, use createOds or createXls");
-
-		final String extension = fileName.substring(dotIndex + 1);
-		final SpreadsheetDocumentWriter spreadsheetWriter;
-
-		if (extension.equals("ods")) {
-			spreadsheetWriter = this.createOds(outputURL);
-		} else if (extension.equals("xls") || extension.equals("xlsx"))
-			spreadsheetWriter = this.createXls(outputURL);
-		else
-			throw new SpreadsheetException(
-					"Can't find extension, use createOds or createXls");
-
-		return spreadsheetWriter;
+		return this.create(outputURL, this.getExtension(outputURL.getPath()));
 	}
 
 	/**
-	 * Creates a workbook writer with no output (use saveAs). May throw
-	 * UnsupportedOperationException
+	 * @param outputURL
+	 * @return
+	 * @throws SpreadsheetException
+	 * @deprecated
 	 */
-	public SpreadsheetDocumentWriter createOds() throws SpreadsheetException {
-		return this.odsDocumentFactory.create();
-	}
-
 	@Deprecated
-	public SpreadsheetDocumentWriter createOds(final URL outputURL)
-			throws SpreadsheetException {
-		return this.odsDocumentFactory.create(outputURL);
+	public SpreadsheetDocumentWriter create(final URL outputURL,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.create(outputURL);
 	}
 
 	/**
-	 * Creates a workbook writer with no output (use saveAs). May throw
-	 * UnsupportedOperationException
+	 * Creates a workbook reader from an existing workbook
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @return the reader
+	 * */
+	public SpreadsheetDocumentReader openForRead(final File inputFile)
+			throws SpreadsheetException {
+		return this.openForRead(inputFile,
+				this.getExtension(inputFile.getPath()));
+	}
+
+	/**
+	 * Creates a workbook reader from an existing workbook
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @return the reader
+	 * */
+	public SpreadsheetDocumentReader openForRead(final File inputFile,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForRead(inputFile);
+	}
+
+	/**
+	 * Creates a workbook reader from an existing workbook
+	 *
+	 * @param inputStream
+	 *            the stream to read from
+	 * @return the reader
+	 * */
+	public SpreadsheetDocumentReader openForRead(final InputStream inputStream,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForRead(inputStream);
+	}
+
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @return a reader on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
 	 */
-	public SpreadsheetDocumentWriter createXls() throws SpreadsheetException {
-		return this.xlsDocumentFactory.create();
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter createXls(final URL outputURL)
-			throws SpreadsheetException {
-		return this.xlsDocumentFactory.create(outputURL);
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter openCopyOf(final URL inputURL)
-			throws SpreadsheetException {
-		final String fileName = inputURL.getPath();
-		final int dotIndex = fileName.lastIndexOf('.');
-		if (dotIndex == -1)
-			throw new SpreadsheetException(
-					"Can't find extension, use openCopyOfOds or openCopyOfXls");
-
-		final String extension = fileName.substring(dotIndex + 1);
-		final SpreadsheetDocumentWriter spreadsheetWriter;
-
-		if (extension.equals("ods")) {
-			spreadsheetWriter = this.openCopyOfOds(inputURL);
-		} else if (extension.equals("xls") || extension.equals("xlsx"))
-			spreadsheetWriter = this.openCopyOfXls(inputURL);
-		else
-			throw new SpreadsheetException(
-					"Can't find extension, use openCopyOfOds or openCopyOfXls");
-
-		return spreadsheetWriter;
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter openCopyOf(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException {
-		final String fileName = inputURL.getPath();
-		final int dotIndex = fileName.lastIndexOf('.');
-		if (dotIndex == -1)
-			throw new SpreadsheetException(
-					"Can't find extension, use openCopyOfOds or openCopyOfXls");
-
-		final String extension = fileName.substring(dotIndex + 1);
-		final SpreadsheetDocumentWriter spreadsheetWriter;
-
-		if (extension.equals("ods")) {
-			spreadsheetWriter = this.openCopyOfOds(inputURL, outputURL);
-		} else if (extension.equals("xls") || extension.equals("xlsx"))
-			spreadsheetWriter = this.openCopyOfXls(inputURL, outputURL);
-		else
-			throw new SpreadsheetException(
-					"Can't find extension, use openCopyOfOds or openCopyOfXls");
-
-		return spreadsheetWriter;
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter openCopyOfOds(final URL inputURL)
-			throws SpreadsheetException {
-		return this.odsDocumentFactory.openForWrite(inputURL);
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter openCopyOfOds(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException {
-		return this.odsDocumentFactory.openForWrite(inputURL, outputURL);
-	}
-
-	@Deprecated
-	public SpreadsheetDocumentWriter openCopyOfXls(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException {
-		return this.xlsDocumentFactory.openForWrite(inputURL, outputURL);
-	}
-
 	@Deprecated
 	public SpreadsheetDocumentReader openForRead(final URL inputURL)
 			throws SpreadsheetException {
-		final String fileName = inputURL.getPath();
-		final int dotIndex = fileName.lastIndexOf('.');
-		if (dotIndex == -1)
-			throw new SpreadsheetException(
-					"Can't find extension, use openForReadOds or openForReadXls");
+		return this
+				.openForRead(inputURL, this.getExtension(inputURL.getPath()));
+	}
 
-		final String extension = fileName.substring(dotIndex + 1);
-		final SpreadsheetDocumentReader spreadsheetReader;
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @return a reader on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
+	 */
+	@Deprecated
+	public SpreadsheetDocumentReader openForRead(final URL inputURL,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForRead(inputURL);
+	}
 
+	/**
+	 * Open a workbook writer from a existing workbook with no output (use
+	 * saveAs). May throw UnsupportedOperationException
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @return the writer
+	 */
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile)
+			throws SpreadsheetException {
+		return this.openForWrite(inputFile,
+				this.getExtension(inputFile.getPath()));
+	}
+
+	/**
+	 * Creates a workbook writer from an existing workbook
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @param outputFile
+	 *            the file to write to
+	 * @return the writer
+	 * @throws SpreadsheetException
+	 *             if can't open the writer
+	 */
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
+			final File outputFile) throws SpreadsheetException {
+		return this.openForWrite(inputFile, outputFile,
+				this.getExtension(inputFile.getPath()));
+	}
+
+	/**
+	 * Creates a workbook writer from an existing workbook
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @param outputFile
+	 *            the file to write to
+	 * @return the writer
+	 * @throws SpreadsheetException
+	 *             if can't open the writer
+	 */
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
+			final File outputFile, final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputFile, outputFile);
+	}
+
+	/**
+	 * Open a workbook writer from a existing workbook with no output (use
+	 * saveAs). May throw UnsupportedOperationException
+	 *
+	 * @param inputFile
+	 *            the file to read from
+	 * @return the writer
+	 */
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputFile);
+	}
+
+	/**
+	 * Open a workbook writer from a existing workbook with no output (use
+	 * saveAs). May throw UnsupportedOperationException
+	 *
+	 * @param inputStream
+	 *            the stream to read from
+	 * @return the writer
+	 */
+	public SpreadsheetDocumentWriter openForWrite(
+			final InputStream inputStream, final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputStream);
+
+	}
+
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @return a writer on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
+	 */
+	@Deprecated
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
+			throws SpreadsheetException {
+		return this.openForWrite(inputURL,
+				this.getExtension(inputURL.getPath()));
+	}
+
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @return a writer on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
+	 */
+	@Deprecated
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
+			final String extension) throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputURL);
+	}
+
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @param outputURL
+	 *            URL to write to
+	 * @return a writer on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
+	 */
+	@Deprecated
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
+			final URL outputURL) throws SpreadsheetException {
+		return this.openForWrite(inputURL, outputURL,
+				this.getExtension(inputURL.getPath()));
+	}
+
+	/**
+	 * @param inputURL
+	 *            URL to read from
+	 * @param outputURL
+	 *            URL to write to
+	 * @return a writer on the document
+	 * @throws SpreadsheetException
+	 * @deprecated
+	 */
+	@Deprecated
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
+			final URL outputURL, final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputURL, outputURL);
+	}
+
+	/**
+	 * Creates a workbook writer
+	 *
+	 * @param outputFile
+	 *            the file to write
+	 * @return the writer
+	 * */
+	private SpreadsheetDocumentFactory getDocumentFactory(final String extension)
+			throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory;
 		if (extension.equals("ods")) {
-			spreadsheetReader = this.openForReadOds(inputURL);
+			documentFactory = this.odsDocumentFactory;
 		} else if (extension.equals("xls") || extension.equals("xlsx"))
-			spreadsheetReader = this.openForReadXls(inputURL);
+			documentFactory = this.xlsDocumentFactory;
 		else
 			throw new SpreadsheetException(
-					"Can't find extension, use openForReadOds or openForReadXls");
+					"Can't find extension, use createOds or createXls");
 
-		return spreadsheetReader;
+		return documentFactory;
 	}
 
-	@Deprecated
-	public SpreadsheetDocumentReader openForReadOds(final URL inputURL)
+	private String getExtension(final String filePath)
 			throws SpreadsheetException {
-		return this.odsDocumentFactory.openForRead(inputURL);
+		final int dotIndex = filePath.lastIndexOf('.');
+		if (dotIndex == -1)
+			throw new SpreadsheetException(
+					"Can't find extension, use ...Ods(...) or ...Xls(...)");
+
+		final String extension = filePath.substring(dotIndex + 1);
+		return extension;
 	}
 
-	@Deprecated
-	public SpreadsheetDocumentReader openForReadXls(final URL inputURL)
-			throws SpreadsheetException {
-		return this.xlsDocumentFactory.openForRead(inputURL);
+	/**
+	 * Creates a workbook writer from an existing workbook
+	 *
+	 * @param inputStream
+	 *            the stream to read from
+	 * @param outputStream
+	 *            the stream to write to
+	 * @return the writer
+	 * @throws SpreadsheetException
+	 *             if can't open the writer
+	 */
+	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
+			final/*@Nullable*/OutputStream outputStream, final String extension)
+					throws SpreadsheetException {
+		final SpreadsheetDocumentFactory documentFactory = this
+				.getDocumentFactory(extension);
+		return documentFactory.openForWrite(inputStream, outputStream);
 	}
 
-	@Deprecated
-	private SpreadsheetDocumentWriter openCopyOfXls(final URL inputURL)
-			throws SpreadsheetException {
-		return this.xlsDocumentFactory.openForWrite(inputURL);
-	}
 }

@@ -162,4 +162,23 @@ public class OdsSimpleodsDocumentWriter extends
 			throw new SpreadsheetException(String.format(
 					"this.spreadsheetDocument.save(%s) not ok", this.outputStream));
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean createStyle(String styleName, String styleString) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean updateStyle(String styleName, String styleString) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

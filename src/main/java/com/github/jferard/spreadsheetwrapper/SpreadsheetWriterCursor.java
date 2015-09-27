@@ -26,7 +26,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param content
 	 *            the value
 	 */
-	void setCellContent(Object content);
+	Object setCellContent(Object content);
 
 	/**
 	 * Set a value at the current position
@@ -36,7 +36,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setCellContent(Object content, String styleName);
+	Object setCellContent(Object content, String styleName);
 
 	/**
 	 * Set a date at the current position
@@ -44,7 +44,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param date
 	 *            the date
 	 */
-	void setDate(Date date);
+	Date setDate(Date date);
 
 	/**
 	 * Set a date at the current position
@@ -54,7 +54,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setDate(Date date, String styleName);
+	Date setDate(Date date, String styleName);
 
 	/**
 	 * set a Double at the current position
@@ -62,7 +62,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param value
 	 *            Double
 	 */
-	void setDouble(Double value);
+	Double setDouble(Number value);
 
 	/**
 	 * set a Double at the current position
@@ -72,7 +72,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setDouble(Double value, String styleName);
+	Double setDouble(Number value, String styleName);
 
 	/**
 	 * Set a formula at the current position
@@ -80,7 +80,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param formula
 	 *            the formula text (english)
 	 */
-	void setFormula(String formula);
+	String setFormula(String formula);
 
 	/**
 	 * Set a formula at the current position
@@ -90,7 +90,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setFormula(String formula, String styleName);
+	String setFormula(String formula, String styleName);
 
 	/**
 	 * Set an integer at the current position
@@ -98,7 +98,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param value
 	 *            the integer
 	 */
-	void setInteger(Integer value);
+	Integer setInteger(Number value);
 
 	/**
 	 * Set an integer at the current position
@@ -108,7 +108,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setInteger(Integer value, String styleName);
+	Integer setInteger(Number value, String styleName);
 
 	/**
 	 * Set a format at the current position
@@ -116,7 +116,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setStyleName(String styleName);
+	boolean setStyleName(String styleName);
 
 	/**
 	 * Set a format at the current position
@@ -124,7 +124,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleString
 	 *            the string that contains the format
 	 */
-	void setStyleString(String styleString);
+	boolean setStyleString(String styleString);
 
 	/**
 	 * Set a text at the current position
@@ -132,7 +132,7 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param text
 	 *            the text
 	 */
-	void setText(String text);
+	String setText(String text);
 
 	/**
 	 * Set a text at the current position
@@ -142,6 +142,6 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	 * @param styleName
 	 *            the name of the format
 	 */
-	void setText(String text, String styleName);
+	String setText(String text, String styleName);
 
 }

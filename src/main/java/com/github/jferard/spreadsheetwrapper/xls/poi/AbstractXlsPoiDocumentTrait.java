@@ -79,16 +79,16 @@ AbstractSpreadsheetDocumentTrait<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	protected T addSheetWithCheckedIndex(final int i, final String sheetName) {
+	protected T addSheetWithCheckedIndex(final int index, final String sheetName) {
 		Sheet sheet = this.workbook.getSheet(sheetName);
 		if (sheet != null)
 			throw new IllegalArgumentException(String.format("Sheet %s exists",
 					sheetName));
 
 		sheet = this.workbook.createSheet(sheetName);
-		this.workbook.setSheetOrder(sheetName, i);
+		this.workbook.setSheetOrder(sheetName, index);
 		final T spreadsheet = this.createNew(sheet);
-		this.accessor.put(sheetName, i, spreadsheet);
+		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
 	}
 

@@ -21,13 +21,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
+import java.util.List;
 
 import jxl.Cell;
 import jxl.format.CellFormat;
 import jxl.write.DateTime;
 import jxl.write.Formula;
 import jxl.write.Label;
-import jxl.write.Number;
 import jxl.write.WritableCell;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
@@ -63,29 +63,35 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		this.curRow = null;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setBoolean(final int r, final int c, final Boolean value) {
+	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		this.addCell(new jxl.write.Boolean(c, r, value));
+		return value;
 	}
 
-	/** {@inheritDoc} */
+	/** {@inheritDoc} 
+	 * @return */
 	@Override
-	public void setDate(final int r, final int c, final Date date) {
+	public Date setDate(final int r, final int c, final Date date) {
 		this.addCell(new DateTime(c, r, date));
+		return date;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDouble(final int r, final int c, final Double value) {
-		this.addCell(new Number(c, r, value));
+	public Double setDouble(final int r, final int c, final Number value) {
+		double retValue = value.doubleValue();
+		this.addCell(new jxl.write.Number(c, r, retValue));
+		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFormula(final int r, final int c, final String fString) {
+	public String setFormula(final int r, final int c, final String fString) {
 		if (fString == null || fString.equals(""))
-			return;
+			return "";
 
 		Formula formula;
 		final WritableCell xritableCell = this.getJxlCell(c, r);
@@ -99,18 +105,22 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 				formula = new Formula(c, r, fString, cellFormat);
 		}
 		this.addCellWithStdErrWorkaround(formula);
+		return formula.getContents();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setInteger(final int r, final int c, final Integer value) {
-		this.setDouble(c, r, value.doubleValue());
+	public Integer setInteger(final int r, final int c, final Number value) {
+		int retValue = value.intValue();
+		this.setDouble(c, r, new Double(retValue));
+		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setText(final int r, final int c, final String text) {
+	public String setText(final int r, final int c, final String text) {
 		this.addCell(new Label(c, r, text));
+		return text;
 	}
 
 	private void addCell(final WritableCell cell) {
@@ -168,5 +178,52 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		}
 		return cell;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public void insertCol(int c) {
+		this.sheet.insertColumn(c);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertRow(int r) {
+		this.sheet.insertRow(r);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeCol(int c) {
+		List<Object> ret = this.getColContents(c);
+		this.sheet.removeColumn(c);
+		return ret;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeRow(int r) {
+		List<Object> ret = this.getRowContents(r);
+		this.sheet.removeRow(r);
+		return ret;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(int r, int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(int r, int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(int r, int c, String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
 
 }

@@ -186,4 +186,23 @@ implements SpreadsheetDocumentWriter {
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in writableWorkbook", sheetName));
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean createStyle(String styleName, String styleString) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean updateStyle(String styleName, String styleString) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

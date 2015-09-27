@@ -109,4 +109,35 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	 */
 	@Deprecated
 	void saveAs(URL outputURL) throws SpreadsheetException;
+
+	/**
+	 * Creates a new style
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @param styleString
+	 *            the style string (format to be defined)
+	 * @return false if fails
+	 */
+	boolean createStyle(String styleName, String styleString);
+
+	/**
+	 * Creates an existing style
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @param styleString
+	 *            the style string (format to be defined)
+	 * @return false if fails
+	 */
+	boolean updateStyle(String styleName, String styleString);
+
+	/**
+	 * Gets a style string
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @return the style string
+	 */
+	String getStyleString(String styleName);
 }

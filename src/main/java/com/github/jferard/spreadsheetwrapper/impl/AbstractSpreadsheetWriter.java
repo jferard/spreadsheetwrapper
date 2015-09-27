@@ -17,9 +17,12 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import com.github.jferard.spreadsheetwrapper.DataWrapper;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
@@ -39,13 +42,6 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	 */
 	public AbstractSpreadsheetWriter(final SpreadsheetReader reader) {
 		this.reader = reader;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final boolean createStyle(final String styleName,
-			final String styleString) {
-		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
@@ -122,8 +118,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyle(final int r, final int c) {
-		return this.reader.getStyle(r, c);
+	public String getStyleName(final int r, final int c) {
+		return this.reader.getStyleName(r, c);
 	}
 
 	/** {@inheritDoc} */
@@ -138,105 +134,129 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 		return this.reader.getText(r, c);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public final void insertCol(final int r) {
-		throw new UnsupportedOperationException();
-	}
+//	/** {@inheritDoc} */
+//	@Override
+//	public void insertCol(final int r) {
+//		throw new UnsupportedOperationException();
+//	}
+//
+//	/** {@inheritDoc} */
+//	@Override
+//	public void insertRow(final int r) {
+//		throw new UnsupportedOperationException();
+//	}
+//
+//	/** {@inheritDoc} */
+//	@Override
+//	public List<Object> removeCol(final int c) {
+//		throw new UnsupportedOperationException();
+//	}
+//
+//	/** {@inheritDoc} */
+//	@Override
+//	public List<Object> removeRow(final int r) {
+//		throw new UnsupportedOperationException();
+//	}
 
 	/** {@inheritDoc} */
 	@Override
-	public final void insertRow(final int r) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final void removeCol(final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final void removeRow(final int r) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void setBoolean(final int r, final int c, final Boolean value,
+	public Boolean setBoolean(final int r, final int c, final Boolean value,
 			final String styleName) {
-		this.setBoolean(r, c, value);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setBoolean(r, c, value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public final void setCellContent(final int r, final int c,
+	public Object setCellContent(final int r, final int c,
 			final Object content) {
-		throw new UnsupportedOperationException();
+		Object retValue;
+		if (content == null)
+			throw new IllegalArgumentException();
+
+		if (content instanceof String)
+			retValue = this.setText(r, c, (String) content);
+		else if (content instanceof Double)
+			retValue = this.setDouble(r, c, (Double) content);
+		else if (content instanceof Integer)
+			retValue = this.setInteger(r, c, (Integer) content);
+		else if (content instanceof Number)
+			retValue = this.setDouble(r, c, (Number) content);
+		else if (content instanceof Boolean)
+			retValue = this.setBoolean(r, c, (Boolean) content);
+		else if (content instanceof Date) {
+			retValue = this.setDate(r, c, (Date) content);
+		} else if (content instanceof Calendar) {
+			retValue = this.setDate(r, c, ((Calendar) content).getTime());
+		} else
+			throw new IllegalArgumentException();
+		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setCellContent(final int r, final int c, final Object content,
+	public Object setCellContent(final int r, final int c, final Object content,
 			final String styleName) {
-		this.setCellContent(r, c, content);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setCellContent(r, c, content);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public final void setColContents(final int c, final List<Object> contents) {
+	public List<Object> setColContents(final int c, final List<Object> contents) {
+		List<Object> ret = new ArrayList<Object>(contents.size());
 		final int rowCount = this.getRowCount();
 		for (int r = 0; r < rowCount; r++) {
-			this.setCellContent(r, c, contents.get(r));
+			ret.add(r, this.setCellContent(r, c, contents.get(r)));
 		}
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDate(final int r, final int c, final Date date,
+	public Date setDate(final int r, final int c, final Date date,
 			final String styleName) {
-		this.setDate(r, c, date);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setDate(r, c, date);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setDouble(final int r, final int c, final Double value,
+	public Double setDouble(final int r, final int c, final Number value,
 			final String styleName) {
-		this.setDouble(r, c, value);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setDouble(r, c, value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setFormula(final int r, final int c, final String formula,
+	public String setFormula(final int r, final int c, final String formula,
 			final String styleName) {
-		this.setFormula(r, c, formula);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setFormula(r, c, formula);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void setInteger(final int r, final int c, final Integer value,
+	public Integer setInteger(final int r, final int c, final Number value,
 			final String styleName) {
-		this.setInteger(r, c, value);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setInteger(r, c, value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public final void setRowContents(final int r, final List<Object> contents) {
+	public final List<Object> setRowContents(final int r, final List<Object> contents) {
+		List<Object> ret = new ArrayList<Object>(contents.size());
 		final int colCount = this.getCellCount(r);
 		for (int c = 0; c < colCount; c++)
-			this.setCellContent(r, c, contents.get(c));
+			ret.add(c, this.setCellContent(r, c, contents.get(c)));
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public final boolean setStyle(final int r, final int c,
+	public boolean setStyleName(final int r, final int c,
 			final String styleName) {
 		throw new UnsupportedOperationException();
 	}
@@ -250,9 +270,16 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setText(final int r, final int c, final String text,
+	public String setText(final int r, final int c, final String text,
 			final String styleName) {
-		this.setText(r, c, text);
-		this.setStyle(r, c, styleName);
+		this.setStyleName(r, c, styleName);
+		return this.setText(r, c, text);
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean writeDataFrom(int r, int c, DataWrapper dataWrapper) {
+		return dataWrapper.writeDataTo(this, r, c);
+	}
+	
 }

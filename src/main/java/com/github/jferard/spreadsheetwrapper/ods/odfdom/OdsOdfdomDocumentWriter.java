@@ -19,12 +19,20 @@
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.io.OutputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
+import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
+import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
+import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
+import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
+import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -68,6 +76,8 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** the logger */
 	final Logger logger;
 
+	private OdfOfficeStyles documentStyles;
+
 	/**
 	 * @param logger
 	 *            the logger
@@ -86,6 +96,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.reader = new OdsOdfdomDocumentReader(document);
 		this.logger = logger;
 		this.document = document;
+		this.documentStyles = this.document.getDocumentStyles();
 		this.documentTrait = new OdsOdfdomDocumentWriterTrait(document);
 	}
 
@@ -163,4 +174,48 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			throw new SpreadsheetException(e);
 		}
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean createStyle(String styleName, String styleString) {
+		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
+		newStyle.setProperties(this.getProperties(styleString));
+		return true;
+	}
+	
+	private Map<OdfStyleProperty, String> getProperties(String styleString) {
+		Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
+		String[] styleProps = styleString.split(";");
+		String[] entry;
+		for (String styleProp : styleProps) { 
+			entry = styleProp.split(":");
+			if (entry[0].equals("font-weight")) {
+				properties.put(OdfTextProperties.FontWeight, entry[1]);
+			} else if (entry[0].equals("background-color")) {
+				properties.put(OdfTableCellProperties.BackgroundColor, entry[1]);
+			}
+		}
+		return properties;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean updateStyle(String styleName, String styleString) {
+		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+		existingStyle.setProperties(this.getProperties(styleString));
+		return true;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(String styleName) {
+		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+		return this.getStyleString(existingStyle);
+	}
+
+	private String getStyleString(OdfStyle style) {
+		String fontWeight = style.getProperty(OdfTextProperties.FontWeight);
+		String backgroundColor = style.getProperty(OdfTableCellProperties.BackgroundColor);
+		return String.format("font-weight:%s;background-color:%s", fontWeight, backgroundColor);  
+	}	
 }
