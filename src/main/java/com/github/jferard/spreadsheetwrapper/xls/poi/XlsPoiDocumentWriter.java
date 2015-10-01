@@ -24,14 +24,23 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
+import org.apache.poi.ss.usermodel.Font;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
+import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
+import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
+import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
+import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -55,22 +64,26 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
 			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+		private Map<String, CellStyle> cellStyleByName;
+
 		/**
 		 * @param workbook
 		 *            *internal* workbook
 		 * @param dateCellStyle
 		 *            the style for all date cells
+		 * @param cellStyleByName 
 		 */
 		XlsPoiDocumentWriterTrait(final Workbook workbook,
-				final CellStyle dateCellStyle) {
+				final CellStyle dateCellStyle, Map<String, CellStyle> cellStyleByName) {
 			super(workbook, dateCellStyle);
+			this.cellStyleByName = cellStyleByName;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.dateCellStyle);
+			return new XlsPoiWriter(sheet, this.dateCellStyle, this.cellStyleByName);
 		}
 	}
 
@@ -80,7 +93,9 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 * @return the stream on the file
 	 * @throws IOException
 	 * @throws FileNotFoundException
+	 * @deprecated
 	 */
+	@Deprecated
 	private static OutputStream getOutputStream(final URL outputURL)
 			throws IOException, FileNotFoundException {
 		OutputStream outputStream;
@@ -104,6 +119,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** *internal* workbook */
 	private final Workbook workbook;
+	private Map<String, CellStyle> cellStyleByName;
+	private XlsPoiUtil xlsPoiUtil;
 
 	/**
 	 * @param logger
@@ -121,10 +138,11 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.workbook = workbook;
 		final CreationHelper createHelper = this.workbook.getCreationHelper();
 		final CellStyle dateCellStyle = this.workbook.createCellStyle();
+		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
 		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
-				dateCellStyle);
+				dateCellStyle, this.cellStyleByName);
 	}
 
 	/** {@inheritDoc} */
@@ -206,18 +224,36 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public boolean createStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		CellStyle cellStyle = this.workbook.createCellStyle();
+		Map<String, String> props = this.getPropertiesMap(styleString);
+		for (Map.Entry<String, String> entry : props.entrySet()) { 
+			if (entry.getKey().equals("font-weight")) {
+				if (entry.getValue().equals("bold")) {
+					Font font = this.workbook.createFont();
+				    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+				    cellStyle.setFont(font);
+				}
+			  } else if (entry.getKey().equals("background-color")) {
+				  // int color = Integer.decode(entry.getValue());
+				  // do nothing here
+				  // cellStyle.setFillBackgroundColor(...);
+			  }
+		}
+		this.cellStyleByName.put(styleName, cellStyle);
+		return true;
 	}
 	
 	/** {@inheritDoc} */
 	@Override
 	public boolean updateStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		this.createStyle(styleName, styleString);
+		return true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(String styleName) {
-		throw new UnsupportedOperationException();
+		CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		return this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
 	}
 }

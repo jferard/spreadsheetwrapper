@@ -149,6 +149,9 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 	@Override
 	public Date getDate(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (!"date".equals(cell.getValueType())
+				&& !"time".equals(cell.getValueType()))
+			throw new IllegalArgumentException();
 		final Date date = OdsOdfdomReader.getDate(cell);
 		if (date == null)
 			throw new IllegalArgumentException();
@@ -159,6 +162,8 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 	@Override
 	public Double getDouble(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (!"float".equals(cell.getValueType()))
+			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
 	}
 

@@ -15,14 +15,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
 
-public class OdsOdfdomWriter2Test extends SpreadsheetWriter2Test {
+public class OdsJOpenWriter2Test extends SpreadsheetWriter2Test {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -30,7 +30,7 @@ public class OdsOdfdomWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal());
+		return new OdsJOpenDocumentFactory(Logger.getGlobal());
 	}
 
 	// @Rule

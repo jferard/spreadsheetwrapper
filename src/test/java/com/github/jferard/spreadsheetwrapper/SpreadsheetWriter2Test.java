@@ -176,6 +176,13 @@ public abstract class SpreadsheetWriter2Test {
 		this.sw.setText(1, -10, "10");
 		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
+	
+	@Test
+	public final void testStyle() {
+		this.sdw.createStyle("toto", "background-color:#999999;font-weight:bold");
+		this.sw.setCellContent(0, 0, "Titre", "toto");
+	}
+	
 
 	protected abstract String getExtension();
 

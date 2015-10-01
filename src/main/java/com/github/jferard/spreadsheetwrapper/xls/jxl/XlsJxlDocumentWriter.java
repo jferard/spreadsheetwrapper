@@ -21,10 +21,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
@@ -42,11 +46,12 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 	/** *internal* workbook */
 	private final WritableWorkbook writableWorkbook;
+	private Map<String, WritableCellFormat> cellFormatByName;
 
 	/**
 	 * @param workbook
@@ -60,9 +65,10 @@ implements SpreadsheetDocumentWriter {
 		for (int n = 0; n < sheets.length; n++) {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetWriter reader = new XlsJxlWriter(sheet);
+			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, this.cellFormatByName);
 			this.accessor.put(name, n, reader);
 		}
+		this.cellFormatByName = new HashMap<String, WritableCellFormat>();
 	}
 
 	/** {@inheritDoc} */
@@ -74,7 +80,7 @@ implements SpreadsheetDocumentWriter {
 			throw new IllegalArgumentException();
 		final WritableSheet createSheet = this.writableWorkbook.createSheet(
 				sheetName, index);
-		return new XlsJxlWriter(createSheet);
+		return new XlsJxlWriter(createSheet, this.cellFormatByName);
 	}
 
 	/** {@inheritDoc} */
@@ -136,7 +142,7 @@ implements SpreadsheetDocumentWriter {
 						"No sheet at position %d", index));
 
 			final WritableSheet sheet = sheets[index];
-			spreadsheet = new XlsJxlWriter(sheet);
+			spreadsheet = new XlsJxlWriter(sheet, this.cellFormatByName);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
 		return spreadsheet;
@@ -178,7 +184,7 @@ implements SpreadsheetDocumentWriter {
 			final WritableSheet sheet = sheets[n];
 
 			if (sheet.getName().equals(sheetName)) {
-				spreadsheet = new XlsJxlWriter(sheet);
+				spreadsheet = new XlsJxlWriter(sheet, this.cellFormatByName);
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;
 			}
@@ -190,13 +196,31 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public boolean createStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		Map<String, String> props = this.getPropertiesMap(styleString);
+		WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
+		WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
+		try {
+			for (Map.Entry<String, String> entry : props.entrySet()) {
+				if (entry.getKey().equals("font-weight")) {
+					if (entry.getValue().equals("bold"))
+						cellFont.setBoldStyle(WritableFont.BOLD);
+				} else if (entry.getKey().equals("background-color")) {
+					// Colour colour = Colour.AUTOMATIC;
+					// cellFormat.setBackground(colour);
+				}
+			}
+			this.cellFormatByName.put(styleName, cellFormat);
+		} catch (WriteException e) {
+			return false;
+		}
+		return true;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean updateStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		this.createStyle(styleName, styleString);
+		return true;
 	}
 
 	/** {@inheritDoc} */
@@ -204,5 +228,4 @@ implements SpreadsheetDocumentWriter {
 	public String getStyleString(String styleName) {
 		throw new UnsupportedOperationException();
 	}
-	
 }

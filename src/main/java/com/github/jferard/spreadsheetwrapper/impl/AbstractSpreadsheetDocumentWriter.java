@@ -23,8 +23,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
+import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
+import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
@@ -32,13 +38,13 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-SpreadsheetDocumentWriter {
+		SpreadsheetDocumentWriter {
 
 	/** the logger */
 	private final Logger logger;
 
 	/** where to write */
-	protected /*@Nullable*/ OutputStream outputStream;
+	protected/*@Nullable*/OutputStream outputStream;
 
 	public AbstractSpreadsheetDocumentWriter(final Logger logger,
 			final/*@Nullable*/OutputStream outputStream) {
@@ -96,4 +102,17 @@ SpreadsheetDocumentWriter {
 		}
 	}
 
+	/**
+	 * @param styleString the styleString, format key1:value1;key2:value2
+	 * @return
+	 */
+	protected Map<String, String> getPropertiesMap(final String styleString) {
+		Map<String, String> properties = new HashMap<String, String>();
+		String[] styleProps = styleString.split(";");
+		for (String styleProp : styleProps) {
+			String[] entry = styleProp.split(":");
+			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());
+		}
+		return properties;
+	}
 }

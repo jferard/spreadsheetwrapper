@@ -11,10 +11,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<github.global.server>github</github.global.server>
-		<!--		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
-		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file> -->
+		<!-- <jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file> 
+			<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file> -->
 		<skip.integration.tests>true</skip.integration.tests>
-		<skip.unit.tests>false</skip.unit.tests>	
+		<skip.unit.tests>false</skip.unit.tests>
 	</properties>
 
 	<dependencies>
@@ -74,6 +74,14 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jopendocument</groupId>
+			<artifactId>jOpenDocument</artifactId>
+			<version>1.3b1</version>
+			<scope>compile</scope>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
 			<groupId>org.checkerframework</groupId>
 			<artifactId>checker-qual</artifactId>
 			<version>1.9.3</version>
@@ -86,7 +94,8 @@
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.7.4.201502262128</version>
-				<!--  jacoco call for each lifecycle phase : prepare-agent -> initialize, report -> verify, prepare-agent-integration -> pre-integration-test -->
+				<!-- jacoco call for each lifecycle phase : prepare-agent -> initialize, 
+					report -> verify, prepare-agent-integration -> pre-integration-test -->
 				<executions>
 					<execution>
 						<id>prepare-agent</id>
@@ -114,51 +123,19 @@
 					</execution>
 				</executions>
 
-				<!--				<executions>
-					<execution>
-						<id>pre-unit-test</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<destFile>${jacoco.ut.execution.data.file}</destFile>
-							<propertyName>surefireArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-unit-test</id>
-						<phase>test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<dataFile>${jacoco.ut.execution.data.file}</dataFile>
-							<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory>
-						</configuration>
-					</execution>
-					<execution>
-						<id>pre-integration-test</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-						<configuration>
-							<destFile>${jacoco.it.execution.data.file}</destFile>
-							<propertyName>failsafeArgLine</propertyName>
-						</configuration>
-					</execution>
-					<execution>
-						<id>post-integration-test</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-						<configuration>
-							<dataFile>${jacoco.it.execution.data.file}</dataFile>
-							<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-						</configuration>
-					</execution>
-				</executions> -->
+				<!-- <executions> <execution> <id>pre-unit-test</id> <goals> <goal>prepare-agent</goal> 
+					</goals> <configuration> <destFile>${jacoco.ut.execution.data.file}</destFile> 
+					<propertyName>surefireArgLine</propertyName> </configuration> </execution> 
+					<execution> <id>post-unit-test</id> <phase>test</phase> <goals> <goal>report</goal> 
+					</goals> <configuration> <dataFile>${jacoco.ut.execution.data.file}</dataFile> 
+					<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory> 
+					</configuration> </execution> <execution> <id>pre-integration-test</id> <phase>pre-integration-test</phase> 
+					<goals> <goal>prepare-agent</goal> </goals> <configuration> <destFile>${jacoco.it.execution.data.file}</destFile> 
+					<propertyName>failsafeArgLine</propertyName> </configuration> </execution> 
+					<execution> <id>post-integration-test</id> <phase>post-integration-test</phase> 
+					<goals> <goal>report</goal> </goals> <configuration> <dataFile>${jacoco.it.execution.data.file}</dataFile> 
+					<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory> 
+					</configuration> </execution> </executions> -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -187,28 +164,13 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!--			<plugin>
-				<groupId>org.checkerframework</groupId>
-				<artifactId>checkerframework-maven-plugin</artifactId>
-				<version>1.9.3</version>
-				<executions>
-					<execution>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<processors>
-						<processor>org.checkerframework.checker.nullness.NullnessChecker</processor>
-					</processors>
-					<checkerFrameworkVersion>1.9.3</checkerFrameworkVersion>
-					<failOnError>false</failOnError>
-					<procOnly>false</procOnly>
-					<javaParams>-Xdebug</javaParams>
-				</configuration>
-			</plugin> -->
+			<!-- <plugin> <groupId>org.checkerframework</groupId> <artifactId>checkerframework-maven-plugin</artifactId> 
+				<version>1.9.3</version> <executions> <execution> <phase>process-classes</phase> 
+				<goals> <goal>check</goal> </goals> </execution> </executions> <configuration> 
+				<processors> <processor>org.checkerframework.checker.nullness.NullnessChecker</processor> 
+				</processors> <checkerFrameworkVersion>1.9.3</checkerFrameworkVersion> <failOnError>false</failOnError> 
+				<procOnly>false</procOnly> <javaParams>-Xdebug</javaParams> </configuration> 
+				</plugin> -->
 
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

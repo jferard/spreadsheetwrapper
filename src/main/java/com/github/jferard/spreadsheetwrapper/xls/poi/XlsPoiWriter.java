@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -46,11 +48,17 @@ SpreadsheetWriter {
 
 	private Sheet sheet;
 
+	private Map<String, CellStyle> cellStyleByName;
+
+	private XlsPoiUtil xlsPoiUtil;
+
 	/**
+	 * @param cellStyleByName 
 	 */
-	XlsPoiWriter(final Sheet sheet, final /*@Nullable*/ CellStyle dateCellStyle) {
+	XlsPoiWriter(final Sheet sheet, final /*@Nullable*/ CellStyle dateCellStyle, Map<String, CellStyle> cellStyleByName) {
 		super(new XlsPoiReader(sheet));
 		this.sheet = sheet;
+		this.cellStyleByName = cellStyleByName;
 		this.preader = (XlsPoiReader) this.reader;
 		this.dateCellStyle = dateCellStyle;
 
@@ -146,19 +154,32 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(int r, int c) {
-		throw new UnsupportedOperationException();
+		final Cell cell = this.preader.getPOICell(r, c);
+		CellStyle cellStyle = cell.getCellStyle();
+		for (Map.Entry<String, CellStyle> entry : this.cellStyleByName.entrySet()) {
+			if (entry.getValue().equals(cellStyle))
+				return entry.getKey();
+		}
+		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(int r, int c) {
-		throw new UnsupportedOperationException();
+		final Cell cell = this.preader.getPOICell(r, c);
+		CellStyle cellStyle = cell.getCellStyle();
+		return ""; // this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(int r, int c, String styleName) {
-		throw new UnsupportedOperationException();
+		if (this.cellStyleByName.containsKey(styleName)) {
+			final Cell cell = this.preader.getPOICell(r, c);
+			cell.setCellStyle(this.cellStyleByName.get(styleName));
+			return true;
+		} else
+			return false;
 	}
 	
 }

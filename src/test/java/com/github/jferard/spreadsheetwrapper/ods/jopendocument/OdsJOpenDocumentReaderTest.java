@@ -15,14 +15,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReaderTest;
 
-public class OdsOdfdomWriter2Test extends SpreadsheetWriter2Test {
+public class OdsJOpenDocumentReaderTest extends SpreadsheetDocumentReaderTest {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -30,40 +30,6 @@ public class OdsOdfdomWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal());
+		return new OdsJOpenDocumentFactory(Logger.getGlobal());
 	}
-
-	// @Rule
-	// public TestName name = new TestName();
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @Before
-	// public void setUp() {
-	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
-	// try {
-	// this.sdw = this.factory.create();
-	// this.sdw.addSheet("f");
-	// this.sw = this.sdw.getSpreadsheet("f");
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @After
-	// public void tearDown() {
-	// try {
-	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
-	// .getSimpleName(), this.name.getMethodName(), "ods");
-	// this.sdw.saveAs(outputFile);
-	// this.sdw.close();
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-
 }

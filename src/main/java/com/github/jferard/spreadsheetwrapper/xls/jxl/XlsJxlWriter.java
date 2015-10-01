@@ -22,6 +22,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import jxl.Cell;
 import jxl.format.CellFormat;
@@ -29,6 +31,8 @@ import jxl.write.DateTime;
 import jxl.write.Formula;
 import jxl.write.Label;
 import jxl.write.WritableCell;
+import jxl.write.WritableCellFeatures;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
@@ -52,27 +56,37 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** *internal* sheet */
 	private final WritableSheet sheet;
 
+	private Map<String, WritableCellFormat> cellFormatByName;
+
 	/**
 	 * @param sheet
 	 *            *internal* sheet
+	 * @param cellFormatByName 
 	 */
-	XlsJxlWriter(final WritableSheet sheet) {
+	XlsJxlWriter(final WritableSheet sheet, Map<String, WritableCellFormat> cellFormatByName) {
 		super(new XlsJxlReader(sheet));
 		this.sheet = sheet;
+		this.cellFormatByName = cellFormatByName;
 		this.curR = -1;
 		this.curRow = null;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @return
+	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		this.addCell(new jxl.write.Boolean(c, r, value));
 		return value;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * @return
+	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		this.addCell(new DateTime(c, r, date));
@@ -178,7 +192,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		}
 		return cell;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void insertCol(int c) {
@@ -206,11 +220,17 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		this.sheet.removeRow(r);
 		return ret;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(int r, int c) {
-		throw new UnsupportedOperationException();
+		WritableCell jxlCell = this.getJxlCell(r, c);
+		CellFormat cf = jxlCell.getCellFormat();
+		for (Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName.entrySet()) {
+			if (entry.getValue().equals(cf))
+				return entry.getKey();
+		}
+		return null;
 	}
 
 	/** {@inheritDoc} */
@@ -222,8 +242,13 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(int r, int c, String styleName) {
-		throw new UnsupportedOperationException();
+		if (this.cellFormatByName.containsKey(styleName)) {
+			CellFormat format = this.cellFormatByName.get(styleName);
+			WritableCell jxlCell = this.getJxlCell(r, c);
+			jxlCell.setCellFormat(format);
+			return true;
+		} else
+			return false;
 	}
-	
 
 }

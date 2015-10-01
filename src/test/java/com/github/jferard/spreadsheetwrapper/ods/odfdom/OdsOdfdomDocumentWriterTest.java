@@ -49,7 +49,7 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	// @Override
 	// @Before
 	// public void setUp() {
-	// this.factory = new OdsOdfdomDocumentFactory(Logger.getGlobal());
+	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
 	// try {
 	// final InputStream inputStream = this.getClass().getResource(
 	// "/VilleMTP_MTP_MonumentsHist.ods").openStream();

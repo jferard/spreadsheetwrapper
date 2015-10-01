@@ -19,10 +19,15 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.OutputStream;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
+import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
+import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.simpleods.OdsFile;
+import org.simpleods.Styles;
 import org.simpleods.Table;
+import org.simpleods.TableStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -166,18 +171,32 @@ public class OdsSimpleodsDocumentWriter extends
 	/** {@inheritDoc} */
 	@Override
 	public boolean createStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL, styleName, this.file);
+		Map<String, String> props = this.getPropertiesMap(styleString);
+		for (Map.Entry<String, String> entry : props.entrySet()) { 
+			if (entry.getKey().equals("font-weight")) {
+				if (entry.getValue().equals("bold"))
+					newStyle.setFontWeightBold();
+				else if (entry.getValue().equals("italic"))
+					newStyle.setFontWeightItalic();
+			} else if (entry.getKey().equals("background-color")) {
+				newStyle.setBackgroundColor(entry.getValue());
+			}
+		}
+		return true;
 	}
 	
 	/** {@inheritDoc} */
 	@Override
 	public boolean updateStyle(String styleName, String styleString) {
-		throw new UnsupportedOperationException();
+		/** @see javadoc */
+		return this.createStyle(styleName, styleString);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(String styleName) {
+		Styles styles = this.file.getStyles();
 		throw new UnsupportedOperationException();
 	}
 	
