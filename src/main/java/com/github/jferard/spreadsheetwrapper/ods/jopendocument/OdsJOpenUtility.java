@@ -22,60 +22,65 @@ import java.util.Map;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.Font;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 
 public class OdsJOpenUtility {
-	private static Namespace officeNS = Namespace.getNamespace("office",
-			"urn:oasis:names:tc:opendocument:xmlns:office:1.0");
 	private static Namespace foNS = Namespace.getNamespace("fo",
 			"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0");
+	private static Namespace officeNS = Namespace.getNamespace("office",
+			"urn:oasis:names:tc:opendocument:xmlns:office:1.0");
 	private static Namespace styleNS = Namespace.getNamespace("style",
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 
-	public static Element createStyle(String styleName,
-			Map<String, String> propertiesMap) {
-		Element style = getBaseStyle(styleName);
-		if (propertiesMap.containsKey("background-color")) {
-			Element tableCellProps = new Element("table-cell-properties",
-					styleNS);
+	public static Element createStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
+		final Element style = OdsJOpenUtility.getBaseStyle(styleName);
+		final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
+		if (backgroundColor != null) {
+			final Element tableCellProps = new Element("table-cell-properties",
+					OdsJOpenUtility.styleNS);
 			tableCellProps.setAttribute("background-color",
-					propertiesMap.get("background-color"), foNS);
+					backgroundColor.toHex(), OdsJOpenUtility.foNS);
+			style.addContent(tableCellProps);
+		}
+		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
+		if (cellFont != null && cellFont.isBold()) {
+			final Element textProps = new Element("text-properties",
+					OdsJOpenUtility.styleNS);
+			textProps.setAttribute("font-weight", "bold", OdsJOpenUtility.foNS);
+			style.addContent(textProps);
+		}
+		return style;
+	}
+
+	public static Element createStyle(final String styleName,
+			final Map<String, String> propertiesMap) {
+		final Element style = OdsJOpenUtility.getBaseStyle(styleName);
+		if (propertiesMap.containsKey("background-color")) {
+			final Element tableCellProps = new Element("table-cell-properties",
+					OdsJOpenUtility.styleNS);
+			tableCellProps
+			.setAttribute("background-color",
+					propertiesMap.get("background-color"),
+					OdsJOpenUtility.foNS);
 			style.addContent(tableCellProps);
 		}
 		if (propertiesMap.containsKey("font-weight")) {
-			Element textProps = new Element("text-properties", styleNS);
+			final Element textProps = new Element("text-properties",
+					OdsJOpenUtility.styleNS);
 			textProps.setAttribute("font-weight",
-					propertiesMap.get("font-weight"), foNS);
+					propertiesMap.get("font-weight"), OdsJOpenUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;
 	}
 
-	private static Element getBaseStyle(String styleName) {
-		Element style = new Element("style", styleNS);
-		style.setAttribute("name", styleName, styleNS);
-		style.setAttribute("family", "table-cell", styleNS);
-		return style;
-	}
-
-	public static Element createStyle(String styleName, CellStyle cellStyle) {
-		Element style = getBaseStyle(styleName);
-		final Color backgroundColor = cellStyle.getBackgroundColor();
-		if (backgroundColor != null) {
-			Element tableCellProps = new Element("table-cell-properties",
-					styleNS);
-			tableCellProps.setAttribute("background-color",
-					backgroundColor.toHex(), foNS);
-			style.addContent(tableCellProps);
-		}
-		final Font cellFont = cellStyle.getCellFont();
-		if (cellFont != null && cellFont.isBold()) {
-			Element textProps = new Element("text-properties", styleNS);
-			textProps.setAttribute("font-weight", "bold", foNS);
-			style.addContent(textProps);
-		}
+	private static Element getBaseStyle(final String styleName) {
+		final Element style = new Element("style", OdsJOpenUtility.styleNS);
+		style.setAttribute("name", styleName, OdsJOpenUtility.styleNS);
+		style.setAttribute("family", "table-cell", OdsJOpenUtility.styleNS);
 		return style;
 	}
 

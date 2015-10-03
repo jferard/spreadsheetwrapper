@@ -36,7 +36,8 @@ SpreadsheetWriter {
 
 	/** the reader for delegation */
 	private final OdsSimpleodsReader preader;
-	private Table table;
+	private final Table table;
+
 	/**
 	 * @param table
 	 *            *internal* sheet
@@ -48,15 +49,57 @@ SpreadsheetWriter {
 
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final TableCell simpleCell = this.preader.getSimpleCell(r, c);
+		return simpleCell.getStyle();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(final int r, final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertRow(final int r) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public List<Object> removeRow(final int r) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		throw new UnsupportedOperationException();
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
@@ -67,33 +110,50 @@ SpreadsheetWriter {
 		return date;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
-		double retValue = value.doubleValue();
+		final double retValue = value.doubleValue();
 		cell.setValue(Double.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
 		return retValue;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		throw new UnsupportedOperationException();
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
-		int retValue = value.intValue();
+		final int retValue = value.intValue();
 		cell.setValue(Integer.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
 		return retValue;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c, final String styleName) {
+		final TableCell simpleCell = this.preader.getSimpleCell(r, c);
+		simpleCell.setStyle(styleName);
+		return true;
 	}
 
 	/** {@inheritDoc} */
@@ -105,48 +165,4 @@ SpreadsheetWriter {
 		return text;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void insertCol(int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertRow(int r) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Object> removeCol(int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public List<Object> removeRow(int r) {
-		throw new UnsupportedOperationException();
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(int r, int c) {
-		TableCell simpleCell = this.preader.getSimpleCell(r, c);
-		return simpleCell.getStyle();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(int r, int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(int r, int c, String styleName) {
-		TableCell simpleCell = this.preader.getSimpleCell(r, c);
-		simpleCell.setStyle(styleName);
-		return true;
-	}
-	
 }

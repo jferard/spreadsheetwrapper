@@ -28,7 +28,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 abstract class AbstractOdsJOpenDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
-	private OdsJOpenStatefulDocument sfSpreadSheet;
+	private final OdsJOpenStatefulDocument sfSpreadSheet;
 
 	/**
 	 * @param spreadSheet
@@ -56,8 +56,7 @@ abstract class AbstractOdsJOpenDocumentTrait<T> extends
 		if (this.accessor.hasByIndex(index))
 			spreadsheet = this.accessor.getByIndex(index);
 		else {
-			if (this.sfSpreadSheet.isNew()
-					|| index < 0
+			if (this.sfSpreadSheet.isNew() || index < 0
 					|| index >= this.sfSpreadSheet.getRawSheetCount())
 				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));

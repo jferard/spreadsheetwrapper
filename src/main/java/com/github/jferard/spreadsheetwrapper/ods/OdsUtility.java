@@ -25,53 +25,61 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
-import com.github.jferard.spreadsheetwrapper.Font;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 
 public class OdsUtility {
-	public static Map<OdfStyleProperty, String> getProperties(CellStyle cellStyle) {
-		Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
-		Font font = cellStyle.getCellFont();
-		if (font != null && font.isBold())
+	public static WrapperCellStyle getCellStyle(final OdfStyle style) {
+		final String fontWeight = style
+				.getProperty(OdfTextProperties.FontWeight);
+		final String backgroundColor = style
+				.getProperty(OdfTableCellProperties.BackgroundColor);
+
+		WrapperFont wrapperFont = null;
+		if ("bold".equals(fontWeight))
+			wrapperFont = new WrapperFont(true, false, -1, null);
+		final Color color = WrapperCellStyle.colorByHex.get(backgroundColor);
+		return new WrapperCellStyle(color, wrapperFont);
+	}
+
+	public static Map<OdfStyleProperty, String> getProperties(
+			final WrapperCellStyle wrapperCellStyle) {
+		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
+		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont != null && wrapperFont.isBold())
 			properties.put(OdfTextProperties.FontWeight, "bold");
-		if (cellStyle.getBackgroundColor() != null) {
-			properties.put(OdfTableCellProperties.BackgroundColor, cellStyle.getBackgroundColor().toHex());
-		}		
+		if (wrapperCellStyle.getBackgroundColor() != null) {
+			properties.put(OdfTableCellProperties.BackgroundColor, wrapperCellStyle
+					.getBackgroundColor().toHex());
+		}
 		return properties;
 	}
 
-	public static Map<OdfStyleProperty, String> getProperties(String styleString) {
-		Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
-		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
-		for (Map.Entry<String, String> entry : props.entrySet()) { 
+	public static Map<OdfStyleProperty, String> getProperties(
+			final String styleString) {
+		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
+		final Map<String, String> props = ImplUtility
+				.getPropertiesMap(styleString);
+		for (final Map.Entry<String, String> entry : props.entrySet()) {
 			if (entry.getKey().equals("font-weight")) {
 				properties.put(OdfTextProperties.FontWeight, entry.getValue());
 			} else if (entry.getKey().equals("background-color")) {
-				properties.put(OdfTableCellProperties.BackgroundColor, entry.getValue());
+				properties.put(OdfTableCellProperties.BackgroundColor,
+						entry.getValue());
 			}
 		}
 		return properties;
 	}
-	
-	public static String getStyleString(OdfStyle style) {
-		String fontWeight = style.getProperty(OdfTextProperties.FontWeight);
-		String backgroundColor = style.getProperty(OdfTableCellProperties.BackgroundColor);
-		return String.format("font-weight:%s;background-color:%s", fontWeight, backgroundColor);  
-	}	
-	
-	public static CellStyle getCellStyle(OdfStyle style) {
-		String fontWeight = style.getProperty(OdfTextProperties.FontWeight);
-		String backgroundColor = style.getProperty(OdfTableCellProperties.BackgroundColor);
-		
-		Font font = null;
-		if ("bold".equals(fontWeight))
-			font = new Font(true, false, -1, null);
-		Color color = CellStyle.colorByHex.get(backgroundColor);
-		return new CellStyle(color, font); 
+
+	public static String getStyleString(final OdfStyle style) {
+		final String fontWeight = style
+				.getProperty(OdfTextProperties.FontWeight);
+		final String backgroundColor = style
+				.getProperty(OdfTableCellProperties.BackgroundColor);
+		return String.format("font-weight:%s;background-color:%s", fontWeight,
+				backgroundColor);
 	}
-
-
 
 }

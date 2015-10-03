@@ -79,7 +79,8 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 	@Test
 	public final void testCellDate3() {
 		try {
-			Date d = this.sw.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
+			final Date d = this.sw.setDate(0, 1, new Date(0)); // setDate : 0
+			// UTC = 1 CET
 			Assert.assertEquals(d, new Date(0));
 			Assert.assertEquals(d, this.sw.getCellContent(0, 1));
 			Assert.assertEquals(d, this.sw.getDate(0, 1)); // getDate
@@ -115,7 +116,8 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 		final int r = 5;
 		final int c = 6;
 		try {
-			Date d = this.sw.setDate(r, c, new Date(0)); // setDate : 0 UTC = 1 CET
+			final Date d = this.sw.setDate(r, c, new Date(0)); // setDate : 0
+			// UTC = 1 CET
 			Assert.assertEquals(d, new Date(0));
 			Assert.assertEquals(new Date(0), this.sw.getDate(r, c));
 		} catch (final IllegalArgumentException e) {

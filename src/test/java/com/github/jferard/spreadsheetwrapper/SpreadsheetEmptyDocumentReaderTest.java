@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -40,7 +39,7 @@ public abstract class SpreadsheetEmptyDocumentReaderTest {
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testSheet() {
-		SpreadsheetReader sr = this.sdr.getSpreadsheet(0);
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet(0);
 	}
 
 	@Test(expected = NoSuchElementException.class)

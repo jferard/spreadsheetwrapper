@@ -20,8 +20,6 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import org.junit.After;
@@ -40,7 +38,6 @@ SpreadsheetDocumentReaderTest {
 
 	protected SpreadsheetWriter sw;
 
-	
 	/** set the test up */
 	@Override
 	@Before
@@ -153,7 +150,7 @@ SpreadsheetDocumentReaderTest {
 			throws CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet("Feuille1");
 	}
-	
+
 	@Override
 	protected abstract String getExtension();
 

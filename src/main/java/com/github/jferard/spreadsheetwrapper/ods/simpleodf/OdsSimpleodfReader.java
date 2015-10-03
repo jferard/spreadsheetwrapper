@@ -18,11 +18,14 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
 import java.util.Date;
+import java.util.List;
 
+import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
+import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
@@ -176,11 +179,29 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 	 */
 	protected Cell getSimpleCell(final int r, final int c) {
 		if (r != this.curR || this.curRow == null) {
+			// Hack for clean style @see Table.appendRows(count, false)
+			// 1. append "manually" the missing rows
+			// 2. clean style
+			final int lastIndex = this.getRowCount() - 1;
+			if (r > lastIndex) {
+				final List<Row> resultList = this.table.appendRows(r
+						- lastIndex);
+				final String tableNameSpace = OdfDocumentNamespace.TABLE
+						.getUri();
+				for (final Row row : resultList) {
+					Node cellE = row.getOdfElement().getFirstChild();
+					while (cellE != null) {
+						((TableTableCellElementBase) cellE).removeAttributeNS(
+								tableNameSpace, "style-name");
+						cellE = cellE.getNextSibling();
+					}
+				}
+			}
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
-		Cell cell = this.curRow.getCellByIndex(c);
-		cell.getStyleHandler().getStyleElementForWrite();
+		final Cell cell = this.curRow.getCellByIndex(c);
+		// cell.getStyleHandler().getStyleElementForWrite();
 		return cell;
 	}
 }

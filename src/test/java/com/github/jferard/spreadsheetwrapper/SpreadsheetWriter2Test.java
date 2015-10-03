@@ -27,6 +27,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
+
 public abstract class SpreadsheetWriter2Test {
 	@Rule
 	public TestName name = new TestName();
@@ -79,7 +81,7 @@ public abstract class SpreadsheetWriter2Test {
 		final Date d2 = this.sw.setDate(2, 2, d);
 		Assert.assertEquals(d2, this.sw.getDate(2, 2));
 
-		Object o2 = this.sw.setCellContent(2, 2, d);
+		final Object o2 = this.sw.setCellContent(2, 2, d);
 		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
 		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
 	}
@@ -90,7 +92,7 @@ public abstract class SpreadsheetWriter2Test {
 		final Date d2 = this.sw.setDate(2, 2, d);
 		Assert.assertEquals(d2, this.sw.getDate(2, 2));
 
-		Object o2 = this.sw.setCellContent(2, 2, d);
+		final Object o2 = this.sw.setCellContent(2, 2, d);
 		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
 		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
 	}
@@ -130,6 +132,40 @@ public abstract class SpreadsheetWriter2Test {
 
 		this.sw.setInteger(1, 1, 10);
 		Assert.assertEquals(Integer.valueOf(10), this.sw.getCellContent(1, 1));
+	}
+
+	@Test
+	public final void testStyle() {
+		this.sdw.createStyle("mystyle",
+				"background-color:#999999;font-weight:bold");
+		this.sw.setCellContent(0, 0, "Head", "mystyle");
+	}
+
+	@Test
+	public final void testStyle2() {
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(1, 0, "Tail", "");
+	}
+
+	@Test
+	public final void testStyle3() {
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(2, 2, "Tail");
+	}
+
+	@Test
+	public final void testStyle4() { // buggy for simpleodf
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(1, 0, "Tail");
 	}
 
 	@Test
@@ -176,13 +212,6 @@ public abstract class SpreadsheetWriter2Test {
 		this.sw.setText(1, -10, "10");
 		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
-	
-	@Test
-	public final void testStyle() {
-		this.sdw.createStyle("mystyle", "background-color:#999999;font-weight:bold");
-		this.sw.setCellContent(0, 0, "Head", "mystyle");
-	}
-	
 
 	protected abstract String getExtension();
 

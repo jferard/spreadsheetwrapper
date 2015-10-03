@@ -23,15 +23,13 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import org.simpleods.OdsFile;
-import org.simpleods.PageStyle;
 import org.simpleods.Table;
 import org.simpleods.TableStyle;
-import org.simpleods.TextStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.CellStyle;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.Font;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -123,6 +121,34 @@ public class OdsSimpleodsDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
+	public boolean createStyle(final String styleName, final String styleString) {
+		// add to content because of background-color.
+		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
+				styleName, this.file);
+		final Map<String, String> props = ImplUtility
+				.getPropertiesMap(styleString);
+		for (final Map.Entry<String, String> entry : props.entrySet()) {
+			if (entry.getKey().equals("font-weight")) {
+				if (entry.getValue().equals("bold"))
+					newStyle.setFontWeightBold();
+				if (entry.getValue().equals("italic"))
+					newStyle.setFontWeightItalic();
+			} else if (entry.getKey().equals("background-color")) {
+				newStyle.setBackgroundColor(entry.getValue());
+			}
+		}
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
@@ -158,6 +184,13 @@ public class OdsSimpleodsDocumentWriter extends
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(final String styleName) {
+		return this.reader.getStyleString(styleName);
+	}
+
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -173,62 +206,28 @@ public class OdsSimpleodsDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public boolean createStyle(String styleName, String styleString) {
-		// add to content because of background-color.
-		TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
+	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
 				styleName, this.file);
-		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
-		for (Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals("font-weight")) {
-				if (entry.getValue().equals("bold"))
-					newStyle.setFontWeightBold();
-				if (entry.getValue().equals("italic"))
-					newStyle.setFontWeightItalic();
-			} else if (entry.getKey().equals("background-color")) {
-				newStyle.setBackgroundColor(entry.getValue());
-			}
-		}
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(String styleName, String styleString) {
-		/** @see javadoc */
-		return this.createStyle(styleName, styleString);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		return this.reader.getCellStyle(styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(String styleName, CellStyle cellStyle) {
-		TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
-				styleName, this.file);
-		Font font = cellStyle.getCellFont();
-		if (font != null) {
-			if (font.isBold())
+		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont != null) {
+			if (wrapperFont.isBold())
 				newStyle.setFontWeightBold();
-			if (font.isItalic())
+			if (wrapperFont.isItalic())
 				newStyle.setFontWeightItalic();
 		}
-		final Color backgroundColor = cellStyle.getBackgroundColor();
+		final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			newStyle.setBackgroundColor(backgroundColor.toHex());
 		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public boolean updateStyle(final String styleName, final String styleString) {
+		/** @see javadoc */
+		return this.createStyle(styleName, styleString);
 	}
 
 }

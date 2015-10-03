@@ -34,14 +34,14 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
 	/** the reader for delegation */
 	private final OdsSimpleodfReader preader;
 
-	private Table table;
+	private final Table table;
 
 	/**
 	 * @param table
@@ -54,8 +54,49 @@ SpreadsheetWriter {
 
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		return cell.getCellStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(final int r, final int c) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		return cell.getCellStyleName();
+	}
+
+	@Override
+	public void insertCol(final int c) {
+		this.table.insertColumnsBefore(c, 1);
+	}
+
+	@Override
+	public void insertRow(final int r) {
+		this.table.insertRowsBefore(r, 1);
+	}
+
+	@Override
+	public List<Object> removeCol(final int c) {
+		final List<Object> retValue = this.getColContents(c);
+		this.table.removeColumnsByIndex(c, 1);
+		return retValue;
+	}
+
+	@Override
+	public List<Object> removeRow(final int r) {
+		final List<Object> retValue = this.getRowContents(r);
+		this.table.removeRowsByIndex(r, 1);
+		return retValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
@@ -63,8 +104,11 @@ SpreadsheetWriter {
 		return value;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
@@ -76,13 +120,16 @@ SpreadsheetWriter {
 				"yyyy-MM-dd'T'HH:mm:ss", Locale.US);
 		final String svalue = simpleFormat.format(date);
 		odfElement.setOfficeDateValueAttribute(svalue);
-		Date retDate = new Date();
-		retDate.setTime(date.getTime()/1000 * 1000);
+		final Date retDate = new Date();
+		retDate.setTime(date.getTime() / 1000 * 1000);
 		return retDate;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
@@ -103,66 +150,30 @@ SpreadsheetWriter {
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
-		int retValue = value.intValue();
+		final int retValue = value.intValue();
 		cell.setDoubleValue(Double.valueOf(retValue));
 		cell.setFormatString(OdsSimpleodfWriter.INT_FORMAT_STR);
 		return retValue;
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c, final String styleName) {
+		final Cell cell = this.preader.getSimpleCell(r, c);
+		cell.setCellStyleName(styleName);
+		return true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public String setText(final int r, final int c, final String text) {
 		final Cell cell = this.preader.getSimpleCell(r, c);
 		cell.setStringValue(text);
 		return text;
 	}
-	
-	@Override
-	public void insertCol(int c) {
-		this.table.insertColumnsBefore(c, 1);
-	}
-
-	@Override
-	public void insertRow(int r) {
-		this.table.insertRowsBefore(r, 1);
-	}
-
-	@Override
-	public List<Object> removeCol(int c) {
-		List<Object> retValue = this.getColContents(c);
-		this.table.removeColumnsByIndex(c, 1);
-		return retValue;
-	}
-
-	@Override
-	public List<Object> removeRow(int r) {
-		List<Object> retValue = this.getRowContents(r);
-		this.table.removeRowsByIndex(r, 1);
-		return retValue;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(int r, int c) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
-		return cell.getCellStyleName();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(int r, int c) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
-		return cell.getCellStyleName();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(int r, int c, String styleName) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
-		cell.setCellStyleName(styleName);
-		return true;
-	}
-	
 
 }

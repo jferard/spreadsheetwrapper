@@ -64,11 +64,11 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
-		
+
 		try {
-			final WritableWorkbook writableWorkbook = Workbook
-					.createWorkbook(outputStream, this.getWriteSettings());
-			
+			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
+					outputStream, this.getWriteSettings());
+
 			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -82,7 +82,8 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream, getReadSettings());
+			final Workbook workbook = Workbook.getWorkbook(inputStream,
+					this.getReadSettings());
 			return new XlsJxlDocumentReader(workbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -96,15 +97,17 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
+			final InputStream inputStream,
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
-		
+
 		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream, getReadSettings());
+			final Workbook workbook = Workbook.getWorkbook(inputStream,
+					this.getReadSettings());
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
-					outputStream, workbook, getWriteSettings());
+					outputStream, workbook, this.getWriteSettings());
 			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -113,6 +116,14 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		} catch (final BiffException e) {
 			throw new SpreadsheetException(e);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
+			throws SpreadsheetException {
+		throw new UnsupportedOperationException();
 	}
 
 	private WorkbookSettings getReadSettings() {
@@ -126,13 +137,5 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		final WorkbookSettings settings = this.getReadSettings();
 		settings.setWriteAccess("spreadsheetwrapper");
 		return settings;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
-			throws SpreadsheetException {
-		throw new UnsupportedOperationException();
 	}
 }

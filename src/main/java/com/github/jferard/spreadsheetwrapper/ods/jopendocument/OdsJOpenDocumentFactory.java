@@ -54,9 +54,10 @@ public class OdsJOpenDocumentFactory extends
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadsheetDocumentReader createReader(final Stateful<SpreadSheet> sfDocument)
-			throws SpreadsheetException {
-		return new OdsJOpenDocumentReader(new OdsJOpenStatefulDocument(sfDocument));
+	protected SpreadsheetDocumentReader createReader(
+			final Stateful<SpreadSheet> sfDocument) throws SpreadsheetException {
+		return new OdsJOpenDocumentReader(new OdsJOpenStatefulDocument(
+				sfDocument));
 	}
 
 	/**
@@ -66,10 +67,11 @@ public class OdsJOpenDocumentFactory extends
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			Stateful<SpreadSheet> sfDocument,
+			final Stateful<SpreadSheet> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
-		return new OdsJOpenDocumentWriter(this.logger, new OdsJOpenStatefulDocument(sfDocument), outputStream);
+		return new OdsJOpenDocumentWriter(this.logger,
+				new OdsJOpenStatefulDocument(sfDocument), outputStream);
 	}
 
 	@Override
@@ -77,7 +79,7 @@ public class OdsJOpenDocumentFactory extends
 			throws SpreadsheetException {
 		try {
 			return new ODPackage(inputStream).getSpreadSheet();
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}
@@ -88,7 +90,7 @@ public class OdsJOpenDocumentFactory extends
 			throws SpreadsheetException {
 		try {
 			return SpreadSheet.createEmpty(new DefaultTableModel());
-		} catch (IOException e) {
+		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}

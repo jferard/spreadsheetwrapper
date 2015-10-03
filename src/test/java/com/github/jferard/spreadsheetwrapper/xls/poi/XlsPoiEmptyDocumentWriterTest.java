@@ -22,7 +22,8 @@ import java.util.logging.Logger;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 
-public class XlsPoiEmptyDocumentWriterTest extends SpreadsheetEmptyDocumentWriterTest {
+public class XlsPoiEmptyDocumentWriterTest extends
+SpreadsheetEmptyDocumentWriterTest {
 	@Override
 	protected String getExtension() {
 		return "xls";

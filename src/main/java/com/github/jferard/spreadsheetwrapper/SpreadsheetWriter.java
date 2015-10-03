@@ -254,7 +254,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 *            the style name
 	 */
 	String setText(int r, int c, String text, String styleName);
-	
+
 	/**
 	 * @param r
 	 *            row index (0..)

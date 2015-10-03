@@ -25,14 +25,10 @@ import java.util.Locale;
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
-import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
-import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.Font;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
@@ -67,9 +63,9 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 
 	/** the *internal* value */
 	private final OdfSpreadsheetDocument document;
+	private final OdfOfficeStyles documentStyles;
 	/** for delegation only */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> documentTrait;
-	private OdfOfficeStyles documentStyles;
 
 	/**
 	 * @param value
@@ -98,15 +94,16 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return OdsUtility.getCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetReaderCursor getNewCursorByName(final String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(sheetName));
+	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
+		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
 
 	// private SpreadsheetReaderCursor getPrivateCursorByIndex(final int i)
@@ -121,11 +118,11 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	// return cursor;
 	// }
 
-	/** */
+	/** {@inheritDoc} */
 	@Override
-	public int getSheetCount() {
-		final List<OdfTable> tables = this.document.getTableList();
-		return tables.size();
+	public SpreadsheetReaderCursor getNewCursorByName(final String sheetName)
+			throws SpreadsheetException {
+		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	// private SpreadsheetReaderCursor getPrivateCursorByName(final String
@@ -138,6 +135,13 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	// cursor = this.getNewCursorByName(sheetName);
 	// return cursor;
 	// }
+
+	/** */
+	@Override
+	public int getSheetCount() {
+		final List<OdfTable> tables = this.document.getTableList();
+		return tables.size();
+	}
 
 	/** */
 	@Override
@@ -160,19 +164,13 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
-		return OdsUtility.getCellStyle(existingStyle);
-	}
 
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public String getStyleString(String styleName) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+	public String getStyleString(final String styleName) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
 		return OdsUtility.getStyleString(existingStyle);
 	}
 }

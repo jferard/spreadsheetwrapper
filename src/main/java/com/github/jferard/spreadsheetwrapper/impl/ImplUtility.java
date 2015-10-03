@@ -23,14 +23,15 @@ import java.util.Map;
 public class ImplUtility {
 
 	/**
-	 * @param styleString the styleString, format key1:value1;key2:value2
+	 * @param styleString
+	 *            the styleString, format key1:value1;key2:value2
 	 * @return
 	 */
 	public static Map<String, String> getPropertiesMap(final String styleString) {
-		Map<String, String> properties = new HashMap<String, String>();
-		String[] styleProps = styleString.split(";");
-		for (String styleProp : styleProps) {
-			String[] entry = styleProp.split(":");
+		final Map<String, String> properties = new HashMap<String, String>();
+		final String[] styleProps = styleString.split(";");
+		for (final String styleProp : styleProps) {
+			final String[] entry = styleProp.split(":");
 			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());
 		}
 		return properties;

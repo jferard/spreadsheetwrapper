@@ -30,11 +30,10 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
-import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.CellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -42,7 +41,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -60,7 +58,8 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		 * @param value
 		 *            *internal* workbook
 		 */
-		OdsSimpleodfDocumentWriterTrait(final OdsSimpleodfStatefulDocument sfDocument) {
+		OdsSimpleodfDocumentWriterTrait(
+				final OdsSimpleodfStatefulDocument sfDocument) {
 			super(sfDocument);
 		}
 
@@ -72,8 +71,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		}
 	}
 
-	/** *internal* workbook */
-	private final OdsSimpleodfStatefulDocument sfDocument;
+	private final OdfOfficeStyles documentStyles;
 
 	/** for delegation */
 	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> documentTrait;
@@ -83,7 +81,8 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** reader for delegation */
 	private final OdsSimpleodfDocumentReader reader;
 
-	private OdfOfficeStyles documentStyles;
+	/** *internal* workbook */
+	private final OdsSimpleodfStatefulDocument sfDocument;
 
 	/**
 	 * @param logger
@@ -139,6 +138,20 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	public boolean createStyle(final String styleName, final String styleString) {
+		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		newStyle.setProperties(this.getProperties(styleString));
+		return true;
+	}
+
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
@@ -176,6 +189,13 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
+	public String getStyleString(final String styleName) {
+		return this.reader.getStyleString(styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void save() throws SpreadsheetException {
 		if (this.outputStream == null)
 			throw new IllegalStateException(
@@ -189,54 +209,38 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			throw new SpreadsheetException(e);
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public boolean createStyle(String styleName, String styleString) {
-		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.getProperties(styleString));
+	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		newStyle.setProperties(OdsUtility.getProperties(wrapperCellStyle));
 		return true;
-	}
-	
-	private Map<OdfStyleProperty, String> getProperties(String styleString) {
-		Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
-		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
-		for (Map.Entry<String, String> entry : props.entrySet()) { 
-			if (entry.getKey().equals("font-weight")) {
-				properties.put(OdfTextProperties.FontWeight, entry.getValue());
-			} else if (entry.getKey().equals("background-color")) {
-				properties.put(OdfTableCellProperties.BackgroundColor, entry.getValue());
-			}
-		}
-		return properties;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public boolean updateStyle(String styleName, String styleString) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+	public boolean updateStyle(final String styleName, final String styleString) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
 		existingStyle.setProperties(this.getProperties(styleString));
 		return true;
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(String styleName, CellStyle cellStyle) {
-		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
-		newStyle.setProperties(OdsUtility.getProperties(cellStyle));
-		return true;
-	}
 
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		return this.reader.getCellStyle(styleName);
+	private Map<OdfStyleProperty, String> getProperties(final String styleString) {
+		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
+		final Map<String, String> props = ImplUtility
+				.getPropertiesMap(styleString);
+		for (final Map.Entry<String, String> entry : props.entrySet()) {
+			if (entry.getKey().equals("font-weight")) {
+				properties.put(OdfTextProperties.FontWeight, entry.getValue());
+			} else if (entry.getKey().equals("background-color")) {
+				properties.put(OdfTableCellProperties.BackgroundColor,
+						entry.getValue());
+			}
+		}
+		return properties;
 	}
 }

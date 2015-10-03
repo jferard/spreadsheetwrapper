@@ -27,33 +27,32 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
-	public OdsJOpenStatefulDocument(Stateful<SpreadSheet> sfDocument) {
+	public OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
 		super(sfDocument.getValue(), sfDocument.isNew());
 	}
 
-	public Sheet getRawSheet(int s) {
+	public Sheet addRawSheet(final int index, final String sheetName) {
+		return this.value.addSheet(index, sheetName);
+	}
+
+	public Sheet getRawSheet(final int s) {
 		return this.value.getSheet(s);
+	}
+
+	public Sheet getRawSheet(final String sheetName) {
+		return this.value.getSheet(sheetName);
 	}
 
 	public int getRawSheetCount() {
 		return this.value.getSheetCount();
 	}
 
-	public Sheet getRawSheet(String sheetName) {
-		return this.value.getSheet(sheetName);
-	}
-
-	public Sheet addRawSheet(int index, String sheetName) {
-		return this.value.addSheet(index, sheetName);
-	}
-
-	public void save(OutputStream outputStream) throws IOException {
-		this.value.getPackage().save(outputStream);
-	}
-
 	public ODXMLDocument getStyles() {
 		return this.value.getPackage().getStyles();
 	}
-	
+
+	public void save(final OutputStream outputStream) throws IOException {
+		this.value.getPackage().save(outputStream);
+	}
 
 }

@@ -46,6 +46,8 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		SpreadsheetWriter {
 
+	private final Map<String, WritableCellFormat> cellFormatByName;
+
 	/** current row index, -1 if none */
 	private int curR;
 
@@ -55,14 +57,13 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** *internal* sheet */
 	private final WritableSheet sheet;
 
-	private Map<String, WritableCellFormat> cellFormatByName;
-
 	/**
 	 * @param sheet
 	 *            *internal* sheet
-	 * @param cellFormatByName 
+	 * @param cellFormatByName
 	 */
-	XlsJxlWriter(final WritableSheet sheet, Map<String, WritableCellFormat> cellFormatByName) {
+	XlsJxlWriter(final WritableSheet sheet,
+			final Map<String, WritableCellFormat> cellFormatByName) {
 		super(new XlsJxlReader(sheet));
 		this.sheet = sheet;
 		this.cellFormatByName = cellFormatByName;
@@ -70,9 +71,56 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		this.curRow = null;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final WritableCell jxlCell = this.getJxlCell(r, c);
+		final CellFormat cf = jxlCell.getCellFormat();
+		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
+				.entrySet()) {
+			if (entry.getValue().equals(cf))
+				return entry.getKey();
+		}
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(final int r, final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertCol(final int c) {
+		this.sheet.insertColumn(c);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertRow(final int r) {
+		this.sheet.insertRow(r);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeCol(final int c) {
+		final List<Object> ret = this.getColContents(c);
+		this.sheet.removeColumn(c);
+		return ret;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeRow(final int r) {
+		final List<Object> ret = this.getRowContents(r);
+		this.sheet.removeRow(r);
+		return ret;
+	}
+
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -83,7 +131,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -95,7 +143,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		double retValue = value.doubleValue();
+		final double retValue = value.doubleValue();
 		this.addCell(r, c, new jxl.write.Number(c, r, retValue));
 		return retValue;
 	}
@@ -107,16 +155,16 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 			return "";
 
 		Formula formula;
-//		final WritableCell writableCell = this.getJxlCell(c, r);
-//		if (writableCell == null)
-			formula = new Formula(c, r, fString);
-//		else {
-//			final CellFormat cellFormat = writableCell.getCellFormat();
-//			if (cellFormat == null)
-//				formula = new Formula(c, r, fString);
-//			else
-//				formula = new Formula(c, r, fString, cellFormat);
-//		}
+		// final WritableCell writableCell = this.getJxlCell(c, r);
+		// if (writableCell == null)
+		formula = new Formula(c, r, fString);
+		// else {
+		// final CellFormat cellFormat = writableCell.getCellFormat();
+		// if (cellFormat == null)
+		// formula = new Formula(c, r, fString);
+		// else
+		// formula = new Formula(c, r, fString, cellFormat);
+		// }
 		this.addCellWithStdErrWorkaround(r, c, formula);
 		return formula.getContents();
 	}
@@ -124,9 +172,25 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		int retValue = value.intValue();
+		final int retValue = value.intValue();
 		this.setDouble(r, c, new Double(retValue));
 		return retValue;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c, final String styleName) {
+		if (this.cellFormatByName.containsKey(styleName)) {
+			final CellFormat format = this.cellFormatByName.get(styleName);
+			WritableCell jxlCell = this.getJxlCell(r, c);
+			if (jxlCell instanceof EmptyCell) {
+				this.setText(r, c, "");
+				jxlCell = this.getJxlCell(r, c);
+			}
+			jxlCell.setCellFormat(format);
+			return true;
+		} else
+			return false;
 	}
 
 	/** {@inheritDoc} */
@@ -136,9 +200,9 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		return text;
 	}
 
-	private void addCell(int r, int c, final WritableCell cell) {
+	private void addCell(final int r, final int c, final WritableCell cell) {
 		try {
-			WritableCell oldCell = this.getJxlCell(r, c);
+			final WritableCell oldCell = this.getJxlCell(r, c);
 			final CellFormat oldFormat = oldCell.getCellFormat();
 			if (oldFormat != null)
 				cell.setCellFormat(oldFormat);
@@ -153,7 +217,8 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	}
 
 	/** Adds a cell */
-	private void addCellWithStdErrWorkaround(int r, int c, final WritableCell writableCell) {
+	private void addCellWithStdErrWorkaround(final int r, final int c,
+			final WritableCell writableCell) {
 		// WORKAROUND : jxl does not throw an error but a message on stderr
 		System.err.flush(); // empties stderr
 		final PrintStream originalErr = new PrintStream(System.err); // backup
@@ -194,68 +259,6 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 			this.curRow = this.sheet.getRow(r);
 		}
 		return cell;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertCol(int c) {
-		this.sheet.insertColumn(c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertRow(int r) {
-		this.sheet.insertRow(r);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Object> removeCol(int c) {
-		List<Object> ret = this.getColContents(c);
-		this.sheet.removeColumn(c);
-		return ret;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Object> removeRow(int r) {
-		List<Object> ret = this.getRowContents(r);
-		this.sheet.removeRow(r);
-		return ret;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(int r, int c) {
-		WritableCell jxlCell = this.getJxlCell(r, c);
-		CellFormat cf = jxlCell.getCellFormat();
-		for (Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName.entrySet()) {
-			if (entry.getValue().equals(cf))
-				return entry.getKey();
-		}
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(int r, int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(int r, int c, String styleName) {
-		if (this.cellFormatByName.containsKey(styleName)) {
-			CellFormat format = this.cellFormatByName.get(styleName);
-			WritableCell jxlCell = this.getJxlCell(r, c);
-			if (jxlCell instanceof EmptyCell) {
-				this.setText(r, c, "");
-				jxlCell = this.getJxlCell(r, c);
-			}
-			jxlCell.setCellFormat(format);
-			return true;
-		} else
-			return false;
 	}
 
 }

@@ -27,16 +27,15 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.Font;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -54,9 +53,9 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
+	private final Map<String, WritableCellFormat> cellStyleByName;
 	/** *internal* workbook */
 	private final WritableWorkbook writableWorkbook;
-	private Map<String, WritableCellFormat> cellStyleByName;
 
 	/**
 	 * @param workbook
@@ -70,7 +69,8 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		for (int n = 0; n < sheets.length; n++) {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, this.cellStyleByName);
+			final SpreadsheetWriter reader = new XlsJxlWriter(sheet,
+					this.cellStyleByName);
 			this.accessor.put(name, n, reader);
 		}
 		this.cellStyleByName = new HashMap<String, WritableCellFormat>();
@@ -107,6 +107,36 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public boolean createStyle(final String styleName, final String styleString) {
+		final Map<String, String> props = ImplUtility
+				.getPropertiesMap(styleString);
+		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
+		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
+		try {
+			for (final Map.Entry<String, String> entry : props.entrySet()) {
+				if (entry.getKey().equals("font-weight")) {
+					if (entry.getValue().equals("bold"))
+						cellFont.setBoldStyle(WritableFont.BOLD);
+				} else if (entry.getKey().equals("background-color")) {
+					// do nothing
+				}
+			}
+			this.cellStyleByName.put(styleName, cellFormat);
+		} catch (final WriteException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
@@ -167,6 +197,13 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
+	public String getStyleString(final String styleName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public void save() throws SpreadsheetException {
 		try {
 			this.writableWorkbook.write();
@@ -179,6 +216,36 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public void saveAs(final OutputStream outputStream) {
 		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
+		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
+		try {
+			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+			if (wrapperFont != null) {
+				if (wrapperFont.isBold())
+					cellFont.setBoldStyle(WritableFont.BOLD);
+			}
+			final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
+			if (backgroundColor != null) {
+				cellFormat.setBackground(backgroundColor.getJxlColor());
+			}
+			this.cellStyleByName.put(styleName, cellFormat);
+		} catch (final WriteException e) {
+			return false;
+		}
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public boolean updateStyle(final String styleName, final String styleString) {
+		this.createStyle(styleName, styleString);
+		return true;
 	}
 
 	private SpreadsheetWriter findSpreadsheet(final String sheetName) {
@@ -196,72 +263,5 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		}
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in writableWorkbook", sheetName));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean createStyle(String styleName, String styleString) {
-		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
-		WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
-		WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
-		try {
-			for (Map.Entry<String, String> entry : props.entrySet()) {
-				if (entry.getKey().equals("font-weight")) {
-					if (entry.getValue().equals("bold"))
-						cellFont.setBoldStyle(WritableFont.BOLD);
-				} else if (entry.getKey().equals("background-color")) {
-					// do nothing
-				}
-			}
-			this.cellStyleByName.put(styleName, cellFormat);
-		} catch (WriteException e) {
-			return false;
-		}
-		return true;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(String styleName, CellStyle cellStyle) {
-		WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
-		WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
-		try {
-			Font font = cellStyle.getCellFont();
-			if (font != null) {
-				if (font.isBold())
-					cellFont.setBoldStyle(WritableFont.BOLD);
-			}
-			final Color backgroundColor = cellStyle.getBackgroundColor();
-			if (backgroundColor != null) {
-				cellFormat.setBackground(backgroundColor.getJxlColor());
-			}
-			this.cellStyleByName.put(styleName, cellFormat);
-		} catch (WriteException e) {
-			return false;
-		}
-		return true;
-	}
-	
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(String styleName, String styleString) {
-		this.createStyle(styleName, styleString);
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(String styleName) {
-		throw new UnsupportedOperationException();
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		throw new UnsupportedOperationException();
 	}
 }

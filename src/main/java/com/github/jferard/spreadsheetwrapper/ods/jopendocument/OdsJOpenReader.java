@@ -65,13 +65,13 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final String formula = cell.getFormula();
 		if (formula != null && formula.charAt(0) == '=')
 			return formula.substring(1);
-		
+
 		Object value = cell.getValue();
 		if (value instanceof BigDecimal) {
-			BigDecimal decimal = (BigDecimal) value;
+			final BigDecimal decimal = (BigDecimal) value;
 			try {
 				value = Integer.valueOf(decimal.intValueExact());
-			} catch (ArithmeticException e) {
+			} catch (final ArithmeticException e) {
 				value = Double.valueOf(decimal.doubleValue());
 			}
 		}
@@ -99,12 +99,12 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	public Double getDouble(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		final String type = cell.getValueType().getName();
-		if (!("float".equals(type)))
+		if (!"float".equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
 		if (!(value instanceof BigDecimal))
 			throw new IllegalStateException();
-		BigDecimal decimal = (BigDecimal) value;
+		final BigDecimal decimal = (BigDecimal) value;
 		return decimal.doubleValue();
 	}
 
@@ -148,15 +148,15 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	 *            the row index
 	 * @param c
 	 *            the column index
-	 * @return 
+	 * @return
 	 * @return the cell
 	 */
 	protected MutableCell<SpreadSheet> getCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		
+
 		if (r >= this.sheet.getRowCount())
-			this.sheet.ensureRowCount((int) (r*1.25)+1);
+			this.sheet.ensureRowCount((int) (r * 1.25) + 1);
 		if (c >= this.sheet.getColumnCount())
 			this.sheet.ensureColumnCount(c + 5);
 		return this.sheet.getCellAt(c, r);

@@ -68,11 +68,12 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	}
 
 	@Test
-	public final void testCreation() throws CantInsertElementInSpreadsheetException {
-		Assert.assertEquals(0, this.sdw.getSheetCount()); 
+	public final void testCreation()
+			throws CantInsertElementInSpreadsheetException {
+		Assert.assertEquals(0, this.sdw.getSheetCount());
 		Assert.assertEquals(Collections.emptyList(), this.sdw.getSheetNames());
 		this.sdw.addSheet("ok");
-		Assert.assertEquals(1, this.sdw.getSheetCount()); 
+		Assert.assertEquals(1, this.sdw.getSheetCount());
 		Assert.assertEquals(Arrays.asList("ok"), this.sdw.getSheetNames());
 		Assert.assertNotNull(this.sdw.getSpreadsheet(0));
 		Assert.assertNotNull(this.sdw.getSpreadsheet("ok"));
@@ -80,7 +81,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testCreation2() {
-		SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0); 
+		final SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0);
 	}
 
 	@Override

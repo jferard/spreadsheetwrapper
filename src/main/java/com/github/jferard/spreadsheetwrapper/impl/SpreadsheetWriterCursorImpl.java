@@ -190,58 +190,64 @@ implements SpreadsheetWriterCursor {
 	/** {@inheritDoc} */
 	@Override
 	public Object setCellContent(final Object content) {
-		return this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
-				content);
+		return this.writer.setCellContent(this.cursor.getR(),
+				this.cursor.getC(), content);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Object setCellContent(final Object content, final String styleName) {
-		return this.writer.setCellContent(this.cursor.getR(), this.cursor.getC(),
-				content, styleName);
+		return this.writer.setCellContent(this.cursor.getR(),
+				this.cursor.getC(), content, styleName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Date setDate(final Date date) {
-		return this.writer.setDate(this.cursor.getR(), this.cursor.getC(), date);
+		return this.writer
+				.setDate(this.cursor.getR(), this.cursor.getC(), date);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final Number value) {
-		return this.writer.setDouble(this.cursor.getR(), this.cursor.getC(), value);
+		return this.writer.setDouble(this.cursor.getR(), this.cursor.getC(),
+				value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final String text) {
-		return this.writer.setFormula(this.cursor.getR(), this.cursor.getC(), text);
+		return this.writer.setFormula(this.cursor.getR(), this.cursor.getC(),
+				text);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final Number value) {
-		return this.writer.setInteger(this.cursor.getR(), this.cursor.getC(), value);
+		return this.writer.setInteger(this.cursor.getR(), this.cursor.getC(),
+				value);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final String styleName) {
-		return this.writer.setStyleName(this.cursor.getR(), this.cursor.getC(), styleName);
+		return this.writer.setStyleName(this.cursor.getR(), this.cursor.getC(),
+				styleName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleString(final String styleString) {
-		return this.writer.setStyleString(this.cursor.getR(), this.cursor.getC(),
-				styleString);
+		return this.writer.setStyleString(this.cursor.getR(),
+				this.cursor.getC(), styleString);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String setText(final String text) {
-		return this.writer.setText(this.cursor.getR(), this.cursor.getC(), text);
+		return this.writer
+				.setText(this.cursor.getR(), this.cursor.getC(), text);
 	}
 
 	/** {@inheritDoc} */

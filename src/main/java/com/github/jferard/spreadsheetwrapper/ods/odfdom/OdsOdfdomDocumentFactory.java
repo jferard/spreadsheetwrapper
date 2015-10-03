@@ -51,7 +51,8 @@ public class OdsOdfdomDocumentFactory extends
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
-			final Stateful<OdfSpreadsheetDocument> sfDocument) throws SpreadsheetException {
+			final Stateful<OdfSpreadsheetDocument> sfDocument)
+					throws SpreadsheetException {
 		return new OdsOdfdomDocumentReader(sfDocument.getValue());
 	}
 
@@ -65,7 +66,8 @@ public class OdsOdfdomDocumentFactory extends
 			final Stateful<OdfSpreadsheetDocument> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
-		return new OdsOdfdomDocumentWriter(this.logger, sfDocument.getValue(), outputStream);
+		return new OdsOdfdomDocumentWriter(this.logger, sfDocument.getValue(),
+				outputStream);
 	}
 
 	@Override
@@ -82,13 +84,13 @@ public class OdsOdfdomDocumentFactory extends
 
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
-			final/*@Nullable*/ OutputStream outputStream)
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		OdfSpreadsheetDocument document;
 		try {
 			document = OdfSpreadsheetDocument.newSpreadsheetDocument();
 			document.getTableList().get(0).remove(); // a sheet is already
-														// present
+			// present
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:04
 			throw new SpreadsheetException(e);
 		}

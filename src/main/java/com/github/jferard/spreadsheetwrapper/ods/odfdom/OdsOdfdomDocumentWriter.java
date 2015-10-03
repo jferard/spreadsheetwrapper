@@ -30,7 +30,7 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.CellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -66,14 +66,14 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** the *internal* workbook */
 	private final OdfSpreadsheetDocument document;
 
+	private final OdfOfficeStyles documentStyles;
 	/** delegation value */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> documentTrait;
 	/** delegation reader */
 	private final OdsOdfdomDocumentReader reader;
+
 	/** the logger */
 	final Logger logger;
-
-	private OdfOfficeStyles documentStyles;
 
 	/**
 	 * @param logger
@@ -120,6 +120,22 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
+	public boolean createStyle(final String styleName, final String styleString) {
+		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		newStyle.setProperties(OdsUtility.getProperties(styleString));
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
@@ -155,6 +171,13 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(final String styleName) {
+		return this.reader.getStyleString(styleName);
+	}
+
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -170,43 +193,23 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			throw new SpreadsheetException(e);
 		}
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public boolean createStyle(String styleName, String styleString) {
-		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
-		newStyle.setProperties(OdsUtility.getProperties(styleString));
+	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		newStyle.setProperties(OdsUtility.getProperties(wrapperCellStyle));
 		return true;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public boolean updateStyle(String styleName, String styleString) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+	public boolean updateStyle(final String styleName, final String styleString) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
 		existingStyle.setProperties(OdsUtility.getProperties(styleString));
 		return true;
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		return this.reader.getCellStyle(styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(String styleName, CellStyle cellStyle) {
-		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
-		newStyle.setProperties(OdsUtility.getProperties(cellStyle));
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(String styleName) {
-		return this.reader.getStyleString(styleName);
-	}	
 }

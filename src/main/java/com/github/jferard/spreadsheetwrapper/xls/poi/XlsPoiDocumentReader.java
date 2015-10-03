@@ -47,17 +47,17 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 		/** {inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
-		/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
+				/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
 			return new XlsPoiReader(sheet);
 		}
 	}
 
+	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
 	/** *internal* workbook */
 	private final Workbook workbook;
-	private XlsPoiUtil xlsPoiUtil;
-	private Map<String, CellStyle> cellStyleByName;
+	private final XlsPoiUtil xlsPoiUtil;
 
 	/**
 	 * @param workbook
@@ -74,6 +74,14 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public void close() {
 		// Nothing to do
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
+			final String styleName) {
+		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		return this.xlsPoiUtil.getCellStyle(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -116,19 +124,12 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleString(String styleName) {
-		CellStyle cellStyle = this.cellStyleByName.get(styleName);
+	public String getStyleString(final String styleName) {
+		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
 		return this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public com.github.jferard.spreadsheetwrapper.CellStyle getCellStyle(String styleName) {
-		CellStyle cellStyle = this.cellStyleByName.get(styleName);
-		return this.xlsPoiUtil.getCellStyle(this.workbook, cellStyle);
-	}
-	
+
 }

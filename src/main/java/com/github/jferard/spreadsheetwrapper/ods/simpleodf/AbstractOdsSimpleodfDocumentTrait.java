@@ -34,7 +34,8 @@ AbstractSpreadsheetDocumentTrait<T> {
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
-	public AbstractOdsSimpleodfDocumentTrait(final OdsSimpleodfStatefulDocument sfDocument) {
+	public AbstractOdsSimpleodfDocumentTrait(
+			final OdsSimpleodfStatefulDocument sfDocument) {
 		super();
 		this.sfDocument = sfDocument;
 		final List<Table> tables = this.getTableList();
@@ -47,7 +48,6 @@ AbstractSpreadsheetDocumentTrait<T> {
 			this.accessor.put(name, index, reader);
 		}
 	}
-
 
 	public T getSpreadsheet(final int i) {
 		final T spreadsheet;
@@ -66,6 +66,15 @@ AbstractSpreadsheetDocumentTrait<T> {
 		return spreadsheet;
 	}
 
+	public final List<Table> getTableList() {
+		final List<Table> tables;
+		if (this.sfDocument.isNew())
+			tables = Collections.emptyList();
+		else
+			tables = this.sfDocument.getRawTableList();
+		return tables;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	protected T addSheetWithCheckedIndex(final int index, final String sheetName)
@@ -75,7 +84,8 @@ AbstractSpreadsheetDocumentTrait<T> {
 			throw new IllegalArgumentException(String.format("Sheet %s exists",
 					sheetName));
 
-		if (this.sfDocument.isNew() && this.sfDocument.getRawTableList().size() >= 1) {
+		if (this.sfDocument.isNew()
+				&& this.sfDocument.getRawTableList().size() >= 1) {
 			table = this.sfDocument.getRawSheet(0);
 			table.setTableName(sheetName);
 		} else {
@@ -116,19 +126,10 @@ AbstractSpreadsheetDocumentTrait<T> {
 				"No %s sheet in workbook", sheetName));
 	}
 
-	public final List<Table> getTableList() {
-		final List<Table> tables;
-		if (this.sfDocument.isNew())
-			tables = Collections.emptyList();
-		else
-			tables = this.sfDocument.getRawTableList();
-		return tables;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	protected int getSheetCount() {
-			
+
 		return this.getTableList().size();
 	}
 }

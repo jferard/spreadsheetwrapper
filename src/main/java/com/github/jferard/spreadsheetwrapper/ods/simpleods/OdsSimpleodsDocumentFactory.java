@@ -57,11 +57,11 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter create(final /*@Nullable*/ File f)
+	public SpreadsheetDocumentWriter create(final/*@Nullable*/File f)
 			throws SpreadsheetException {
 		if (f == null)
 			return this.create();
-		
+
 		final OdsFile file = new OdsFile(f.getPath());
 		OutputStream outputStream;
 		try {
@@ -74,19 +74,20 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	}
 
 	@Override
-	public SpreadsheetDocumentWriter create(final /*@Nullable*/ OutputStream outputStream)
-			throws SpreadsheetException {
+	public SpreadsheetDocumentWriter create(
+			final/*@Nullable*/OutputStream outputStream)
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public SpreadsheetDocumentWriter create(final /*@Nullable*/ URL outputURL)
+	public SpreadsheetDocumentWriter create(final/*@Nullable*/URL outputURL)
 			throws SpreadsheetException {
 		if (outputURL == null)
 			return this.create();
-		
+
 		try {
 			final File f = new File(outputURL.toURI());
 			return this.create(f);
@@ -111,7 +112,8 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
+			final InputStream inputStream,
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}

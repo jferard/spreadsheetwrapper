@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
@@ -37,7 +38,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -60,17 +61,18 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
 			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
-		private Map<String, CellStyle> cellStyleByName;
+		private final Map<String, CellStyle> cellStyleByName;
 
 		/**
 		 * @param workbook
 		 *            *internal* workbook
 		 * @param dateCellStyle
 		 *            the style for all date cells
-		 * @param cellStyleByName 
+		 * @param cellStyleByName
 		 */
 		XlsPoiDocumentWriterTrait(final Workbook workbook,
-				final CellStyle dateCellStyle, Map<String, CellStyle> cellStyleByName) {
+				final CellStyle dateCellStyle,
+				final Map<String, CellStyle> cellStyleByName) {
 			super(workbook, dateCellStyle);
 			this.cellStyleByName = cellStyleByName;
 		}
@@ -79,7 +81,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.dateCellStyle, this.cellStyleByName);
+			return new XlsPoiWriter(sheet, this.dateCellStyle,
+					this.cellStyleByName);
 		}
 	}
 
@@ -105,18 +108,18 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return outputStream;
 	}
 
+	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetWriter> documentTrait;
+
 	/** simple logger */
 	private final Logger logger;
 
 	/** for delegation */
 	private final XlsPoiDocumentReader reader;
-
 	/** *internal* workbook */
 	private final Workbook workbook;
-	private Map<String, CellStyle> cellStyleByName;
-	private XlsPoiUtil xlsPoiUtil;
+	private final XlsPoiUtil xlsPoiUtil;
 
 	/**
 	 * @param logger
@@ -165,6 +168,35 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
+	public boolean createStyle(final String styleName, final String styleString) {
+		final CellStyle cellStyle = this.workbook.createCellStyle();
+		final Map<String, String> props = ImplUtility
+				.getPropertiesMap(styleString);
+		for (final Map.Entry<String, String> entry : props.entrySet()) {
+			if (entry.getKey().equals("font-weight")) {
+				if (entry.getValue().equals("bold")) {
+					final Font font = this.workbook.createFont();
+					font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+					cellStyle.setFont(font);
+				}
+			} else if (entry.getKey().equals("background-color")) {
+				// do nothing
+			}
+		}
+		this.cellStyleByName.put(styleName, cellStyle);
+		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
+			final String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
@@ -200,6 +232,13 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(final String styleName) {
+		return this.reader.getStyleString(styleName);
+	}
+
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -219,63 +258,34 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public boolean createStyle(String styleName, String styleString) {
-		CellStyle cellStyle = this.workbook.createCellStyle();
-		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
-		for (Map.Entry<String, String> entry : props.entrySet()) { 
-			if (entry.getKey().equals("font-weight")) {
-				if (entry.getValue().equals("bold")) {
-					Font font = this.workbook.createFont();
-				    font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-				    cellStyle.setFont(font);
-				}
-			  } else if (entry.getKey().equals("background-color")) {
-				  // do nothing
-			  }
-		}
-		this.cellStyleByName.put(styleName, cellStyle);
-		return true;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(String styleName, com.github.jferard.spreadsheetwrapper.CellStyle wrapperCellStyle) {
-		CellStyle cellStyle = this.workbook.createCellStyle();
-		com.github.jferard.spreadsheetwrapper.Font wrapperFont = wrapperCellStyle.getCellFont();
+	public boolean setStyle(
+			final String styleName,
+			final com.github.jferard.spreadsheetwrapper.WrapperCellStyle wrapperCellStyle) {
+		final CellStyle cellStyle = this.workbook.createCellStyle();
+		final com.github.jferard.spreadsheetwrapper.WrapperFont wrapperFont = wrapperCellStyle
+				.getCellFont();
 		if (wrapperFont.isBold()) {
-			Font font = this.workbook.createFont();
+			final Font font = this.workbook.createFont();
 			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 			cellStyle.setFont(font);
 		}
 		final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
 		if (backgroundColor != null) {
-			cellStyle.setFillBackgroundColor(backgroundColor.getHssfColor().getIndex());
+			final HSSFColor hssfColor = backgroundColor.getHssfColor();
+			final short index = hssfColor.getIndex();
+			cellStyle.setFillForegroundColor(index);
+			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		}
 		this.cellStyleByName.put(styleName, cellStyle);
-		return true;
-	}
-	
-	
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(String styleName, String styleString) {
-		this.createStyle(styleName, styleString);
 		return true;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public String getStyleString(String styleName) {
-		return this.reader.getStyleString(styleName);
+	public boolean updateStyle(final String styleName, final String styleString) {
+		this.createStyle(styleName, styleString);
+		return true;
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public com.github.jferard.spreadsheetwrapper.CellStyle getCellStyle(String styleName) {
-		return this.reader.getCellStyle(styleName);
-	}
-	
+
 }

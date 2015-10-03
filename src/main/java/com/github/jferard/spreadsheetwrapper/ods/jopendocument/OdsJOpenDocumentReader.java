@@ -24,7 +24,7 @@ import java.util.List;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
@@ -57,10 +57,10 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		}
 	}
 
-	/** the *internal* value */
-	private final Stateful<SpreadSheet> sfSpreadSheet;
 	/** for delegation only */
 	private final AbstractOdsJOpenDocumentTrait<SpreadsheetReader> documentTrait;
+	/** the *internal* value */
+	private final Stateful<SpreadSheet> sfSpreadSheet;
 
 	/**
 	 * @param sfSpreadSheet
@@ -78,6 +78,13 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public void close() {
 		// do nothing ??
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
@@ -103,7 +110,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public List<String> getSheetNames() {
 		final List<String> sheetNames;
-		int sheetCount = this.getSheetCount();
+		final int sheetCount = this.getSheetCount();
 		sheetNames = new ArrayList<String>(sheetCount);
 		for (int s = 0; s < sheetCount; s++)
 			sheetNames.add(this.sfSpreadSheet.getValue().getSheet(s).getName());
@@ -125,14 +132,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public CellStyle getCellStyle(String styleName) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(String styleName) {
+	public String getStyleString(final String styleName) {
 		throw new UnsupportedOperationException();
 	}
 }

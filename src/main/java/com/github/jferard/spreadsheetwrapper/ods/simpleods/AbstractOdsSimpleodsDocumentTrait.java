@@ -98,7 +98,7 @@ public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
 			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentTrait<T> this, */final int index) {
 		if (this.file == null)
 			throw new IllegalStateException();
-		
+
 		return (Table) this.file.getContent().getTableQueue().get(index);
 	}
 

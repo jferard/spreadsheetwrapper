@@ -17,15 +17,16 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
 
-public class Font {
+public class WrapperFont {
 	private boolean bold;
+	private final WrapperCellStyle.Color color;
 	private boolean italic;
 	private int size;
-	private final CellStyle.Color color;
-	
-	public Font(boolean bold, boolean italic, int size, Color color) {
+
+	public WrapperFont(final boolean bold, final boolean italic, final int size,
+			final Color color) {
 		super();
 		this.bold = bold;
 		this.italic = italic;
@@ -33,32 +34,32 @@ public class Font {
 		this.color = color;
 	}
 
-	public boolean isBold() {
-		return this.bold;
-	}
-
-	public void setBold(boolean bold) {
-		this.bold = bold;
-	}
-
-	public boolean isItalic() {
-		return this.italic;
-	}
-
-	public void setItalic(boolean italic) {
-		this.italic = italic;
+	public WrapperCellStyle.Color getColor() {
+		return this.color;
 	}
 
 	public int getSize() {
 		return this.size;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
+	public boolean isBold() {
+		return this.bold;
 	}
 
-	public CellStyle.Color getColor() {
-		return this.color;
+	public boolean isItalic() {
+		return this.italic;
+	}
+
+	public void setBold(final boolean bold) {
+		this.bold = bold;
+	}
+
+	public void setItalic(final boolean italic) {
+		this.italic = italic;
+	}
+
+	public void setSize(final int size) {
+		this.size = size;
 	}
 
 }

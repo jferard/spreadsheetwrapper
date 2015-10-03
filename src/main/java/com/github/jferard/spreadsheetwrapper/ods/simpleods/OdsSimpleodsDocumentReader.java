@@ -24,9 +24,8 @@ import org.simpleods.OdsFile;
 import org.simpleods.SimpleOdsException;
 import org.simpleods.Styles;
 import org.simpleods.Table;
-import org.simpleods.TextStyle;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
@@ -80,6 +79,12 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
@@ -122,18 +127,12 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public String getStyleString(String styleName) {
-		Styles styles = this.file.getStyles();
-		throw new UnsupportedOperationException();
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
+	public String getStyleString(final String styleName) {
+		final Styles styles = this.file.getStyles();
 		throw new UnsupportedOperationException();
 	}
 }

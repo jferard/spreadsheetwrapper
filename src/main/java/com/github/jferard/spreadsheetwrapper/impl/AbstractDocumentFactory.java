@@ -65,10 +65,12 @@ public abstract class AbstractDocumentFactory<R> extends
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
+			final InputStream inputStream,
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createWriter(Stateful.createInitialized(document), outputStream);
+		return this.createWriter(Stateful.createInitialized(document),
+				outputStream);
 	}
 
 	/**
@@ -79,8 +81,8 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @return the value reader
 	 * @throws SpreadsheetException
 	 */
-	protected abstract SpreadsheetDocumentReader createReader(Stateful<R> stateful)
-			throws SpreadsheetException;
+	protected abstract SpreadsheetDocumentReader createReader(
+			Stateful<R> stateful) throws SpreadsheetException;
 
 	/**
 	 * create a writer from a *internal* workbook
@@ -90,8 +92,10 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @return the value writer
 	 * @throws SpreadsheetException
 	 */
-	protected abstract SpreadsheetDocumentWriter createWriter(Stateful<R> stateful,
-			/*@Nullable*/ OutputStream outputStream) throws SpreadsheetException;
+	protected abstract SpreadsheetDocumentWriter createWriter(
+			Stateful<R> stateful,
+			/*@Nullable*/OutputStream outputStream)
+					throws SpreadsheetException;
 
 	/**
 	 * @param inputStream
@@ -108,7 +112,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @return the *internal* value
 	 * @throws SpreadsheetException
 	 */
-	protected abstract R newSpreadsheetDocument(/*@Nullable*/ OutputStream outputStream)
-			throws SpreadsheetException;
+	protected abstract R newSpreadsheetDocument(
+	/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
 
 }

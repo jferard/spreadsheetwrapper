@@ -26,13 +26,12 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.table.Table;
 
-import com.github.jferard.spreadsheetwrapper.CellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -44,7 +43,8 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentReaderTrait extends
 			AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
-		OdsSimpleodfDocumentReaderTrait(final OdsSimpleodfStatefulDocument sfDocument) {
+		OdsSimpleodfDocumentReaderTrait(
+				final OdsSimpleodfStatefulDocument sfDocument) {
 			super(sfDocument);
 		}
 
@@ -56,11 +56,11 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 		}
 	}
 
-	/** *internal* workbook */
-	private final OdsSimpleodfStatefulDocument sfDocument;
+	private final OdfOfficeStyles documentStyles;
 	/** for delegation */
 	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> documentTrait;
-	private OdfOfficeStyles documentStyles;
+	/** *internal* workbook */
+	private final OdsSimpleodfStatefulDocument sfDocument;
 
 	/**
 	 * @param value
@@ -71,11 +71,11 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	OdsSimpleodfDocumentReader(final OdsSimpleodfStatefulDocument sfDocument)
 			throws SpreadsheetException {
 		this.sfDocument = sfDocument;
-//		try {
-//			this.sfDocument.getValue().getContentRoot();
-//		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
-//			throw new SpreadsheetException(e); // colors the exception
-//		}
+		// try {
+		// this.sfDocument.getValue().getContentRoot();
+		// } catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
+		// throw new SpreadsheetException(e); // colors the exception
+		// }
 		this.sfDocument.setLocale(Locale.US);
 		this.documentStyles = this.sfDocument.getStyles();
 		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(sfDocument);
@@ -85,6 +85,14 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public void close() {
 		this.sfDocument.close();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return OdsUtility.getCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -128,19 +136,13 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public CellStyle getCellStyle(String styleName) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
-		return OdsUtility.getCellStyle(existingStyle);
-	}
 
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
-	public String getStyleString(String styleName) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+	public String getStyleString(final String styleName) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
 		return OdsUtility.getStyleString(existingStyle);
 	}
 }

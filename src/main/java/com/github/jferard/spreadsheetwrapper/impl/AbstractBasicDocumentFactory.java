@@ -69,7 +69,7 @@ public abstract class AbstractBasicDocumentFactory implements
 			throws SpreadsheetException {
 		if (outputURL == null)
 			return this.create();
-		
+
 		try {
 			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
 					.getOutputStream(outputURL);

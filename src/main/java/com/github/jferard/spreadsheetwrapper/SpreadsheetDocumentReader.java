@@ -28,6 +28,13 @@ public interface SpreadsheetDocumentReader {
 	void close() throws SpreadsheetException;
 
 	/**
+	 * @param styleName
+	 *            the name of the style
+	 * @return the style
+	 */
+	WrapperCellStyle getCellStyle(String styleName);
+
+	/**
 	 * @param index
 	 *            index of the sheet, table, ...
 	 * @return the cursor.
@@ -65,13 +72,6 @@ public interface SpreadsheetDocumentReader {
 	 * @return the reader.
 	 */
 	SpreadsheetReader getSpreadsheet(final String name);
-	
-	/**
-	 * @param styleName
-	 *            the name of the style
-	 * @return the style
-	 */
-	CellStyle getCellStyle(String styleName);
 
 	/**
 	 * Gets a style string

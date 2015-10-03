@@ -17,21 +17,18 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import jxl.format.Colour;
 
 import org.apache.poi.hssf.util.HSSFColor;
 
-public class CellStyle {
-	public static Map<String, Color> colorByHex;
-	public static Map<Colour, Color> colorByJxl;
-	public static Map<org.apache.poi.ss.usermodel.Color, Color> colorByHssf;
-
+public class WrapperCellStyle {
 	public static enum Color {
 		AQUA(Colour.AQUA, new HSSFColor.AQUA()), AUTOMATIC(Colour.AUTOMATIC,
-				new HSSFColor.AUTOMATIC()), BLACK(Colour.BLACK, new HSSFColor.BLACK()), BLUE(
-						Colour.BLUE, new HSSFColor.BLUE());
+				new HSSFColor.AUTOMATIC()), BLACK(Colour.BLACK,
+						new HSSFColor.BLACK()), BLUE(Colour.BLUE, new HSSFColor.BLUE());
 
 		private String hex;
 		private HSSFColor hssfColor;
@@ -41,18 +38,14 @@ public class CellStyle {
 			this.jxlColor = jxlColor;
 			this.hssfColor = hssfColor;
 			final short[] triplet = this.hssfColor.getTriplet();
-			final StringBuilder sb = new StringBuilder('#');
+			final StringBuilder sb = new StringBuilder("#");
 			for (final short l : triplet)
 				sb.append(Integer.toHexString(l));
 			this.hex = sb.toString();
-			
-			CellStyle.colorByHex.put(this.hex, this);
-			CellStyle.colorByJxl.put(this.jxlColor, this);
-			CellStyle.colorByHssf.put(this.hssfColor, this);
-		}
 
-		public String toHex() {
-			return this.hex;
+			WrapperCellStyle.colorByHex.put(this.hex, this);
+			WrapperCellStyle.colorByJxl.put(this.jxlColor, this);
+			WrapperCellStyle.colorByHssf.put(this.hssfColor, this);
 		}
 
 		public HSSFColor getHssfColor() {
@@ -62,12 +55,21 @@ public class CellStyle {
 		public Colour getJxlColor() {
 			return this.jxlColor;
 		}
+
+		public String toHex() {
+			return this.hex;
+		}
 	}
 
-	private Color backgoundColor;
-	private Font cellFont;
+	public static Map<String, Color> colorByHex = new HashMap<String, Color>();
+	public static Map<org.apache.poi.ss.usermodel.Color, Color> colorByHssf = new HashMap<org.apache.poi.ss.usermodel.Color, Color>();
 
-	public CellStyle(final Color color, Font cellFont) {
+	public static Map<Colour, Color> colorByJxl = new HashMap<Colour, Color>();
+
+	private Color backgoundColor;
+	private WrapperFont cellFont;
+
+	public WrapperCellStyle(final Color color, final WrapperFont cellFont) {
 		super();
 		this.backgoundColor = color;
 		this.cellFont = cellFont;
@@ -77,15 +79,15 @@ public class CellStyle {
 		return this.backgoundColor;
 	}
 
+	public WrapperFont getCellFont() {
+		return this.cellFont;
+	}
+
 	public void setBackgroundColor(final Color color) {
 		this.backgoundColor = color;
 	}
 
-	public Font getCellFont() {
-		return this.cellFont;
-	}
-
-	public void setCellFont(Font cellFont) {
+	public void setCellFont(final WrapperFont cellFont) {
 		this.cellFont = cellFont;
 	}
 }

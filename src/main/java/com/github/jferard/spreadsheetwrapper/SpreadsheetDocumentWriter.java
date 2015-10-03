@@ -52,6 +52,19 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	SpreadsheetWriter addSheet(String sheetName)
 			throws CantInsertElementInSpreadsheetException;
 
+	/**
+	 * Creates a new style
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @param styleString
+	 *            the style string (format to be defined)
+	 * @return false if fails
+	 * @deprecated
+	 */
+	@Deprecated
+	boolean createStyle(String styleName, String styleString);
+
 	/** {@inheritDoc} */
 	@Override
 	SpreadsheetWriterCursor getNewCursorByIndex(final int index);
@@ -114,25 +127,13 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	 *
 	 * @param styleName
 	 *            the name of the style
-	 * @param styleString
-	 *            the style string (format to be defined)
-	 * @return false if fails
-	 * @deprecated
-	 */
-	@Deprecated
-	boolean createStyle(String styleName, String styleString);
-
-	/**
-	 * Creates a new style
+	 * @param wrapperCellStyle
+	 *            the style
 	 *
-	 * @param styleName
-	 *            the name of the style
-	 * @param cellStyle the style
-	 * 
 	 * @return false if fails
 	 */
-	boolean setStyle(String styleName, CellStyle cellStyle);
-	
+	boolean setStyle(String styleName, WrapperCellStyle wrapperCellStyle);
+
 	/**
 	 * Creates an existing style
 	 *

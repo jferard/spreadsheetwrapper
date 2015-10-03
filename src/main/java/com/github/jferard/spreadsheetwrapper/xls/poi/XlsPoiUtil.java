@@ -23,30 +23,33 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
 public class XlsPoiUtil {
-	public String getStyleString(Workbook workbook, CellStyle cellStyle) {
-		StringBuilder sb = new StringBuilder();
-		short fontIndex = cellStyle.getFontIndex();
-		Font font = workbook.getFontAt(fontIndex);
+	public String getStyleString(final Workbook workbook,
+			final CellStyle cellStyle) {
+		final StringBuilder sb = new StringBuilder();
+		final short fontIndex = cellStyle.getFontIndex();
+		final Font font = workbook.getFontAt(fontIndex);
 		if (font.getBoldweight() == Font.BOLDWEIGHT_BOLD)
 			sb.append("font-weight:bold;");
-		Color color = cellStyle.getFillBackgroundColorColor();
+		final Color color = cellStyle.getFillBackgroundColorColor();
 		return "";
 	}
 
-	com.github.jferard.spreadsheetwrapper.CellStyle getCellStyle(
-			Workbook workbook, CellStyle cellStyle) {
-		short fontIndex = cellStyle.getFontIndex();
-		Font font = workbook.getFontAt(fontIndex);
-		com.github.jferard.spreadsheetwrapper.CellStyle c= null;
-		com.github.jferard.spreadsheetwrapper.Font f = null;
+	com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
+			final Workbook workbook, final CellStyle cellStyle) {
+		final short fontIndex = cellStyle.getFontIndex();
+		final Font font = workbook.getFontAt(fontIndex);
+		com.github.jferard.spreadsheetwrapper.WrapperCellStyle c = null;
+		com.github.jferard.spreadsheetwrapper.WrapperFont f = null;
 		if (font.getBoldweight() == Font.BOLDWEIGHT_BOLD)
-			f = new com.github.jferard.spreadsheetwrapper.Font(true, false, fontIndex, null);
-		Color color = cellStyle.getFillBackgroundColorColor();
-		com.github.jferard.spreadsheetwrapper.CellStyle.Color col = null;
+			f = new com.github.jferard.spreadsheetwrapper.WrapperFont(true, false,
+					fontIndex, null);
+		final Color color = cellStyle.getFillBackgroundColorColor();
+		com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color col = null;
 		if (color != null)
-			col = com.github.jferard.spreadsheetwrapper.CellStyle.colorByHssf.get(color);
-		
-		c = new com.github.jferard.spreadsheetwrapper.CellStyle(col, f);
+			col = com.github.jferard.spreadsheetwrapper.WrapperCellStyle.colorByHssf
+			.get(color);
+
+		c = new com.github.jferard.spreadsheetwrapper.WrapperCellStyle(col, f);
 		return c;
 	}
 }

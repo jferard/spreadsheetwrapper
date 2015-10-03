@@ -134,29 +134,29 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 		return this.reader.getText(r, c);
 	}
 
-//	/** {@inheritDoc} */
-//	@Override
-//	public void insertCol(final int r) {
-//		throw new UnsupportedOperationException();
-//	}
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	public void insertRow(final int r) {
-//		throw new UnsupportedOperationException();
-//	}
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	public List<Object> removeCol(final int c) {
-//		throw new UnsupportedOperationException();
-//	}
-//
-//	/** {@inheritDoc} */
-//	@Override
-//	public List<Object> removeRow(final int r) {
-//		throw new UnsupportedOperationException();
-//	}
+	// /** {@inheritDoc} */
+	// @Override
+	// public void insertCol(final int r) {
+	// throw new UnsupportedOperationException();
+	// }
+	//
+	// /** {@inheritDoc} */
+	// @Override
+	// public void insertRow(final int r) {
+	// throw new UnsupportedOperationException();
+	// }
+	//
+	// /** {@inheritDoc} */
+	// @Override
+	// public List<Object> removeCol(final int c) {
+	// throw new UnsupportedOperationException();
+	// }
+	//
+	// /** {@inheritDoc} */
+	// @Override
+	// public List<Object> removeRow(final int r) {
+	// throw new UnsupportedOperationException();
+	// }
 
 	/** {@inheritDoc} */
 	@Override
@@ -168,8 +168,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object setCellContent(final int r, final int c,
-			final Object content) {
+	public Object setCellContent(final int r, final int c, final Object content) {
 		Object retValue;
 		if (content == null)
 			throw new IllegalArgumentException();
@@ -195,8 +194,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object setCellContent(final int r, final int c, final Object content,
-			final String styleName) {
+	public Object setCellContent(final int r, final int c,
+			final Object content, final String styleName) {
 		this.setStyleName(r, c, styleName);
 		return this.setCellContent(r, c, content);
 	}
@@ -204,7 +203,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public List<Object> setColContents(final int c, final List<Object> contents) {
-		List<Object> ret = new ArrayList<Object>(contents.size());
+		final List<Object> ret = new ArrayList<Object>(contents.size());
 		final int rowCount = this.getRowCount();
 		for (int r = 0; r < rowCount; r++) {
 			ret.add(r, this.setCellContent(r, c, contents.get(r)));
@@ -246,8 +245,9 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public final List<Object> setRowContents(final int r, final List<Object> contents) {
-		List<Object> ret = new ArrayList<Object>(contents.size());
+	public final List<Object> setRowContents(final int r,
+			final List<Object> contents) {
+		final List<Object> ret = new ArrayList<Object>(contents.size());
 		final int colCount = this.getCellCount(r);
 		for (int c = 0; c < colCount; c++)
 			ret.add(c, this.setCellContent(r, c, contents.get(c)));
@@ -256,8 +256,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyleName(final int r, final int c,
-			final String styleName) {
+	public boolean setStyleName(final int r, final int c, final String styleName) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -275,11 +274,12 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 		this.setStyleName(r, c, styleName);
 		return this.setText(r, c, text);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public boolean writeDataFrom(int r, int c, DataWrapper dataWrapper) {
+	public boolean writeDataFrom(final int r, final int c,
+			final DataWrapper dataWrapper) {
 		return dataWrapper.writeDataTo(this, r, c);
 	}
-	
+
 }

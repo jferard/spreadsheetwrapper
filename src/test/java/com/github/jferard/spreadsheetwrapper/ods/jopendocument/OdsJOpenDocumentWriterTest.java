@@ -19,9 +19,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
-import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
 

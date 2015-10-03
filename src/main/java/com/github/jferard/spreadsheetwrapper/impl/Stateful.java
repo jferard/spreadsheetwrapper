@@ -17,21 +17,20 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
-import org.jopendocument.dom.spreadsheet.Sheet;
-
 public class Stateful<T> {
-	protected final T value;
-	private boolean isNew;
-
-	public static <S> Stateful<S> createNew(S document) {
-		return new Stateful<S>(document, true);
-	}
-	
-	public static <S> Stateful<S> createInitialized(S document) {
+	public static <S> Stateful<S> createInitialized(final S document) {
 		return new Stateful<S>(document, false);
 	}
-	
-	protected Stateful(T value, boolean isNew) {
+
+	public static <S> Stateful<S> createNew(final S document) {
+		return new Stateful<S>(document, true);
+	}
+
+	private boolean isNew;
+
+	protected final T value;
+
+	protected Stateful(final T value, final boolean isNew) {
 		this.value = value;
 		this.isNew = isNew;
 	}

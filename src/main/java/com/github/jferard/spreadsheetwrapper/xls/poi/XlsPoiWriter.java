@@ -18,10 +18,8 @@
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -37,6 +35,8 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
+	private final Map<String, CellStyle> cellStyleByName;
+
 	/**
 	 * the style for cell dates, since Excel does not know the difference
 	 * between a date and a number
@@ -46,16 +46,15 @@ SpreadsheetWriter {
 	/** the internal reader */
 	private final XlsPoiReader preader;
 
-	private Sheet sheet;
-
-	private Map<String, CellStyle> cellStyleByName;
+	private final Sheet sheet;
 
 	private XlsPoiUtil xlsPoiUtil;
 
 	/**
-	 * @param cellStyleByName 
+	 * @param cellStyleByName
 	 */
-	XlsPoiWriter(final Sheet sheet, final /*@Nullable*/ CellStyle dateCellStyle, Map<String, CellStyle> cellStyleByName) {
+	XlsPoiWriter(final Sheet sheet, final/*@Nullable*/CellStyle dateCellStyle,
+			final Map<String, CellStyle> cellStyleByName) {
 		super(new XlsPoiReader(sheet));
 		this.sheet = sheet;
 		this.cellStyleByName = cellStyleByName;
@@ -64,8 +63,61 @@ SpreadsheetWriter {
 
 	}
 
-	/** {@inheritDoc} 
-	 * @return */
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final Cell cell = this.preader.getPOICell(r, c);
+		final CellStyle cellStyle = cell.getCellStyle();
+		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
+				.entrySet()) {
+			if (entry.getValue().equals(cellStyle))
+				return entry.getKey();
+		}
+		return null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(final int r, final int c) {
+		final Cell cell = this.preader.getPOICell(r, c);
+		final CellStyle cellStyle = cell.getCellStyle();
+		return ""; // this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void insertRow(final int r) {
+		this.sheet.shiftRows(r, this.getRowCount(), 1);
+		this.sheet.createRow(r);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<Object> removeRow(final int r) {
+		final List<Object> ret = this.getRowContents(r);
+		final Row row = this.sheet.getRow(r);
+		this.sheet.removeRow(row);
+		this.sheet.shiftRows(r, this.getRowCount(), 1);
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final Cell cell = this.preader.getPOICell(r, c);
@@ -74,7 +126,8 @@ SpreadsheetWriter {
 	}
 
 	/**
-	 * @return  */
+	 * @return
+	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		final Cell cell = this.preader.getPOICell(r, c);
@@ -85,7 +138,7 @@ SpreadsheetWriter {
 	}
 
 	/**
-	 * @return 
+	 * @return
 	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
@@ -96,7 +149,8 @@ SpreadsheetWriter {
 	}
 
 	/**
-	 * @return  */
+	 * @return
+	 */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		final Cell cell = this.preader.getPOICell(r, c);
@@ -105,13 +159,25 @@ SpreadsheetWriter {
 	}
 
 	/**
-	 * @return  */
+	 * @return
+	 */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final Cell cell = this.preader.getPOICell(r, c);
-		int retValue = value.intValue();
+		final int retValue = value.intValue();
 		cell.setCellValue(retValue);
 		return retValue;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c, final String styleName) {
+		if (this.cellStyleByName.containsKey(styleName)) {
+			final Cell cell = this.preader.getPOICell(r, c);
+			cell.setCellStyle(this.cellStyleByName.get(styleName));
+			return true;
+		} else
+			return false;
 	}
 
 	/** */
@@ -121,65 +187,5 @@ SpreadsheetWriter {
 		cell.setCellValue(text);
 		return text;
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public void insertCol(int c) {
-		throw new UnsupportedOperationException();
-	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void insertRow(int r) {
-		this.sheet.shiftRows(r,  this.getRowCount(), 1);
-		this.sheet.createRow(r);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Object> removeCol(int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<Object> removeRow(int r) {
-		List<Object> ret = this.getRowContents(r);
-		Row row = this.sheet.getRow(r);
-		this.sheet.removeRow(row);
-		this.sheet.shiftRows(r,  this.getRowCount(), 1);
-		return ret;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(int r, int c) {
-		final Cell cell = this.preader.getPOICell(r, c);
-		CellStyle cellStyle = cell.getCellStyle();
-		for (Map.Entry<String, CellStyle> entry : this.cellStyleByName.entrySet()) {
-			if (entry.getValue().equals(cellStyle))
-				return entry.getKey();
-		}
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(int r, int c) {
-		final Cell cell = this.preader.getPOICell(r, c);
-		CellStyle cellStyle = cell.getCellStyle();
-		return ""; // this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(int r, int c, String styleName) {
-		if (this.cellStyleByName.containsKey(styleName)) {
-			final Cell cell = this.preader.getPOICell(r, c);
-			cell.setCellStyle(this.cellStyleByName.get(styleName));
-			return true;
-		} else
-			return false;
-	}
-	
 }
