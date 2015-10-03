@@ -38,7 +38,7 @@ public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
 	private final OdsFile file;
 
 	/**
-	 * Creates a document from an ods file
+	 * Creates a value from an ods file
 	 *
 	 * @param file
 	 *            the *internal* ods file

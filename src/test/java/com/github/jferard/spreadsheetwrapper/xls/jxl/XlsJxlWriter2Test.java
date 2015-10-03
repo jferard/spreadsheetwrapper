@@ -1,5 +1,5 @@
 /*******************************************************************************
- *     SpreadsheetWrapper - An abstraction layer over the API for Excel or Calc
+ *     SpreadsheetWrapper - An abstraction layer over some APIs for Excel or Calc
  *     Copyright (C) 2015  J. Férard
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ public class XlsJxlWriter2Test extends SpreadsheetWriter2Test {
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getExtension());
 			this.sdw = this.factory.create(outputFile);
-			this.sw = this.sdw.addSheet(0, "name");
+			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

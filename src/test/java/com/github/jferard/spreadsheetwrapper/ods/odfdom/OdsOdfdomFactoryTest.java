@@ -1,5 +1,5 @@
 /*******************************************************************************
- *     SpreadsheetWrapper - An abstraction layer over the API for Excel or Calc
+ *     SpreadsheetWrapper - An abstraction layer over some APIs for Excel or Calc
  *     Copyright (C) 2015  J. Férard
  *
  *     This program is free software: you can redistribute it and/or modify

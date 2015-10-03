@@ -21,69 +21,75 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import org.odftoolkit.simple.SpreadsheetDocument;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
+import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
+import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.table.Table;
 
+import com.github.jferard.spreadsheetwrapper.CellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
+import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
- * The document reader for Apache simple-odf
+ * The value reader for Apache simple-odf
  */
 public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
-	/** delegation document with definition of createNew */
-	private final class OdsSimpleodfDocumentWriterTrait extends
+	/** delegation value with definition of createNew */
+	private final class OdsSimpleodfDocumentReaderTrait extends
 			AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
-		OdsSimpleodfDocumentWriterTrait(final SpreadsheetDocument document) {
-			super(document);
+		OdsSimpleodfDocumentReaderTrait(final OdsSimpleodfStatefulDocument sfDocument) {
+			super(sfDocument);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
+				/*>>> @UnknownInitialization OdsSimpleodfDocumentReaderTrait this, */final Table table) {
 			return new OdsSimpleodfReader(table);
 		}
 	}
 
 	/** *internal* workbook */
-	private final SpreadsheetDocument document;
+	private final OdsSimpleodfStatefulDocument sfDocument;
 	/** for delegation */
 	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> documentTrait;
+	private OdfOfficeStyles documentStyles;
 
 	/**
-	 * @param document
+	 * @param value
 	 *            *internal* workbook
 	 * @throws SpreadsheetException
-	 *             if the document reader can't be created
+	 *             if the value reader can't be created
 	 */
-	OdsSimpleodfDocumentReader(final SpreadsheetDocument document)
+	OdsSimpleodfDocumentReader(final OdsSimpleodfStatefulDocument sfDocument)
 			throws SpreadsheetException {
-		this.document = document;
-		try {
-			this.document.getContentRoot();
-		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
-			throw new SpreadsheetException(e); // colors the exception
-		}
-		this.document.setLocale(Locale.US);
-		this.documentTrait = new OdsSimpleodfDocumentWriterTrait(document);
+		this.sfDocument = sfDocument;
+//		try {
+//			this.sfDocument.getValue().getContentRoot();
+//		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
+//			throw new SpreadsheetException(e); // colors the exception
+//		}
+		this.sfDocument.setLocale(Locale.US);
+		this.documentStyles = this.sfDocument.getStyles();
+		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(sfDocument);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
-		this.document.close();
+		this.sfDocument.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetReaderCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -97,14 +103,14 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getSheetCount() {
-		final List<Table> tables = this.document.getTableList();
+		final List<Table> tables = this.documentTrait.getTableList();
 		return tables.size();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List<String> getSheetNames() {
-		final List<Table> tables = this.document.getTableList();
+		final List<Table> tables = this.documentTrait.getTableList();
 		final List<String> sheetNames = new ArrayList<String>(tables.size());
 		for (final Table table : tables)
 			sheetNames.add(table.getTableName());
@@ -121,5 +127,20 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public CellStyle getCellStyle(String styleName) {
+		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+		return OdsUtility.getCellStyle(existingStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(String styleName) {
+		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
+		return OdsUtility.getStyleString(existingStyle);
 	}
 }

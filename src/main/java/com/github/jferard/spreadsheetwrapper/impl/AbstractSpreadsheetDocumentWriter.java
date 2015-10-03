@@ -23,8 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -100,19 +98,5 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 					this.outputStream), e);
 			throw new SpreadsheetException(e);
 		}
-	}
-
-	/**
-	 * @param styleString the styleString, format key1:value1;key2:value2
-	 * @return
-	 */
-	protected Map<String, String> getPropertiesMap(final String styleString) {
-		Map<String, String> properties = new HashMap<String, String>();
-		String[] styleProps = styleString.split(";");
-		for (String styleProp : styleProps) {
-			String[] entry = styleProp.split(":");
-			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());
-		}
-		return properties;
 	}
 }

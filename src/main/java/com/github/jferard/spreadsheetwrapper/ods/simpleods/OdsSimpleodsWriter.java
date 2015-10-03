@@ -37,8 +37,6 @@ SpreadsheetWriter {
 	/** the reader for delegation */
 	private final OdsSimpleodsReader preader;
 	private Table table;
-	private Table table2;
-
 	/**
 	 * @param table
 	 *            *internal* sheet
@@ -103,6 +101,7 @@ SpreadsheetWriter {
 	public String setText(final int r, final int c, final String text) {
 		final TableCell cell = this.preader.getSimpleCell(r, c);
 		cell.setText(text);
+		cell.setValue(text);
 		return text;
 	}
 

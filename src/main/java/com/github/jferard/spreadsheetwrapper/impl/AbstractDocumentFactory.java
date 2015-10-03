@@ -51,7 +51,7 @@ public abstract class AbstractDocumentFactory<R> extends
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
-		return this.createWriter(document, outputStream);
+		return this.createWriter(Stateful.createNew(document), outputStream);
 	}
 
 	/** {@inheritDoc} */
@@ -59,7 +59,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createReader(document);
+		return this.createReader(Stateful.createInitialized(document));
 	}
 
 	/** {@inheritDoc} */
@@ -68,35 +68,35 @@ public abstract class AbstractDocumentFactory<R> extends
 			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createWriter(document, outputStream);
+		return this.createWriter(Stateful.createInitialized(document), outputStream);
 	}
 
 	/**
 	 * create a reader from a *internal* workbook
 	 *
-	 * @param document
+	 * @param stateful
 	 *            the internal workbook
-	 * @return the document reader
+	 * @return the value reader
 	 * @throws SpreadsheetException
 	 */
-	protected abstract SpreadsheetDocumentReader createReader(R document)
+	protected abstract SpreadsheetDocumentReader createReader(Stateful<R> stateful)
 			throws SpreadsheetException;
 
 	/**
 	 * create a writer from a *internal* workbook
 	 *
-	 * @param document
+	 * @param stateful
 	 *            the internal workbook
-	 * @return the document writer
+	 * @return the value writer
 	 * @throws SpreadsheetException
 	 */
-	protected abstract SpreadsheetDocumentWriter createWriter(R document,
+	protected abstract SpreadsheetDocumentWriter createWriter(Stateful<R> stateful,
 			/*@Nullable*/ OutputStream outputStream) throws SpreadsheetException;
 
 	/**
 	 * @param inputStream
-	 *            the source of the document
-	 * @return the *internal* document
+	 *            the source of the value
+	 * @return the *internal* value
 	 * @throws SpreadsheetException
 	 */
 	protected abstract R loadSpreadsheetDocument(InputStream inputStream)
@@ -104,8 +104,8 @@ public abstract class AbstractDocumentFactory<R> extends
 
 	/**
 	 * @param outputStream
-	 *            the destination of the document
-	 * @return the *internal* document
+	 *            the destination of the value
+	 * @return the *internal* value
 	 * @throws SpreadsheetException
 	 */
 	protected abstract R newSpreadsheetDocument(/*@Nullable*/ OutputStream outputStream)

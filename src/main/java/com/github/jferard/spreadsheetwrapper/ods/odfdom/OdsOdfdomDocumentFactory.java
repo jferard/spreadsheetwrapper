@@ -29,6 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -50,8 +51,8 @@ public class OdsOdfdomDocumentFactory extends
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
-			final OdfSpreadsheetDocument document) throws SpreadsheetException {
-		return new OdsOdfdomDocumentReader(document);
+			final Stateful<OdfSpreadsheetDocument> sfDocument) throws SpreadsheetException {
+		return new OdsOdfdomDocumentReader(sfDocument.getValue());
 	}
 
 	/**
@@ -61,10 +62,10 @@ public class OdsOdfdomDocumentFactory extends
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final OdfSpreadsheetDocument document,
+			final Stateful<OdfSpreadsheetDocument> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
-		return new OdsOdfdomDocumentWriter(this.logger, document, outputStream);
+		return new OdsOdfdomDocumentWriter(this.logger, sfDocument.getValue(), outputStream);
 	}
 
 	@Override

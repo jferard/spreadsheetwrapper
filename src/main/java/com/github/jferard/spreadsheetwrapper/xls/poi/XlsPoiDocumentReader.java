@@ -18,8 +18,11 @@
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -53,6 +56,8 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
 	/** *internal* workbook */
 	private final Workbook workbook;
+	private XlsPoiUtil xlsPoiUtil;
+	private Map<String, CellStyle> cellStyleByName;
 
 	/**
 	 * @param workbook
@@ -61,6 +66,8 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	XlsPoiDocumentReader(final Workbook workbook) {
 		this.workbook = workbook;
 		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook);
+		this.xlsPoiUtil = new XlsPoiUtil();
+		this.cellStyleByName = new HashMap<String, CellStyle>();
 	}
 
 	/** {@inheritDoc} */
@@ -71,8 +78,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetReaderCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -110,4 +116,19 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleString(String styleName) {
+		CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		return this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public com.github.jferard.spreadsheetwrapper.CellStyle getCellStyle(String styleName) {
+		CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		return this.xlsPoiUtil.getCellStyle(this.workbook, cellStyle);
+	}
+	
 }

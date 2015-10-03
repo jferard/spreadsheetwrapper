@@ -166,7 +166,7 @@ public class DocumentFactory {
 	/**
 	 * @param inputURL
 	 *            URL to read from
-	 * @return a reader on the document
+	 * @return a reader on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */
@@ -180,7 +180,7 @@ public class DocumentFactory {
 	/**
 	 * @param inputURL
 	 *            URL to read from
-	 * @return a reader on the document
+	 * @return a reader on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */
@@ -277,7 +277,7 @@ public class DocumentFactory {
 	/**
 	 * @param inputURL
 	 *            URL to read from
-	 * @return a writer on the document
+	 * @return a writer on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */
@@ -291,7 +291,7 @@ public class DocumentFactory {
 	/**
 	 * @param inputURL
 	 *            URL to read from
-	 * @return a writer on the document
+	 * @return a writer on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */
@@ -308,7 +308,7 @@ public class DocumentFactory {
 	 *            URL to read from
 	 * @param outputURL
 	 *            URL to write to
-	 * @return a writer on the document
+	 * @return a writer on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */
@@ -324,7 +324,7 @@ public class DocumentFactory {
 	 *            URL to read from
 	 * @param outputURL
 	 *            URL to write to
-	 * @return a writer on the document
+	 * @return a writer on the value
 	 * @throws SpreadsheetException
 	 * @deprecated
 	 */

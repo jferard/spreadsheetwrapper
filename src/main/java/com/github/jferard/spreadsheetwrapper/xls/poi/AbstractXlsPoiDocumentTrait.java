@@ -67,7 +67,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 			spreadsheet = this.accessor.getByIndex(index);
 		else {
 			if (index < 0 || index >= this.getSheetCount())
-				throw new NoSuchElementException(String.format(
+				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
 			final Sheet sheet = this.workbook.getSheetAt(index);

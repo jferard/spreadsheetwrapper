@@ -1,5 +1,5 @@
 /*******************************************************************************
- *     SpreadsheetWrapper - An abstraction layer over the API for Excel or Calc
+ *     SpreadsheetWrapper - An abstraction layer over some APIs for Excel or Calc
  *     Copyright (C) 2015  J. Férard
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import org.junit.After;
@@ -38,6 +40,7 @@ SpreadsheetDocumentReaderTest {
 
 	protected SpreadsheetWriter sw;
 
+	
 	/** set the test up */
 	@Override
 	@Before
@@ -150,7 +153,7 @@ SpreadsheetDocumentReaderTest {
 			throws CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet("Feuille1");
 	}
-
+	
 	@Override
 	protected abstract String getExtension();
 

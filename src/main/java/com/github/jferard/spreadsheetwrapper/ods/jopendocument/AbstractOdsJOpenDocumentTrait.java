@@ -19,28 +19,27 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.util.NoSuchElementException;
 
-import org.jopendocument.dom.XMLFormatVersion;
 import org.jopendocument.dom.spreadsheet.Sheet;
-import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 abstract class AbstractOdsJOpenDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
-	/** the *internal* document (workbook) */
-	private final SpreadSheet spreadSheet;
+		AbstractSpreadsheetDocumentTrait<T> {
+	/** the *internal* value (workbook) */
+	private OdsJOpenStatefulDocument sfSpreadSheet;
 
 	/**
 	 * @param spreadSheet
-	 *            the *internal* document (workbook)
+	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsJOpenDocumentTrait(final SpreadSheet spreadSheet) {
+	public AbstractOdsJOpenDocumentTrait(
+			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		super();
-		this.spreadSheet = spreadSheet;
-		for (int s = 0; s<this.spreadSheet.getSheetCount(); s++) {
-			final Sheet sheet = this.spreadSheet.getSheet(s);
+		this.sfSpreadSheet = sfSpreadSheet;
+		for (int s = 0; s < this.getSheetCount(); s++) {
+			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
 			final String name = sheet.getName();
 			final T reader = this.createNew(sheet);
 			this.accessor.put(name, s, reader);
@@ -57,11 +56,13 @@ AbstractSpreadsheetDocumentTrait<T> {
 		if (this.accessor.hasByIndex(index))
 			spreadsheet = this.accessor.getByIndex(index);
 		else {
-			if (index < 0 || index >= this.spreadSheet.getSheetCount())
-				throw new NoSuchElementException(String.format(
+			if (this.sfSpreadSheet.isNew()
+					|| index < 0
+					|| index >= this.sfSpreadSheet.getRawSheetCount())
+				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
-			final Sheet sheet = this.spreadSheet.getSheet(index);
+			final Sheet sheet = this.sfSpreadSheet.getRawSheet(index);
 			spreadsheet = this.createNew(sheet);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
@@ -71,14 +72,23 @@ AbstractSpreadsheetDocumentTrait<T> {
 	/** {@inheritDoc} */
 	@Override
 	protected T addSheetWithCheckedIndex(final int index, final String sheetName) {
-		Sheet sheet = this.spreadSheet.getSheet(sheetName);
-		if (sheet != null)
-			throw new IllegalArgumentException(String.format("Sheet %s exists",
-					sheetName));
+		Sheet sheet;
+		if (this.sfSpreadSheet.isNew()
+				&& this.sfSpreadSheet.getRawSheetCount() == 1) {
+			sheet = this.sfSpreadSheet.getRawSheet(0);
+			sheet.setName(sheetName);
+		} else { // ok
+			sheet = this.sfSpreadSheet.getRawSheet(sheetName);
+			if (sheet != null)
+				throw new IllegalArgumentException(String.format(
+						"Sheet %s exists", sheetName));
 
-		sheet = this.spreadSheet.addSheet(index, sheetName);
+			sheet = this.sfSpreadSheet.addRawSheet(index, sheetName);
+		}
+		this.sfSpreadSheet.setInitialized();
 		final T spreadsheet = this.createNew(sheet);
 		this.accessor.put(sheetName, index, spreadsheet);
+
 		return spreadsheet;
 	}
 
@@ -96,8 +106,12 @@ AbstractSpreadsheetDocumentTrait<T> {
 	@Override
 	protected T findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
 		final T spreadsheet;
-		for (int s = 0; s<this.spreadSheet.getSheetCount(); s++) {
-			final Sheet sheet = this.spreadSheet.getSheet(s);
+		if (this.sfSpreadSheet.isNew())
+			throw new NoSuchElementException(String.format(
+					"No %s sheet in workbook", sheetName));
+
+		for (int s = 0; s < this.sfSpreadSheet.getRawSheetCount(); s++) {
+			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
 			final String name = sheet.getName();
 			if (name.equals(sheetName)) {
 				spreadsheet = this.createNew(sheet);
@@ -105,14 +119,19 @@ AbstractSpreadsheetDocumentTrait<T> {
 				return spreadsheet;
 			}
 		}
-		
+
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in workbook", sheetName));
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected int getSheetCount() {
-		return this.spreadSheet.getSheetCount();
+	protected final int getSheetCount() {
+		int count;
+		if (this.sfSpreadSheet.isNew())
+			count = 0;
+		else
+			count = this.sfSpreadSheet.getRawSheetCount();
+		return count;
 	}
 }

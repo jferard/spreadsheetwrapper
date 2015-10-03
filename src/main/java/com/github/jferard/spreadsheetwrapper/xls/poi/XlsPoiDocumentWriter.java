@@ -33,21 +33,17 @@ import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
 import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
-import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
-import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
-import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.CellStyle.Color;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -141,6 +137,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
+		this.xlsPoiUtil = new XlsPoiUtil();
 		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
 				dateCellStyle, this.cellStyleByName);
 	}
@@ -168,8 +165,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -223,9 +219,10 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean createStyle(String styleName, String styleString) {
 		CellStyle cellStyle = this.workbook.createCellStyle();
-		Map<String, String> props = this.getPropertiesMap(styleString);
+		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
 		for (Map.Entry<String, String> entry : props.entrySet()) { 
 			if (entry.getKey().equals("font-weight")) {
 				if (entry.getValue().equals("bold")) {
@@ -234,9 +231,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 				    cellStyle.setFont(font);
 				}
 			  } else if (entry.getKey().equals("background-color")) {
-				  // int color = Integer.decode(entry.getValue());
-				  // do nothing here
-				  // cellStyle.setFillBackgroundColor(...);
+				  // do nothing
 			  }
 		}
 		this.cellStyleByName.put(styleName, cellStyle);
@@ -245,6 +240,26 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	
 	/** {@inheritDoc} */
 	@Override
+	public boolean setStyle(String styleName, com.github.jferard.spreadsheetwrapper.CellStyle wrapperCellStyle) {
+		CellStyle cellStyle = this.workbook.createCellStyle();
+		com.github.jferard.spreadsheetwrapper.Font wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont.isBold()) {
+			Font font = this.workbook.createFont();
+			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			cellStyle.setFont(font);
+		}
+		final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
+		if (backgroundColor != null) {
+			cellStyle.setFillBackgroundColor(backgroundColor.getHssfColor().getIndex());
+		}
+		this.cellStyleByName.put(styleName, cellStyle);
+		return true;
+	}
+	
+	
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
 	public boolean updateStyle(String styleName, String styleString) {
 		this.createStyle(styleName, styleString);
 		return true;
@@ -252,8 +267,15 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public String getStyleString(String styleName) {
-		CellStyle cellStyle = this.cellStyleByName.get(styleName);
-		return this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
+		return this.reader.getStyleString(styleName);
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public com.github.jferard.spreadsheetwrapper.CellStyle getCellStyle(String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+	
 }

@@ -113,11 +113,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	public String getFormula(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		final String formula = cell.getFormula();
-		System.out.println(formula);
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
 
-		System.out.println(formula.substring(1));
 		return formula.substring(1);
 	}
 

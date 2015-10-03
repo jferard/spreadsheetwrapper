@@ -23,15 +23,14 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import jxl.Cell;
+import jxl.biff.EmptyCell;
 import jxl.format.CellFormat;
 import jxl.write.DateTime;
 import jxl.write.Formula;
 import jxl.write.Label;
 import jxl.write.WritableCell;
-import jxl.write.WritableCellFeatures;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
@@ -78,7 +77,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		this.addCell(new jxl.write.Boolean(c, r, value));
+		this.addCell(r, c, new jxl.write.Boolean(c, r, value));
 		return value;
 	}
 
@@ -89,7 +88,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		this.addCell(new DateTime(c, r, date));
+		this.addCell(r, c, new DateTime(c, r, date));
 		return date;
 	}
 
@@ -97,7 +96,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
 		double retValue = value.doubleValue();
-		this.addCell(new jxl.write.Number(c, r, retValue));
+		this.addCell(r, c, new jxl.write.Number(c, r, retValue));
 		return retValue;
 	}
 
@@ -108,17 +107,17 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 			return "";
 
 		Formula formula;
-		final WritableCell xritableCell = this.getJxlCell(c, r);
-		if (xritableCell == null)
+//		final WritableCell writableCell = this.getJxlCell(c, r);
+//		if (writableCell == null)
 			formula = new Formula(c, r, fString);
-		else {
-			final CellFormat cellFormat = xritableCell.getCellFormat();
-			if (cellFormat == null)
-				formula = new Formula(c, r, fString);
-			else
-				formula = new Formula(c, r, fString, cellFormat);
-		}
-		this.addCellWithStdErrWorkaround(formula);
+//		else {
+//			final CellFormat cellFormat = writableCell.getCellFormat();
+//			if (cellFormat == null)
+//				formula = new Formula(c, r, fString);
+//			else
+//				formula = new Formula(c, r, fString, cellFormat);
+//		}
+		this.addCellWithStdErrWorkaround(r, c, formula);
 		return formula.getContents();
 	}
 
@@ -126,19 +125,23 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		int retValue = value.intValue();
-		this.setDouble(c, r, new Double(retValue));
+		this.setDouble(r, c, new Double(retValue));
 		return retValue;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		this.addCell(new Label(c, r, text));
+		this.addCell(r, c, new Label(c, r, text));
 		return text;
 	}
 
-	private void addCell(final WritableCell cell) {
+	private void addCell(int r, int c, final WritableCell cell) {
 		try {
+			WritableCell oldCell = this.getJxlCell(r, c);
+			final CellFormat oldFormat = oldCell.getCellFormat();
+			if (oldFormat != null)
+				cell.setCellFormat(oldFormat);
 			this.sheet.addCell(cell);
 		} catch (final RowsExceededException e) {
 			throw new IllegalArgumentException(e);
@@ -150,7 +153,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	}
 
 	/** Adds a cell */
-	private void addCellWithStdErrWorkaround(final WritableCell writableCell) {
+	private void addCellWithStdErrWorkaround(int r, int c, final WritableCell writableCell) {
 		// WORKAROUND : jxl does not throw an error but a message on stderr
 		System.err.flush(); // empties stderr
 		final PrintStream originalErr = new PrintStream(System.err); // backup
@@ -160,7 +163,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		System.setErr(new PrintStream(byteArrayOutputStream)); // stderr >
 		// bytearray
 
-		this.addCell(writableCell);
+		this.addCell(r, c, writableCell);
 		System.err.flush(); // empties stderr
 		System.setErr(originalErr); // original stderr
 		final String errMsg = byteArrayOutputStream.toString();
@@ -245,6 +248,10 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 		if (this.cellFormatByName.containsKey(styleName)) {
 			CellFormat format = this.cellFormatByName.get(styleName);
 			WritableCell jxlCell = this.getJxlCell(r, c);
+			if (jxlCell instanceof EmptyCell) {
+				this.setText(r, c, "");
+				jxlCell = this.getJxlCell(r, c);
+			}
 			jxlCell.setCellFormat(format);
 			return true;
 		} else

@@ -22,38 +22,40 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.CellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
- * The spreadSheet writer for Apache JOpen.
+ * The sfSpreadSheet writer for Apache JOpen.
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		implements SpreadsheetDocumentWriter {
-	/** delegation spreadSheet with definition of createNew */
+	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
 			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
-		OdsJOpenDocumentWriterTrait(final SpreadSheet document) {
-			super(document);
+		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
+			super(sfSpreadSheet);
 		}
 
 		/** {@inheritDoc} */
@@ -65,9 +67,9 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	}
 
 	/** the *internal* workbook */
-	private final SpreadSheet spreadSheet;
+	private final OdsJOpenStatefulDocument sfSpreadSheet;
 
-	/** delegation spreadSheet */
+	/** delegation sfSpreadSheet */
 	private final AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> documentTrait;
 	/** delegation reader */
 	private final OdsJOpenDocumentReader reader;
@@ -79,22 +81,23 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/**
 	 * @param logger
 	 *            the logger
-	 * @param spreadSheet
+	 * @param sfSpreadSheet
 	 *            the *internal* workbook
 	 * @param outputStream
 	 *            where to write
+	 * @param newDocument 
 	 * @throws SpreadsheetException
-	 *             if can't open spreadSheet writer
+	 *             if can't open sfSpreadSheet writer
 	 */
 	public OdsJOpenDocumentWriter(final Logger logger,
-			final SpreadSheet document,
+			final OdsJOpenStatefulDocument sfSpreadSheet,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		super(logger, outputStream);
-		this.reader = new OdsJOpenDocumentReader(document);
+		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
 		this.logger = logger;
-		this.spreadSheet = document;
-		this.documentTrait = new OdsJOpenDocumentWriterTrait(document);
+		this.sfSpreadSheet = sfSpreadSheet;
+		this.documentTrait = new OdsJOpenDocumentWriterTrait(sfSpreadSheet);
 		this.styles = new HashMap<String, String>();
 	}
 
@@ -103,7 +106,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentTrait
+				.addSheet(index, sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -121,8 +125,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -148,12 +151,14 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
+		SpreadsheetWriter writer;
 		return this.documentTrait.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
+		SpreadsheetWriter writer;
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
@@ -164,7 +169,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			throw new IllegalStateException(
 					String.format("Use saveAs when output file is not specified"));
 		try {
-			this.spreadSheet.getPackage().save(this.outputStream);
+			this.sfSpreadSheet.save(this.outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",
@@ -175,8 +180,9 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean createStyle(String styleName, String styleString) {
-		ODXMLDocument stylesDoc = this.spreadSheet.getPackage().getStyles();
+		ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		Element namedStyles = stylesDoc.getChild("styles", true);
 		List<Element> styles = namedStyles.getChildren("style");
 
@@ -185,46 +191,28 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 				return false;
 		}
 
-		Map<String, String> propertiesMap = this.getPropertiesMap(styleString);
-		Element style = createStyle(styleName, propertiesMap);
+		Map<String, String> propertiesMap = ImplUtility
+				.getPropertiesMap(styleString);
+		Element style = OdsJOpenUtility.createStyle(styleName, propertiesMap);
 		namedStyles.addContent(style);
 		return true;
 	}
 
-	private Element createStyle(String styleName, Map<String, String> propertiesMap) {
-		Namespace officeNS = Namespace.getNamespace("office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
-		Namespace foNS = Namespace.getNamespace("fo", "urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0");
-		Namespace styleNS = Namespace.getNamespace("style", "urn:oasis:names:tc:opendocument:xmlns:style:1.0");
-		Element style = new Element("style", styleNS);
-		style.setAttribute("name", styleName, styleNS);
-		style.setAttribute("family", "table-cell", styleNS);
-		if (propertiesMap.containsKey("background-color")) {
-			Element tableCellProps = new Element("table-cell-properties", styleNS);
-			tableCellProps.setAttribute("background-color",
-					propertiesMap.get("background-color"), foNS);
-			style.addContent(tableCellProps);
-		}
-		if (propertiesMap.containsKey("font-weight")) {
-			Element textProps = new Element("text-properties", styleNS);
-			textProps.setAttribute("font-weight",
-					propertiesMap.get("font-weight"), foNS);
-			style.addContent(textProps);
-		}
-		return style;
-	}
-
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean updateStyle(String styleName, String styleString) {
-		ODXMLDocument stylesDoc = this.spreadSheet.getPackage().getStyles();
+		ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		Element namedStyles = stylesDoc.getChild("styles", true);
 		List<Element> styles = namedStyles.getChildren("style");
 
 		for (Element style : styles) {
 			if (styleName.equals(style.getAttributeValue("name"))) {
 				styles.remove(style);
-				Map<String, String> propertiesMap = this.getPropertiesMap(styleString);
-				Element style2 = createStyle(styleName, propertiesMap);
+				Map<String, String> propertiesMap = ImplUtility
+						.getPropertiesMap(styleString);
+				Element style2 = OdsJOpenUtility.createStyle(styleName,
+						propertiesMap);
 				namedStyles.addContent(style);
 				return true;
 			}
@@ -234,7 +222,33 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public String getStyleString(String styleName) {
 		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public CellStyle getCellStyle(String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
+
+	@Override
+	public boolean setStyle(String styleName, CellStyle cellStyle) {
+		ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
+		Element namedStyles = stylesDoc.getChild("styles", true);
+		List<Element> styles = namedStyles.getChildren("style");
+
+		for (Element style : styles) {
+			if (styleName.equals(style.getAttributeValue("name"))) {
+				namedStyles.removeContent(style);
+				break;
+			}
+		}
+
+		Element style = OdsJOpenUtility.createStyle(styleName, cellStyle);
+		namedStyles.addContent(style);
+		return true;
 	}
 }

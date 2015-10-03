@@ -31,12 +31,12 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 AbstractSpreadsheetDocumentTrait<T> {
-	/** the *internal* document (workbook) */
+	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
 
 	/**
-	 * @param document
-	 *            the *internal* document (workbook)
+	 * @param value
+	 *            the *internal* value (workbook)
 	 */
 	public AbstractOdsOdfdomDocumentTrait(final OdfSpreadsheetDocument document) {
 		super();
@@ -64,7 +64,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 		else {
 			final List<OdfTable> tables = this.document.getTableList();
 			if (index < 0 || index >= tables.size())
-				throw new NoSuchElementException(String.format(
+				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
 			final OdfTable table = this.document.getTableList().get(index);

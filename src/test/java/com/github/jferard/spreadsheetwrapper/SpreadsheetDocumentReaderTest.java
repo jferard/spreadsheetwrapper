@@ -1,5 +1,5 @@
 /*******************************************************************************
- *     SpreadsheetWrapper - An abstraction layer over the API for Excel or Calc
+ *     SpreadsheetWrapper - An abstraction layer over some APIs for Excel or Calc
  *     Copyright (C) 2015  J. Férard
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -104,12 +104,12 @@ public abstract class SpreadsheetDocumentReaderTest {
 		}
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testSheet5() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testSheet6() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
 	}
@@ -147,12 +147,12 @@ public abstract class SpreadsheetDocumentReaderTest {
 		sr = this.sdr.getSpreadsheet("Feuille1");
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testSheetOutOfBounds1() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
 	}
 
-	@Test(expected = NoSuchElementException.class)
+	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testSheetOutOfBounds2() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
 	}

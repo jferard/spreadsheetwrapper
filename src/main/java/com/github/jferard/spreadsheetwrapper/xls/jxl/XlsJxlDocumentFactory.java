@@ -67,7 +67,8 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		
 		try {
 			final WritableWorkbook writableWorkbook = Workbook
-					.createWorkbook(outputStream);
+					.createWorkbook(outputStream, this.getWriteSettings());
+			
 			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -81,7 +82,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream);
+			final Workbook workbook = Workbook.getWorkbook(inputStream, getReadSettings());
 			return new XlsJxlDocumentReader(workbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -101,12 +102,9 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			throw new SpreadsheetException("Specify an output stream");
 		
 		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream);
-			final WorkbookSettings settings = new WorkbookSettings();
-			settings.setLocale(Locale.US);
-			settings.setWriteAccess("spreadsheetwrapper");
+			final Workbook workbook = Workbook.getWorkbook(inputStream, getReadSettings());
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
-					outputStream, workbook, settings);
+					outputStream, workbook, getWriteSettings());
 			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -117,6 +115,19 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		}
 	}
 
+	private WorkbookSettings getReadSettings() {
+		final WorkbookSettings settings = new WorkbookSettings();
+		settings.setLocale(Locale.US);
+		settings.setEncoding("windows-1252");
+		return settings;
+	}
+
+	private WorkbookSettings getWriteSettings() {
+		final WorkbookSettings settings = this.getReadSettings();
+		settings.setWriteAccess("spreadsheetwrapper");
+		return settings;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated

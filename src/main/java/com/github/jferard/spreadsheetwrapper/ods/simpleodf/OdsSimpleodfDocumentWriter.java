@@ -34,12 +34,16 @@ import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.CellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
+import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -49,27 +53,27 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  */
 public class OdsSimpleodfDocumentWriter extends
 AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
-	/** delegation document with definition of createNew */
-	private final class OdsSimpleodfDocumentW extends
+	/** delegation value with definition of createNew */
+	private final class OdsSimpleodfDocumentWriterTrait extends
 			AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
 		/**
-		 * @param document
+		 * @param value
 		 *            *internal* workbook
 		 */
-		OdsSimpleodfDocumentW(final SpreadsheetDocument document) {
-			super(document);
+		OdsSimpleodfDocumentWriterTrait(final OdsSimpleodfStatefulDocument sfDocument) {
+			super(sfDocument);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsSimpleodfDocumentW this, */final Table table) {
+				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
 			return new OdsSimpleodfWriter(table);
 		}
 	}
 
 	/** *internal* workbook */
-	private final SpreadsheetDocument document;
+	private final OdsSimpleodfStatefulDocument sfDocument;
 
 	/** for delegation */
 	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> documentTrait;
@@ -84,23 +88,23 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/**
 	 * @param logger
 	 *            the logger
-	 * @param document
+	 * @param value
 	 *            *internal* workbook
 	 * @param outputURL
 	 *            URL where to write, should be a local file
 	 * @throws SpreadsheetException
-	 *             if the document writer can't be created
+	 *             if the value writer can't be created
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
-			final SpreadsheetDocument document,
+			final OdsSimpleodfStatefulDocument sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		super(logger, outputStream);
-		this.reader = new OdsSimpleodfDocumentReader(document);
+		this.reader = new OdsSimpleodfDocumentReader(sfDocument);
 		this.logger = logger;
-		this.document = document;
-		this.documentStyles = this.document.getDocumentStyles();
-		this.documentTrait = new OdsSimpleodfDocumentW(document);
+		this.sfDocument = sfDocument;
+		this.documentStyles = this.sfDocument.getStyles();
+		this.documentTrait = new OdsSimpleodfDocumentWriterTrait(sfDocument);
 	}
 
 	/**
@@ -135,8 +139,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -178,7 +181,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			throw new IllegalStateException(
 					String.format("Use saveAs when output file is not specified"));
 		try {
-			this.document.save(this.outputStream);
+			this.sfDocument.save(this.outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",
@@ -197,7 +200,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	
 	private Map<OdfStyleProperty, String> getProperties(String styleString) {
 		Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
-		Map<String, String> props = this.getPropertiesMap(styleString);
+		Map<String, String> props = ImplUtility.getPropertiesMap(styleString);
 		for (Map.Entry<String, String> entry : props.entrySet()) { 
 			if (entry.getKey().equals("font-weight")) {
 				properties.put(OdfTextProperties.FontWeight, entry.getValue());
@@ -210,6 +213,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean updateStyle(String styleName, String styleString) {
 		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
 		existingStyle.setProperties(this.getProperties(styleString));
@@ -218,14 +222,21 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public String getStyleString(String styleName) {
-		OdfStyle existingStyle = this.documentStyles.getStyle(styleName, OdfStyleFamily.TableCell);
-		return this.getStyleString(existingStyle);
+		return this.reader.getStyleString(styleName);
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(String styleName, CellStyle cellStyle) {
+		OdfStyle newStyle = this.documentStyles.newStyle(styleName, OdfStyleFamily.TableCell);
+		newStyle.setProperties(OdsUtility.getProperties(cellStyle));
+		return true;
 	}
 
-	private String getStyleString(OdfStyle style) {
-		String fontWeight = style.getProperty(OdfTextProperties.FontWeight);
-		String backgroundColor = style.getProperty(OdfTableCellProperties.BackgroundColor);
-		return String.format("font-weight:%s;background-color:%s", fontWeight, backgroundColor);  
-	}	
+	@Override
+	public CellStyle getCellStyle(String styleName) {
+		return this.reader.getCellStyle(styleName);
+	}
 }

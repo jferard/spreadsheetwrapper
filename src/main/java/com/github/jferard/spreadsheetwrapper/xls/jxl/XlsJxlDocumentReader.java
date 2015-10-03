@@ -25,6 +25,7 @@ import java.util.NoSuchElementException;
 import jxl.Sheet;
 import jxl.Workbook;
 
+import com.github.jferard.spreadsheetwrapper.CellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
@@ -100,7 +101,7 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		else {
 			final Sheet[] sheets = this.workbook.getSheets();
 			if (index < 0 || index >= sheets.length)
-				throw new NoSuchElementException(String.format(
+				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
 			final Sheet sheet = sheets[index];
@@ -139,4 +140,18 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in workbook", sheetName));
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public CellStyle getCellStyle(String styleName) {
+		throw new UnsupportedOperationException();
+	}
+	
 }

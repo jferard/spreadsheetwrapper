@@ -32,6 +32,8 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -46,16 +48,16 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadsheetDocumentReader createReader(final Workbook workbook)
+	protected SpreadsheetDocumentReader createReader(final Stateful<Workbook> sfWorkbook)
 			throws SpreadsheetException {
-		return new XlsPoiDocumentReader(workbook);
+		return new XlsPoiDocumentReader(sfWorkbook.getValue());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadsheetDocumentWriter createWriter(final Workbook workbook,
+	protected SpreadsheetDocumentWriter createWriter(final Stateful<Workbook> sfWorkbook,
 			final /*@Nullable*/ OutputStream outputStream) throws SpreadsheetException {
-		return new XlsPoiDocumentWriter(this.logger, workbook, outputStream);
+		return new XlsPoiDocumentWriter(this.logger, sfWorkbook.getValue(), outputStream);
 	}
 
 	/** {@inheritDoc} */

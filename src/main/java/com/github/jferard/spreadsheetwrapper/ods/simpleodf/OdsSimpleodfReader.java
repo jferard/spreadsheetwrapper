@@ -179,6 +179,8 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
-		return this.curRow.getCellByIndex(c);
+		Cell cell = this.curRow.getCellByIndex(c);
+		cell.getStyleHandler().getStyleElementForWrite();
+		return cell;
 	}
 }

@@ -31,11 +31,10 @@ public interface SpreadsheetDocumentReader {
 	 * @param index
 	 *            index of the sheet, table, ...
 	 * @return the cursor.
-	 * @throws SpreadsheetException
+	 * @throws IndexOutOfBoundsException
 	 *             if the sheet, table, ... does not exist
 	 */
-	SpreadsheetReaderCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException;
+	SpreadsheetReaderCursor getNewCursorByIndex(final int index);
 
 	/**
 	 * @param sheetName
@@ -66,4 +65,22 @@ public interface SpreadsheetDocumentReader {
 	 * @return the reader.
 	 */
 	SpreadsheetReader getSpreadsheet(final String name);
+	
+	/**
+	 * @param styleName
+	 *            the name of the style
+	 * @return the style
+	 */
+	CellStyle getCellStyle(String styleName);
+
+	/**
+	 * Gets a style string
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @return the style string
+	 * @deprecated
+	 */
+	@Deprecated
+	String getStyleString(String styleName);
 }

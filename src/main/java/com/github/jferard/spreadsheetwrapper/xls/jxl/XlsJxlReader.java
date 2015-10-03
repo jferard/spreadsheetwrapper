@@ -17,6 +17,7 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import jxl.BooleanCell;
@@ -175,10 +176,10 @@ SpreadsheetReader {
 	@Override
 	public String getText(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
-		if (cell instanceof LabelCell)
-			return ((LabelCell) cell).getString();
-
-		throw new IllegalArgumentException(cell.toString());
+		if (!(cell instanceof LabelCell))
+			throw new IllegalArgumentException(cell.toString());
+		
+		return ((LabelCell) cell).getString();
 	}
 
 	/**

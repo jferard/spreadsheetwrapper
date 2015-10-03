@@ -29,11 +29,12 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodfDocumentFactory extends
-AbstractDocumentFactory<SpreadsheetDocument> implements
+		AbstractDocumentFactory<SpreadsheetDocument> implements
 		SpreadsheetDocumentFactory {
 	private final Logger logger;
 
@@ -45,17 +46,20 @@ AbstractDocumentFactory<SpreadsheetDocument> implements
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
-			final SpreadsheetDocument document) throws SpreadsheetException {
-		return new OdsSimpleodfDocumentReader(document);
+			final Stateful<SpreadsheetDocument> sfDocument)
+			throws SpreadsheetException {
+		return new OdsSimpleodfDocumentReader(new OdsSimpleodfStatefulDocument(
+				sfDocument));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final SpreadsheetDocument document, final /*@Nullable*/ OutputStream outputStream)
+			final Stateful<SpreadsheetDocument> sfDocument,
+			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
-		return new OdsSimpleodfDocumentWriter(this.logger, document,
-				outputStream);
+		return new OdsSimpleodfDocumentWriter(this.logger,
+				new OdsSimpleodfStatefulDocument(sfDocument), outputStream);
 	}
 
 	/** {@inheritDoc} */
@@ -76,7 +80,8 @@ AbstractDocumentFactory<SpreadsheetDocument> implements
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocument newSpreadsheetDocument(
-			final /*@Nullable*/ OutputStream outputStream) throws SpreadsheetException {
+			final/*@Nullable*/OutputStream outputStream)
+			throws SpreadsheetException {
 		SpreadsheetDocument document;
 		try {
 			document = SpreadsheetDocument.newSpreadsheetDocument();

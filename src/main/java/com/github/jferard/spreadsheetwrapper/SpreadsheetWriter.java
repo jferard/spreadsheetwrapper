@@ -230,6 +230,7 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 *            the style string (@see createStyle)
 	 * @return false if failed
 	 */
+	@Deprecated
 	boolean setStyleString(int r, int c, String styleString);
 
 	/**

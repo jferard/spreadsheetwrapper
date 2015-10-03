@@ -54,8 +54,7 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	SpreadsheetWriterCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException;
+	SpreadsheetWriterCursor getNewCursorByIndex(final int index);
 
 	/** {@inheritDoc} */
 	@Override
@@ -71,40 +70,40 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	SpreadsheetWriter getSpreadsheet(final String name);
 
 	/**
-	 * Saves the current document
+	 * Saves the current value
 	 *
 	 * @throws SpreadsheetException
-	 *             if the document can't be saved
+	 *             if the value can't be saved
 	 */
 	void save() throws SpreadsheetException;
 
 	/**
-	 * Saves the current document
+	 * Saves the current value
 	 *
 	 * @param outputFile
 	 *            the destination file
 	 * @throws SpreadsheetException
-	 *             if the document can't be saved
+	 *             if the value can't be saved
 	 */
 	void saveAs(File outputFile) throws SpreadsheetException;
 
 	/**
-	 * Saves the current document
+	 * Saves the current value
 	 *
 	 * @param outputStream
 	 *            the destination stream
 	 * @throws SpreadsheetException
-	 *             if the document can't be saved
+	 *             if the value can't be saved
 	 */
 	void saveAs(OutputStream outputStream) throws SpreadsheetException;
 
 	/**
-	 * Saves the current document
+	 * Saves the current value
 	 *
 	 * @param outputURL
 	 *            the destination URL (local file is better)
 	 * @throws SpreadsheetException
-	 *             if the document can't be saved
+	 *             if the value can't be saved
 	 * @deprecated use saveAs(outputStream)
 	 */
 	@Deprecated
@@ -118,9 +117,22 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	 * @param styleString
 	 *            the style string (format to be defined)
 	 * @return false if fails
+	 * @deprecated
 	 */
+	@Deprecated
 	boolean createStyle(String styleName, String styleString);
 
+	/**
+	 * Creates a new style
+	 *
+	 * @param styleName
+	 *            the name of the style
+	 * @param cellStyle the style
+	 * 
+	 * @return false if fails
+	 */
+	boolean setStyle(String styleName, CellStyle cellStyle);
+	
 	/**
 	 * Creates an existing style
 	 *
@@ -129,15 +141,8 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	 * @param styleString
 	 *            the style string (format to be defined)
 	 * @return false if fails
+	 * @deprecated
 	 */
+	@Deprecated
 	boolean updateStyle(String styleName, String styleString);
-
-	/**
-	 * Gets a style string
-	 *
-	 * @param styleName
-	 *            the name of the style
-	 * @return the style string
-	 */
-	String getStyleString(String styleName);
 }

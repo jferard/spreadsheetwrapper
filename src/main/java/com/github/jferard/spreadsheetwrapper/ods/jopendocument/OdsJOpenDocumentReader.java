@@ -24,11 +24,13 @@ import java.util.List;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
+import com.github.jferard.spreadsheetwrapper.CellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
+import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -36,15 +38,15 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 /**
  */
 class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
-	/** delegation document with definition of createNew */
+	/** delegation value with definition of createNew */
 	private final class OdsJOpenDocumentReaderTrait extends
 			AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/**
-		 * @param spreadSheet
-		 *            *internal* document
+		 * @param sfSpreadSheet
+		 *            *internal* value
 		 */
-		OdsJOpenDocumentReaderTrait(final SpreadSheet spreadSheet) {
-			super(spreadSheet);
+		OdsJOpenDocumentReaderTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
+			super(sfSpreadSheet);
 		}
 
 		/** {@inheritDoc} */
@@ -55,21 +57,21 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		}
 	}
 
-	/** the *internal* document */
-	private final SpreadSheet spreadSheet;
+	/** the *internal* value */
+	private final Stateful<SpreadSheet> sfSpreadSheet;
 	/** for delegation only */
-	private final AbstractOdsJOpenDocumentTrait<SpreadsheetReader> spreadSheetTrait;
+	private final AbstractOdsJOpenDocumentTrait<SpreadsheetReader> documentTrait;
 
 	/**
-	 * @param spreadSheet
-	 *            *internal* document
+	 * @param sfSpreadSheet
+	 *            *internal* value
 	 * @throws SpreadsheetException
 	 *             if can't open reader
 	 */
-	OdsJOpenDocumentReader(final SpreadSheet spreadSheet)
+	OdsJOpenDocumentReader(final OdsJOpenStatefulDocument sfSpreadSheet)
 			throws SpreadsheetException {
-		this.spreadSheet = spreadSheet;
-		this.spreadSheetTrait = new OdsJOpenDocumentReaderTrait(spreadSheet);
+		this.sfSpreadSheet = sfSpreadSheet;
+		this.documentTrait = new OdsJOpenDocumentReaderTrait(sfSpreadSheet);
 	}
 
 	/** {@inheritDoc} */
@@ -80,8 +82,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetReaderCursor getNewCursorByIndex(final int index)
-			throws SpreadsheetException {
+	public SpreadsheetReaderCursor getNewCursorByIndex(final int index) {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
 
@@ -95,30 +96,43 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** */
 	@Override
 	public int getSheetCount() {
-		return this.spreadSheet.getSheetCount();
+		return this.documentTrait.getSheetCount();
 	}
 
 	/** */
 	@Override
 	public List<String> getSheetNames() {
+		final List<String> sheetNames;
 		int sheetCount = this.getSheetCount();
-		final List<String> tableNames = new ArrayList<String>(sheetCount);
-		for (int s = 0; s<sheetCount; s++)
-			tableNames.add(this.spreadSheet.getSheet(s).getName());
-		return tableNames;
+		sheetNames = new ArrayList<String>(sheetCount);
+		for (int s = 0; s < sheetCount; s++)
+			sheetNames.add(this.sfSpreadSheet.getValue().getSheet(s).getName());
+		return sheetNames;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.spreadSheetTrait.getSpreadsheet(index);
+		return this.documentTrait.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.spreadSheetTrait.getSpreadsheet(sheetName);
+		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-	
-	
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public CellStyle getCellStyle(String styleName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Deprecated
+	public String getStyleString(String styleName) {
+		throw new UnsupportedOperationException();
+	}
 }

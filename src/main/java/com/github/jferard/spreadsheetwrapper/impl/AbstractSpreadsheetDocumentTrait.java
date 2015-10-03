@@ -58,14 +58,14 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 	protected final Accessor<T> accessor;
 
 	/**
-	 * Creates an abstract spreadsheet document
+	 * Creates an abstract spreadsheet value
 	 */
 	protected AbstractSpreadsheetDocumentTrait() {
 		this.accessor = new Accessor<T>();
 	}
 
 	/**
-	 * Adds a sheet to the document
+	 * Adds a sheet to the value
 	 *
 	 * @param index
 	 *            (0..n) the sheet is inserted before this index
