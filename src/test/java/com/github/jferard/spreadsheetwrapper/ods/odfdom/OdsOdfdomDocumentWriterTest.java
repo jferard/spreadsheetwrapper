@@ -24,13 +24,14 @@ import org.junit.Test;
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	/** {@inheritDoc} */
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
 	public final void testAddAt0() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
+			CantInsertElementInSpreadsheetException {
 		super.testAddAt0();
 	}
 
@@ -88,6 +89,6 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal());
+		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

@@ -133,7 +133,7 @@ public class Accessor</*@NonNull*/T> {
 				}
 			}
 			sb.append(index).append("&").append(name).append("->")
-					.append(element).append(",");
+			.append(element).append(",");
 		}
 		sb.deleteCharAt(sb.length() - 1).append("]");
 		return sb.toString();

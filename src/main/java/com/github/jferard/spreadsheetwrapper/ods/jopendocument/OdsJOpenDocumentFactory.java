@@ -38,18 +38,21 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-		AbstractDocumentFactory<SpreadSheet> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<SpreadSheet> implements
+SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
+	private final OdsJOpenStyleUtility styleUtility;
 
 	/**
 	 * @param logger
 	 *            simple logger
 	 */
-	public OdsJOpenDocumentFactory(final Logger logger) {
+	public OdsJOpenDocumentFactory(final Logger logger,
+			final OdsJOpenStyleUtility styleUtility) {
 		super(logger);
 		this.logger = logger;
+		this.styleUtility = styleUtility;
 	}
 
 	/** {@inheritDoc} */
@@ -69,8 +72,8 @@ public class OdsJOpenDocumentFactory extends
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadSheet> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
-		return new OdsJOpenDocumentWriter(this.logger,
+					throws SpreadsheetException {
+		return new OdsJOpenDocumentWriter(this.logger, this.styleUtility,
 				new OdsJOpenStatefulDocument(sfDocument), outputStream);
 	}
 
@@ -87,7 +90,7 @@ public class OdsJOpenDocumentFactory extends
 	@Override
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		try {
 			return SpreadSheet.createEmpty(new DefaultTableModel());
 		} catch (final IOException e) {

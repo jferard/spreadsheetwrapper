@@ -23,7 +23,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 
 public class OdsJOpenEmptyDocumentWriterTest extends
-SpreadsheetEmptyDocumentWriterTest {
+		SpreadsheetEmptyDocumentWriterTest {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -31,6 +31,6 @@ SpreadsheetEmptyDocumentWriterTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal());
+		return new OdsJOpenDocumentFactory(Logger.getGlobal(), new OdsJOpenStyleUtility());
 	}
 }

@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReaderTest;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class XlsPoiDocumentReaderTest extends SpreadsheetDocumentReaderTest {
 	@Override
@@ -30,6 +31,6 @@ public class XlsPoiDocumentReaderTest extends SpreadsheetDocumentReaderTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsPoiDocumentFactory(Logger.getGlobal());
+		return new XlsPoiDocumentFactory(Logger.getGlobal(), new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

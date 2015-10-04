@@ -25,11 +25,11 @@ import org.simpleods.SimpleOdsException;
 import org.simpleods.Styles;
 import org.simpleods.Table;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** a value for delegation */
 	private final class OdsSimpleodsDocumentReaderTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param file
 		 *            *internal* workbook

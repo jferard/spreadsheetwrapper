@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  *            internal workbook
  */
 public abstract class AbstractDocumentFactory<R> extends
-		AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
+AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	private final Logger logger;
 
 	/**
@@ -49,7 +49,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
 		return this.createWriter(Stateful.createNew(document), outputStream);
 	}
@@ -67,7 +67,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
 		return this.createWriter(Stateful.createInitialized(document),
 				outputStream);
@@ -95,7 +95,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	protected abstract SpreadsheetDocumentWriter createWriter(
 			Stateful<R> stateful,
 			/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
 
 	/**
 	 * @param inputStream
@@ -113,6 +113,6 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @throws SpreadsheetException
 	 */
 	protected abstract R newSpreadsheetDocument(
-	/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
+			/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
 
 }

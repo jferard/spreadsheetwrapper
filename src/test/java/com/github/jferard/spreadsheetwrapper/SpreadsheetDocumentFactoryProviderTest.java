@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
 @SuppressWarnings("unused")
 public class SpreadsheetDocumentFactoryProviderTest {
@@ -37,7 +38,7 @@ public class SpreadsheetDocumentFactoryProviderTest {
 	public void setUp() {
 		final Map<String, SpreadsheetDocumentFactory> factoryByExtension = new HashMap<String, SpreadsheetDocumentFactory>();
 		factoryByExtension.put("ods",
-				new OdsOdfdomDocumentFactory(Logger.getGlobal()));
+				new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper())));
 		this.spreadsheetDocumentFactoryProvider = new SpreadsheetDocumentFactoryProvider(
 				factoryByExtension);
 	}

@@ -30,14 +30,13 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
-import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -72,6 +71,8 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** delegation reader */
 	private final OdsOdfdomDocumentReader reader;
 
+	private final OdsOdfdomStyleUtility styleUtility;
+
 	/** the logger */
 	final Logger logger;
 
@@ -86,11 +87,13 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *             if can't open value writer
 	 */
 	public OdsOdfdomDocumentWriter(final Logger logger,
+			final OdsOdfdomStyleUtility styleUtility,
 			final OdfSpreadsheetDocument document,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		super(logger, outputStream);
-		this.reader = new OdsOdfdomDocumentReader(document);
+		this.styleUtility = styleUtility;
+		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);
 		this.logger = logger;
 		this.document = document;
 		this.documentStyles = this.document.getDocumentStyles();
@@ -124,7 +127,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public boolean createStyle(final String styleName, final String styleString) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);
-		newStyle.setProperties(OdsUtility.getProperties(styleString));
+		newStyle.setProperties(this.styleUtility.getProperties(styleString));
 		return true;
 	}
 
@@ -196,10 +199,12 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);
-		newStyle.setProperties(OdsUtility.getProperties(wrapperCellStyle));
+		newStyle.setProperties(this.styleUtility
+				.getProperties(wrapperCellStyle));
 		return true;
 	}
 
@@ -209,7 +214,8 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public boolean updateStyle(final String styleName, final String styleString) {
 		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
 				OdfStyleFamily.TableCell);
-		existingStyle.setProperties(OdsUtility.getProperties(styleString));
+		existingStyle.setProperties(this.styleUtility
+				.getProperties(styleString));
 		return true;
 	}
 }

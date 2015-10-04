@@ -24,11 +24,11 @@ import java.util.List;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsJOpenDocumentReaderTrait extends
-			AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
+	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param sfSpreadSheet
 		 *            *internal* value

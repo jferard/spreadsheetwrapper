@@ -30,6 +30,6 @@ public class OdsJOpenFactoryTest extends SpreadsheetDocumentFactoryTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal());
+		return new OdsJOpenDocumentFactory(Logger.getGlobal(), new OdsJOpenStyleUtility());
 	}
 }

@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+		AbstractSpreadsheetDocumentTrait<T> {
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 

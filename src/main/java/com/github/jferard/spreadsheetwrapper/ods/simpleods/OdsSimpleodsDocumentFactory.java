@@ -33,20 +33,24 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	/** the logger */
 	private final Logger logger;
+	private final StyleUtility styleUtility;
 
 	/**
 	 * @param logger
 	 *            the logger
 	 */
-	public OdsSimpleodsDocumentFactory(final Logger logger) {
+	public OdsSimpleodsDocumentFactory(final Logger logger,
+			final StyleUtility styleUtility) {
 		this.logger = logger;
+		this.styleUtility = styleUtility;
 	}
 
 	/** {@inheritDoc} */
@@ -66,8 +70,8 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 		OutputStream outputStream;
 		try {
 			outputStream = new FileOutputStream(f);
-			return new OdsSimpleodsDocumentWriter(this.logger, file,
-					outputStream);
+			return new OdsSimpleodsDocumentWriter(this.logger,
+					this.styleUtility, file, outputStream);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -76,7 +80,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -114,7 +118,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 

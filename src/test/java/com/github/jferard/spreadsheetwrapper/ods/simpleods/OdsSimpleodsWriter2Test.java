@@ -29,6 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsSimpleodsWriter2Test extends SpreadsheetWriter2Test {
 	/** set the test up */
@@ -94,6 +95,6 @@ public class OdsSimpleodsWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodsDocumentFactory(Logger.getGlobal());
+		return new OdsSimpleodsDocumentFactory(Logger.getGlobal(), new StyleUtility());
 	}
 }

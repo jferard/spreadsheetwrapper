@@ -21,7 +21,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,13 +29,12 @@ import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -47,10 +45,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
-			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 		}
@@ -72,6 +70,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
 	private final HashMap<String, String> styles;
 
+	private final OdsJOpenStyleUtility styleUtility;
+
 	/** the logger */
 	final Logger logger;
 
@@ -87,10 +87,12 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *             if can't open sfSpreadSheet writer
 	 */
 	public OdsJOpenDocumentWriter(final Logger logger,
+			final OdsJOpenStyleUtility styleUtility,
 			final OdsJOpenStatefulDocument sfSpreadSheet,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, outputStream);
+		this.styleUtility = styleUtility;
 		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
@@ -125,6 +127,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public boolean createStyle(final String styleName, final String styleString) {
 		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		final Element namedStyles = stylesDoc.getChild("styles", true);
+		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
 
 		for (final Element style : styles) {
@@ -132,10 +135,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 				return false;
 		}
 
-		final Map<String, String> propertiesMap = ImplUtility
-				.getPropertiesMap(styleString);
-		final Element style = OdsJOpenUtility.createStyle(styleName,
-				propertiesMap);
+		final Element style = this.styleUtility.createStyleElement(styleName,
+				styleString);
 		namedStyles.addContent(style);
 		return true;
 	}
@@ -175,14 +176,12 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		final SpreadsheetWriter writer;
 		return this.documentTrait.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		final SpreadsheetWriter writer;
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
@@ -210,9 +209,11 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	}
 
 	@Override
-	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
 		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		final Element namedStyles = stylesDoc.getChild("styles", true);
+		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
 
 		for (final Element style : styles) {
@@ -222,7 +223,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			}
 		}
 
-		final Element style = OdsJOpenUtility.createStyle(styleName, wrapperCellStyle);
+		final Element style = this.styleUtility.createStyleElement(styleName,
+				wrapperCellStyle);
 		namedStyles.addContent(style);
 		return true;
 	}
@@ -233,16 +235,15 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public boolean updateStyle(final String styleName, final String styleString) {
 		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		final Element namedStyles = stylesDoc.getChild("styles", true);
+		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
 
 		for (final Element style : styles) {
 			if (styleName.equals(style.getAttributeValue("name"))) {
 				styles.remove(style);
-				final Map<String, String> propertiesMap = ImplUtility
-						.getPropertiesMap(styleString);
-				final Element style2 = OdsJOpenUtility.createStyle(styleName,
-						propertiesMap);
-				namedStyles.addContent(style);
+				final Element newStyle = this.styleUtility.createStyleElement(
+						styleName, styleString);
+				namedStyles.addContent(newStyle);
 				return true;
 			}
 		}

@@ -27,15 +27,15 @@ import org.simpleods.Table;
 import org.simpleods.TableStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -44,10 +44,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
 		}
@@ -72,6 +72,8 @@ public class OdsSimpleodsDocumentWriter extends
 	/** for delegation */
 	private final OdsSimpleodsDocumentReader reader;
 
+	private final StyleUtility styleUtility;
+
 	/**
 	 * @param logger
 	 *            simple logger
@@ -80,9 +82,11 @@ public class OdsSimpleodsDocumentWriter extends
 	 * @param outputURL
 	 *            where to write
 	 */
-	public OdsSimpleodsDocumentWriter(final Logger logger, final OdsFile file,
+	public OdsSimpleodsDocumentWriter(final Logger logger,
+			final StyleUtility styleUtility, final OdsFile file,
 			final OutputStream outputStream) {
 		super(logger, outputStream);
+		this.styleUtility = styleUtility;
 		this.reader = new OdsSimpleodsDocumentReader(file);
 		this.logger = logger;
 		this.file = file;
@@ -126,7 +130,7 @@ public class OdsSimpleodsDocumentWriter extends
 		// add to content because of background-color.
 		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
 				styleName, this.file);
-		final Map<String, String> props = ImplUtility
+		final Map<String, String> props = this.styleUtility
 				.getPropertiesMap(styleString);
 		for (final Map.Entry<String, String> entry : props.entrySet()) {
 			if (entry.getKey().equals("font-weight")) {
@@ -191,7 +195,7 @@ public class OdsSimpleodsDocumentWriter extends
 		return this.reader.getStyleString(styleName);
 	}
 
-	/** */
+	/** {@inheritDoc} */
 	@Override
 	public void save() throws SpreadsheetException {
 		if (this.outputStream == null)
@@ -206,7 +210,8 @@ public class OdsSimpleodsDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
 		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
 				styleName, this.file);
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
@@ -216,7 +221,8 @@ public class OdsSimpleodsDocumentWriter extends
 			if (wrapperFont.isItalic())
 				newStyle.setFontWeightItalic();
 		}
-		final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
 		if (backgroundColor != null)
 			newStyle.setBackgroundColor(backgroundColor.toHex());
 		return true;

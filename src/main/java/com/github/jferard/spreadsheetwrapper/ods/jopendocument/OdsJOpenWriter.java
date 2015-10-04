@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** reader for delegation */
 	private final OdsJOpenReader preader;
 	private final Sheet sheet;

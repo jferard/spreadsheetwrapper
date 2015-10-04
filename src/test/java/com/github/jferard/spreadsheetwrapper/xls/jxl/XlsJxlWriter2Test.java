@@ -78,6 +78,6 @@ public class XlsJxlWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal());
+		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
 	}
 }

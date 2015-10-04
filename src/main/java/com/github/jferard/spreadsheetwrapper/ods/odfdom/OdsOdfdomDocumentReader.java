@@ -28,13 +28,12 @@ import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
-import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -44,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsUtility;
 class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param value
 		 *            *internal* value
@@ -66,6 +65,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	private final OdfOfficeStyles documentStyles;
 	/** for delegation only */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> documentTrait;
+	private final OdsOdfdomStyleUtility styleUtility;
 
 	/**
 	 * @param value
@@ -73,8 +73,9 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	 * @throws SpreadsheetException
 	 *             if can't open reader
 	 */
-	OdsOdfdomDocumentReader(final OdfSpreadsheetDocument document)
-			throws SpreadsheetException {
+	OdsOdfdomDocumentReader(final OdsOdfdomStyleUtility styleUtility,
+			final OdfSpreadsheetDocument document) throws SpreadsheetException {
+		this.styleUtility = styleUtility;
 		this.document = document;
 		try {
 			this.document.getContentRoot();
@@ -97,7 +98,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
 				OdfStyleFamily.TableCell);
-		return OdsUtility.getCellStyle(existingStyle);
+		return this.styleUtility.getCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -171,6 +172,6 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	public String getStyleString(final String styleName) {
 		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
 				OdfStyleFamily.TableCell);
-		return OdsUtility.getStyleString(existingStyle);
+		return this.styleUtility.getStyleString(existingStyle);
 	}
 }

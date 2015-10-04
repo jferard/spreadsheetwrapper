@@ -15,22 +15,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.impl;
 
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderTest;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
+public class StyleUtility {
 
-public class OdsOdfdomReaderTest extends SpreadsheetReaderTest {
-	@Override
-	protected String getExtension() {
-		return "ods";
+	/**
+	 * @param styleString
+	 *            the styleString, format key1:value1;key2:value2
+	 * @return
+	 */
+	public Map<String, String> getPropertiesMap(final String styleString) {
+		final Map<String, String> properties = new HashMap<String, String>();
+		final String[] styleProps = styleString.split(";");
+		for (final String styleProp : styleProps) {
+			final String[] entry = styleProp.split(":");
+			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());
+		}
+		return properties;
 	}
 
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()) );
-	}
 }

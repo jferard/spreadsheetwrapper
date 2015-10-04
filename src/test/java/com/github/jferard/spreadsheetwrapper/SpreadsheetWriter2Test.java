@@ -27,8 +27,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
-
 public abstract class SpreadsheetWriter2Test {
 	@Rule
 	public TestName name = new TestName();
@@ -143,8 +141,10 @@ public abstract class SpreadsheetWriter2Test {
 
 	@Test
 	public final void testStyle2() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(1, 0, "Tail", "");
@@ -152,8 +152,10 @@ public abstract class SpreadsheetWriter2Test {
 
 	@Test
 	public final void testStyle3() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(2, 2, "Tail");
@@ -161,8 +163,10 @@ public abstract class SpreadsheetWriter2Test {
 
 	@Test
 	public final void testStyle4() { // buggy for simpleodf
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0, Color.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(Color.AQUA, wrapperFont);
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(1, 0, "Tail");

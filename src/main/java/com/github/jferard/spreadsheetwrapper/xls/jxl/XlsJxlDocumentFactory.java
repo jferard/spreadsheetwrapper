@@ -39,16 +39,19 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
+	private final XlsJxlStyleUtility styleUtility;
 
 	/**
 	 * @param logger
 	 *            simple logger
 	 */
-	public XlsJxlDocumentFactory(final Logger logger) {
+	public XlsJxlDocumentFactory(final Logger logger,
+			final XlsJxlStyleUtility styleUtility) {
 		this.logger = logger;
+		this.styleUtility = styleUtility;
 	}
 
 	/** {@inheritDoc} */
@@ -61,7 +64,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -69,7 +72,8 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
 					outputStream, this.getWriteSettings());
 
-			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
+			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+					writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		} catch (final IOException e) {
@@ -99,7 +103,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 
@@ -108,7 +112,8 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 					this.getReadSettings());
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
 					outputStream, workbook, this.getWriteSettings());
-			return new XlsJxlDocumentWriter(this.logger, writableWorkbook);
+			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+					writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		} catch (final IOException e) {

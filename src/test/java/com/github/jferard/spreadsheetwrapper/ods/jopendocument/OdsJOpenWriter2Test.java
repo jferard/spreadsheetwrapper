@@ -30,40 +30,6 @@ public class OdsJOpenWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal());
+		return new OdsJOpenDocumentFactory(Logger.getGlobal(), new OdsJOpenStyleUtility());
 	}
-
-	// @Rule
-	// public TestName name = new TestName();
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @Before
-	// public void setUp() {
-	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
-	// try {
-	// this.sdw = this.factory.create();
-	// this.sdw.addSheet("f");
-	// this.sw = this.sdw.getSpreadsheet("f");
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @After
-	// public void tearDown() {
-	// try {
-	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
-	// .getSimpleName(), this.name.getMethodName(), "ods");
-	// this.sdw.saveAs(outputFile);
-	// this.sdw.close();
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-
 }

@@ -33,16 +33,15 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Accessor;
-import com.github.jferard.spreadsheetwrapper.impl.ImplUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -50,10 +49,11 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 	private final Map<String, WritableCellFormat> cellStyleByName;
+	private final XlsJxlStyleUtility styleUtility;
 	/** *internal* workbook */
 	private final WritableWorkbook writableWorkbook;
 
@@ -61,8 +61,11 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 * @param workbook
 	 *            *internal* workbook
 	 */
-	XlsJxlDocumentWriter(final Logger logger, final WritableWorkbook workbook) {
+	XlsJxlDocumentWriter(final Logger logger,
+			final XlsJxlStyleUtility styleUtility,
+			final WritableWorkbook workbook) {
 		super(logger, null);
+		this.styleUtility = styleUtility;
 		this.writableWorkbook = workbook;
 		this.accessor = new Accessor<SpreadsheetWriter>();
 		final WritableSheet[] sheets = this.writableWorkbook.getSheets();
@@ -113,20 +116,9 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	@Deprecated
 	public boolean createStyle(final String styleName, final String styleString) {
-		final Map<String, String> props = ImplUtility
-				.getPropertiesMap(styleString);
-		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
-		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
 		try {
-			for (final Map.Entry<String, String> entry : props.entrySet()) {
-				if (entry.getKey().equals("font-weight")) {
-					if (entry.getValue().equals("bold"))
-						cellFont.setBoldStyle(WritableFont.BOLD);
-				} else if (entry.getKey().equals("background-color")) {
-					// do nothing
-				}
-			}
-			this.cellStyleByName.put(styleName, cellFormat);
+			this.cellStyleByName.put(styleName,
+					this.styleUtility.getCellFormat(styleString));
 		} catch (final WriteException e) {
 			return false;
 		}
@@ -220,7 +212,8 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyle(final String styleName, final WrapperCellStyle wrapperCellStyle) {
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
 		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
 		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
 		try {
@@ -229,7 +222,8 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 				if (wrapperFont.isBold())
 					cellFont.setBoldStyle(WritableFont.BOLD);
 			}
-			final Color backgroundColor = wrapperCellStyle.getBackgroundColor();
+			final WrapperColor backgroundColor = wrapperCellStyle
+					.getBackgroundColor();
 			if (backgroundColor != null) {
 				cellFormat.setBackground(backgroundColor.getJxlColor());
 			}

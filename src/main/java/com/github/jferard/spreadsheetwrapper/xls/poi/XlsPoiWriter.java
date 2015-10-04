@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	private final Map<String, CellStyle> cellStyleByName;
 
 	/**
@@ -47,8 +47,6 @@ SpreadsheetWriter {
 	private final XlsPoiReader preader;
 
 	private final Sheet sheet;
-
-	private XlsPoiUtil xlsPoiUtil;
 
 	/**
 	 * @param cellStyleByName

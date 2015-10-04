@@ -26,7 +26,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 abstract class AbstractOdsJOpenDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
 
@@ -125,7 +125,7 @@ abstract class AbstractOdsJOpenDocumentTrait<T> extends
 
 	/** {@inheritDoc} */
 	@Override
-	protected final int getSheetCount() {
+	protected final int getSheetCount(/*>>> @UnknownInitialization AbstractOdsJOpenDocumentTrait<T> this*/) {
 		int count;
 		if (this.sfSpreadSheet.isNew())
 			count = 0;

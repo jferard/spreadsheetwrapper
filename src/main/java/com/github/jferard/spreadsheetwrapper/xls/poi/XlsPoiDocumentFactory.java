@@ -37,19 +37,23 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	private final Logger logger;
+	private final XlsPoiStyleUtility styleUtility;
 
-	public XlsPoiDocumentFactory(final Logger logger) {
+	public XlsPoiDocumentFactory(final Logger logger,
+			final XlsPoiStyleUtility styleUtility) {
 		super(logger);
 		this.logger = logger;
+		this.styleUtility = styleUtility;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
-		return new XlsPoiDocumentReader(sfWorkbook.getValue());
+		return new XlsPoiDocumentReader(this.styleUtility,
+				sfWorkbook.getValue());
 	}
 
 	/** {@inheritDoc} */
@@ -57,9 +61,9 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
-		return new XlsPoiDocumentWriter(this.logger, sfWorkbook.getValue(),
-				outputStream);
+			throws SpreadsheetException {
+		return new XlsPoiDocumentWriter(this.logger, this.styleUtility,
+				sfWorkbook.getValue(), outputStream);
 	}
 
 	/** {@inheritDoc} */
@@ -80,7 +84,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		final Workbook workbook = new HSSFWorkbook();
 		return workbook;
 	}

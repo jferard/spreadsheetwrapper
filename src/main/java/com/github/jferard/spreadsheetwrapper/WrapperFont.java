@@ -17,25 +17,24 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle.Color;
 
 public class WrapperFont {
 	private boolean bold;
-	private final WrapperCellStyle.Color color;
 	private boolean italic;
 	private int size;
+	private final WrapperColor wrapperColor;
 
-	public WrapperFont(final boolean bold, final boolean italic, final int size,
-			final Color color) {
+	public WrapperFont(final boolean bold, final boolean italic,
+			final int size, final WrapperColor wrapperColor) {
 		super();
 		this.bold = bold;
 		this.italic = italic;
 		this.size = size;
-		this.color = color;
+		this.wrapperColor = wrapperColor;
 	}
 
-	public WrapperCellStyle.Color getColor() {
-		return this.color;
+	public WrapperColor getColor() {
+		return this.wrapperColor;
 	}
 
 	public int getSize() {

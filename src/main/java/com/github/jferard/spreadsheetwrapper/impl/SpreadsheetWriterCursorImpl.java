@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
  * Implementation of the writer Cursor, using a writer.
  */
 public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
-implements SpreadsheetWriterCursor {
+		implements SpreadsheetWriterCursor {
 
 	/** the cursor */
 	private final Cursor cursor;

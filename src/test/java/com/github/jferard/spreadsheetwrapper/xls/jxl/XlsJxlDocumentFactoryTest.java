@@ -44,7 +44,7 @@ public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal());
+		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
 	}
 
 }

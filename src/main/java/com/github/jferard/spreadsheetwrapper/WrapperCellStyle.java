@@ -17,65 +17,19 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import jxl.format.Colour;
-
-import org.apache.poi.hssf.util.HSSFColor;
 
 public class WrapperCellStyle {
-	public static enum Color {
-		AQUA(Colour.AQUA, new HSSFColor.AQUA()), AUTOMATIC(Colour.AUTOMATIC,
-				new HSSFColor.AUTOMATIC()), BLACK(Colour.BLACK,
-						new HSSFColor.BLACK()), BLUE(Colour.BLUE, new HSSFColor.BLUE());
-
-		private String hex;
-		private HSSFColor hssfColor;
-		private Colour jxlColor;
-
-		Color(final Colour jxlColor, final HSSFColor hssfColor) {
-			this.jxlColor = jxlColor;
-			this.hssfColor = hssfColor;
-			final short[] triplet = this.hssfColor.getTriplet();
-			final StringBuilder sb = new StringBuilder("#");
-			for (final short l : triplet)
-				sb.append(Integer.toHexString(l));
-			this.hex = sb.toString();
-
-			WrapperCellStyle.colorByHex.put(this.hex, this);
-			WrapperCellStyle.colorByJxl.put(this.jxlColor, this);
-			WrapperCellStyle.colorByHssf.put(this.hssfColor, this);
-		}
-
-		public HSSFColor getHssfColor() {
-			return this.hssfColor;
-		}
-
-		public Colour getJxlColor() {
-			return this.jxlColor;
-		}
-
-		public String toHex() {
-			return this.hex;
-		}
-	}
-
-	public static Map<String, Color> colorByHex = new HashMap<String, Color>();
-	public static Map<org.apache.poi.ss.usermodel.Color, Color> colorByHssf = new HashMap<org.apache.poi.ss.usermodel.Color, Color>();
-
-	public static Map<Colour, Color> colorByJxl = new HashMap<Colour, Color>();
-
-	private Color backgoundColor;
+	private WrapperColor backgoundColor;
 	private WrapperFont cellFont;
 
-	public WrapperCellStyle(final Color color, final WrapperFont cellFont) {
+	public WrapperCellStyle(final WrapperColor wrapperColor,
+			final WrapperFont cellFont) {
 		super();
-		this.backgoundColor = color;
+		this.backgoundColor = wrapperColor;
 		this.cellFont = cellFont;
-	};
+	}
 
-	public Color getBackgroundColor() {
+	public WrapperColor getBackgroundColor() {
 		return this.backgoundColor;
 	}
 
@@ -83,8 +37,8 @@ public class WrapperCellStyle {
 		return this.cellFont;
 	}
 
-	public void setBackgroundColor(final Color color) {
-		this.backgoundColor = color;
+	public void setBackgroundColor(final WrapperColor wrapperColor) {
+		this.backgoundColor = wrapperColor;
 	}
 
 	public void setCellFont(final WrapperFont cellFont) {

@@ -21,9 +21,11 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
 public class OdsSimpleodfDocumentFactoryTest extends
-SpreadsheetDocumentFactoryTest {
+		SpreadsheetDocumentFactoryTest {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -31,6 +33,6 @@ SpreadsheetDocumentFactoryTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodfDocumentFactory(Logger.getGlobal());
+		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

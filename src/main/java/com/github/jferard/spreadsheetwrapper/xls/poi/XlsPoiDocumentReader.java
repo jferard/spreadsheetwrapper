@@ -39,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 		XlsPoiDocumentReaderTrait(final Workbook workbook) {
 			super(workbook, null);
 		}
@@ -55,18 +55,19 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
+	private final XlsPoiStyleUtility styleUtility;
 	/** *internal* workbook */
 	private final Workbook workbook;
-	private final XlsPoiUtil xlsPoiUtil;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
 	 */
-	XlsPoiDocumentReader(final Workbook workbook) {
+	XlsPoiDocumentReader(final XlsPoiStyleUtility styleUtility,
+			final Workbook workbook) {
 		this.workbook = workbook;
 		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook);
-		this.xlsPoiUtil = new XlsPoiUtil();
+		this.styleUtility = styleUtility;
 		this.cellStyleByName = new HashMap<String, CellStyle>();
 	}
 
@@ -81,7 +82,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	public com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
 			final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
-		return this.xlsPoiUtil.getCellStyle(this.workbook, cellStyle);
+		return this.styleUtility.getCellStyle(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -129,7 +130,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public String getStyleString(final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
-		return this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
+		return this.styleUtility.getStyleString(this.workbook, cellStyle);
 	}
 
 }
