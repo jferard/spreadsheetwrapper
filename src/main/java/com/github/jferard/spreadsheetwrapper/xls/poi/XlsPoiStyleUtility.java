@@ -24,14 +24,24 @@ import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
+/**
+ * An utility class for style handling
+ *
+ */
 public class XlsPoiStyleUtility extends StyleUtility {
+	/** for colors */
 	private final WrapperCellStyleHelper helper;
 
+	/**
+	 * @param helper
+	 *            helper class for colors
+	 */
 	public XlsPoiStyleUtility(final WrapperCellStyleHelper helper) {
 		this.helper = helper;
 	}
@@ -65,21 +75,19 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		return sb.toString();
 	}
 
-	com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
-			final Workbook workbook, final CellStyle cellStyle) {
+	WrapperCellStyle getCellStyle(final Workbook workbook,
+			final CellStyle cellStyle) {
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font poiFont = workbook.getFontAt(fontIndex);
-		com.github.jferard.spreadsheetwrapper.WrapperCellStyle wrapperCellStyle = null;
-		com.github.jferard.spreadsheetwrapper.WrapperFont wrapperFont = null;
+		WrapperCellStyle wrapperCellStyle = null;
+		WrapperFont wrapperFont = null;
 		if (poiFont.getBoldweight() == Font.BOLDWEIGHT_BOLD)
-			wrapperFont = new WrapperFont(true, false, fontIndex, null);
+			wrapperFont = new WrapperFont(true, false, fontIndex,
+					WrapperColor.AUTOMATIC);
 		final Color poiColor = cellStyle.getFillBackgroundColorColor();
-		WrapperColor wrapperColor = null;
-		if (poiColor != null)
-			wrapperColor = this.helper.getColor(poiColor);
+		WrapperColor wrapperColor = this.helper.getColor(poiColor);
 
-		wrapperCellStyle = new com.github.jferard.spreadsheetwrapper.WrapperCellStyle(
-				wrapperColor, wrapperFont);
+		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;
 	}
 }

@@ -104,7 +104,6 @@ AbstractSpreadsheetDocumentTrait<T> {
 	/** {@inheritDoc} */
 	@Override
 	protected T findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
-		final T spreadsheet;
 		if (this.sfSpreadSheet.isNew())
 			throw new NoSuchElementException(String.format(
 					"No %s sheet in workbook", sheetName));
@@ -113,7 +112,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
 			final String name = sheet.getName();
 			if (name.equals(sheetName)) {
-				spreadsheet = this.createNew(sheet);
+				final T spreadsheet = this.createNew(sheet);
 				this.accessor.put(sheetName, s, spreadsheet);
 				return spreadsheet;
 			}

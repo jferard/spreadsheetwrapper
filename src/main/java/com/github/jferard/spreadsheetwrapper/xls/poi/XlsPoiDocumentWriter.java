@@ -60,6 +60,7 @@ implements SpreadsheetDocumentWriter {
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
 	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+		/** a map styleName -> internal cell style */
 		private final Map<String, CellStyle> cellStyleByName;
 
 		/**
@@ -107,6 +108,7 @@ implements SpreadsheetDocumentWriter {
 		return outputStream;
 	}
 
+	/** a map styleName -> internal cell style */
 	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetWriter> documentTrait;
@@ -116,6 +118,7 @@ implements SpreadsheetDocumentWriter {
 
 	/** for delegation */
 	private final XlsPoiDocumentReader reader;
+	/** for delegation */
 	private final XlsPoiStyleUtility styleUtility;
 	/** *internal* workbook */
 	private final Workbook workbook;

@@ -19,6 +19,8 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.util.List;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 public interface SpreadsheetDocumentReader {
 	/**
 	 * close resource
@@ -32,7 +34,7 @@ public interface SpreadsheetDocumentReader {
 	 *            the name of the style
 	 * @return the style
 	 */
-	WrapperCellStyle getCellStyle(String styleName);
+	/*@Nullable*/ WrapperCellStyle getCellStyle(String styleName);
 
 	/**
 	 * @param index
@@ -82,5 +84,5 @@ public interface SpreadsheetDocumentReader {
 	 * @deprecated
 	 */
 	@Deprecated
-	String getStyleString(String styleName);
+	/*@Nullable*/ String getStyleString(String styleName);
 }

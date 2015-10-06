@@ -7,6 +7,8 @@ import jxl.format.Colour;
 
 import org.apache.poi.ss.usermodel.Color;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 public class WrapperCellStyleHelper {
 	private final Map<String, WrapperColor> colorByHex;
 	private final Map<Color, WrapperColor> colorByHssf;
@@ -24,15 +26,30 @@ public class WrapperCellStyleHelper {
 		}
 	}
 
-	public WrapperColor getColor(final Color hssfColor) {
-		return this.colorByHssf.get(hssfColor);
+	public WrapperColor getColor(final /*@Nullable*/ Color hssfColor) {
+		WrapperColor wrapperColor;
+		if (this.colorByHssf.containsKey(hssfColor))
+			wrapperColor = this.colorByHssf.get(hssfColor);
+		else
+			wrapperColor = WrapperColor.AUTOMATIC;
+		return wrapperColor;
 	}
 
-	public WrapperColor getColor(final Colour jxlColour) {
-		return this.colorByJxl.get(jxlColour);
+	public WrapperColor getColor(final /*@Nullable*/ Colour jxlColour) {
+		WrapperColor wrapperColor;
+		if (this.colorByJxl.containsKey(jxlColour))
+			wrapperColor = this.colorByJxl.get(jxlColour);
+		else
+			wrapperColor = WrapperColor.AUTOMATIC;
+		return wrapperColor;
 	}
 
 	public WrapperColor getColor(final String hex) {
-		return this.colorByHex.get(hex);
+		WrapperColor wrapperColor;
+		if (this.colorByHex.containsKey(hex))
+			wrapperColor = this.colorByHex.get(hex);
+		else
+			wrapperColor = WrapperColor.AUTOMATIC;
+		return wrapperColor;
 	}
 }

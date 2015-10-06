@@ -30,8 +30,10 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
@@ -39,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 		XlsPoiDocumentReaderTrait(final Workbook workbook) {
 			super(workbook, null);
 		}
@@ -52,9 +54,11 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 		}
 	}
 
+	/** a map styleName -> internal cell style */
 	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
+	/** for delegation */
 	private final XlsPoiStyleUtility styleUtility;
 	/** *internal* workbook */
 	private final Workbook workbook;
@@ -79,9 +83,11 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
-			final String styleName) {
+	public /*@Nullable*/ WrapperCellStyle getCellStyle(final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		if (cellStyle == null)
+			return null;
+		
 		return this.styleUtility.getCellStyle(this.workbook, cellStyle);
 	}
 
@@ -130,6 +136,9 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public String getStyleString(final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		if (cellStyle == null)
+			return "";
+		
 		return this.styleUtility.getStyleString(this.workbook, cellStyle);
 	}
 

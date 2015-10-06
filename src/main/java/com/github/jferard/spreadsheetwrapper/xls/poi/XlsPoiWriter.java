@@ -63,7 +63,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final Cell cell = this.preader.getPOICell(r, c);
 		final CellStyle cellStyle = cell.getCellStyle();
 		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
@@ -73,7 +73,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		}
 		return null;
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(final int r, final int c) {

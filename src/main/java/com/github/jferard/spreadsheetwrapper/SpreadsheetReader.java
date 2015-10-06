@@ -132,7 +132,7 @@ public interface SpreadsheetReader {
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist
 	 */
-	String getStyleName(int r, int c);
+	/*@Nullable*/ String getStyleName(int r, int c);
 
 	/**
 	 * @param r
