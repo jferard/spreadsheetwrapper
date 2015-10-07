@@ -99,7 +99,7 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 	}
 
 	@Test
-	public final void testSetBoolean() {
+	public void testSetBoolean() {
 		final int r = 5;
 		final int c = 6;
 		try {

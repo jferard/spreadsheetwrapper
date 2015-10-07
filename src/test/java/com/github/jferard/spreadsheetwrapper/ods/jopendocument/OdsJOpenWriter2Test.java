@@ -19,6 +19,9 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.util.logging.Logger;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
 
@@ -31,5 +34,13 @@ public class OdsJOpenWriter2Test extends SpreadsheetWriter2Test {
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
 		return new OdsJOpenDocumentFactory(Logger.getGlobal(), new OdsJOpenStyleUtility());
+	}
+	
+	@Test
+	@Override
+	public void testBoolean() {
+		// this.sw.setCellContents(0, 0, true);
+		this.sw.setBoolean(0, 0, true);
+		Assert.assertEquals(true, this.sw.getBoolean(0, 0));
 	}
 }

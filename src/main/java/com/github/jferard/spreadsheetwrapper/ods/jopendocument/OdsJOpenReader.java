@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.jdom.Element;
+import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
@@ -49,10 +51,15 @@ SpreadsheetReader {
 	@Override
 	public Boolean getBoolean(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = cell.getValueType().getName();
-		if (!"boolean".equals(type))
+		final String type = getTypeName(cell);
+		// 1.3b1
+//		if (!"boolean".equals(type))
+//			throw new IllegalArgumentException();
+//		return (Boolean) cell.getValue();
+		// 1.2
+		if (!"float".equals(type))
 			throw new IllegalArgumentException();
-		return (Boolean) cell.getValue();
+		return ((BigDecimal) cell.getValue()).doubleValue() != 0.0;
 	}
 
 	/** {@inheritDoc} */
@@ -62,7 +69,7 @@ SpreadsheetReader {
 		final MutableCell<SpreadSheet> cell = this.getCell(rowIndex, colIndex);
 		if (cell == null)
 			return null;
-		final String formula = cell.getFormula();
+		final String formula = this.getFormula(cell);
 		if (formula != null && formula.charAt(0) == '=')
 			return formula.substring(1);
 
@@ -77,6 +84,14 @@ SpreadsheetReader {
 		}
 		return value;
 	}
+	
+	private String getFormula(MutableCell<SpreadSheet> cell) {
+		// 1.3b1
+		// return cell.getFormula();
+		// 1.2
+		final Element element = cell.getElement();
+		return element.getAttributeValue("formula", element.getNamespace());
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -88,7 +103,7 @@ SpreadsheetReader {
 	@Override
 	public Date getDate(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = cell.getValueType().getName();
+		final String type = getTypeName(cell);
 		if (!"date".equals(type) && !"time".equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
@@ -98,7 +113,7 @@ SpreadsheetReader {
 	@Override
 	public Double getDouble(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = cell.getValueType().getName();
+		final String type = getTypeName(cell);
 		if (!"float".equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
@@ -112,7 +127,7 @@ SpreadsheetReader {
 	@Override
 	public String getFormula(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String formula = cell.getFormula();
+		final String formula = this.getFormula(cell);
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
 
@@ -135,10 +150,15 @@ SpreadsheetReader {
 	@Override
 	public String getText(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = cell.getValueType().getName();
+		final String type = getTypeName(cell);
 		if (!"string".equals(type))
 			throw new IllegalArgumentException();
 		return (String) cell.getValue();
+	}
+
+	private String getTypeName(final MutableCell<SpreadSheet> cell) {
+		final ODValueType valueType = cell.getValueType();
+		return valueType == null ? "string" : valueType.getName();
 	}
 
 	/**

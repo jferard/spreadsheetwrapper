@@ -25,7 +25,11 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jopendocument.dom.ODPackage;
+import org.jopendocument.dom.XMLVersion;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -81,10 +85,18 @@ SpreadsheetDocumentFactory {
 	protected SpreadSheet loadSpreadsheetDocument(final InputStream inputStream)
 			throws SpreadsheetException {
 		try {
-			return new ODPackage(inputStream).getSpreadSheet();
+			final ODPackage odPackage = new ODPackage(inputStream);
+			return getSpreadSheet(odPackage);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
+	}
+
+	private SpreadSheet getSpreadSheet(final ODPackage odPackage) {
+		// 1.3b1
+		// return odPackage.getSpreadSheet();
+		// 1.2
+		return SpreadSheet.create(odPackage);
 	}
 
 	@Override
@@ -92,9 +104,25 @@ SpreadsheetDocumentFactory {
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
 		try {
-			return SpreadSheet.createEmpty(new DefaultTableModel());
+			// 1.3b1
+			// return SpreadSheet.createEmpty(new DefaultTableModel());
+			// 1.2
+			SpreadSheet spreadSheet = SpreadSheet.createEmpty(new DefaultTableModel());
+			spreadSheet.getPackage().putFile("styles.xml", this.createDocument("office", "document-styles", "styles.xml"));
+			return spreadSheet;
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}
+	
+	// 1.2
+	private final Document createDocument(String nsPrefix, String name, String zipEntry) {
+        final XMLVersion version = XMLVersion.OD;
+        final Element root = new Element(name, version.getNS(nsPrefix));
+        for (final Namespace ns : version.getALL())
+            root.addNamespaceDeclaration(ns);
+
+        return new Document(root);
+    }
+
 }

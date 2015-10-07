@@ -78,7 +78,10 @@ SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
-		cell.setValue(value);
+		// 1.3b1
+		// cell.setValue(value);
+		// 1.2
+		cell.setValue(value ? 1.0 : 0.0);
 		return value;
 	}
 
