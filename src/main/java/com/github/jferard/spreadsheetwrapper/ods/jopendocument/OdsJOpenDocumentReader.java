@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsJOpenDocumentReaderTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
+			AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param sfSpreadSheet
 		 *            *internal* value

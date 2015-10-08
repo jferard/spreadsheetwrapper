@@ -32,6 +32,7 @@ public class OdsSimpleodfWriterCursorTest extends SpreadsheetWriterCursorTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

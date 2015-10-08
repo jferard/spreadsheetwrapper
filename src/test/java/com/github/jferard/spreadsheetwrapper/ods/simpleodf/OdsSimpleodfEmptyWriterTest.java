@@ -15,37 +15,24 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.xls.poi;
+package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
 import java.util.logging.Logger;
 
-import org.junit.Test;
-
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
-public class XlsPoiWriter2Test extends SpreadsheetWriter2Test {
-	@Override
-	@Test
-	public void testFormula2() {
-		// can't parse a bad formula
-	}
-
-	@Override
-	@Test(expected = IllegalArgumentException.class)
-	public void testText1000col() {
-		super.testText1000col();
-	}
-
+public class OdsSimpleodfEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Override
 	protected String getExtension() {
-		return "xls";
+		return "ods";
 	}
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsPoiDocumentFactory(Logger.getGlobal(), new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
-
 }

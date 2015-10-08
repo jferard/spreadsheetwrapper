@@ -42,7 +42,7 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentReaderTrait extends
-	AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
+			AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
 		OdsSimpleodfDocumentReaderTrait(
 				final OdsSimpleodfStatefulDocument sfDocument) {
 			super(sfDocument);
@@ -71,7 +71,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	 */
 	OdsSimpleodfDocumentReader(final OdsOdfdomStyleUtility styleUtility,
 			final OdsSimpleodfStatefulDocument sfDocument)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		this.styleUtility = styleUtility;
 		this.sfDocument = sfDocument;
 		// try {
@@ -79,7 +79,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 		// } catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 		// throw new SpreadsheetException(e); // colors the exception
 		// }
-		this.sfDocument.setLocale(Locale.US);
+		this.sfDocument.rawSetLocale(Locale.US);
 		this.documentStyles = this.sfDocument.getStyles();
 		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(sfDocument);
 	}

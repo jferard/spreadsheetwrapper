@@ -32,6 +32,7 @@ public class XlsJxlWriterCursorTest extends SpreadsheetWriterCursorTest {
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
+		return new XlsJxlDocumentFactory(Logger.getGlobal(),
+				new XlsJxlStyleUtility());
 	}
 }

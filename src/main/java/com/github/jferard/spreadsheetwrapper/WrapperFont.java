@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-
 public class WrapperFont {
 	private boolean bold;
 	private boolean italic;

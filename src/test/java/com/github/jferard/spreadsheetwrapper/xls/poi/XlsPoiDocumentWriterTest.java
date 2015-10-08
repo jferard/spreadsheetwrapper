@@ -31,6 +31,7 @@ public class XlsPoiDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsPoiDocumentFactory(Logger.getGlobal(), new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
+		return new XlsPoiDocumentFactory(Logger.getGlobal(),
+				new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

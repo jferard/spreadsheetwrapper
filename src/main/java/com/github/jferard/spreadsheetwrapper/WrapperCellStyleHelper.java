@@ -26,7 +26,7 @@ public class WrapperCellStyleHelper {
 		}
 	}
 
-	public WrapperColor getColor(final /*@Nullable*/ Color hssfColor) {
+	public WrapperColor getColor(final/*@Nullable*/Color hssfColor) {
 		WrapperColor wrapperColor;
 		if (this.colorByHssf.containsKey(hssfColor))
 			wrapperColor = this.colorByHssf.get(hssfColor);
@@ -35,7 +35,7 @@ public class WrapperCellStyleHelper {
 		return wrapperColor;
 	}
 
-	public WrapperColor getColor(final /*@Nullable*/ Colour jxlColour) {
+	public WrapperColor getColor(final/*@Nullable*/Colour jxlColour) {
 		WrapperColor wrapperColor;
 		if (this.colorByJxl.containsKey(jxlColour))
 			wrapperColor = this.colorByJxl.get(jxlColour);

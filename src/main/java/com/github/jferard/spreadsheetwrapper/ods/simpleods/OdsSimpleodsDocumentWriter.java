@@ -35,8 +35,8 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -44,10 +44,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
 		}

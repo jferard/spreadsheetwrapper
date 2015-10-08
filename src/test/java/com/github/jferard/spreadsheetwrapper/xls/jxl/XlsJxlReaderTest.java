@@ -30,6 +30,7 @@ public class XlsJxlReaderTest extends SpreadsheetReaderTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
+		return new XlsJxlDocumentFactory(Logger.getGlobal(),
+				new XlsJxlStyleUtility());
 	}
 }

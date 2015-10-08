@@ -41,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 		XlsPoiDocumentReaderTrait(final Workbook workbook) {
 			super(workbook, null);
 		}
@@ -83,11 +83,11 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ WrapperCellStyle getCellStyle(final String styleName) {
+	public/*@Nullable*/WrapperCellStyle getCellStyle(final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
 		if (cellStyle == null)
 			return null;
-		
+
 		return this.styleUtility.getCellStyle(this.workbook, cellStyle);
 	}
 
@@ -138,7 +138,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
 		if (cellStyle == null)
 			return "";
-		
+
 		return this.styleUtility.getStyleString(this.workbook, cellStyle);
 	}
 

@@ -32,6 +32,7 @@ public class OdsSimpleodfWriterTest extends SpreadsheetWriterTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

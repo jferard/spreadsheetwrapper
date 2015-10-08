@@ -31,7 +31,7 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
 	public final void testAddAt0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		super.testAddAt0();
 	}
 
@@ -89,6 +89,7 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

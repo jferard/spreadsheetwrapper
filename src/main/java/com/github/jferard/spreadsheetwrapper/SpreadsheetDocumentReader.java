@@ -34,7 +34,7 @@ public interface SpreadsheetDocumentReader {
 	 *            the name of the style
 	 * @return the style
 	 */
-	/*@Nullable*/ WrapperCellStyle getCellStyle(String styleName);
+	/*@Nullable*/WrapperCellStyle getCellStyle(String styleName);
 
 	/**
 	 * @param index
@@ -84,5 +84,5 @@ public interface SpreadsheetDocumentReader {
 	 * @deprecated
 	 */
 	@Deprecated
-	/*@Nullable*/ String getStyleString(String styleName);
+	/*@Nullable*/String getStyleString(String styleName);
 }

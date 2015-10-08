@@ -37,8 +37,11 @@ public class SpreadsheetDocumentFactoryProviderTest {
 	@Before
 	public void setUp() {
 		final Map<String, SpreadsheetDocumentFactory> factoryByExtension = new HashMap<String, SpreadsheetDocumentFactory>();
-		factoryByExtension.put("ods",
-				new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper())));
+		factoryByExtension
+				.put("ods",
+						new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+								new OdsOdfdomStyleUtility(
+										new WrapperCellStyleHelper())));
 		this.spreadsheetDocumentFactoryProvider = new SpreadsheetDocumentFactoryProvider(
 				factoryByExtension);
 	}

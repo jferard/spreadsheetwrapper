@@ -17,33 +17,63 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
+/**
+ * The class Stateful is used to keep a trace of the state, new or initialized, of an
+ * object. See Optional in Guava or Java8 for examples
+ * 
+ * @param <T>
+ *            the wrapped object
+ */
 public class Stateful<T> {
-	public static <S> Stateful<S> createInitialized(final S document) {
-		return new Stateful<S>(document, false);
+	/**
+	 * @param object the object that is already initialized
+	 * @return the stateful object
+	 */
+	public static <S> Stateful<S> createInitialized(final S object) {
+		return new Stateful<S>(object, false);
 	}
 
-	public static <S> Stateful<S> createNew(final S document) {
-		return new Stateful<S>(document, true);
+	/**
+	 * @param object the object that is not initialized (new)
+	 * @return the stateful object
+	 */
+	public static <S> Stateful<S> createNew(final S object) {
+		return new Stateful<S>(object, true);
 	}
 
-	private boolean isNew;
+	/** true if the object is not initialized */
+	private boolean newObject;
 
-	protected final T value;
+	/** the object */
+	protected final T object;
 
-	protected Stateful(final T value, final boolean isNew) {
-		this.value = value;
-		this.isNew = isNew;
+	/**
+	 * @param object the object
+	 * @param newObject true if the object is initialized
+	 */
+	protected Stateful(final T object, final boolean newObject) {
+		this.object = object;
+		this.newObject = newObject;
 	}
 
-	public T getValue() {
-		return this.value;
+	/**
+	 * @return the object
+	 */
+	public T getObject() {
+		return this.object;
 	}
 
+	/**
+	 * @return true if not initialized
+	 */
 	public boolean isNew() {
-		return this.isNew;
+		return this.newObject;
 	}
 
+	/**
+	 * sets the object to initialized
+	 */
 	public void setInitialized() {
-		this.isNew = false;
+		this.newObject = false;
 	}
 }

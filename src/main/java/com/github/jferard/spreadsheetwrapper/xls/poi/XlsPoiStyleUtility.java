@@ -85,7 +85,7 @@ public class XlsPoiStyleUtility extends StyleUtility {
 			wrapperFont = new WrapperFont(true, false, fontIndex,
 					WrapperColor.AUTOMATIC);
 		final Color poiColor = cellStyle.getFillBackgroundColorColor();
-		WrapperColor wrapperColor = this.helper.getColor(poiColor);
+		final WrapperColor wrapperColor = this.helper.getColor(poiColor);
 
 		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;

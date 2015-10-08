@@ -27,7 +27,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-public abstract class SpreadsheetWriter2Test {
+public abstract class SpreadsheetEmptyWriterTest {
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentFactory factory;
@@ -71,6 +71,14 @@ public abstract class SpreadsheetWriter2Test {
 
 		this.sw.setBoolean(0, 0, true);
 		Assert.assertEquals(true, this.sw.getCellContent(0, 0));
+	}
+
+	@Test
+	public void testCounts() {
+		this.sw.setText(10, 10, "10:10");
+		Assert.assertEquals(11, this.sw.getRowCount());
+		for (int i = 0; i <= 10; i++)
+			Assert.assertEquals(11, this.sw.getCellCount(i));
 	}
 
 	@Test

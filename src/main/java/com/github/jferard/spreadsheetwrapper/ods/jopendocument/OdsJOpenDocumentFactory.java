@@ -42,8 +42,8 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-AbstractDocumentFactory<SpreadSheet> implements
-SpreadsheetDocumentFactory {
+		AbstractDocumentFactory<SpreadSheet> implements
+		SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
 	private final OdsJOpenStyleUtility styleUtility;
@@ -57,6 +57,24 @@ SpreadsheetDocumentFactory {
 		super(logger);
 		this.logger = logger;
 		this.styleUtility = styleUtility;
+	}
+
+	// 1.2
+	private final Document createDocument(final String nsPrefix,
+			final String name, final String zipEntry) {
+		final XMLVersion version = XMLVersion.OD;
+		final Element root = new Element(name, version.getNS(nsPrefix));
+		for (final Namespace ns : version.getALL())
+			root.addNamespaceDeclaration(ns);
+
+		return new Document(root);
+	}
+
+	private SpreadSheet getSpreadSheet(final ODPackage odPackage) {
+		// 1.3b1
+		// return odPackage.getSpreadSheet();
+		// 1.2
+		return SpreadSheet.create(odPackage);
 	}
 
 	/** {@inheritDoc} */
@@ -76,7 +94,7 @@ SpreadsheetDocumentFactory {
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadSheet> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new OdsJOpenDocumentWriter(this.logger, this.styleUtility,
 				new OdsJOpenStatefulDocument(sfDocument), outputStream);
 	}
@@ -86,43 +104,30 @@ SpreadsheetDocumentFactory {
 			throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
-			return getSpreadSheet(odPackage);
+			return this.getSpreadSheet(odPackage);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
-	}
-
-	private SpreadSheet getSpreadSheet(final ODPackage odPackage) {
-		// 1.3b1
-		// return odPackage.getSpreadSheet();
-		// 1.2
-		return SpreadSheet.create(odPackage);
 	}
 
 	@Override
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		try {
 			// 1.3b1
 			// return SpreadSheet.createEmpty(new DefaultTableModel());
 			// 1.2
-			SpreadSheet spreadSheet = SpreadSheet.createEmpty(new DefaultTableModel());
-			spreadSheet.getPackage().putFile("styles.xml", this.createDocument("office", "document-styles", "styles.xml"));
+			final SpreadSheet spreadSheet = SpreadSheet
+					.createEmpty(new DefaultTableModel());
+			spreadSheet.getPackage().putFile(
+					"styles.xml",
+					this.createDocument("office", "document-styles",
+							"styles.xml"));
 			return spreadSheet;
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}
-	
-	// 1.2
-	private final Document createDocument(String nsPrefix, String name, String zipEntry) {
-        final XMLVersion version = XMLVersion.OD;
-        final Element root = new Element(name, version.getNS(nsPrefix));
-        for (final Namespace ns : version.getALL())
-            root.addNamespaceDeclaration(ns);
-
-        return new Document(root);
-    }
 
 }

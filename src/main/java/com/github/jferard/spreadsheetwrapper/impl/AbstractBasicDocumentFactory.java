@@ -34,11 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractBasicDocumentFactory implements
-SpreadsheetDocumentFactory {
-
-	public AbstractBasicDocumentFactory() {
-		super();
-	}
+		SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override

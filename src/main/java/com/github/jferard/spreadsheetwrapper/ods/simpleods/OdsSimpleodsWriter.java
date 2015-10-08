@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 
 	/** the reader for delegation */
 	private final OdsSimpleodsReader preader;

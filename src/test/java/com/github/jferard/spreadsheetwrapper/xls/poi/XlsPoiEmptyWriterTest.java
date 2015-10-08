@@ -15,56 +15,38 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.logging.Logger;
 
+import org.junit.Test;
+
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
-public class OdsOdfdomWriter2Test extends SpreadsheetWriter2Test {
+public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
+	@Override
+	@Test
+	public void testFormula2() {
+		// can't parse a bad formula
+	}
+
+	@Override
+	@Test(expected = IllegalArgumentException.class)
+	public void testText1000col() {
+		super.testText1000col();
+	}
+
 	@Override
 	protected String getExtension() {
-		return "ods";
+		return "xls";
 	}
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new XlsPoiDocumentFactory(Logger.getGlobal(),
+				new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
 	}
-
-	// @Rule
-	// public TestName name = new TestName();
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @Before
-	// public void setUp() {
-	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
-	// try {
-	// this.sdw = this.factory.create();
-	// this.sdw.addSheet("f");
-	// this.sw = this.sdw.getSpreadsheet("f");
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @After
-	// public void tearDown() {
-	// try {
-	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
-	// .getSimpleName(), this.name.getMethodName(), "ods");
-	// this.sdw.saveAs(outputFile);
-	// this.sdw.close();
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
 
 }

@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-
 public class WrapperCellStyle {
 	private WrapperColor backgoundColor;
 	private WrapperFont cellFont;

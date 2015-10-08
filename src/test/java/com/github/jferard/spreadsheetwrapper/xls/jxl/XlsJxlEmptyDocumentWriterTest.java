@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 
 public class XlsJxlEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentWriterTest {
+SpreadsheetEmptyDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before
@@ -77,6 +77,7 @@ public class XlsJxlEmptyDocumentWriterTest extends
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
+		return new XlsJxlDocumentFactory(Logger.getGlobal(),
+				new XlsJxlStyleUtility());
 	}
 }

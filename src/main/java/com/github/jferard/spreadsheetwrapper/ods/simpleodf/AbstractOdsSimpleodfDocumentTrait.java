@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
@@ -92,7 +92,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 			if (index == this.getSheetCount())
 				table = this.sfDocument.newTable();
 			else
-				table = this.sfDocument.insertSheet(index);
+				table = this.sfDocument.rawInsertSheet(index);
 			if (table == null)
 				throw new CantInsertElementInSpreadsheetException();
 		}

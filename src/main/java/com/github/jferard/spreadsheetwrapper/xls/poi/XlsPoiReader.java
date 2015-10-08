@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsPoiReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */

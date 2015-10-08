@@ -66,7 +66,8 @@ public class SpreadsheetReaderCursorImplTest extends CursorAbstractTest {
 	}
 
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 
 }

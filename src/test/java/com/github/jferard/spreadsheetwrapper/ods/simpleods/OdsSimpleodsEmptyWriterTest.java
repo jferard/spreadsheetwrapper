@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.xls.jxl;
+package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
 import java.util.logging.Logger;
@@ -23,13 +23,15 @@ import java.util.logging.Logger;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
-public class XlsJxlWriter2Test extends SpreadsheetWriter2Test {
+public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	/** set the test up */
 	@Before
 	@Override
@@ -52,7 +54,6 @@ public class XlsJxlWriter2Test extends SpreadsheetWriter2Test {
 	@Override
 	public void tearDown() {
 		try {
-
 			this.sdw.save();
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
@@ -61,23 +62,40 @@ public class XlsJxlWriter2Test extends SpreadsheetWriter2Test {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public void testFormula2() {
-		// can't parse a bad formula
+	@Test
+	public void testBoolean() {
+		//
 	}
 
 	@Override
-	public void testText1000col() {
-		// not ok, can't add cell over 256
+	public void testDateSecond() {
+		//
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Test
+	public void testFormula() {
+		//
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	@Test
+	public void testFormula2() {
+		//
 	}
 
 	@Override
 	protected String getExtension() {
-		return "xls";
+		return "ods";
 	}
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(), new XlsJxlStyleUtility());
+		return new OdsSimpleodsDocumentFactory(Logger.getGlobal(),
+				new StyleUtility());
 	}
 }

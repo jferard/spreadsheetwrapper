@@ -15,17 +15,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
+package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.util.logging.Logger;
 
-import org.junit.Assert;
-import org.junit.Test;
-
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter2Test;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
-public class OdsJOpenWriter2Test extends SpreadsheetWriter2Test {
+public class OdsOdfdomEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -33,14 +31,41 @@ public class OdsJOpenWriter2Test extends SpreadsheetWriter2Test {
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal(), new OdsJOpenStyleUtility());
+		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
-	
-	@Test
-	@Override
-	public void testBoolean() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setBoolean(0, 0, true);
-		Assert.assertEquals(true, this.sw.getBoolean(0, 0));
-	}
+
+	// @Rule
+	// public TestName name = new TestName();
+	//
+	// /** {@inheritDoc} */
+	// @Override
+	// @Before
+	// public void setUp() {
+	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
+	// try {
+	// this.sdw = this.factory.create();
+	// this.sdw.addSheet("f");
+	// this.sw = this.sdw.getSpreadsheet("f");
+	// } catch (final SpreadsheetException e) {
+	// e.printStackTrace();
+	// Assert.fail();
+	// }
+	// }
+	//
+	// /** {@inheritDoc} */
+	// @Override
+	// @After
+	// public void tearDown() {
+	// try {
+	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
+	// .getSimpleName(), this.name.getMethodName(), "ods");
+	// this.sdw.saveAs(outputFile);
+	// this.sdw.close();
+	// } catch (final SpreadsheetException e) {
+	// e.printStackTrace();
+	// Assert.fail();
+	// }
+	// }
+
 }

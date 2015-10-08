@@ -58,7 +58,8 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (cellFont != null && cellFont.isBold()) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps.setAttribute("font-weight", "bold", OdsJOpenStyleUtility.foNS);
+			textProps.setAttribute("font-weight", "bold",
+					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -70,8 +71,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (propertiesMap.containsKey("background-color")) {
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps
-			.setAttribute("background-color",
+			tableCellProps.setAttribute("background-color",
 					propertiesMap.get("background-color"),
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
@@ -79,8 +79,10 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (propertiesMap.containsKey("font-weight")) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps.setAttribute("font-weight",
-					propertiesMap.get("font-weight"), OdsJOpenStyleUtility.foNS);
+			textProps
+					.setAttribute("font-weight",
+							propertiesMap.get("font-weight"),
+							OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;

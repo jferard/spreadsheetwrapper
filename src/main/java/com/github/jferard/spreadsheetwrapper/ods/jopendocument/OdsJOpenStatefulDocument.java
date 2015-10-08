@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Set;
 
 import org.jopendocument.dom.ODPackage;
 import org.jopendocument.dom.ODXMLDocument;
@@ -51,15 +50,15 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 
 	public ODXMLDocument getStyles() {
 		final ODPackage odPackage = this.value.getPackage();
-//		1.3b1
-//		return odPackage.getStyles();
-//		1.2
-        final ODXMLDocument res;
-        if (odPackage.isSingle())
-            res = odPackage.getContent();
-        else
-            res = odPackage.getXMLFile("styles.xml");
-        return res;
+		// 1.3b1
+		// return odPackage.getStyles();
+		// 1.2
+		final ODXMLDocument res;
+		if (odPackage.isSingle())
+			res = odPackage.getContent();
+		else
+			res = odPackage.getXMLFile("styles.xml");
+		return res;
 	}
 
 	public void save(final OutputStream outputStream) throws IOException {

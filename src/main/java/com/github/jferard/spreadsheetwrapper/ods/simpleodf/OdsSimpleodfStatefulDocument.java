@@ -28,49 +28,52 @@ import org.odftoolkit.simple.table.Table;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> {
+	/**
+	 * @param sfDocument a stateful SpreadsheetDocument, ie a SpreadsheetDocument that is, or not, initialized 
+	 */
 	public OdsSimpleodfStatefulDocument(
 			final Stateful<SpreadsheetDocument> sfDocument) {
-		super(sfDocument.getValue(), sfDocument.isNew());
+		super(sfDocument.getObject(), sfDocument.isNew());
 	}
 
 	public void close() {
-		this.value.close();
+		this.object.close();
 	}
 
-	public Table getRawSheet(final int s) {
-		return this.value.getTableList().get(s);
+	public Table getRawSheet(final int sheetIndex) {
+		return this.object.getTableList().get(sheetIndex);
 	}
 
 	public Table getRawSheet(final String sheetName) {
-		return this.value.getTableByName(sheetName);
+		return this.object.getTableByName(sheetName);
 	}
 
 	public int getRawSheetCount() {
-		return this.value.getSheetCount();
+		return this.object.getSheetCount();
 	}
 
 	public List<Table> getRawTableList() {
-		return this.value.getTableList();
+		return this.object.getTableList();
 	}
 
 	public OdfOfficeStyles getStyles() {
-		return this.value.getDocumentStyles();
+		return this.object.getDocumentStyles();
 	}
 
 	public Table insertSheet(final int index) {
-		return this.value.insertSheet(index);
+		return this.object.insertSheet(index);
 	}
 
 	public Table newTable() {
-		return Table.newTable(this.value);
+		return Table.newTable(this.object);
 	}
 
 	public void save(final OutputStream outputStream) throws Exception {
-		this.value.save(outputStream);
+		this.object.save(outputStream);
 	}
 
 	public void setLocale(final Locale locale) {
-		this.value.setLocale(locale);
+		this.object.setLocale(locale);
 	}
 
 }

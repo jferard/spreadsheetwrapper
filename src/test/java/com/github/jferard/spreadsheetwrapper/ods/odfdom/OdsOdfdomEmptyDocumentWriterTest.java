@@ -24,7 +24,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class OdsOdfdomEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentWriterTest {
+SpreadsheetEmptyDocumentWriterTest {
 	@Override
 	protected String getExtension() {
 		return "ods";
@@ -32,6 +32,7 @@ public class OdsOdfdomEmptyDocumentWriterTest extends
 
 	@Override
 	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(), new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
 	}
 }

@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -51,11 +51,11 @@ SpreadsheetReader {
 	@Override
 	public Boolean getBoolean(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = getTypeName(cell);
+		final String type = this.getTypeName(cell);
 		// 1.3b1
-//		if (!"boolean".equals(type))
-//			throw new IllegalArgumentException();
-//		return (Boolean) cell.getValue();
+		// if (!"boolean".equals(type))
+		// throw new IllegalArgumentException();
+		// return (Boolean) cell.getValue();
 		// 1.2
 		if (!"float".equals(type))
 			throw new IllegalArgumentException();
@@ -84,14 +84,6 @@ SpreadsheetReader {
 		}
 		return value;
 	}
-	
-	private String getFormula(MutableCell<SpreadSheet> cell) {
-		// 1.3b1
-		// return cell.getFormula();
-		// 1.2
-		final Element element = cell.getElement();
-		return element.getAttributeValue("formula", element.getNamespace());
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -103,7 +95,7 @@ SpreadsheetReader {
 	@Override
 	public Date getDate(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = getTypeName(cell);
+		final String type = this.getTypeName(cell);
 		if (!"date".equals(type) && !"time".equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
@@ -113,7 +105,7 @@ SpreadsheetReader {
 	@Override
 	public Double getDouble(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = getTypeName(cell);
+		final String type = this.getTypeName(cell);
 		if (!"float".equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
@@ -150,10 +142,18 @@ SpreadsheetReader {
 	@Override
 	public String getText(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		final String type = getTypeName(cell);
+		final String type = this.getTypeName(cell);
 		if (!"string".equals(type))
 			throw new IllegalArgumentException();
 		return (String) cell.getValue();
+	}
+
+	private String getFormula(final MutableCell<SpreadSheet> cell) {
+		// 1.3b1
+		// return cell.getFormula();
+		// 1.2
+		final Element element = cell.getElement();
+		return element.getAttributeValue("formula", element.getNamespace());
 	}
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
@@ -175,10 +175,14 @@ SpreadsheetReader {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 
-		if (r >= this.sheet.getRowCount())
-			this.sheet.ensureRowCount((int) (r * 1.25) + 1);
-		if (c >= this.sheet.getColumnCount())
-			this.sheet.ensureColumnCount(c + 5);
+		if (r >= this.sheet.getRowCount()) {
+			// do not set more because this will affect the row count value
+			this.sheet.ensureRowCount(r + 1);
+		}
+		if (c >= this.sheet.getColumnCount()) {
+			// do not set more because this will affect the row count value
+			this.sheet.ensureColumnCount(c + 1);
+		}
 		return this.sheet.getCellAt(c, r);
 	}
 }
