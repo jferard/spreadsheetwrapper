@@ -34,7 +34,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	/** cell style for date cells, since Excel hasn't any cell date type */
 	protected/*@Nullable*/CellStyle dateCellStyle;
 	/** *internal* workbook */
-	final Workbook workbook;
+	final private Workbook workbook;
 
 	/**
 	 * @param workbook

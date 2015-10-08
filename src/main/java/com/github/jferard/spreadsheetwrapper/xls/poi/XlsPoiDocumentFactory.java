@@ -53,7 +53,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
 		return new XlsPoiDocumentReader(this.styleUtility,
-				sfWorkbook.getValue());
+				sfWorkbook.getObject());
 	}
 
 	/** {@inheritDoc} */
@@ -63,7 +63,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, this.styleUtility,
-				sfWorkbook.getValue(), outputStream);
+				sfWorkbook.getObject(), outputStream);
 	}
 
 	/** {@inheritDoc} */

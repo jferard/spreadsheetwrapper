@@ -90,7 +90,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 			table.setTableName(sheetName);
 		} else {
 			if (index == this.getSheetCount())
-				table = this.sfDocument.newTable();
+				table = this.sfDocument.rawNewTable();
 			else
 				table = this.sfDocument.rawInsertSheet(index);
 			if (table == null)

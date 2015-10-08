@@ -17,6 +17,18 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+/**
+ * Visitor pattern.
+ * A wrapper for data to write on the sheet
+ * One should declare a wrapper an the method to write it on the sheet
+ * E.g. a ResultSetDataWrapper has to declare the writeDataTo method that writes the content of the resultSet on the sheet.
+ */
 public interface DataWrapper {
+	/**
+	 * @param writer sheet where to write
+	 * @param r row index
+	 * @param c column inex
+	 * @return true if the data is written
+	 */
 	boolean writeDataTo(SpreadsheetWriter writer, int r, int c);
 }

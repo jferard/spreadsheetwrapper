@@ -199,7 +199,7 @@ public class OdsSimpleodfDocumentWriter extends
 			throw new IllegalStateException(
 					String.format("Use saveAs when output file is not specified"));
 		try {
-			this.sfDocument.save(this.outputStream);
+			this.sfDocument.rawSave(this.outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",

@@ -28,13 +28,21 @@ import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsJOpenStyleUtility extends StyleUtility {
+	/** the name space fo (fonts ?) */
 	private static Namespace foNS = Namespace.getNamespace("fo",
 			"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0");
+	/** the name space office (table, row, cell, etc.) */
 	private static Namespace officeNS = Namespace.getNamespace("office",
 			"urn:oasis:names:tc:opendocument:xmlns:office:1.0");
+	/** the name space style (styles) */
 	private static Namespace styleNS = Namespace.getNamespace("style",
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 
+	/**
+	 * @param styleName the name of the style
+	 * @param styleString the old style string
+	 * @return the DOM element
+	 */
 	public Element createStyleElement(final String styleName,
 			final String styleString) {
 		final Map<String, String> propertiesMap = this
@@ -42,6 +50,11 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		return this.createStyle(styleName, propertiesMap);
 	}
 
+	/**
+	 * @param styleName the name of the style
+	 * @param styleString the new style format
+	 * @return the DOM element
+	 */
 	public Element createStyleElement(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
 		final Element style = this.getBaseStyle(styleName);
@@ -65,6 +78,11 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		return style;
 	}
 
+	/**
+	 * @param styleName the name of the style
+	 * @param propertiesMap a map key-value of the properties
+	 * @return the DOM element
+	 */
 	private Element createStyle(final String styleName,
 			final Map<String, String> propertiesMap) {
 		final Element style = this.getBaseStyle(styleName);
@@ -88,6 +106,10 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		return style;
 	}
 
+	/**
+	 * @param styleName the name of the style
+	 * @return the base of the DOM element for a style
+	 */
 	private Element getBaseStyle(final String styleName) {
 		final Element style = new Element("style", OdsJOpenStyleUtility.styleNS);
 		style.setAttribute("name", styleName, OdsJOpenStyleUtility.styleNS);

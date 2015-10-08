@@ -77,8 +77,8 @@ public abstract class SpreadsheetEmptyWriterTest {
 	public void testCounts() {
 		this.sw.setText(10, 10, "10:10");
 		Assert.assertEquals(11, this.sw.getRowCount());
-		for (int i = 0; i <= 10; i++)
-			Assert.assertEquals(11, this.sw.getCellCount(i));
+		Assert.assertEquals(11, this.sw.getCellCount(10));
+		// what about this.sw.getCellCount(5) : NPE, 0, 10 ??
 	}
 
 	@Test

@@ -17,12 +17,26 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+/**
+ * the class WrapperFont wraps some font attributes : bold/italic, size and color
+ *
+ */
 public class WrapperFont {
+	/** true if the font is bold */
 	private boolean bold;
+	/** true if the font is italic */
 	private boolean italic;
+	/** size of the font */
 	private int size;
+	/** color of the font */
 	private final WrapperColor wrapperColor;
 
+	/**
+	 * @param bold true if the font is bold
+	 * @param italic true if the font is italic
+	 * @param size size of the font
+	 * @param wrapperColor color of the font
+	 */
 	public WrapperFont(final boolean bold, final boolean italic,
 			final int size, final WrapperColor wrapperColor) {
 		super();
@@ -32,30 +46,51 @@ public class WrapperFont {
 		this.wrapperColor = wrapperColor;
 	}
 
+	/**
+	 * @return the color of the font
+	 */
 	public WrapperColor getColor() {
 		return this.wrapperColor;
 	}
 
+	/**
+	 * @return the size of the font
+	 */
 	public int getSize() {
 		return this.size;
 	}
 
+	/**
+	 * @return true if the font is bold
+	 */
 	public boolean isBold() {
 		return this.bold;
 	}
 
+	/**
+	 * @return true if the font is italic
+	 */
 	public boolean isItalic() {
 		return this.italic;
 	}
 
+	/**
+	 * @param bold true toset the font to bold
+	 */
 	public void setBold(final boolean bold) {
 		this.bold = bold;
 	}
 
+	/**
+	 * @param italic true to set thee font to italic
+ 	 */
 	public void setItalic(final boolean italic) {
 		this.italic = italic;
 	}
 
+	/**
+	 * @param size size of the font
+	 */
 	public void setSize(final int size) {
 		this.size = size;
 	}

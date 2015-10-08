@@ -57,7 +57,7 @@ public class OdsOdfdomDocumentFactory extends
 			final Stateful<OdfSpreadsheetDocument> sfDocument)
 			throws SpreadsheetException {
 		return new OdsOdfdomDocumentReader(this.styleUtility,
-				sfDocument.getValue());
+				sfDocument.getObject());
 	}
 
 	/**
@@ -71,7 +71,7 @@ public class OdsOdfdomDocumentFactory extends
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		return new OdsOdfdomDocumentWriter(this.logger, this.styleUtility,
-				sfDocument.getValue(), outputStream);
+				sfDocument.getObject(), outputStream);
 	}
 
 	@Override

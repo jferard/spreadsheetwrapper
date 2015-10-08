@@ -31,13 +31,24 @@ import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
+/**
+ * A little style utility for odftoolkit files
+ *
+ */
 public class OdsOdfdomStyleUtility extends StyleUtility {
 	private final WrapperCellStyleHelper helper;
 
+	/**
+	 * @param helper a helper for wrapper cell style
+	 */
 	public OdsOdfdomStyleUtility(final WrapperCellStyleHelper helper) {
 		this.helper = helper;
 	}
 
+	/**
+	 * @param style *internal* cell style
+	 * @return the new cell style format
+	 */
 	public WrapperCellStyle getCellStyle(final OdfStyle style) {
 		final String fontWeight = style
 				.getProperty(OdfTextProperties.FontWeight);
@@ -51,6 +62,10 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 
+	/**
+	 * @param styleString the old style string
+	 * @return the properties extracted from the style string
+	 */
 	public Map<OdfStyleProperty, String> getProperties(final String styleString) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final Map<String, String> props = this.getPropertiesMap(styleString);
@@ -65,6 +80,10 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		return properties;
 	}
 
+	/**
+	 * @param wrapperCellStyle the new style format
+	 * @return the properties extracted from the style string
+	 */
 	public Map<OdfStyleProperty, String> getProperties(
 			final WrapperCellStyle wrapperCellStyle) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
@@ -78,6 +97,10 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		return properties;
 	}
 
+	/**
+	 * @param style *internal* style
+	 * @return the old style string that contains the properties fo the style
+	 */
 	public String getStyleString(final OdfStyle style) {
 		final String fontWeight = style
 				.getProperty(OdfTextProperties.FontWeight);

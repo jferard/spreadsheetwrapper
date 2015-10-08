@@ -169,10 +169,10 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public Object setCellContent(final int r, final int c, final Object content) {
-		Object retValue;
 		if (content == null)
 			throw new IllegalArgumentException();
 
+		Object retValue;
 		if (content instanceof String)
 			retValue = this.setText(r, c, (String) content);
 		else if (content instanceof Double)

@@ -27,6 +27,9 @@ import org.odftoolkit.simple.table.Table;
 
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
+/**
+ * A OdsSimpleodfStatefulDocument is a specific Stateful SpreadsheetDocument.
+ */
 public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> {
 	/**
 	 * @param sfDocument a stateful SpreadsheetDocument, ie a SpreadsheetDocument that is, or not, initialized 
@@ -36,43 +39,78 @@ public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> 
 		super(sfDocument.getObject(), sfDocument.isNew());
 	}
 
+	/**
+	 * close the document
+	 */
 	public void close() {
 		this.object.close();
 	}
 
+	/**
+	 * Raw means that we use the object directly
+	 * @param sheetIndex the index of the sheet
+	 * @return the sheet in the document
+	 */
 	public Table getRawSheet(final int sheetIndex) {
 		return this.object.getTableList().get(sheetIndex);
 	}
 
+	/**
+	 * @param sheetName the name of the sheet
+	 * @return the sheet in the document
+	 */
 	public Table getRawSheet(final String sheetName) {
 		return this.object.getTableByName(sheetName);
 	}
 
+	/**
+	 * @return the sheetCount of the document
+	 */
 	public int getRawSheetCount() {
 		return this.object.getSheetCount();
 	}
 
+	/**
+	 * @return the list of the sheets in the document 
+	 */
 	public List<Table> getRawTableList() {
 		return this.object.getTableList();
 	}
 
+	/**
+	 * @return the document with the odf styles
+	 */
 	public OdfOfficeStyles getStyles() {
 		return this.object.getDocumentStyles();
 	}
 
-	public Table insertSheet(final int index) {
+	/**
+	 * @param index the index of the sheet after the new sheet 
+	 * @return the sheet
+	 */
+	public Table rawInsertSheet(final int index) {
 		return this.object.insertSheet(index);
 	}
 
-	public Table newTable() {
+	/**
+	 * @return a new sheet on the object
+	 */
+	public Table rawNewTable() {
 		return Table.newTable(this.object);
 	}
 
-	public void save(final OutputStream outputStream) throws Exception {
+	/**
+	 * @param outputStream the stream to write to
+	 * @throws Exception if odftoolkit throws an exception !
+	 */
+	public void rawSave(final OutputStream outputStream) throws Exception {
 		this.object.save(outputStream);
 	}
 
-	public void setLocale(final Locale locale) {
+	/**
+	 * @param locale the locale to set
+	 */
+	public void rawSetLocale(final Locale locale) {
 		this.object.setLocale(locale);
 	}
 

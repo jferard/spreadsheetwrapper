@@ -46,6 +46,12 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		this.helper = helper;
 	}
 
+	/**
+	 * Converts the syle string to the CellStyle value
+	 * @param workbook the *internal* workbook
+	 * @param styleString the old format style string to use
+	 * @return the style in poi format
+	 */
 	public CellStyle getCellStyle(final Workbook workbook,
 			final String styleString) {
 		final CellStyle cellStyle = workbook.createCellStyle();
@@ -64,6 +70,12 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		return cellStyle;
 	}
 
+	/**
+	 * Reverse of the getCellStyle method
+	 * @param workbook the *internal* workbook
+	 * @param cellStyle the style in poi format
+	 * @return the old style string
+	 */
 	public String getStyleString(final Workbook workbook,
 			final CellStyle cellStyle) {
 		final StringBuilder sb = new StringBuilder();
@@ -75,6 +87,11 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		return sb.toString();
 	}
 
+	/**
+	 * @param workbook the *internal* workbook
+	 * @param cellStyle the style in poi format
+	 * @return the cell style in new format
+	 */
 	WrapperCellStyle getCellStyle(final Workbook workbook,
 			final CellStyle cellStyle) {
 		final short fontIndex = cellStyle.getFontIndex();
