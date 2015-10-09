@@ -41,11 +41,11 @@ public abstract class SpreadsheetReaderTest {
 	/** set the test up */
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getClass().getResource(
 					String.format("/VilleMTP_MTP_MonumentsHist.%s",
-							this.getExtension()));
+							this.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
@@ -296,7 +296,5 @@ public abstract class SpreadsheetReaderTest {
 		Assert.assertEquals(7, this.sr.getCellCount(0));
 	}
 
-	protected abstract String getExtension();
-
-	protected abstract SpreadsheetDocumentFactory getFactory();
+	protected abstract TestProperties getProperties();
 }

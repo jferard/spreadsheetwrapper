@@ -23,29 +23,24 @@ import org.junit.Assert;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenWriterTest extends SpreadsheetWriterTest {
+	@Override
+	protected TestProperties getProperties() {
+		return OdsJOpenTestProperties.getProperties();
+	}
+	
 	@Override
 	public final void testSetBoolean() {
 		final int r = 5;
 		final int c = 6;
 		try {
-			this.sw.setBoolean(r, c, true); // setDate : 0 UTC = 1 CET
+			this.sw.setBoolean(r, c, true);
 			Assert.assertEquals(true, this.sw.getBoolean(r, c));
 		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
-	}
-
-	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal(),
-				new OdsJOpenStyleUtility());
 	}
 }

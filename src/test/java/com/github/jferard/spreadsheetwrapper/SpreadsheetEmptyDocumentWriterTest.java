@@ -41,11 +41,11 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	@Override
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
 			this.sdr = this.sdw;
 		} catch (final SpreadsheetException e) {
@@ -83,10 +83,4 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	public final void testCreation2() {
 		final SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0);
 	}
-
-	@Override
-	protected abstract String getExtension();
-
-	@Override
-	protected abstract SpreadsheetDocumentFactory getFactory();
 }

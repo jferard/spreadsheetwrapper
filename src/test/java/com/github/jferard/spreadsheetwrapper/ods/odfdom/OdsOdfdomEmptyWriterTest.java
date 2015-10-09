@@ -21,51 +21,12 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class OdsOdfdomEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Override
-	protected String getExtension() {
-		return "ods";
+	protected TestProperties getProperties() {
+		return OdsOdfdomTestProperties.getProperties();
 	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
-				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
-	}
-
-	// @Rule
-	// public TestName name = new TestName();
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @Before
-	// public void setUp() {
-	// this.factory = new OdsJOpenDocumentFactory(Logger.getGlobal());
-	// try {
-	// this.sdw = this.factory.create();
-	// this.sdw.addSheet("f");
-	// this.sw = this.sdw.getSpreadsheet("f");
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// @After
-	// public void tearDown() {
-	// try {
-	// final File outputFile = SpreadsheetTest.getOutputFile(this.getClass()
-	// .getSimpleName(), this.name.getMethodName(), "ods");
-	// this.sdw.saveAs(outputFile);
-	// this.sdw.close();
-	// } catch (final SpreadsheetException e) {
-	// e.printStackTrace();
-	// Assert.fail();
-	// }
-	// }
-
 }

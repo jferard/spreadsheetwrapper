@@ -15,21 +15,18 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
+package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.util.logging.Logger;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomTestProperties;
 
-public class OdsSimpleodfDocumentFactoryTest extends
-SpreadsheetDocumentFactoryTest {
-	@Override
-	protected TestProperties getProperties() {
-		return OdsSimpleodfTestProperties.getProperties();
+public class OdsOdfdomTestProperties {
+	private static TestProperties properties = new TestProperties("ods", new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+			new OdsOdfdomStyleUtility(new WrapperCellStyleHelper())));
+
+	public static TestProperties getProperties() {
+		return OdsOdfdomTestProperties.properties;
 	}
 }

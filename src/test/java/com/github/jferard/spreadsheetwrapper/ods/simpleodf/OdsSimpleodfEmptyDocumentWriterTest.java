@@ -21,19 +21,14 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
 public class OdsSimpleodfEmptyDocumentWriterTest extends
 SpreadsheetDocumentWriterTest {
 	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
-				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+	protected TestProperties getProperties() {
+		return OdsSimpleodfTestProperties.getProperties();
 	}
 }

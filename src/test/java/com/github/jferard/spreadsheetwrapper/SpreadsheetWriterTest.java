@@ -41,11 +41,11 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 	@Before
 	@Override
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getClass().getResource(
 					String.format("/VilleMTP_MTP_MonumentsHist.%s",
-							this.getExtension()));
+							this.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
@@ -67,7 +67,7 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {

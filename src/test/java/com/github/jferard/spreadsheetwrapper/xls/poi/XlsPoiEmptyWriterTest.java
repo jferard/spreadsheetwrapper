@@ -23,9 +23,15 @@ import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
+	@Override
+	protected TestProperties getProperties() {
+		return XlsPoiTestProperties.getProperties();
+	}
+	
 	@Override
 	@Test
 	public void testFormula2() {
@@ -36,17 +42,6 @@ public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testText1000col() {
 		super.testText1000col();
-	}
-
-	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsPoiDocumentFactory(Logger.getGlobal(),
-				new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
 	}
 
 }

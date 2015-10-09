@@ -24,24 +24,19 @@ import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenEmptyWriterTest extends SpreadsheetEmptyWriterTest {
+	@Override
+	protected TestProperties getProperties() {
+		return OdsJOpenTestProperties.getProperties();
+	}
+	
 	@Test
 	@Override
 	public void testBoolean() {
 		// this.sw.setCellContents(0, 0, true);
 		this.sw.setBoolean(0, 0, true);
 		Assert.assertEquals(true, this.sw.getBoolean(0, 0));
-	}
-
-	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal(),
-				new OdsJOpenStyleUtility());
 	}
 }

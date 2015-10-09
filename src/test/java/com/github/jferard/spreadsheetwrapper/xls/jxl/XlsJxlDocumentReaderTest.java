@@ -21,16 +21,11 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReaderTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentReaderTest extends SpreadsheetDocumentReaderTest {
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
 	}
 }

@@ -21,18 +21,11 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlWriterCursorTest extends SpreadsheetWriterCursorTest {
-	/** {@inheritDoc} */
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
 	}
 }

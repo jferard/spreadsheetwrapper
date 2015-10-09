@@ -48,16 +48,16 @@ public abstract class SpreadsheetWriterCursorTest {
 	/** set the test up */
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final InputStream inputStream = this
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getExtension())).openStream();
+									this.getProperties().getExtension())).openStream();
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.openForWrite(inputStream, outputStream);
 			Assert.assertEquals(1, this.sdw.getSheetCount());
@@ -199,7 +199,5 @@ public abstract class SpreadsheetWriterCursorTest {
 		}
 	}
 
-	protected abstract String getExtension();
-
-	protected abstract SpreadsheetDocumentFactory getFactory();
+	protected abstract TestProperties getProperties();
 }

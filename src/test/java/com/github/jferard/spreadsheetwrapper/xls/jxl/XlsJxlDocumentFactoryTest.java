@@ -23,8 +23,15 @@ import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
+import com.github.jferard.spreadsheetwrapper.ods.simpleodf.OdsSimpleodfTestProperties;
 
 public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
+	@Override
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
+	}
+	
 	@Test
 	@Override
 	public void testLoad1() {
@@ -36,16 +43,4 @@ public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
 	public void testLoad3() {
 		// does not work
 	}
-
-	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
-	}
-
 }

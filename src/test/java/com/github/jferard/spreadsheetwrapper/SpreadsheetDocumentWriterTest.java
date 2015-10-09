@@ -42,13 +42,13 @@ SpreadsheetDocumentReaderTest {
 	@Override
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final InputStream inputStream = this
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getExtension())).openStream();
+									this.getProperties().getExtension())).openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
 			Assert.assertEquals(1, this.sdw.getSheetCount());
@@ -69,7 +69,7 @@ SpreadsheetDocumentReaderTest {
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
@@ -151,9 +151,5 @@ SpreadsheetDocumentReaderTest {
 		this.sdw.addSheet("Feuille1");
 	}
 
-	@Override
-	protected abstract String getExtension();
-
-	@Override
-	protected abstract SpreadsheetDocumentFactory getFactory();
+	protected abstract TestProperties getProperties();
 }

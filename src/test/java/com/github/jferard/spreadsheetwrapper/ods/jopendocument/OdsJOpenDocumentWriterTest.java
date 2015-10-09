@@ -21,16 +21,11 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsJOpenDocumentFactory(Logger.getGlobal(),
-				new OdsJOpenStyleUtility());
+	protected TestProperties getProperties() {
+		return OdsJOpenTestProperties.getProperties();
 	}
 }

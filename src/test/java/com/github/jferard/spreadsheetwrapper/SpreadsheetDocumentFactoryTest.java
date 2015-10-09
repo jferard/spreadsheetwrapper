@@ -36,9 +36,9 @@ public abstract class SpreadsheetDocumentFactoryTest {
 
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s",
-				this.getExtension());
+				this.getProperties().getExtension());
 	}
 
 	@Test
@@ -81,8 +81,6 @@ public abstract class SpreadsheetDocumentFactoryTest {
 		}
 	}
 
-	protected abstract String getExtension();
-
-	protected abstract SpreadsheetDocumentFactory getFactory();
+	protected abstract TestProperties getProperties();
 
 }

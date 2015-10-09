@@ -28,17 +28,18 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	/** set the test up */
 	@Before
 	@Override
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
 			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
@@ -72,13 +73,7 @@ public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	}
 
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
 	}
 }

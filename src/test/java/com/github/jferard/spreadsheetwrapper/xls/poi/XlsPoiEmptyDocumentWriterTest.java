@@ -21,18 +21,13 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class XlsPoiEmptyDocumentWriterTest extends
 SpreadsheetEmptyDocumentWriterTest {
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsPoiDocumentFactory(Logger.getGlobal(),
-				new XlsPoiStyleUtility(new WrapperCellStyleHelper()));
+	protected TestProperties getProperties() {
+		return XlsPoiTestProperties.getProperties();
 	}
 }

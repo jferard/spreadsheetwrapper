@@ -32,22 +32,23 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final InputStream inputStream = this
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getExtension())).openStream();
+									this.getProperties().getExtension())).openStream();
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.openForWrite(inputStream, outputStream);
 			this.sdr = this.sdw;
@@ -76,13 +77,7 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	}
 
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
 	}
 }

@@ -31,6 +31,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends
 SpreadsheetEmptyDocumentWriterTest {
@@ -38,11 +39,11 @@ SpreadsheetEmptyDocumentWriterTest {
 	@Override
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.create(outputStream);
 			this.sdr = this.sdw;
@@ -71,13 +72,7 @@ SpreadsheetEmptyDocumentWriterTest {
 	}
 
 	@Override
-	protected String getExtension() {
-		return "xls";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new XlsJxlDocumentFactory(Logger.getGlobal(),
-				new XlsJxlStyleUtility());
+	protected TestProperties getProperties() {
+		return XlsJxlTestProperties.getProperties();
 	}
 }

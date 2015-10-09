@@ -25,10 +25,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
@@ -36,11 +36,11 @@ public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Before
 	@Override
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
 			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
@@ -89,13 +89,8 @@ public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	}
 
 	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsSimpleodsDocumentFactory(Logger.getGlobal(),
-				new StyleUtility());
+	protected TestProperties getProperties() {
+		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(Logger.getGlobal(),
+				new StyleUtility()));
 	}
 }

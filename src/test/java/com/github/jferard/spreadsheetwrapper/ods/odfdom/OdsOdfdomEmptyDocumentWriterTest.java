@@ -21,18 +21,13 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class OdsOdfdomEmptyDocumentWriterTest extends
 SpreadsheetEmptyDocumentWriterTest {
 	@Override
-	protected String getExtension() {
-		return "ods";
-	}
-
-	@Override
-	protected SpreadsheetDocumentFactory getFactory() {
-		return new OdsOdfdomDocumentFactory(Logger.getGlobal(),
-				new OdsOdfdomStyleUtility(new WrapperCellStyleHelper()));
+	protected TestProperties getProperties() {
+		return OdsOdfdomTestProperties.getProperties();
 	}
 }

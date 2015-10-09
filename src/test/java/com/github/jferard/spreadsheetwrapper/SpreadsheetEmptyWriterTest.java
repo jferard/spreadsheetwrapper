@@ -38,7 +38,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 	/** set the test up */
 	@Before
 	public void setUp() {
-		this.factory = this.getFactory();
+		this.factory = this.getProperties().getFactory();
 		try {
 			this.sdw = this.factory.create();
 			this.sw = this.sdw.addSheet(0, "first sheet");
@@ -54,7 +54,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 		try {
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getExtension());
+					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
@@ -224,9 +224,6 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setText(1, -10, "10");
 		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
-
-	protected abstract String getExtension();
-
-	protected abstract SpreadsheetDocumentFactory getFactory();
-
+	
+	protected abstract TestProperties getProperties();
 }
