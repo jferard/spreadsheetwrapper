@@ -44,6 +44,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  * The sfSpreadSheet writer for Apache JOpen.
  *
  */
+/**
+ * @author Julien
+ *
+ */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
@@ -68,12 +72,11 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	private final OdsJOpenDocumentReader reader;
 	/** the *internal* workbook */
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
-	private final HashMap<String, String> styles;
-
+	/** utility for style */
 	private final OdsJOpenStyleUtility styleUtility;
 
 	/** the logger */
-	final Logger logger;
+	private final Logger logger;
 
 	/**
 	 * @param logger
@@ -97,7 +100,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
 		this.documentTrait = new OdsJOpenDocumentWriterTrait(sfSpreadSheet);
-		this.styles = new HashMap<String, String>();
+		new HashMap<String, String>();
 	}
 
 	/** {@inheritDoc} */
@@ -129,15 +132,14 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
-
-		for (final Element style : styles) {
-			if (styleName.equals(style.getAttributeValue("name")))
-				return false;
-		}
-
-		final Element style = this.styleUtility.createStyleElement(styleName,
-				styleString);
-		namedStyles.addContent(style);
+		Element oldStyle = findElementWithName(styleName, styles);
+		if (oldStyle == null) {
+			oldStyle = this.styleUtility.createBaseStyle(styleName);
+			namedStyles.addContent(oldStyle);
+		} else
+			oldStyle.removeContent();
+		
+		this.styleUtility.setStyle(oldStyle, styleString);
 		return true;
 	}
 
@@ -208,6 +210,10 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		}
 	}
 
+	/** {@inheritDoc} */
+	/* (non-Javadoc)
+	 * @see com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter#setStyle(java.lang.String, com.github.jferard.spreadsheetwrapper.WrapperCellStyle)
+	 */
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
@@ -215,18 +221,30 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
+		Element newStyle = findElementWithName(styleName, styles);
+		if (newStyle == null) {
+			newStyle = this.styleUtility.createBaseStyle(styleName);
+			namedStyles.addContent(newStyle);
+		} else
+			newStyle.removeContent();
 
-		for (final Element style : styles) {
-			if (styleName.equals(style.getAttributeValue("name"))) {
-				namedStyles.removeContent(style);
-				break;
-			}
-		}
-
-		final Element style = this.styleUtility.createStyleElement(styleName,
-				wrapperCellStyle);
-		namedStyles.addContent(style);
+		this.styleUtility.setStyle(newStyle, wrapperCellStyle);
 		return true;
+	}
+
+	/**
+	 * XPath could do better...
+	 * @param name the name to find in attributes
+	 * @param elements the elements to look at
+	 * @return the matching element, or null 
+	 */
+	private static Element findElementWithName(final String name,
+			final List<Element> elements) {
+		for (final Element element : elements) {
+			if (name.equals(element.getAttributeValue("name")))
+				return element;
+		}
+		return null;
 	}
 
 	/** {@inheritDoc} */
@@ -237,16 +255,12 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
-
-		for (final Element style : styles) {
-			if (styleName.equals(style.getAttributeValue("name"))) {
-				styles.remove(style);
-				final Element newStyle = this.styleUtility.createStyleElement(
-						styleName, styleString);
-				namedStyles.addContent(newStyle);
-				return true;
-			}
+		Element oldStyle = findElementWithName(styleName, styles);
+		if (oldStyle == null) {
+			oldStyle = this.styleUtility.createBaseStyle(styleName);
+			this.styleUtility.setStyle(oldStyle, styleString);
+			namedStyles.addContent(oldStyle);
 		}
-		return false;
+		return oldStyle == null; 
 	}
 }

@@ -17,9 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument;
 
-import java.util.logging.Logger;
-
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 

@@ -37,8 +37,8 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	@Before
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
-		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s",
-				this.getProperties().getExtension());
+		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s", this
+				.getProperties().getExtension());
 	}
 
 	@Test

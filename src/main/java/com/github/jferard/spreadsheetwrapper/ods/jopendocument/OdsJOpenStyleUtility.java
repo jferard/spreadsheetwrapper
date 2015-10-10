@@ -38,9 +38,17 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	private static Namespace styleNS = Namespace.getNamespace("style",
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 
+	public Element createBaseStyle(final String styleName) {
+		final Element style = new Element("style", OdsJOpenStyleUtility.styleNS);
+		style.setAttribute("name", styleName, OdsJOpenStyleUtility.styleNS);
+		return style;
+	}
+
 	/**
-	 * @param styleName the name of the style
-	 * @param styleString the old style string
+	 * @param styleName
+	 *            the name of the style
+	 * @param styleString
+	 *            the old style string
 	 * @return the DOM element
 	 */
 	public Element createStyleElement(final String styleName,
@@ -51,8 +59,10 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param styleName the name of the style
-	 * @param styleString the new style format
+	 * @param styleName
+	 *            the name of the style
+	 * @param styleString
+	 *            the new style format
 	 * @return the DOM element
 	 */
 	public Element createStyleElement(final String styleName,
@@ -78,9 +88,40 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		return style;
 	}
 
+	public Element setStyle(final Element style, final String styleString) {
+		final Map<String, String> propertiesMap = this
+				.getPropertiesMap(styleString);
+		return this.setStyle(style, propertiesMap);
+	}
+
+	public Element setStyle(final Element style,
+			final WrapperCellStyle wrapperCellStyle) {
+		style.setAttribute("family", "table-cell", OdsJOpenStyleUtility.styleNS);
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
+		if (backgroundColor != null) {
+			final Element tableCellProps = new Element("table-cell-properties",
+					OdsJOpenStyleUtility.styleNS);
+			tableCellProps.setAttribute("background-color",
+					backgroundColor.toHex(), OdsJOpenStyleUtility.foNS);
+			style.addContent(tableCellProps);
+		}
+		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
+		if (cellFont != null && cellFont.isBold()) {
+			final Element textProps = new Element("text-properties",
+					OdsJOpenStyleUtility.styleNS);
+			textProps.setAttribute("font-weight", "bold",
+					OdsJOpenStyleUtility.foNS);
+			style.addContent(textProps);
+		}
+		return style;
+	}
+
 	/**
-	 * @param styleName the name of the style
-	 * @param propertiesMap a map key-value of the properties
+	 * @param styleName
+	 *            the name of the style
+	 * @param propertiesMap
+	 *            a map key-value of the properties
 	 * @return the DOM element
 	 */
 	private Element createStyle(final String styleName,
@@ -107,13 +148,36 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param styleName the name of the style
+	 * @param styleName
+	 *            the name of the style
 	 * @return the base of the DOM element for a style
 	 */
 	private Element getBaseStyle(final String styleName) {
-		final Element style = new Element("style", OdsJOpenStyleUtility.styleNS);
-		style.setAttribute("name", styleName, OdsJOpenStyleUtility.styleNS);
+		final Element style = this.createBaseStyle(styleName);
 		style.setAttribute("family", "table-cell", OdsJOpenStyleUtility.styleNS);
+		return style;
+	}
+
+	private Element setStyle(final Element style,
+			final Map<String, String> propertiesMap) {
+		style.setAttribute("family", "table-cell", OdsJOpenStyleUtility.styleNS);
+		if (propertiesMap.containsKey("background-color")) {
+			final Element tableCellProps = new Element("table-cell-properties",
+					OdsJOpenStyleUtility.styleNS);
+			tableCellProps.setAttribute("background-color",
+					propertiesMap.get("background-color"),
+					OdsJOpenStyleUtility.foNS);
+			style.addContent(tableCellProps);
+		}
+		if (propertiesMap.containsKey("font-weight")) {
+			final Element textProps = new Element("text-properties",
+					OdsJOpenStyleUtility.styleNS);
+			textProps
+					.setAttribute("font-weight",
+							propertiesMap.get("font-weight"),
+							OdsJOpenStyleUtility.foNS);
+			style.addContent(textProps);
+		}
 		return style;
 	}
 

@@ -41,7 +41,8 @@ public abstract class SpreadsheetDocumentReaderTest {
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension())).openStream();
+									this.getProperties().getExtension()))
+					.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
 		} catch (final SpreadsheetException e) {

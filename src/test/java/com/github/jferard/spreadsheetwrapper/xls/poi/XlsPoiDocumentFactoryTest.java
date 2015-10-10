@@ -17,13 +17,8 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import java.util.logging.Logger;
-
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
-import com.github.jferard.spreadsheetwrapper.xls.jxl.XlsJxlTestProperties;
 
 public class XlsPoiDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
 	@Override

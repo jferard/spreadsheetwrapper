@@ -17,13 +17,8 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import java.util.logging.Logger;
-
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReaderTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
-import com.github.jferard.spreadsheetwrapper.ods.jopendocument.OdsJOpenTestProperties;
 
 public class OdsOdfdomDocumentReaderTest extends SpreadsheetDocumentReaderTest {
 	@Override

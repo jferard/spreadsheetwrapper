@@ -54,7 +54,8 @@ public abstract class SpreadsheetWriterCursorTest {
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension())).openStream();
+									this.getProperties().getExtension()))
+					.openStream();
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());

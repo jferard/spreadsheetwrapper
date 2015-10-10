@@ -17,21 +17,12 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import java.util.logging.Logger;
-
 import org.junit.Test;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
-	@Override
-	protected TestProperties getProperties() {
-		return XlsPoiTestProperties.getProperties();
-	}
-	
 	@Override
 	@Test
 	public void testFormula2() {
@@ -42,6 +33,11 @@ public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testText1000col() {
 		super.testText1000col();
+	}
+
+	@Override
+	protected TestProperties getProperties() {
+		return XlsPoiTestProperties.getProperties();
 	}
 
 }

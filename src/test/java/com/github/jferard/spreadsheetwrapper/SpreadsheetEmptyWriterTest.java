@@ -224,6 +224,6 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setText(1, -10, "10");
 		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
-	
+
 	protected abstract TestProperties getProperties();
 }

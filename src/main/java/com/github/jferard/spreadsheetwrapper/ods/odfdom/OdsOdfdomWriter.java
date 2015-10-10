@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** reader for delegation */
 	private final OdsOdfdomReader preader;
 	private final OdfTable table;

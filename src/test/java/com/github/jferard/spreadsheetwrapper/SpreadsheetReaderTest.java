@@ -44,8 +44,8 @@ public abstract class SpreadsheetReaderTest {
 		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s",
-							this.getProperties().getExtension()));
+					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
+							.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());

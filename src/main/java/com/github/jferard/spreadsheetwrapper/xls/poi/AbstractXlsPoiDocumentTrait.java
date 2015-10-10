@@ -30,11 +30,11 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.nullness.qual.PolyNull;*/
 
 public abstract class AbstractXlsPoiDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
-	/** cell style for date cells, since Excel hasn't any cell date type */
-	protected/*@Nullable*/CellStyle dateCellStyle;
+		AbstractSpreadsheetDocumentTrait<T> {
 	/** *internal* workbook */
 	final private Workbook workbook;
+	/** cell style for date cells, since Excel hasn't any cell date type */
+	protected/*@Nullable*/CellStyle dateCellStyle;
 
 	/**
 	 * @param workbook

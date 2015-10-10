@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	private final Logger logger;
 	private final XlsPoiStyleUtility styleUtility;
 
@@ -61,7 +61,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, this.styleUtility,
 				sfWorkbook.getObject(), outputStream);
 	}
@@ -84,7 +84,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		final Workbook workbook = new HSSFWorkbook();
 		return workbook;
 	}

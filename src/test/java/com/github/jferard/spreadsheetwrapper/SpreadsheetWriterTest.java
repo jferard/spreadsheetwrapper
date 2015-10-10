@@ -44,8 +44,8 @@ public abstract class SpreadsheetWriterTest extends SpreadsheetReaderTest {
 		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s",
-							this.getProperties().getExtension()));
+					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
+							.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;

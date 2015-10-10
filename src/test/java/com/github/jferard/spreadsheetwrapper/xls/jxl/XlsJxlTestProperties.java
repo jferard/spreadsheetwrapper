@@ -20,12 +20,11 @@ package com.github.jferard.spreadsheetwrapper.xls.jxl;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
 public class XlsJxlTestProperties {
-	private static TestProperties properties = new TestProperties("xls", new XlsJxlDocumentFactory(Logger.getGlobal(),
-			new XlsJxlStyleUtility()));
+	private static TestProperties properties = new TestProperties("xls",
+			new XlsJxlDocumentFactory(Logger.getGlobal(),
+					new XlsJxlStyleUtility()));
 
 	public static TestProperties getProperties() {
 		return XlsJxlTestProperties.properties;

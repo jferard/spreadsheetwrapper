@@ -90,7 +90,7 @@ public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 
 	@Override
 	protected TestProperties getProperties() {
-		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(Logger.getGlobal(),
-				new StyleUtility()));
+		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(
+				Logger.getGlobal(), new StyleUtility()));
 	}
 }

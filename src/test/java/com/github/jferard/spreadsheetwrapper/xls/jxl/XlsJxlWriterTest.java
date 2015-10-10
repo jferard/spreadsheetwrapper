@@ -23,13 +23,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterTest;
@@ -43,8 +41,8 @@ public class XlsJxlWriterTest extends SpreadsheetWriterTest {
 		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s",
-							this.getProperties().getExtension()));
+					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
+							.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),

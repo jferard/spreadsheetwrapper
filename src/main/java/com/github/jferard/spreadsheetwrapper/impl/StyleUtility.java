@@ -28,8 +28,8 @@ public class StyleUtility {
 	 * @return
 	 */
 	public Map<String, String> getPropertiesMap(final String styleString) {
-		final Map<String, String> properties = new HashMap<String, String>();
 		final String[] styleProps = styleString.split(";");
+		final Map<String, String> properties = new HashMap<String, String>(styleProps.length);
 		for (final String styleProp : styleProps) {
 			final String[] entry = styleProp.split(":");
 			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());

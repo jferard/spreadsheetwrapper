@@ -30,9 +30,10 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** reader for delegation */
 	private final OdsJOpenReader preader;
+	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
 	/**
@@ -53,22 +54,26 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return cell.getStyleName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertCol(final int c) {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertRow(final int r) {
 		this.sheet.insertDuplicatedRows(r, 1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<Object> removeCol(final int c) {
 		this.sheet.removeColumn(c, true);
 		return null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List<Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
@@ -85,8 +90,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return value;
 	}
 
-	/**
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
@@ -94,9 +98,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return date;
 	}
 
-	/**
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
@@ -105,7 +107,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return retValue;
 	}
 
-	/**  */
+	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
@@ -114,9 +116,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return formula;
 	}
 
-	/**
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
@@ -133,7 +133,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		return true;
 	}
 
-	/**  */
+	/** {@inheritDoc} */
 	@Override
 	public String setText(final int r, final int c, final String text) {
 		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);

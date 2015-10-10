@@ -48,8 +48,11 @@ public class XlsPoiStyleUtility extends StyleUtility {
 
 	/**
 	 * Converts the syle string to the CellStyle value
-	 * @param workbook the *internal* workbook
-	 * @param styleString the old format style string to use
+	 * 
+	 * @param workbook
+	 *            the *internal* workbook
+	 * @param styleString
+	 *            the old format style string to use
 	 * @return the style in poi format
 	 */
 	public CellStyle getCellStyle(final Workbook workbook,
@@ -72,8 +75,11 @@ public class XlsPoiStyleUtility extends StyleUtility {
 
 	/**
 	 * Reverse of the getCellStyle method
-	 * @param workbook the *internal* workbook
-	 * @param cellStyle the style in poi format
+	 * 
+	 * @param workbook
+	 *            the *internal* workbook
+	 * @param cellStyle
+	 *            the style in poi format
 	 * @return the old style string
 	 */
 	public String getStyleString(final Workbook workbook,
@@ -88,8 +94,10 @@ public class XlsPoiStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param workbook the *internal* workbook
-	 * @param cellStyle the style in poi format
+	 * @param workbook
+	 *            the *internal* workbook
+	 * @param cellStyle
+	 *            the style in poi format
 	 * @return the cell style in new format
 	 */
 	WrapperCellStyle getCellStyle(final Workbook workbook,

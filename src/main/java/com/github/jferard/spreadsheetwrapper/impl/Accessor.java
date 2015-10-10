@@ -116,10 +116,11 @@ public class Accessor</*@NonNull*/T> {
 		this.elementByName.put(elementName, element);
 	}
 
+	/* {@inheritDoc} */
 	@Override
 	public String toString() {
 		assert this.elementByName.size() == this.elementByIndex.size();
-		final StringBuilder sb = new StringBuilder("Accessor[");
+		final StringBuilder stringBuilder = new StringBuilder("Accessor[");
 		final ListIterator<T> iterator = this.elementByIndex.listIterator();
 		while (iterator.hasNext()) {
 			final int index = iterator.nextIndex();
@@ -132,10 +133,10 @@ public class Accessor</*@NonNull*/T> {
 					break;
 				}
 			}
-			sb.append(index).append("&").append(name).append("->")
-					.append(element).append(",");
+			stringBuilder.append(index).append('&').append(name).append("->")
+			.append(element).append(',');
 		}
-		sb.deleteCharAt(sb.length() - 1).append("]");
-		return sb.toString();
+		stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(']');
+		return stringBuilder.toString();
 	}
 }

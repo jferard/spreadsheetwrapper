@@ -34,6 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  */
 public abstract class AbstractDocumentFactory<R> extends
 		AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
+	/** the logger */
 	private final Logger logger;
 
 	/**
@@ -95,7 +96,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	protected abstract SpreadsheetDocumentWriter createWriter(
 			Stateful<R> stateful,
 			/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
 
 	/**
 	 * @param inputStream

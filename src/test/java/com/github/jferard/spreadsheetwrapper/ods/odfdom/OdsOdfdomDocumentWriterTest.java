@@ -17,27 +17,18 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import java.util.logging.Logger;
-
 import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
-	@Override
-	protected TestProperties getProperties() {
-		return OdsOdfdomTestProperties.getProperties();
-	}
-	
 	/** {@inheritDoc} */
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
 	public final void testAddAt0() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
+			CantInsertElementInSpreadsheetException {
 		super.testAddAt0();
 	}
 
@@ -47,5 +38,10 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	public final void testAppendAdd20At0()
 			throws CantInsertElementInSpreadsheetException {
 		super.testAppendAdd20At0();
+	}
+
+	@Override
+	protected TestProperties getProperties() {
+		return OdsOdfdomTestProperties.getProperties();
 	}
 }

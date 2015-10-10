@@ -17,17 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
-import java.util.logging.Logger;
-
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomTestProperties;
 
 public class OdsSimpleodfDocumentFactoryTest extends
-SpreadsheetDocumentFactoryTest {
+		SpreadsheetDocumentFactoryTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsSimpleodfTestProperties.getProperties();

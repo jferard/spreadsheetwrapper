@@ -42,15 +42,17 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-		AbstractDocumentFactory<SpreadSheet> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<SpreadSheet> implements
+SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
+	/** utility for styles */
 	private final OdsJOpenStyleUtility styleUtility;
 
 	/**
 	 * @param logger
 	 *            simple logger
+	 * @param styleUtility utility for styles
 	 */
 	public OdsJOpenDocumentFactory(final Logger logger,
 			final OdsJOpenStyleUtility styleUtility) {
@@ -64,8 +66,8 @@ public class OdsJOpenDocumentFactory extends
 			final String name, final String zipEntry) {
 		final XMLVersion version = XMLVersion.OD;
 		final Element root = new Element(name, version.getNS(nsPrefix));
-		for (final Namespace ns : version.getALL())
-			root.addNamespaceDeclaration(ns);
+		for (final Namespace nameSpace : version.getALL())
+			root.addNamespaceDeclaration(nameSpace);
 
 		return new Document(root);
 	}
@@ -94,11 +96,12 @@ public class OdsJOpenDocumentFactory extends
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadSheet> sfDocument,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		return new OdsJOpenDocumentWriter(this.logger, this.styleUtility,
 				new OdsJOpenStatefulDocument(sfDocument), outputStream);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected SpreadSheet loadSpreadsheetDocument(final InputStream inputStream)
 			throws SpreadsheetException {
@@ -110,10 +113,11 @@ public class OdsJOpenDocumentFactory extends
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		try {
 			// 1.3b1
 			// return SpreadSheet.createEmpty(new DefaultTableModel());

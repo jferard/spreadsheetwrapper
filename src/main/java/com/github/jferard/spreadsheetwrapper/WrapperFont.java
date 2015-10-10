@@ -18,7 +18,8 @@
 package com.github.jferard.spreadsheetwrapper;
 
 /**
- * the class WrapperFont wraps some font attributes : bold/italic, size and color
+ * the class WrapperFont wraps some font attributes : bold/italic, size and
+ * color
  *
  */
 public class WrapperFont {
@@ -32,10 +33,14 @@ public class WrapperFont {
 	private final WrapperColor wrapperColor;
 
 	/**
-	 * @param bold true if the font is bold
-	 * @param italic true if the font is italic
-	 * @param size size of the font
-	 * @param wrapperColor color of the font
+	 * @param bold
+	 *            true if the font is bold
+	 * @param italic
+	 *            true if the font is italic
+	 * @param size
+	 *            size of the font
+	 * @param wrapperColor
+	 *            color of the font
 	 */
 	public WrapperFont(final boolean bold, final boolean italic,
 			final int size, final WrapperColor wrapperColor) {
@@ -75,21 +80,24 @@ public class WrapperFont {
 	}
 
 	/**
-	 * @param bold true toset the font to bold
+	 * @param bold
+	 *            true toset the font to bold
 	 */
 	public void setBold(final boolean bold) {
 		this.bold = bold;
 	}
 
 	/**
-	 * @param italic true to set thee font to italic
- 	 */
+	 * @param italic
+	 *            true to set thee font to italic
+	 */
 	public void setItalic(final boolean italic) {
 		this.italic = italic;
 	}
 
 	/**
-	 * @param size size of the font
+	 * @param size
+	 *            size of the font
 	 */
 	public void setSize(final int size) {
 		this.size = size;

@@ -18,15 +18,16 @@
 package com.github.jferard.spreadsheetwrapper.impl;
 
 /**
- * The class Stateful is used to keep a trace of the state, new or initialized, of an
- * object. See Optional in Guava or Java8 for examples
- * 
+ * The class Stateful is used to keep a trace of the state, new or initialized,
+ * of an object. See Optional in Guava or Java8 for examples
+ *
  * @param <T>
  *            the wrapped object
  */
 public class Stateful<T> {
 	/**
-	 * @param object the object that is already initialized
+	 * @param object
+	 *            the object that is already initialized
 	 * @return the stateful object
 	 */
 	public static <S> Stateful<S> createInitialized(final S object) {
@@ -34,7 +35,8 @@ public class Stateful<T> {
 	}
 
 	/**
-	 * @param object the object that is not initialized (new)
+	 * @param object
+	 *            the object that is not initialized (new)
 	 * @return the stateful object
 	 */
 	public static <S> Stateful<S> createNew(final S object) {
@@ -48,8 +50,10 @@ public class Stateful<T> {
 	protected final T object;
 
 	/**
-	 * @param object the object
-	 * @param newObject true if the object is initialized
+	 * @param object
+	 *            the object
+	 * @param newObject
+	 *            true if the object is initialized
 	 */
 	protected Stateful(final T object, final boolean newObject) {
 		this.object = object;

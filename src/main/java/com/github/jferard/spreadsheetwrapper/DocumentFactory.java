@@ -79,7 +79,7 @@ public class DocumentFactory {
 	 * */
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream, final String extension)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final SpreadsheetDocumentFactory documentFactory = this
 				.getDocumentFactory(extension);
 		return documentFactory.create(outputStream);
@@ -236,7 +236,7 @@ public class DocumentFactory {
 	 */
 	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
 			final File outputFile, final String extension)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final SpreadsheetDocumentFactory documentFactory = this
 				.getDocumentFactory(extension);
 		return documentFactory.openForWrite(inputFile, outputFile);
@@ -267,7 +267,7 @@ public class DocumentFactory {
 	 */
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream, final String extension)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final SpreadsheetDocumentFactory documentFactory = this
 				.getDocumentFactory(extension);
 		return documentFactory.openForWrite(inputStream);
@@ -331,7 +331,7 @@ public class DocumentFactory {
 	@Deprecated
 	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
 			final URL outputURL, final String extension)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		final SpreadsheetDocumentFactory documentFactory = this
 				.getDocumentFactory(extension);
 		return documentFactory.openForWrite(inputURL, outputURL);
@@ -382,7 +382,7 @@ public class DocumentFactory {
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream, final String extension)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final SpreadsheetDocumentFactory documentFactory = this
 				.getDocumentFactory(extension);
 		return documentFactory.openForWrite(inputStream, outputStream);

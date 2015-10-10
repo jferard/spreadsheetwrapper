@@ -27,27 +27,54 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
+/**
+ * Stateful means that there is a marker if the document is unitialized.
+ *
+ */
 public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
+	/**
+	 * @param sfDocument the wrapped document
+	 */
 	public OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
 		super(sfDocument.getObject(), sfDocument.isNew());
 	}
 
+	/**
+	 * Delegator for addSheet
+	 * @param index index of the sheet after the sheet to be inserted
+	 * @param sheetName the name of the new sheet.
+	 * @return the *internal* sheet
+	 */
 	public Sheet addRawSheet(final int index, final String sheetName) {
 		return this.object.addSheet(index, sheetName);
 	}
 
-	public Sheet getRawSheet(final int s) {
-		return this.object.getSheet(s);
+	/**
+	 * @param index index of the sheet to get
+	 * @return the *internal* sheet
+	 */
+	public Sheet getRawSheet(final int index) {
+		return this.object.getSheet(index);
 	}
 
+	/**
+	 * @param sheetName name of the sheet to get
+	 * @return the *internal* sheet
+	 */
 	public Sheet getRawSheet(final String sheetName) {
 		return this.object.getSheet(sheetName);
 	}
 
+	/**
+	 * @return the number of sheets in the document
+	 */
 	public int getRawSheetCount() {
 		return this.object.getSheetCount();
 	}
 
+	/**
+	 * @return the *internal* styles.xml document
+	 */
 	public ODXMLDocument getStyles() {
 		final ODPackage odPackage = this.object.getPackage();
 		// 1.3b1
@@ -61,8 +88,11 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 		return res;
 	}
 
+	/**
+	 * @param outputStream where to write
+	 * @throws IOException
+	 */
 	public void save(final OutputStream outputStream) throws IOException {
 		this.object.getPackage().save(outputStream);
 	}
-
 }

@@ -38,10 +38,10 @@ public class SpreadsheetDocumentFactoryProviderTest {
 	public void setUp() {
 		final Map<String, SpreadsheetDocumentFactory> factoryByExtension = new HashMap<String, SpreadsheetDocumentFactory>();
 		factoryByExtension
-				.put("ods",
-						new OdsOdfdomDocumentFactory(Logger.getGlobal(),
-								new OdsOdfdomStyleUtility(
-										new WrapperCellStyleHelper())));
+		.put("ods",
+				new OdsOdfdomDocumentFactory(Logger.getGlobal(),
+						new OdsOdfdomStyleUtility(
+								new WrapperCellStyleHelper())));
 		this.spreadsheetDocumentFactoryProvider = new SpreadsheetDocumentFactoryProvider(
 				factoryByExtension);
 	}

@@ -18,16 +18,14 @@
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {

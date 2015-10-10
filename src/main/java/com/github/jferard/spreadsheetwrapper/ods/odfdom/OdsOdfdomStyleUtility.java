@@ -39,14 +39,16 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	private final WrapperCellStyleHelper helper;
 
 	/**
-	 * @param helper a helper for wrapper cell style
+	 * @param helper
+	 *            a helper for wrapper cell style
 	 */
 	public OdsOdfdomStyleUtility(final WrapperCellStyleHelper helper) {
 		this.helper = helper;
 	}
 
 	/**
-	 * @param style *internal* cell style
+	 * @param style
+	 *            *internal* cell style
 	 * @return the new cell style format
 	 */
 	public WrapperCellStyle getCellStyle(final OdfStyle style) {
@@ -63,7 +65,8 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param styleString the old style string
+	 * @param styleString
+	 *            the old style string
 	 * @return the properties extracted from the style string
 	 */
 	public Map<OdfStyleProperty, String> getProperties(final String styleString) {
@@ -81,7 +84,8 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param wrapperCellStyle the new style format
+	 * @param wrapperCellStyle
+	 *            the new style format
 	 * @return the properties extracted from the style string
 	 */
 	public Map<OdfStyleProperty, String> getProperties(
@@ -98,7 +102,8 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	}
 
 	/**
-	 * @param style *internal* style
+	 * @param style
+	 *            *internal* style
 	 * @return the old style string that contains the properties fo the style
 	 */
 	public String getStyleString(final OdfStyle style) {
