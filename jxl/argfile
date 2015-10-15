@@ -1,0 +1,5 @@
+-processor org.checkerframework.checker.nullness.NullnessChecker
+-Alint
+-AprintErrorStack
+-Awarns
+-Xmaxwarns 10000

@@ -3,8 +3,8 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spreadsheetwrapper</artifactId>
 	<groupId>com.github.jferard</groupId>
-	<version>1.0-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<version>1.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
 	<name>spreadsheetwrapper</name>
 	<url>http://maven.apache.org</url>
 	<properties>
@@ -17,213 +17,157 @@
 		<skip.unit.tests>false</skip.unit.tests>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>18.0</version>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>net.sourceforge.jexcelapi</groupId>
-			<artifactId>jxl</artifactId>
-			<version>2.6.12</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.odftoolkit</groupId>
-			<artifactId>simple-odf</artifactId>
-			<version>0.6.6</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.simpleods</groupId>
-			<artifactId>simpleODS</artifactId>
-			<version>0.5.3</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.10-FINAL</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.10-FINAL</version>
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jopendocument</groupId>
-			<artifactId>jOpenDocument</artifactId>
-			<version>1.2</version>
-<!-- 			<version>1.3b1</version> -->
-			<scope>compile</scope>
-			<optional>true</optional>
-		</dependency>
-
-		<dependency>
-			<groupId>org.checkerframework</groupId>
-			<artifactId>checker-qual</artifactId>
-			<version>1.9.3</version>
-		</dependency>
-	</dependencies>
+	<modules>
+		<module>base</module>
+		<module>test</module>
+		<module>odfdom</module>
+		<module>simpleodf</module>
+		<module>simpleods</module>
+		<module>jopendocument1.2</module>
+		<module>jopendocument1.3</module>
+		<module>jxl</module>
+		<module>poi</module>
+		<module>main</module>
+	</modules>
 
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.7.4.201502262128</version>
-				<!-- jacoco call for each lifecycle phase : prepare-agent -> initialize, 
-					report -> verify, prepare-agent-integration -> pre-integration-test -->
-				<executions>
-					<execution>
-						<id>prepare-agent</id>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>prepare-agent-integration</id>
-						<goals>
-							<goal>prepare-agent-integration</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report-integration</id>
-						<goals>
-							<goal>report-integration</goal>
-						</goals>
-					</execution>
-				</executions>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.jacoco</groupId>
+					<artifactId>jacoco-maven-plugin</artifactId>
+					<version>0.7.4.201502262128</version>
+					<!-- jacoco call for each lifecycle phase : prepare-agent -> initialize, 
+						report -> verify, prepare-agent-integration -> pre-integration-test -->
+					<executions>
+						<execution>
+							<id>prepare-agent</id>
+							<goals>
+								<goal>prepare-agent</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>prepare-agent-integration</id>
+							<goals>
+								<goal>prepare-agent-integration</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report</id>
+							<goals>
+								<goal>report</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>report-integration</id>
+							<goals>
+								<goal>report-integration</goal>
+							</goals>
+						</execution>
+					</executions>
 
-				<!-- <executions> <execution> <id>pre-unit-test</id> <goals> <goal>prepare-agent</goal> 
-					</goals> <configuration> <destFile>${jacoco.ut.execution.data.file}</destFile> 
-					<propertyName>surefireArgLine</propertyName> </configuration> </execution> 
-					<execution> <id>post-unit-test</id> <phase>test</phase> <goals> <goal>report</goal> 
-					</goals> <configuration> <dataFile>${jacoco.ut.execution.data.file}</dataFile> 
-					<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory> 
-					</configuration> </execution> <execution> <id>pre-integration-test</id> <phase>pre-integration-test</phase> 
-					<goals> <goal>prepare-agent</goal> </goals> <configuration> <destFile>${jacoco.it.execution.data.file}</destFile> 
-					<propertyName>failsafeArgLine</propertyName> </configuration> </execution> 
-					<execution> <id>post-integration-test</id> <phase>post-integration-test</phase> 
-					<goals> <goal>report</goal> </goals> <configuration> <dataFile>${jacoco.it.execution.data.file}</dataFile> 
-					<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory> 
-					</configuration> </execution> </executions> -->
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.15</version>
-				<configuration>
-					<excludes>
-						<exclude>**/IT*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-failsafe-plugin</artifactId>
-				<version>2.15</version>
-				<executions>
-					<execution>
-						<id>integration-tests</id>
-						<goals>
-							<goal>integration-test</goal>
-							<goal>verify</goal>
-						</goals>
-						<configuration>
-							<argLine>${failsafeArgLine}</argLine>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<!-- <plugin> <groupId>org.checkerframework</groupId> <artifactId>checkerframework-maven-plugin</artifactId> 
-				<version>1.9.3</version> <executions> <execution> <phase>process-classes</phase> 
-				<goals> <goal>check</goal> </goals> </execution> </executions> <configuration> 
-				<processors> <processor>org.checkerframework.checker.nullness.NullnessChecker</processor> 
-				</processors> <checkerFrameworkVersion>1.9.3</checkerFrameworkVersion> <failOnError>false</failOnError> 
-				<procOnly>false</procOnly> <javaParams>-Xdebug</javaParams> </configuration> 
-				</plugin> -->
+					<!-- <executions> <execution> <id>pre-unit-test</id> <goals> <goal>prepare-agent</goal> 
+						</goals> <configuration> <destFile>${jacoco.ut.execution.data.file}</destFile> 
+						<propertyName>surefireArgLine</propertyName> </configuration> </execution> 
+						<execution> <id>post-unit-test</id> <phase>test</phase> <goals> <goal>report</goal> 
+						</goals> <configuration> <dataFile>${jacoco.ut.execution.data.file}</dataFile> 
+						<outputDirectory>${project.reporting.outputDirectory}/jacoco-ut</outputDirectory> 
+						</configuration> </execution> <execution> <id>pre-integration-test</id> <phase>pre-integration-test</phase> 
+						<goals> <goal>prepare-agent</goal> </goals> <configuration> <destFile>${jacoco.it.execution.data.file}</destFile> 
+						<propertyName>failsafeArgLine</propertyName> </configuration> </execution> 
+						<execution> <id>post-integration-test</id> <phase>post-integration-test</phase> 
+						<goals> <goal>report</goal> </goals> <configuration> <dataFile>${jacoco.it.execution.data.file}</dataFile> 
+						<outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory> 
+						</configuration> </execution> </executions> -->
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.15</version>
+					<configuration>
+						<excludes>
+							<exclude>**/IT*.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>2.15</version>
+					<executions>
+						<execution>
+							<id>integration-tests</id>
+							<goals>
+								<goal>integration-test</goal>
+								<goal>verify</goal>
+							</goals>
+							<configuration>
+								<argLine>${failsafeArgLine}</argLine>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<!-- <plugin> <groupId>org.checkerframework</groupId> <artifactId>checkerframework-maven-plugin</artifactId> 
+					<version>1.9.3</version> <executions> <execution> <phase>process-classes</phase> 
+					<goals> <goal>check</goal> </goals> </execution> </executions> <configuration> 
+					<processors> <processor>org.checkerframework.checker.nullness.NullnessChecker</processor> 
+					</processors> <checkerFrameworkVersion>1.9.3</checkerFrameworkVersion> <failOnError>false</failOnError> 
+					<procOnly>false</procOnly> <javaParams>-Xdebug</javaParams> </configuration> 
+					</plugin> -->
 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.3</version>
-				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
-					<compilerArgument>-Werror</compilerArgument>
-					<compilerArgument>-Xlint</compilerArgument>
-					<fork>true</fork>
-					<excludes>
-						<exclude>**/com/github/jferard/**/old/*.java</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-deploy-plugin</artifactId>
-				<version>2.8.1</version>
-				<configuration>
-					<altDeploymentRepository>
-						internal.repo::default::file://${project.build.directory}/mvn-repo
-					</altDeploymentRepository>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>com.github.github</groupId>
-				<artifactId>site-maven-plugin</artifactId>
-				<version>0.11</version>
-				<configuration>
-					<message>Maven artifacts for ${project.version}</message>
-					<noJekyll>true</noJekyll>
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
-					<branch>refs/heads/master</branch>
-					<includes>
-						<include>**/*</include>
-					</includes>
-					<repositoryName>mvn-repo</repositoryName>
-					<repositoryOwner>jferard</repositoryOwner>
-				</configuration>
-				<executions>
-					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
-						'deploy' phase -->
-					<execution>
-						<goals>
-							<goal>site</goal>
-						</goals>
-						<phase>deploy</phase>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.3</version>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+						<compilerArgument>-Werror</compilerArgument>
+						<compilerArgument>-Xlint</compilerArgument>
+						<fork>true</fork>
+						<excludes>
+							<exclude>**/com/github/jferard/**/old/*.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.8.1</version>
+					<configuration>
+						<altDeploymentRepository>
+							internal.repo::default::file://${project.build.directory}/mvn-repo
+						</altDeploymentRepository>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>com.github.github</groupId>
+					<artifactId>site-maven-plugin</artifactId>
+					<version>0.11</version>
+					<configuration>
+						<message>Maven artifacts for ${project.version}</message>
+						<noJekyll>true</noJekyll>
+						<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>
+						<branch>refs/heads/master</branch>
+						<includes>
+							<include>**/*</include>
+						</includes>
+						<repositoryName>mvn-repo</repositoryName>
+						<repositoryOwner>jferard</repositoryOwner>
+					</configuration>
+					<executions>
+						<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+							'deploy' phase -->
+						<execution>
+							<goals>
+								<goal>site</goal>
+							</goals>
+							<phase>deploy</phase>
+						</execution>
+					</executions>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<distributionManagement>
