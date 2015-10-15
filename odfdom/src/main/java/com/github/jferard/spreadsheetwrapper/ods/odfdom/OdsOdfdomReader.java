@@ -118,13 +118,15 @@ SpreadsheetReader {
 		final String type = cell.getValueType();
 		Object result;
 
+		// from the doc
+		//  The type can be "boolean", "currency", "date", "float", "percentage", "string" or "time". 
 		if (type == null)
 			result = null;
 		else if (type.equals("boolean"))
 			result = cell.getBooleanValue();
 		else if (type.equals("date") || type.equals("time"))
 			result = OdsOdfdomReader.getDate(cell);
-		else if (type.equals("float")) {
+		else if (type.equals("float") || type.equals("currency") || type.equals("percentage")) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
