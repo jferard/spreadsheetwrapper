@@ -44,6 +44,10 @@ implements SpreadsheetDocumentFactory {
 	private final Logger logger;
 	private final XlsJxlStyleUtility styleUtility;
 
+	public static SpreadsheetDocumentFactory create(Logger logger) {
+		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleUtility());
+	}
+	
 	/**
 	 * @param logger
 	 *            simple logger

@@ -41,6 +41,10 @@ implements SpreadsheetDocumentFactory {
 	private final Logger logger;
 	private final XlsPoiStyleUtility styleUtility;
 
+	public static SpreadsheetDocumentFactory create(Logger logger) {
+		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleUtility());
+	}
+	
 	public XlsPoiDocumentFactory(final Logger logger,
 			final XlsPoiStyleUtility styleUtility) {
 		super(logger);

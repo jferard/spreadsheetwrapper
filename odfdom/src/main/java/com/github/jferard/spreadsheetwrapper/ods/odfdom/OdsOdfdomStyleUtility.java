@@ -26,7 +26,6 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
@@ -36,14 +35,18 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
  *
  */
 public class OdsOdfdomStyleUtility extends StyleUtility {
-	private final WrapperCellStyleHelper helper;
+	private final Map<String, WrapperColor> colorByHex;
 
 	/**
 	 * @param helper
 	 *            a helper for wrapper cell style
 	 */
-	public OdsOdfdomStyleUtility(final WrapperCellStyleHelper helper) {
-		this.helper = helper;
+	public OdsOdfdomStyleUtility() {
+		super();
+		this.colorByHex = new HashMap<String, WrapperColor>();
+
+		for (final WrapperColor wrapperColor : WrapperColor.values())
+			this.colorByHex.put(wrapperColor.toHex(), wrapperColor);
 	}
 
 	/**
@@ -60,7 +63,7 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		WrapperFont wrapperFont = null;
 		if ("bold".equals(fontWeight))
 			wrapperFont = new WrapperFont(true, false, -1, null);
-		final WrapperColor wrapperColor = this.helper.getColor(backgroundColor);
+		final WrapperColor wrapperColor = this.colorByHex.get	(backgroundColor);
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 

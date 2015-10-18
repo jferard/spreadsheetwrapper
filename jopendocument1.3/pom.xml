@@ -18,7 +18,7 @@
 	</properties>
 
  <parent>
-	<artifactId>spreadsheetwrapper</artifactId>
+	<artifactId>spreadsheetwrapper-parent</artifactId>
 	<groupId>com.github.jferard</groupId>
 	<version>1.0.1-SNAPSHOT</version>
     </parent>
@@ -55,8 +55,6 @@
 			<groupId>org.jopendocument</groupId>
 			<artifactId>jOpenDocument</artifactId>
 			<version>1.3b1</version>
-			<scope>compile</scope>
-			<optional>true</optional>
 		</dependency>
 
 		<dependency>

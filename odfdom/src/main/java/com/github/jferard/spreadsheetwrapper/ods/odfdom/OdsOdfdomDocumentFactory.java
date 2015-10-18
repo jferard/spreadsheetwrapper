@@ -40,6 +40,11 @@ SpreadsheetDocumentFactory {
 	private final Logger logger;
 	private final OdsOdfdomStyleUtility styleUtility;
 
+	public static SpreadsheetDocumentFactory create(Logger logger) {
+		return new OdsOdfdomDocumentFactory(logger, new OdsOdfdomStyleUtility());
+	}
+	
+	
 	/**
 	 * @param logger
 	 *            simple logger

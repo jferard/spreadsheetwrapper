@@ -49,6 +49,10 @@ SpreadsheetDocumentFactory {
 	/** utility for styles */
 	private final OdsJOpenStyleUtility styleUtility;
 
+	public static SpreadsheetDocumentFactory create(Logger logger) {
+		return new OdsJOpenDocumentFactory(logger, new OdsJOpenStyleUtility());
+	}
+	
 	/**
 	 * @param logger
 	 *            simple logger

@@ -43,6 +43,10 @@ implements SpreadsheetDocumentFactory {
 	private final Logger logger;
 	private final StyleUtility styleUtility;
 
+	public static SpreadsheetDocumentFactory create(Logger logger) {
+		return new OdsSimpleodsDocumentFactory(logger, new StyleUtility());
+	}
+	
 	/**
 	 * @param logger
 	 *            the logger

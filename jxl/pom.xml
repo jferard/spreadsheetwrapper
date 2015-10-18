@@ -18,7 +18,7 @@
 	</properties>
 
  <parent>
-	<artifactId>spreadsheetwrapper</artifactId>
+	<artifactId>spreadsheetwrapper-parent</artifactId>
 	<groupId>com.github.jferard</groupId>
 	<version>1.0.1-SNAPSHOT</version>
     </parent>
@@ -41,10 +41,7 @@
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
 			<version>2.6.12</version>
-			<scope>compile</scope>
-			<optional>true</optional>
 		</dependency>
-		
 		
 		<dependency>
 			<groupId>junit</groupId>

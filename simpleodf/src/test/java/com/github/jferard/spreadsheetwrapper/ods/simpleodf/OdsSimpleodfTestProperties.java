@@ -20,13 +20,12 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
 public class OdsSimpleodfTestProperties {
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
-					new OdsOdfdomStyleUtility(new WrapperCellStyleHelper())));
+					new OdsOdfdomStyleUtility()));
 
 	public static TestProperties getProperties() {
 		return OdsSimpleodfTestProperties.properties;

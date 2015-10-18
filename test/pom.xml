@@ -16,16 +16,16 @@
 	</properties>
 
  <parent>
-	<artifactId>spreadsheetwrapper</artifactId>
+	<artifactId>spreadsheetwrapper-parent</artifactId>
 	<groupId>com.github.jferard</groupId>
 	<version>1.0.1-SNAPSHOT</version>
     </parent>
 	
 	<dependencies>
 		<dependency>
-		<groupId>${parent.groupId}</groupId>
+		<groupId>${project.parent.groupId}</groupId>
         <artifactId>spreadsheetwrapper-base</artifactId>
-        <version>${parent.version}</version>
+        <version>${project.parent.version}</version>
 		</dependency>
 	
 		<dependency>
