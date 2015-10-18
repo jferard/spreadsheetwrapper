@@ -263,7 +263,7 @@ implements SpreadsheetDocumentWriter {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
-			final HSSFColor hssfColor = backgroundColor.getHssfColor();
+			final HSSFColor hssfColor = this.styleUtility.getHSSFColor(backgroundColor);
 			final short index = hssfColor.getIndex();
 			cellStyle.setFillForegroundColor(index);
 			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);

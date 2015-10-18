@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spreadsheetwrapper-jopendocument1.3</artifactId>
 	<groupId>com.github.jferard</groupId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>spreadsheetwrapper</name>
 	<url>http://maven.apache.org</url>
@@ -20,7 +20,7 @@
  <parent>
 	<artifactId>spreadsheetwrapper</artifactId>
 	<groupId>com.github.jferard</groupId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
     </parent>
 	
 	<dependencies>

@@ -46,6 +46,11 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 			final URL resourceURL = this.getClass().getResource(
 					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
 							.getProperties().getExtension()));
+			if (resourceURL == null) {
+				Assert.fail();
+				return;
+			}			
+				
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;

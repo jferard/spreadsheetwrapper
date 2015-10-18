@@ -17,15 +17,16 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
@@ -35,15 +36,35 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
  *
  */
 public class XlsPoiStyleUtility extends StyleUtility {
-	/** for colors */
-	private final WrapperCellStyleHelper helper;
+	private Map<WrapperColor, HSSFColor> hssfColorByColor;
+	private Map<HSSFColor, WrapperColor> colorByHssfColor;
 
 	/**
-	 * @param helper
-	 *            helper class for colors
 	 */
-	public XlsPoiStyleUtility(final WrapperCellStyleHelper helper) {
-		this.helper = helper;
+	public XlsPoiStyleUtility() {
+		final WrapperColor[] colors = WrapperColor.values();
+		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(colors.length);
+		this.colorByHssfColor = new HashMap<HSSFColor, WrapperColor>(colors.length);
+		for (WrapperColor color : colors) {
+			HSSFColor hssfColor;
+			try {
+				final Class<?> hssfClazz = Class
+						.forName("org.apache.poi.hssf.util.HSSFColor$" + color.getSimpleName());
+				hssfColor = (HSSFColor) hssfClazz.newInstance();
+			} catch (final ClassNotFoundException e) {
+				hssfColor = null;
+			} catch (final IllegalArgumentException e) {
+				hssfColor = null;
+			} catch (final IllegalAccessException e) {
+				hssfColor = null;
+			} catch (final SecurityException e) {
+				hssfColor = null;
+			} catch (final InstantiationException e) {
+				hssfColor = null;
+			}
+			this.hssfColorByColor.put(color, hssfColor);
+			this.colorByHssfColor.put(hssfColor, color);
+		}
 	}
 
 	/**
@@ -90,6 +111,8 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		if (font.getBoldweight() == Font.BOLDWEIGHT_BOLD)
 			sb.append("font-weight:bold;");
 		final Color color = cellStyle.getFillBackgroundColorColor();
+		if (color != null && color instanceof HSSFColor)
+			sb.append("background-color:").append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
 	}
 
@@ -110,9 +133,13 @@ public class XlsPoiStyleUtility extends StyleUtility {
 			wrapperFont = new WrapperFont(true, false, fontIndex,
 					WrapperColor.AUTOMATIC);
 		final Color poiColor = cellStyle.getFillBackgroundColorColor();
-		final WrapperColor wrapperColor = this.helper.getColor(poiColor);
+		final WrapperColor wrapperColor = this.colorByHssfColor.get(poiColor);
 
 		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;
+	}
+
+	public HSSFColor getHSSFColor(WrapperColor backgroundColor) {
+		return this.hssfColorByColor.get(backgroundColor);
 	}
 }

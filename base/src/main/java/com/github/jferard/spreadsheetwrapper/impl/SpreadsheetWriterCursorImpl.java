@@ -134,7 +134,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName() {
+	public /*@Nullable*/ String getStyleName() {
 		return this.writer.getStyleName(this.cursor.getR(), this.cursor.getC());
 	}
 
@@ -238,6 +238,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean setStyleString(final String styleString) {
 		return this.writer.setStyleString(this.cursor.getR(),
 				this.cursor.getC(), styleString);

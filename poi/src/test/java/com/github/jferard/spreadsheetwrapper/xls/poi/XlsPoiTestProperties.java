@@ -20,12 +20,11 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyleHelper;
 
 public class XlsPoiTestProperties {
 	private static TestProperties properties = new TestProperties("xls",
 			new XlsPoiDocumentFactory(Logger.getGlobal(),
-					new XlsPoiStyleUtility(new WrapperCellStyleHelper())));
+					new XlsPoiStyleUtility()));
 
 	public static TestProperties getProperties() {
 		return XlsPoiTestProperties.properties;

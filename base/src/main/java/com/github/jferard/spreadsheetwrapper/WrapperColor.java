@@ -1,8 +1,5 @@
 package com.github.jferard.spreadsheetwrapper;
 
-import jxl.format.Colour;
-
-import org.apache.poi.hssf.util.HSSFColor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -44,10 +41,6 @@ public enum WrapperColor {
 
 	/** hex value of the color (R G B) */
 	private String hex;
-	/** the color as defined in poi */
-	private /*@Nullable*/ HSSFColor hssfColor;
-	/** the color as defined in jxl */
-	private /*@Nullable*/ Colour jxlColor;
 	/** the xls (poi & jxl) name of the color, for dynamic load */
 	private String simpleName;
 
@@ -60,46 +53,6 @@ public enum WrapperColor {
 	WrapperColor(final String simpleName, final String hex) {
 		this.simpleName = simpleName;
 		this.hex = hex;
-		try {
-			final Class<?> jxlClazz = Class.forName("jxl.format.Colour");
-			this.jxlColor = (Colour) jxlClazz.getDeclaredField(simpleName).get(
-					null);
-		} catch (final ClassNotFoundException e) {
-			this.jxlColor = null;
-		} catch (final IllegalArgumentException e) {
-			this.jxlColor = null;
-		} catch (final IllegalAccessException e) {
-			this.jxlColor = null;
-		} catch (final NoSuchFieldException e) {
-			this.jxlColor = null;
-		} catch (final SecurityException e) {
-			this.jxlColor = null;
-		}
-		try {
-			final Class<?> hssfClazz = Class
-					.forName("org.apache.poi.hssf.util.HSSFColor$" + simpleName);
-			this.hssfColor = (HSSFColor) hssfClazz.newInstance();
-		} catch (final ClassNotFoundException e) {
-			this.hssfColor = null;
-		} catch (final IllegalArgumentException e) {
-			this.hssfColor = null;
-		} catch (final IllegalAccessException e) {
-			this.hssfColor = null;
-		} catch (final SecurityException e) {
-			this.hssfColor = null;
-		} catch (final InstantiationException e) {
-			this.hssfColor = null;
-		}
-	}
-
-	/** @return the color as defined in poi */
-	public /*@Nullable*/ HSSFColor getHssfColor() {
-		return this.hssfColor;
-	}
-
-	/** @return the color as defined in jxl */
-	public /*@Nullable*/ Colour getJxlColor() {
-		return this.jxlColor;
 	}
 
 	/** @return the xls (poi & jxl) name of the color, for dynamic load */

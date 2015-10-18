@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import jxl.format.Colour;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
@@ -225,7 +226,8 @@ implements SpreadsheetDocumentWriter {
 			final WrapperColor backgroundColor = wrapperCellStyle
 					.getBackgroundColor();
 			if (backgroundColor != null) {
-				cellFormat.setBackground(backgroundColor.getJxlColor());
+				Colour jxlColor = this.styleUtility.getJxlColor(backgroundColor);
+				cellFormat.setBackground(jxlColor);
 			}
 			this.cellStyleByName.put(styleName, cellFormat);
 		} catch (final WriteException e) {

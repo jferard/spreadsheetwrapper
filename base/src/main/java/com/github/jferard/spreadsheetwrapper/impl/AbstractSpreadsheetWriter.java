@@ -118,7 +118,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		return this.reader.getStyleName(r, c);
 	}
 
@@ -262,6 +262,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public final boolean setStyleString(final int r, final int c,
 			final String styleString) {
 		throw new UnsupportedOperationException();
