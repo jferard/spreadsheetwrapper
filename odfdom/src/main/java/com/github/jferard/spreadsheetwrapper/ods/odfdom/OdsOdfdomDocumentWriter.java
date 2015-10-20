@@ -25,9 +25,14 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -58,6 +63,25 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
+			final TableTableElement tte = table.getOdfElement();
+			final NodeList colsList = tte
+					.getElementsByTagName("table:table-column");
+			TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
+			while (colsList.getLength() > 1) {
+				final Node item = colsList.item(1);
+				tte.removeChild(item);
+			}
+			column.setTableNumberColumnsRepeatedAttribute(1);
+			final NodeList rowList = tte
+					.getElementsByTagName("table:table-row");
+			while (rowList.getLength() > 0) {
+				final Node item = rowList.item(0);
+				tte.removeChild(item);
+			}
+			final NodeList rowListAfter = tte
+					.getElementsByTagName("table:table-row");
+			final int lengthAfter = rowListAfter.getLength();
+			assert lengthAfter == 0;
 			return new OdsOdfdomWriter(table);
 		}
 	}

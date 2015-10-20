@@ -31,6 +31,19 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.jopendocument</groupId>
+			<artifactId>jOpenDocument</artifactId>
+			<version>1.2</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.checkerframework</groupId>
+			<artifactId>checker-qual</artifactId>
+			<version>1.9.3</version>
+		</dependency>
+		
+		<dependency>
 		<groupId>${project.parent.groupId}</groupId>
         <artifactId>spreadsheetwrapper-test</artifactId>
         <version>${project.parent.version}</version>
@@ -49,18 +62,6 @@
 			<artifactId>guava</artifactId>
 			<version>18.0</version>
 			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.jopendocument</groupId>
-			<artifactId>jOpenDocument</artifactId>
-			<version>1.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.checkerframework</groupId>
-			<artifactId>checker-qual</artifactId>
-			<version>1.9.3</version>
 		</dependency>
 	</dependencies>
 

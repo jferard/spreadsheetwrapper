@@ -39,14 +39,7 @@
             <goals>
               <goal>shade</goal>
             </goals>
-            <configuration>
-              <artifactSet>
-                <includes>
-                  <include>com.github.jferard:*</include>
-                  <include>org.checkerframework:checker-qual</include>
-                </includes>
-              </artifactSet>
-            </configuration>
+            <configuration />
           </execution>
         </executions>
       </plugin>

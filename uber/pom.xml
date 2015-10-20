@@ -128,12 +128,12 @@
 <!-- 							<finalName>spreadsheetwrapper-1.0.1-SNAPSHOT</finalName>
 							<shadedArtifactAttached>true</shadedArtifactAttached>
 							<shadedClassifierName>toto</shadedClassifierName>
- -->							<artifactSet>
+--><!--  							<artifactSet>
 								<includes>
 									<include>com.github.jferard:*</include>
 									<include>org.checkerframework:checker-qual</include>
 								</includes>
-							</artifactSet>
+							</artifactSet> -->
 						</configuration>
 					</execution>
 				</executions>

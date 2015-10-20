@@ -143,6 +143,9 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
+		if (r < 0 || r >= this.getRowCount())
+			throw new IllegalArgumentException();
+		
 		final OdfTableRow row = this.table.getRowByIndex(r);
 		return OdsOdfdomReader.getRowCellCount(row);
 	}
