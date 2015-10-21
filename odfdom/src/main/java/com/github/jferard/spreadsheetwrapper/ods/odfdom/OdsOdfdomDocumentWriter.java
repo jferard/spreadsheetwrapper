@@ -63,25 +63,6 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
-			final TableTableElement tte = table.getOdfElement();
-			final NodeList colsList = tte
-					.getElementsByTagName("table:table-column");
-			TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
-			while (colsList.getLength() > 1) {
-				final Node item = colsList.item(1);
-				tte.removeChild(item);
-			}
-			column.setTableNumberColumnsRepeatedAttribute(1);
-			final NodeList rowList = tte
-					.getElementsByTagName("table:table-row");
-			while (rowList.getLength() > 0) {
-				final Node item = rowList.item(0);
-				tte.removeChild(item);
-			}
-			final NodeList rowListAfter = tte
-					.getElementsByTagName("table:table-row");
-			final int lengthAfter = rowListAfter.getLength();
-			assert lengthAfter == 0;
 			return new OdsOdfdomWriter(table);
 		}
 	}

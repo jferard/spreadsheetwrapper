@@ -21,11 +21,17 @@ import java.util.Date;
 import java.util.List;
 
 import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
+import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
+import org.odftoolkit.odfdom.pkg.OdfFileDom;
+import org.odftoolkit.odfdom.pkg.OdfName;
+import org.odftoolkit.odfdom.pkg.OdfXMLFactory;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
@@ -35,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  * the sheet reader for SimpleODS.
  */
 class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -93,14 +99,16 @@ SpreadsheetReader {
 		Object result;
 
 		// from the doc
-		//  The type can be "boolean", "currency", "date", "float", "percentage", "string" or "time". 
+		// The type can be "boolean", "currency", "date", "float", "percentage",
+		// "string" or "time".
 		if (type == null)
 			result = null;
 		else if (type.equals("boolean"))
 			result = cell.getBooleanValue();
 		else if (type.equals("date") || type.equals("time"))
 			result = OdsSimpleodfReader.getDate(cell);
-		else if (type.equals("float") || type.equals("currency") || type.equals("percentage")) {
+		else if (type.equals("float") || type.equals("currency")
+				|| type.equals("percentage")) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
@@ -117,8 +125,18 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
+		if (r < 0 || r >= this.table.getRowCount())
+			throw new IllegalArgumentException();
+
 		final Row row = this.table.getRowByIndex(r);
-		return row.getCellCount();
+		// return row.getCellCount();
+
+		for (int i = this.table.getColumnCount() - 1; i >= 0; i--) {
+			Cell cell = row.getCellByIndex(i);
+			if (cell.getOdfElement().getChildNodes().getLength() != 0)
+				return i + 1;
+		}
+		return 0;
 	}
 
 	/** {@inheritDoc} */
@@ -158,7 +176,11 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getRowCount() {
-		return this.table.getRowCount();
+		int rowCount = this.table.getRowCount();
+		if (rowCount == 1 && this.getCellCount(0) == 0)
+			rowCount = 0;
+
+		return rowCount;
 	}
 
 	/** {@inheritDoc} */
@@ -184,7 +206,7 @@ SpreadsheetReader {
 			// Hack for clean style @see Table.appendRows(count, false)
 			// 1. append "manually" the missing rows
 			// 2. clean style
-			final int lastIndex = this.getRowCount() - 1;
+			final int lastIndex = this.table.getRowCount() - 1;
 			if (r > lastIndex) {
 				final List<Row> resultList = this.table.appendRows(r
 						- lastIndex);
@@ -202,6 +224,19 @@ SpreadsheetReader {
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
+//		// bad behaviour (to name is not to create) but HACK for writers
+//		final TableTableRowElement aRow = this.curRow.getOdfElement();
+//		NodeList cells = aRow.getElementsByTagName("table:table-cell");
+//		if (cells.getLength() == 0) {
+//			OdfFileDom dom = (OdfFileDom) this.table.getOdfElement()
+//					.getOwnerDocument();
+//			TableTableCellElement aCell = (TableTableCellElement) OdfXMLFactory
+//					.newOdfElement(dom, OdfName.newName(
+//							OdfDocumentNamespace.TABLE, "table-cell"));
+//			aRow.appendChild(aCell);
+//		}
+//		// end of HACK
+
 		final Cell cell = this.curRow.getCellByIndex(c);
 		// cell.getStyleHandler().getStyleElementForWrite();
 		return cell;

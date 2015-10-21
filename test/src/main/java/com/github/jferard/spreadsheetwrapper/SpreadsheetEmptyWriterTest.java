@@ -74,9 +74,24 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public void testRowCount1() {
+	public void testRowCountZero() {
 		Assert.assertEquals(0, this.sw.getRowCount());
 	}
+
+//	@Test
+//	public void testGetIsNotCreate1() {
+//		this.sw.getText(5, 5);
+//		Assert.assertEquals(0, this.sw.getRowCount());
+//	}
+//
+//	@Test
+//	public void testGetIsNotCreate2() {
+//		this.sw.setText(1, 3, "a");
+//		this.sw.getText(5, 5);
+//		Assert.assertEquals(2, this.sw.getRowCount());
+//		Assert.assertEquals(3, this.sw.getCellCount(1));
+//	}
+	
 	
 	@Test
 	public void testRowCount2() {

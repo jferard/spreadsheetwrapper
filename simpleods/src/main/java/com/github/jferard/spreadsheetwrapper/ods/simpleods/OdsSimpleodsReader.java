@@ -97,8 +97,15 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
+		final int count;
 		final TableRow row = (TableRow) this.table.getRows().get(r);
-		return row.getCells().size();
+		if (row == null) 
+			count = 0;
+		else {
+			final ObjectQueue cells = row.getCells();
+			count = cells == null ? 0 : cells.size();
+		}
+		return count;
 	}
 
 	/** {@inheritDoc} */

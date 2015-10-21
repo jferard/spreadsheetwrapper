@@ -83,7 +83,13 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		return this.sheet.getColumnCount();
+		int columnCount = this.sheet.getColumnCount();
+		for (int c = columnCount - 1; c >= 0; c--) {
+			MutableCell<SpreadSheet> cell = this.sheet.getCellAt(c, r);
+			if (cell != null && cell.getValue() != null && !cell.getTextValue().isEmpty())
+				return c+1;
+		}
+		return 0;
 	}
 
 	/** {@inheritDoc} */
@@ -130,7 +136,10 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getRowCount() {
-		return this.sheet.getRowCount();
+		int rowCount = this.sheet.getRowCount();
+		if (rowCount == 1 && this.getCellCount(0) == 0)
+			rowCount = 0;
+		return rowCount;
 	}
 
 	/** {@inheritDoc} */

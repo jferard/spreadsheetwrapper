@@ -59,6 +59,9 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
+		if (r < 0 || r >= this.getRowCount())
+			throw new IllegalArgumentException();
+		
 		return this.reader.getCellCount(r);
 	}
 

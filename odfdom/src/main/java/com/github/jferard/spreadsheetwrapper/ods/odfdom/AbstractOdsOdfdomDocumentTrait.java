@@ -23,7 +23,10 @@ import java.util.NoSuchElementException;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
@@ -89,6 +92,7 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 
 		table = OdfTable.newTable(this.document);
 		final TableTableElement tableElement = table.getOdfElement();
+		this.cleanEmptyTable(tableElement);
 		tableElement.setTableNameAttribute(sheetName);
 		final T spreadsheet = this.createNew(table);
 		// the table is added at the end
@@ -97,11 +101,42 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 	}
 
 	/**
+	 * Cleans the table : remove everything that odftoolkit adds, but let
+	 * <table:table>
+	 * 	<table:table-column number-columns-repeated="1" />
+	 * </table:table>
+	 * @param tableElement the odf element
+	 */
+	private void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
+		while (colsList.getLength() > 1) {
+			final Node item = colsList.item(1);
+			tableElement.removeChild(item);
+		}
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 0) {
+			final Node item = rowList.item(0);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		assert rowListAfter.getLength() == 0;
+	}
+
+	/**
 	 * Create a new reader/writer
 	 *
 	 * @param table
 	 *            *internal* table
 	 * @return the reader/writer
+	 */
+	/**
+	 * @param table
+	 * @return
 	 */
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsOdfdomDocumentTrait<T> this, */final OdfTable table);

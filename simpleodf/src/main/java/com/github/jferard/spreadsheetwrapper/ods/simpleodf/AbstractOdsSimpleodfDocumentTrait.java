@@ -22,7 +22,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.simple.table.Table;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
@@ -99,12 +103,33 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 			if (table == null)
 				throw new CantInsertElementInSpreadsheetException();
 		}
+		TableTableElement tableElement = table.getOdfElement();
+		this.cleanEmptyTable(tableElement);
 
 		this.sfDocument.setInitialized();
 		final T spreadsheet = this.createNew(table);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
 	}
+	
+	private void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		assert colsList.getLength() == 1;
+		TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+	 			.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 1) {
+			final Node item = rowList.item(1);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		final int lengthAfter = rowListAfter.getLength();
+		assert lengthAfter == 1;
+	}
+	
 
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this, */final Table table);

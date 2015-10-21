@@ -108,7 +108,13 @@ SpreadsheetReader {
 	@Override
 	public int getCellCount(final int r) {
 		final Row row = this.sheet.getRow(r);
-		return row.getLastCellNum(); // 1-based
+		final short count;
+		if (row == null)
+			count = 0;
+		else
+			count = row.getLastCellNum(); // 1-based
+
+		return count;
 	}
 
 	/** {@inheritDoc} */
@@ -148,7 +154,10 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getRowCount() {
-		return this.sheet.getLastRowNum() + 1; // 0-based
+		int rowCount = this.sheet.getLastRowNum() + 1; // 0-based
+		if (rowCount == 1 && this.getCellCount(0) == 0)
+			rowCount = 0;
+		return rowCount;
 	}
 
 	/** {@inheritDoc} */

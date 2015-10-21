@@ -23,6 +23,7 @@ import java.util.Date;
 import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.MutableCell;
+import org.jopendocument.dom.spreadsheet.Row;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
@@ -34,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -88,7 +89,13 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		return this.sheet.getColumnCount();
+		int columnCount = this.sheet.getColumnCount();
+		for (int c = columnCount - 1; c >= 0; c--) {
+			MutableCell<SpreadSheet> cell = this.sheet.getCellAt(c, r);
+			if (cell != null && cell.getValue() != null && !cell.getTextValue().isEmpty())
+				return c+1;
+		}
+		return 0;
 	}
 
 	/** {@inheritDoc} */
@@ -135,7 +142,10 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getRowCount() {
-		return this.sheet.getRowCount();
+		int rowCount = this.sheet.getRowCount();
+		if (rowCount == 1 && this.getCellCount(0) == 0)
+			rowCount = 0;
+		return rowCount;
 	}
 
 	/** {@inheritDoc} */

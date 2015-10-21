@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -48,6 +49,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 							.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
+			final List<String> sheetNames = this.sdw.getSheetNames();
 			this.sdr = this.sdw;
 			this.sw = this.sdw.getSpreadsheet(0);
 			this.sr = this.sw;

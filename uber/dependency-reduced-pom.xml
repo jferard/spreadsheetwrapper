@@ -64,6 +64,52 @@
       <version>18.0</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jopendocument</groupId>
+      <artifactId>jOpenDocument</artifactId>
+      <version>1.2</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.jexcelapi</groupId>
+      <artifactId>jxl</artifactId>
+      <version>2.6.12</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>log4j</artifactId>
+          <groupId>log4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi</artifactId>
+      <version>3.10-FINAL</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>commons-codec</artifactId>
+          <groupId>commons-codec</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.poi</groupId>
+      <artifactId>poi-ooxml</artifactId>
+      <version>3.10-FINAL</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>poi-ooxml-schemas</artifactId>
+          <groupId>org.apache.poi</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>dom4j</artifactId>
+          <groupId>dom4j</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
   <distributionManagement>
     <repository>
