@@ -99,6 +99,8 @@ SpreadsheetReader {
 	@Override
 	public Boolean getBoolean(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
 		if (!"boolean".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
@@ -154,6 +156,8 @@ SpreadsheetReader {
 	@Override
 	public Date getDate(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
 		if (!"date".equals(cell.getValueType())
 				&& !"time".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
@@ -167,6 +171,8 @@ SpreadsheetReader {
 	@Override
 	public Double getDouble(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
 		if (!"float".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
@@ -176,6 +182,8 @@ SpreadsheetReader {
 	@Override
 	public String getFormula(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
 		final String formula = cell.getFormula();
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
@@ -217,6 +225,8 @@ SpreadsheetReader {
 	@Override
 	public String getText(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
 		if (!"string".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
@@ -232,6 +242,8 @@ SpreadsheetReader {
 	 * @return the cell
 	 */
 	protected OdfTableCell getOdfCell(final int r, final int c) {
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;

@@ -25,6 +25,7 @@ import java.util.Locale;
 
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
+import org.odftoolkit.odfdom.doc.table.OdfTableRow;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -38,6 +39,12 @@ SpreadsheetWriter {
 	private final OdsOdfdomReader preader;
 	private final OdfTable table;
 
+	/** index of current row, -1 if none */
+	private int curR;
+
+	/** current row, null if none */
+	private/*@Nullable*/OdfTableRow curRow;
+	
 	/**
 	 * @param table
 	 *            the *internal* sheet
@@ -45,14 +52,15 @@ SpreadsheetWriter {
 	OdsOdfdomWriter(final OdfTable table) {
 		super(new OdsOdfdomReader(table));
 		this.table = table;
+		this.curR = -1;
+		this.curRow = null;
 		this.preader = (OdsOdfdomReader) this.reader;
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		return cell.getStyleName();
 	}
 
@@ -83,7 +91,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.setBooleanValue(value);
 		return value;
 	}
@@ -92,7 +100,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cell.setDateValue(cal); // for the hidden manipulations.
@@ -111,7 +119,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		final double retValue = value.doubleValue();
 		cell.setDoubleValue(retValue);
 		return retValue;
@@ -120,8 +128,9 @@ SpreadsheetWriter {
 	/**  */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.setFormula("=" + formula);
+		cell.setStringValue("");
 		return formula;
 	}
 
@@ -130,7 +139,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		final int retValue = value.intValue();
 		cell.setDoubleValue(Double.valueOf(retValue));
 		return retValue;
@@ -139,7 +148,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.getOdfElement().setStyleName(styleName);
 		return true;
 	}
@@ -147,8 +156,25 @@ SpreadsheetWriter {
 	/**  */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		final OdfTableCell cell = this.preader.getOdfCell(r, c);
+		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.setStringValue(text);
 		return text;
+	}
+	
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	protected OdfTableCell getOrCreateOdfCell(final int r, final int c) {
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.table.getRowByIndex(r);
+			this.curR = r;
+		}
+		return this.curRow.getCellByIndex(c);
 	}
 }
