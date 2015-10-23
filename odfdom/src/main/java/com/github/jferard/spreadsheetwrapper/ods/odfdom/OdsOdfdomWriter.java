@@ -35,8 +35,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
-	/** reader for delegation */
-	private final OdsOdfdomReader preader;
 	private final OdfTable table;
 
 	/** index of current row, -1 if none */
@@ -54,7 +52,6 @@ SpreadsheetWriter {
 		this.table = table;
 		this.curR = -1;
 		this.curRow = null;
-		this.preader = (OdsOdfdomReader) this.reader;
 	}
 
 	/** {@inheritDoc} */
@@ -171,6 +168,8 @@ SpreadsheetWriter {
 	 * @return the cell
 	 */
 	protected OdfTableCell getOrCreateOdfCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;

@@ -53,11 +53,6 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	public Boolean getBoolean(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		final String type = this.getTypeName(cell);
-		// 1.3b1
-		// if (!"boolean".equals(type))
-		// throw new IllegalArgumentException();
-		// return (Boolean) cell.getValue();
-		// 1.2
 		if (!"float".equals(type))
 			throw new IllegalArgumentException();
 		return ((BigDecimal) cell.getValue()).doubleValue() != 0.0;
@@ -159,9 +154,6 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	}
 
 	private String getFormula(final MutableCell<SpreadSheet> cell) {
-		// 1.3b1
-		// return cell.getFormula();
-		// 1.2
 		final Element element = cell.getElement();
 		return element.getAttributeValue("formula", element.getNamespace());
 	}
@@ -184,15 +176,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 	protected MutableCell<SpreadSheet> getCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
 
-		if (r >= this.sheet.getRowCount()) {
-			// do not set more because this will affect the row count value
-			this.sheet.ensureRowCount(r + 1);
-		}
-		if (c >= this.sheet.getColumnCount()) {
-			// do not set more because this will affect the row count value
-			this.sheet.ensureColumnCount(c + 1);
-		}
 		return this.sheet.getCellAt(c, r);
 	}
 }

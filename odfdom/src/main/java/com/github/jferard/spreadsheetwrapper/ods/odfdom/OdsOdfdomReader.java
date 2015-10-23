@@ -242,6 +242,8 @@ SpreadsheetReader {
 	 * @return the cell
 	 */
 	protected OdfTableCell getOdfCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))
 			return null;
 		if (r != this.curR || this.curRow == null) {

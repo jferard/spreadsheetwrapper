@@ -31,8 +31,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
-	/** reader for delegation */
-	private final OdsJOpenReader preader;
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -43,14 +41,13 @@ SpreadsheetWriter {
 	OdsJOpenWriter(final Sheet sheet) {
 		super(new OdsJOpenReader(sheet));
 		this.sheet = sheet;
-		this.preader = (OdsJOpenReader) this.reader;
 
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		return cell.getStyleName();
 	}
 
@@ -82,7 +79,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.setValue(value);
 		return value;
 	}
@@ -90,7 +87,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.setValue(date);
 		return date;
 	}
@@ -98,7 +95,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		final double retValue = value.doubleValue();
 		cell.setValue(retValue);
 		return retValue;
@@ -107,16 +104,17 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.getElement().setAttribute("formula", "=" + formula,
 				cell.getElement().getNamespace());
+		cell.setValue(0);
 		return formula;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		final int retValue = value.intValue();
 		cell.setValue(Double.valueOf(retValue));
 		return retValue;
@@ -125,7 +123,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.setStyleName(styleName);
 		return true;
 	}
@@ -133,8 +131,33 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		final MutableCell<SpreadSheet> cell = this.preader.getCell(r, c);
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.setValue(text);
 		return text;
 	}
+	
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return
+	 * @return the cell
+	 */
+	protected MutableCell<SpreadSheet> getOrCreateCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.sheet.getRowCount()) {
+			// do not set more because this will affect the row count value
+			this.sheet.ensureRowCount(r + 1);
+		}
+		if (c >= this.sheet.getColumnCount()) {
+			// do not set more because this will affect the row count value
+			this.sheet.ensureColumnCount(c + 1);
+		}
+		return this.sheet.getCellAt(c, r);
+	}
+	
 }

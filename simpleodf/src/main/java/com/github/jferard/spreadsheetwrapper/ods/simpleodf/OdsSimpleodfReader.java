@@ -202,43 +202,18 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 	 * @return the cell
 	 */
 	protected Cell getSimpleCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+		
 		if (r != this.curR || this.curRow == null) {
-			// Hack for clean style @see Table.appendRows(count, false)
-			// 1. append "manually" the missing rows
-			// 2. clean style
 			final int lastIndex = this.table.getRowCount() - 1;
-			if (r > lastIndex) {
-				final List<Row> resultList = this.table.appendRows(r
-						- lastIndex);
-				final String tableNameSpace = OdfDocumentNamespace.TABLE
-						.getUri();
-				for (final Row row : resultList) {
-					Node cellE = row.getOdfElement().getFirstChild();
-					while (cellE != null) {
-						((TableTableCellElementBase) cellE).removeAttributeNS(
-								tableNameSpace, "style-name");
-						cellE = cellE.getNextSibling();
-					}
-				}
-			}
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
-//		// bad behaviour (to name is not to create) but HACK for writers
-//		final TableTableRowElement aRow = this.curRow.getOdfElement();
-//		NodeList cells = aRow.getElementsByTagName("table:table-cell");
-//		if (cells.getLength() == 0) {
-//			OdfFileDom dom = (OdfFileDom) this.table.getOdfElement()
-//					.getOwnerDocument();
-//			TableTableCellElement aCell = (TableTableCellElement) OdfXMLFactory
-//					.newOdfElement(dom, OdfName.newName(
-//							OdfDocumentNamespace.TABLE, "table-cell"));
-//			aRow.appendChild(aCell);
-//		}
-//		// end of HACK
-
-		final Cell cell = this.curRow.getCellByIndex(c);
-		// cell.getStyleHandler().getStyleElementForWrite();
+		Cell cell = this.curRow.getCellByIndex(c);
+		cell.getStyleHandler().getStyleElementForWrite();
 		return cell;
 	}
 }

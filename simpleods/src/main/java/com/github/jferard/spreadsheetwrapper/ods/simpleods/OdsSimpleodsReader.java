@@ -178,19 +178,20 @@ SpreadsheetReader {
 			throws IllegalArgumentException {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
 
 		if (r != this.curR || this.curRow == null) {
 			final ObjectQueue rowsQueue = this.table.getRows();
 			this.curRow = (TableRow) rowsQueue.get(r);
-			if (this.curRow == null) {
-				final TableRow row = new TableRow();
-				if (rowsQueue.setAt(r, row))
-					this.curRow = row;
-				else {
-					this.curR = -1;
-					throw new IllegalArgumentException();
-				}
-			}
+			assert this.curRow != null;
+// else				final TableRow row = new TableRow();
+//				if (rowsQueue.setAt(r, row))
+//					this.curRow = row;
+//				else {
+//					this.curR = -1;
+//					throw new IllegalArgumentException();
+//				}
 			this.curR = r;
 		}
 		return this.curRow.getCell(c);

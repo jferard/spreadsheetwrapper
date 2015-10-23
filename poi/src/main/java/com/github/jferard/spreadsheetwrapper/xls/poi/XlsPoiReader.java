@@ -180,15 +180,18 @@ SpreadsheetReader {
 	 * @return the cell
 	 */
 	protected Cell getPOICell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+		
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.sheet.getRow(r);
-			if (this.curRow == null)
-				this.curRow = this.sheet.createRow(r);
+			assert this.curRow != null; // else this.curRow = this.sheet.createRow(r);
 			this.curR = r;
 		}
 		Cell cell = this.curRow.getCell(c);
-		if (cell == null)
-			cell = this.curRow.createCell(c);
+		assert cell != null; // else cell = this.curRow.createCell(c);
 		return cell;
 	}
 

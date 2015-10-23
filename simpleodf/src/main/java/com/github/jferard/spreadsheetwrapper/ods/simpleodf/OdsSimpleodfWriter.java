@@ -23,9 +23,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 import org.odftoolkit.simple.table.Cell;
+import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
+import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
@@ -34,14 +37,18 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
-	/** the reader for delegation */
-	private final OdsSimpleodfReader preader;
-
+	/** internal table */
 	private final Table table;
+
+	/** index of the current row, -1 if none */
+	private int curR;
+
+	/** current row, null if none */
+	private/*@Nullable*/Row curRow;
 
 	/**
 	 * @param table
@@ -50,21 +57,19 @@ SpreadsheetWriter {
 	OdsSimpleodfWriter(final Table table) {
 		super(new OdsSimpleodfReader(table));
 		this.table = table;
-		this.preader = (OdsSimpleodfReader) this.reader;
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		return cell.getCellStyleName();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(final int r, final int c) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		return cell.getCellStyleName();
 	}
 
@@ -99,7 +104,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		cell.setBooleanValue(value);
 		return value;
 	}
@@ -111,7 +116,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		final Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		cell.setDateValue(cal); // for the hidden manipulations.
@@ -132,7 +137,7 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		final double retValue = value.doubleValue();
 		cell.setDoubleValue(retValue);
 		return retValue;
@@ -141,15 +146,16 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		cell.setFormula("=" + formula);
+		cell.setStringValue("");
 		return formula;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		final int retValue = value.intValue();
 		cell.setDoubleValue(Double.valueOf(retValue));
 		cell.setFormatString(OdsSimpleodfWriter.INT_FORMAT_STR);
@@ -159,7 +165,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		cell.setCellStyleName(styleName);
 		return true;
 	}
@@ -171,9 +177,60 @@ SpreadsheetWriter {
 	 */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		final Cell cell = this.preader.getSimpleCell(r, c);
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		cell.setStringValue(text);
 		return text;
 	}
 
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	protected Cell getOrCreateSimpleCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r != this.curR || this.curRow == null) {
+			// Hack for clean style @see Table.appendRows(count, false)
+			// 1. append "manually" the missing rows
+			// 2. clean style
+			final int lastIndex = this.table.getRowCount() - 1;
+			if (r > lastIndex) {
+				final List<Row> resultList = this.table.appendRows(r
+						- lastIndex);
+				final String tableNameSpace = OdfDocumentNamespace.TABLE
+						.getUri();
+				for (final Row row : resultList) {
+					Node cellE = row.getOdfElement().getFirstChild();
+					while (cellE != null) {
+						((TableTableCellElementBase) cellE).removeAttributeNS(
+								tableNameSpace, "style-name");
+						cellE = cellE.getNextSibling();
+					}
+				}
+			}
+			this.curRow = this.table.getRowByIndex(r);
+			this.curR = r;
+		}
+		// // bad behaviour (to name is not to create) but HACK for writers
+		// final TableTableRowElement aRow = this.curRow.getOdfElement();
+		// NodeList cells = aRow.getElementsByTagName("table:table-cell");
+		// if (cells.getLength() == 0) {
+		// OdfFileDom dom = (OdfFileDom) this.table.getOdfElement()
+		// .getOwnerDocument();
+		// TableTableCellElement aCell = (TableTableCellElement) OdfXMLFactory
+		// .newOdfElement(dom, OdfName.newName(
+		// OdfDocumentNamespace.TABLE, "table-cell"));
+		// aRow.appendChild(aCell);
+		// }
+		// // end of HACK
+
+		Cell cell = this.curRow.getCellByIndex(c);
+		cell.getStyleHandler().getStyleElementForWrite();
+		return cell;
+	}
 }

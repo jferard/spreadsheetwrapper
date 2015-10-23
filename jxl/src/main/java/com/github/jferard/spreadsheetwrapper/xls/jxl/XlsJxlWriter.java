@@ -74,7 +74,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
-		final WritableCell jxlCell = this.getJxlCell(r, c);
+		final WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
 		final CellFormat cf = jxlCell.getCellFormat();
 		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
 				.entrySet()) {
@@ -182,10 +182,10 @@ SpreadsheetWriter {
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		if (this.cellFormatByName.containsKey(styleName)) {
 			final CellFormat format = this.cellFormatByName.get(styleName);
-			WritableCell jxlCell = this.getJxlCell(r, c);
+			WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
 			if (jxlCell instanceof EmptyCell) {
 				this.setText(r, c, "");
-				jxlCell = this.getJxlCell(r, c);
+				jxlCell = this.getOrCreateJxlCell(r, c);
 			}
 			jxlCell.setCellFormat(format);
 			return true;
@@ -202,7 +202,7 @@ SpreadsheetWriter {
 
 	private void addCell(final int r, final int c, final WritableCell cell) {
 		try {
-			final WritableCell oldCell = this.getJxlCell(r, c);
+			final WritableCell oldCell = this.getOrCreateJxlCell(r, c);
 			final CellFormat oldFormat = oldCell.getCellFormat();
 			if (oldFormat != null)
 				cell.setCellFormat(oldFormat);
@@ -243,7 +243,7 @@ SpreadsheetWriter {
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected/*@Nullable*/WritableCell getJxlCell(final int r, final int c) {
+	protected/*@Nullable*/WritableCell getOrCreateJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 

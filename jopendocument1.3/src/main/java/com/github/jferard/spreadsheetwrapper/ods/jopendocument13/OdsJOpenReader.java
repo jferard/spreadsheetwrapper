@@ -174,15 +174,10 @@ SpreadsheetReader {
 	protected MutableCell<SpreadSheet> getCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
 
-		if (r >= this.sheet.getRowCount()) {
-			// do not set more because this will affect the row count value
-			this.sheet.ensureRowCount(r + 1);
-		}
-		if (c >= this.sheet.getColumnCount()) {
-			// do not set more because this will affect the row count value
-			this.sheet.ensureColumnCount(c + 1);
-		}
 		return this.sheet.getCellAt(c, r);
 	}
+
 }

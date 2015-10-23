@@ -29,6 +29,7 @@ import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.biff.formula.FormulaException;
 import jxl.write.Formula;
+import jxl.write.WritableCell;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
@@ -193,6 +194,8 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 	protected Cell getJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
 
 		Cell cell;
 		if (r != this.curR || this.curRow == null) {

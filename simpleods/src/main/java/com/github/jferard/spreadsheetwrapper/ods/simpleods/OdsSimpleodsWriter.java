@@ -22,8 +22,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import org.simpleods.ObjectQueue;
 import org.simpleods.Table;
 import org.simpleods.TableCell;
+import org.simpleods.TableRow;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
@@ -34,10 +36,15 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		SpreadsheetWriter {
 
-	/** the reader for delegation */
-	private final OdsSimpleodsReader preader;
+	/** the *internal* table */
 	private final Table table;
 
+	/** index of current row, -1 if none */
+	private int curR;
+
+	/** current row, null if none */
+	private/*@Nullable*/TableRow curRow;
+	
 	/**
 	 * @param table
 	 *            *internal* sheet
@@ -45,14 +52,13 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	OdsSimpleodsWriter(final Table table) {
 		super(new OdsSimpleodsReader(table));
 		this.table = table;
-		this.preader = (OdsSimpleodsReader) this.reader;
 
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
-		final TableCell simpleCell = this.preader.getSimpleCell(r, c);
+		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
 		return simpleCell.getStyle();
 	}
 
@@ -102,7 +108,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		final TimeZone timeZone = TimeZone.getTimeZone("UTC");
 		final Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTime(date);
@@ -117,7 +123,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		final double retValue = value.doubleValue();
 		cell.setValue(Double.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
@@ -141,7 +147,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		final int retValue = value.intValue();
 		cell.setValue(Integer.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
@@ -151,7 +157,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final TableCell simpleCell = this.preader.getSimpleCell(r, c);
+		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
 		simpleCell.setStyle(styleName);
 		return true;
 	}
@@ -159,10 +165,41 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		final TableCell cell = this.preader.getSimpleCell(r, c);
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		cell.setText(text);
 		cell.setValue(text);
 		return text;
+	}
+
+	/**
+	 * @param r
+	 *            row index
+	 * @param c
+	 *            column index
+	 * @return the *internal* cell
+	 * @throws IllegalArgumentException
+	 *             if the row does not exist
+	 */
+	protected TableCell getOrCreateSimpleCell(final int r, final int c)
+			throws IllegalArgumentException {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+	
+		if (r != this.curR || this.curRow == null) {
+			final ObjectQueue rowsQueue = this.table.getRows();
+			this.curRow = (TableRow) rowsQueue.get(r);
+			if (this.curRow == null) {
+				final TableRow row = new TableRow();
+				if (rowsQueue.setAt(r, row))
+					this.curRow = row;
+				else {
+					this.curR = -1;
+					throw new IllegalArgumentException();
+				}
+			}
+			this.curR = r;
+		}
+		return this.curRow.getCell(c);
 	}
 
 }

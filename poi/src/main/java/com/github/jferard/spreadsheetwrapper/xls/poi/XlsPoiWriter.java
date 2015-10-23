@@ -37,14 +37,16 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		SpreadsheetWriter {
 	private final Map<String, CellStyle> cellStyleByName;
 
+	/** current row index, -1 if none */
+	private int curR;
+	/** current row, null if none */
+	private/*@Nullable*/Row curRow;
+	
 	/**
 	 * the style for cell dates, since Excel does not know the difference
 	 * between a date and a number
 	 */
 	private final/*@Nullable*/CellStyle dateCellStyle;
-
-	/** the internal reader */
-	private final XlsPoiReader preader;
 
 	private final Sheet sheet;
 
@@ -56,7 +58,6 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		super(new XlsPoiReader(sheet));
 		this.sheet = sheet;
 		this.cellStyleByName = cellStyleByName;
-		this.preader = (XlsPoiReader) this.reader;
 		this.dateCellStyle = dateCellStyle;
 
 	}
@@ -64,7 +65,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		final CellStyle cellStyle = cell.getCellStyle();
 		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
 				.entrySet()) {
@@ -77,7 +78,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public String getStyleString(final int r, final int c) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		final CellStyle cellStyle = cell.getCellStyle();
 		return ""; // this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
 	}
@@ -118,7 +119,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		cell.setCellValue(value);
 		return value;
 	}
@@ -128,7 +129,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		cell.setCellValue(date);
 		if (this.dateCellStyle != null)
 			cell.setCellStyle(this.dateCellStyle);
@@ -140,7 +141,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		final double retValue = value.doubleValue();
 		cell.setCellValue(retValue);
 		return retValue;
@@ -151,7 +152,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		cell.setCellFormula(formula);
 		return formula;
 	}
@@ -161,7 +162,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		final int retValue = value.intValue();
 		cell.setCellValue(retValue);
 		return retValue;
@@ -171,7 +172,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		if (this.cellStyleByName.containsKey(styleName)) {
-			final Cell cell = this.preader.getPOICell(r, c);
+			final Cell cell = this.getOrCreatePOICell(r, c);
 			cell.setCellStyle(this.cellStyleByName.get(styleName));
 			return true;
 		} else
@@ -181,9 +182,35 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	/** */
 	@Override
 	public String setText(final int r, final int c, final String text) {
-		final Cell cell = this.preader.getPOICell(r, c);
+		final Cell cell = this.getOrCreatePOICell(r, c);
 		cell.setCellValue(text);
 		return text;
 	}
+	
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	protected Cell getOrCreatePOICell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.sheet.getRow(r);
+			if (this.curRow == null)
+				this.curRow = this.sheet.createRow(r);
+			this.curR = r;
+		}
+		Cell cell = this.curRow.getCell(c);
+		if (cell == null)
+			cell = this.curRow.createCell(c);
+		return cell;
+	}
+	
 
 }
