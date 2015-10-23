@@ -20,12 +20,19 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 import java.util.Date;
 import java.util.List;
 
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.Text;
+import org.jopendocument.dom.ODValueType;
+import org.jopendocument.dom.XMLVersion;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+
+import org.jdom.Text;
 
 /**
  */
@@ -80,11 +87,21 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		// 1.3b1
-		// cell.setValue(value);
-		// 1.2
-		cell.setValue(value ? 1.0 : 0.0);
+		this.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
+	}
+	
+	private void setValue(MutableCell<SpreadSheet> cell, ODValueType type, Object value) {
+		final Element odfElement = cell.getElement();
+		final Namespace officeNS = XMLVersion.OD.getOFFICE();
+        final Namespace textNS = XMLVersion.OD.getTEXT();
+        
+		odfElement.setAttribute("value-type", type.getName(), officeNS);
+		odfElement.setAttribute(type.getValueAttribute(), type.format(value), officeNS);
+		final Element child = odfElement.getChild("p", textNS);
+        final Element t = child != null ? child : new Element("p", textNS);
+        t.setContent(new Text(value.toString()));
+        odfElement.setContent(t);
 	}
 
 	/** {@inheritDoc} */

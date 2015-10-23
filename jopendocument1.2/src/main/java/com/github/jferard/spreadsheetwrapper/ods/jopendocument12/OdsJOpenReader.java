@@ -52,9 +52,9 @@ SpreadsheetReader {
 	public Boolean getBoolean(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		final String type = this.getTypeName(cell);
-		if (!"float".equals(type))
+		if (!"boolean".equals(type))
 			throw new IllegalArgumentException();
-		return ((BigDecimal) cell.getValue()).doubleValue() != 0.0;
+		return (Boolean) cell.getValue();
 	}
 
 	/** {@inheritDoc} */
