@@ -54,12 +54,12 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 		/** a map styleName -> internal cell style */
 		private final Map<String, CellStyle> cellStyleByName;
 
@@ -263,7 +263,8 @@ implements SpreadsheetDocumentWriter {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
-			final HSSFColor hssfColor = this.styleUtility.getHSSFColor(backgroundColor);
+			final HSSFColor hssfColor = this.styleUtility
+					.getHSSFColor(backgroundColor);
 			final short index = hssfColor.getIndex();
 			cellStyle.setFillForegroundColor(index);
 			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);

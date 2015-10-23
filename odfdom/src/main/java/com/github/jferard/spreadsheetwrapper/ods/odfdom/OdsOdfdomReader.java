@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -121,14 +121,16 @@ SpreadsheetReader {
 		Object result;
 
 		// from the doc
-		//  The type can be "boolean", "currency", "date", "float", "percentage", "string" or "time". 
+		// The type can be "boolean", "currency", "date", "float", "percentage",
+		// "string" or "time".
 		if (type == null)
 			result = null;
 		else if (type.equals("boolean"))
 			result = cell.getBooleanValue();
 		else if (type.equals("date") || type.equals("time"))
 			result = OdsOdfdomReader.getDate(cell);
-		else if (type.equals("float") || type.equals("currency") || type.equals("percentage")) {
+		else if (type.equals("float") || type.equals("currency")
+				|| type.equals("percentage")) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
@@ -147,7 +149,7 @@ SpreadsheetReader {
 	public int getCellCount(final int r) {
 		if (r < 0 || r >= this.getRowCount())
 			throw new IllegalArgumentException();
-		
+
 		final OdfTableRow row = this.table.getRowByIndex(r);
 		return OdsOdfdomReader.getRowCellCount(row);
 	}

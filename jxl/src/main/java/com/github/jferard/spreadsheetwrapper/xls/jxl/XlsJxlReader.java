@@ -29,7 +29,6 @@ import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.biff.formula.FormulaException;
 import jxl.write.Formula;
-import jxl.write.WritableCell;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
@@ -39,7 +38,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsJxlReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)
 			return ((DateCell) cell).getDate();

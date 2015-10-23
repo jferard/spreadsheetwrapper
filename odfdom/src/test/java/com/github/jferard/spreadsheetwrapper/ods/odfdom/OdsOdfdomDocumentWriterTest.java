@@ -28,7 +28,7 @@ public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	@Override
 	@Test(expected = UnsupportedOperationException.class)
 	public final void testAddAt0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		super.testAddAt0();
 	}
 

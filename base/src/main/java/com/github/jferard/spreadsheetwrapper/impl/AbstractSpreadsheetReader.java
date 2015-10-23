@@ -51,8 +51,8 @@ public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
 			String message = e.getMessage();
 			if (message == null)
 				message = "???";
-			Logger.getLogger(AbstractSpreadsheetReader.class.getName()).log(Level.SEVERE,
-					message, e);
+			Logger.getLogger(AbstractSpreadsheetReader.class.getName()).log(
+					Level.SEVERE, message, e);
 			simpleDate = null;
 		}
 		return simpleDate;

@@ -63,7 +63,7 @@ public interface SpreadsheetReaderCursor extends Cursor {
 	 *
 	 * @return the name of the format
 	 */
-	/*@Nullable*/ String getStyleName();
+	/*@Nullable*/String getStyleName();
 
 	/**
 	 * Get thee format at the current position

@@ -74,64 +74,6 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public void testRowCountZero() {
-		Assert.assertEquals(0, this.sw.getRowCount());
-	}
-
-	@Test
-	public void testGetIsNotCreate1() {
-		this.sw.getCellContent(15, 5);
-		Assert.assertEquals(0, this.sw.getRowCount());
-	}
-
-	@Test
-	public void testGetIsNotCreate2() {
-		this.sw.getCellContent(15, 5);
-		this.sw.setText(1, 3, "a");
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testGetIsNotCreate3() {
-		this.sw.setText(1, 3, "a");
-		this.sw.getCellContent(15, 5);
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testRowCount2() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setInteger(0, 0, 1);
-		Assert.assertEquals(1, this.sw.getRowCount());
-		Assert.assertEquals(1, this.sw.getCellCount(0));
-	}
-
-	@Test
-	public void testRowCount3() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setInteger(1, 3, 1);
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testCounts() {
-		this.sw.setText(10, 10, "10:10");
-		Assert.assertEquals(11, this.sw.getRowCount());
-		Assert.assertEquals(0, this.sw.getCellCount(1));
-		Assert.assertEquals(0, this.sw.getCellCount(9));
-		Assert.assertEquals(11, this.sw.getCellCount(10));
-	}
-
-	@Test(expected=IllegalArgumentException.class)
-	public void testCounts2() {
-		this.sw.setText(10, 10, "10:10");
-		Assert.assertEquals(0, this.sw.getCellCount(11));
-	}
-	
-	@Test
 	public void testDateDay() {
 		final Date d = new Date(52 * 86400000L);
 		final Date d2 = this.sw.setDate(2, 2, d);

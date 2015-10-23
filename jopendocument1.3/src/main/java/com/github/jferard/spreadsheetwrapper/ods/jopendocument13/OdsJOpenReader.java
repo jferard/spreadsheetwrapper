@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument13;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
@@ -34,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -83,11 +82,12 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		int columnCount = this.sheet.getColumnCount();
+		final int columnCount = this.sheet.getColumnCount();
 		for (int c = columnCount - 1; c >= 0; c--) {
-			MutableCell<SpreadSheet> cell = this.sheet.getCellAt(c, r);
-			if (cell != null && cell.getValue() != null && !cell.getTextValue().isEmpty())
-				return c+1;
+			final MutableCell<SpreadSheet> cell = this.sheet.getCellAt(c, r);
+			if (cell != null && cell.getValue() != null
+					&& !cell.getTextValue().isEmpty())
+				return c + 1;
 		}
 		return 0;
 	}

@@ -12,12 +12,12 @@ import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class XlsJxlStyleUtility extends StyleUtility {
-	private Map<WrapperColor, Colour> jxlColorByColor;
+	private final Map<WrapperColor, Colour> jxlColorByColor;
 
 	XlsJxlStyleUtility() {
 		final WrapperColor[] colors = WrapperColor.values();
 		this.jxlColorByColor = new HashMap<WrapperColor, Colour>(colors.length);
-		for (WrapperColor color : colors) {
+		for (final WrapperColor color : colors) {
 			Colour jxlColor;
 			try {
 				final Class<?> jxlClazz = Class.forName("jxl.format.Colour");
@@ -54,7 +54,7 @@ public class XlsJxlStyleUtility extends StyleUtility {
 		return cellFormat;
 	}
 
-	public Colour getJxlColor(WrapperColor backgroundColor) {
+	public Colour getJxlColor(final WrapperColor backgroundColor) {
 		return this.jxlColorByColor.get(backgroundColor);
 	}
 }

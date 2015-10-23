@@ -33,9 +33,8 @@ public abstract class SpreadsheetDocumentFactoryProviderTest {
 	@Before
 	public void setUp() {
 		final Map<String, SpreadsheetDocumentFactory> factoryByExtension = new HashMap<String, SpreadsheetDocumentFactory>();
-		factoryByExtension
-		.put(this.getProperties().getExtension(),
-				this.getProperties().getFactory());
+		factoryByExtension.put(this.getProperties().getExtension(), this
+				.getProperties().getFactory());
 		this.spreadsheetDocumentFactoryProvider = new SpreadsheetDocumentFactoryProvider(
 				factoryByExtension);
 	}
@@ -77,7 +76,7 @@ public abstract class SpreadsheetDocumentFactoryProviderTest {
 			Assert.fail();
 		}
 	}
-	
+
 	protected abstract TestProperties getProperties();
 
 }

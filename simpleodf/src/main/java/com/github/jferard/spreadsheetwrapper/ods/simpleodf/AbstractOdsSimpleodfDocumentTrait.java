@@ -34,12 +34,13 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
 	/**
-	 * @param sfDocument the stateful (ie inited/not inited) document
+	 * @param sfDocument
+	 *            the stateful (ie inited/not inited) document
 	 */
 	public AbstractOdsSimpleodfDocumentTrait(
 			final OdsSimpleodfStatefulDocument sfDocument) {
@@ -82,6 +83,25 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return tables;
 	}
 
+	private void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		assert colsList.getLength() == 1;
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 1) {
+			final Node item = rowList.item(1);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		final int lengthAfter = rowListAfter.getLength();
+		assert lengthAfter == 1;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	protected T addSheetWithCheckedIndex(final int index, final String sheetName)
@@ -103,7 +123,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 			if (table == null)
 				throw new CantInsertElementInSpreadsheetException();
 		}
-		TableTableElement tableElement = table.getOdfElement();
+		final TableTableElement tableElement = table.getOdfElement();
 		this.cleanEmptyTable(tableElement);
 
 		this.sfDocument.setInitialized();
@@ -111,25 +131,6 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
 	}
-	
-	private void cleanEmptyTable(final TableTableElement tableElement) {
-		final NodeList colsList = tableElement
-				.getElementsByTagName("table:table-column");
-		assert colsList.getLength() == 1;
-		TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
-		column.setTableNumberColumnsRepeatedAttribute(1);
-		final NodeList rowList = tableElement
-	 			.getElementsByTagName("table:table-row");
-		while (rowList.getLength() > 1) {
-			final Node item = rowList.item(1);
-			tableElement.removeChild(item);
-		}
-		final NodeList rowListAfter = tableElement
-				.getElementsByTagName("table:table-row");
-		final int lengthAfter = rowListAfter.getLength();
-		assert lengthAfter == 1;
-	}
-	
 
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this, */final Table table);

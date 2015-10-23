@@ -15,15 +15,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument13;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsSimpleodfEmptyDocumentWriterTest extends
-SpreadsheetDocumentWriterTest {
+public class OdsJOpenEmptyWriterCountsTest extends
+		SpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
-		return OdsSimpleodfTestProperties.getProperties();
+		return OdsJOpenTestProperties.getProperties();
 	}
 }

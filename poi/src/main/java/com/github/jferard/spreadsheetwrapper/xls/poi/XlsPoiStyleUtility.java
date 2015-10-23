@@ -36,20 +36,23 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
  *
  */
 public class XlsPoiStyleUtility extends StyleUtility {
-	private Map<WrapperColor, HSSFColor> hssfColorByColor;
-	private Map<HSSFColor, WrapperColor> colorByHssfColor;
+	private final Map<HSSFColor, WrapperColor> colorByHssfColor;
+	private final Map<WrapperColor, HSSFColor> hssfColorByColor;
 
 	/**
 	 */
 	public XlsPoiStyleUtility() {
 		final WrapperColor[] colors = WrapperColor.values();
-		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(colors.length);
-		this.colorByHssfColor = new HashMap<HSSFColor, WrapperColor>(colors.length);
-		for (WrapperColor color : colors) {
+		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(
+				colors.length);
+		this.colorByHssfColor = new HashMap<HSSFColor, WrapperColor>(
+				colors.length);
+		for (final WrapperColor color : colors) {
 			HSSFColor hssfColor;
 			try {
 				final Class<?> hssfClazz = Class
-						.forName("org.apache.poi.hssf.util.HSSFColor$" + color.getSimpleName());
+						.forName("org.apache.poi.hssf.util.HSSFColor$"
+								+ color.getSimpleName());
 				hssfColor = (HSSFColor) hssfClazz.newInstance();
 			} catch (final ClassNotFoundException e) {
 				hssfColor = null;
@@ -69,7 +72,7 @@ public class XlsPoiStyleUtility extends StyleUtility {
 
 	/**
 	 * Converts the syle string to the CellStyle value
-	 * 
+	 *
 	 * @param workbook
 	 *            the *internal* workbook
 	 * @param styleString
@@ -94,9 +97,13 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		return cellStyle;
 	}
 
+	public HSSFColor getHSSFColor(final WrapperColor backgroundColor) {
+		return this.hssfColorByColor.get(backgroundColor);
+	}
+
 	/**
 	 * Reverse of the getCellStyle method
-	 * 
+	 *
 	 * @param workbook
 	 *            the *internal* workbook
 	 * @param cellStyle
@@ -112,7 +119,8 @@ public class XlsPoiStyleUtility extends StyleUtility {
 			sb.append("font-weight:bold;");
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color != null && color instanceof HSSFColor)
-			sb.append("background-color:").append(((HSSFColor) color).getHexString()).append(";");
+			sb.append("background-color:")
+					.append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
 	}
 
@@ -137,9 +145,5 @@ public class XlsPoiStyleUtility extends StyleUtility {
 
 		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;
-	}
-
-	public HSSFColor getHSSFColor(WrapperColor backgroundColor) {
-		return this.hssfColorByColor.get(backgroundColor);
 	}
 }

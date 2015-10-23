@@ -34,17 +34,17 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
-
-	/** the *internal* table */
-	private final Table table;
+SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;
 
 	/** current row, null if none */
 	private/*@Nullable*/TableRow curRow;
-	
+
+	/** the *internal* table */
+	private final Table table;
+
 	/**
 	 * @param table
 	 *            *internal* sheet
@@ -184,7 +184,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 			throws IllegalArgumentException {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-	
+
 		if (r != this.curR || this.curRow == null) {
 			final ObjectQueue rowsQueue = this.table.getRows();
 			this.curRow = (TableRow) rowsQueue.get(r);

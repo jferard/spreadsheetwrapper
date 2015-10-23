@@ -38,7 +38,7 @@ public class DocumentFactoryManager {
 
 	/**
 	 * get a factory
-	 * 
+	 *
 	 * @throws ClassNotFoundException
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
@@ -49,25 +49,25 @@ public class DocumentFactoryManager {
 	 * */
 	public SpreadsheetDocumentFactory getFactory(final String endOfClassName)
 			throws SpreadsheetException {
-		String startOfClassName = this.getClass().getPackage().getName();
+		final String startOfClassName = this.getClass().getPackage().getName();
 		Class<?> clazz;
 		try {
 			clazz = Class.forName(new StringBuilder(startOfClassName)
-					.append('.').append(endOfClassName).toString());
-			Method method = clazz.getMethod("create", Logger.class);
+			.append('.').append(endOfClassName).toString());
+			final Method method = clazz.getMethod("create", Logger.class);
 			return (SpreadsheetDocumentFactory) method
 					.invoke(null, this.logger);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			throw new SpreadsheetException(e);
-		} catch (NoSuchMethodException e) {
+		} catch (final NoSuchMethodException e) {
 			throw new SpreadsheetException(e);
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 			throw new SpreadsheetException(e);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			throw new SpreadsheetException(e);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			throw new SpreadsheetException(e);
-		} catch (InvocationTargetException e) {
+		} catch (final InvocationTargetException e) {
 			throw new SpreadsheetException(e);
 		}
 	}

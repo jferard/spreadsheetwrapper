@@ -33,7 +33,8 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
  */
 public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	/**
-	 * @param sfDocument the wrapped document
+	 * @param sfDocument
+	 *            the wrapped document
 	 */
 	public OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
 		super(sfDocument.getObject(), sfDocument.isNew());
@@ -41,8 +42,11 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 
 	/**
 	 * Delegator for addSheet
-	 * @param index index of the sheet after the sheet to be inserted
-	 * @param sheetName the name of the new sheet.
+	 * 
+	 * @param index
+	 *            index of the sheet after the sheet to be inserted
+	 * @param sheetName
+	 *            the name of the new sheet.
 	 * @return the *internal* sheet
 	 */
 	public Sheet addRawSheet(final int index, final String sheetName) {
@@ -50,7 +54,8 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	}
 
 	/**
-	 * @param index index of the sheet to get
+	 * @param index
+	 *            index of the sheet to get
 	 * @return the *internal* sheet
 	 */
 	public Sheet getRawSheet(final int index) {
@@ -58,7 +63,8 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	}
 
 	/**
-	 * @param sheetName name of the sheet to get
+	 * @param sheetName
+	 *            name of the sheet to get
 	 * @return the *internal* sheet
 	 */
 	public Sheet getRawSheet(final String sheetName) {
@@ -81,7 +87,8 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	}
 
 	/**
-	 * @param outputStream where to write
+	 * @param outputStream
+	 *            where to write
 	 * @throws IOException
 	 */
 	public void save(final OutputStream outputStream) throws IOException {

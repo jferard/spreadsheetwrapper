@@ -44,7 +44,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	private final Map<String, WritableCellFormat> cellFormatByName;
 
@@ -243,7 +243,8 @@ SpreadsheetWriter {
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected/*@Nullable*/WritableCell getOrCreateJxlCell(final int r, final int c) {
+	protected/*@Nullable*/WritableCell getOrCreateJxlCell(final int r,
+			final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 

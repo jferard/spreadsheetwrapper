@@ -49,10 +49,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
-			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 		}
@@ -65,18 +65,36 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		}
 	}
 
+	/**
+	 * XPath could do better...
+	 * 
+	 * @param name
+	 *            the name to find in attributes
+	 * @param elements
+	 *            the elements to look at
+	 * @return the matching element, or null
+	 */
+	private static Element findElementWithName(final String name,
+			final List<Element> elements) {
+		for (final Element element : elements) {
+			if (name.equals(element.getAttributeValue("name")))
+				return element;
+		}
+		return null;
+	}
+
 	/** delegation sfSpreadSheet */
 	private final AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> documentTrait;
-
-	/** delegation reader */
-	private final OdsJOpenDocumentReader reader;
-	/** the *internal* workbook */
-	private final OdsJOpenStatefulDocument sfSpreadSheet;
-	/** utility for style */
-	private final OdsJOpenStyleUtility styleUtility;
-
 	/** the logger */
 	private final Logger logger;
+	/** delegation reader */
+	private final OdsJOpenDocumentReader reader;
+
+	/** the *internal* workbook */
+	private final OdsJOpenStatefulDocument sfSpreadSheet;
+
+	/** utility for style */
+	private final OdsJOpenStyleUtility styleUtility;
 
 	/**
 	 * @param logger
@@ -93,7 +111,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final OdsJOpenStyleUtility styleUtility,
 			final OdsJOpenStatefulDocument sfSpreadSheet,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, outputStream);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
@@ -132,13 +150,14 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
-		Element oldStyle = findElementWithName(styleName, styles);
+		Element oldStyle = OdsJOpenDocumentWriter.findElementWithName(
+				styleName, styles);
 		if (oldStyle == null) {
 			oldStyle = this.styleUtility.createBaseStyle(styleName);
 			namedStyles.addContent(oldStyle);
 		} else
 			oldStyle.removeContent();
-		
+
 		this.styleUtility.setStyle(oldStyle, styleString);
 		return true;
 	}
@@ -221,7 +240,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
-		Element newStyle = findElementWithName(styleName, styles);
+		Element newStyle = OdsJOpenDocumentWriter.findElementWithName(
+				styleName, styles);
 		if (newStyle == null) {
 			newStyle = this.styleUtility.createBaseStyle(styleName);
 			namedStyles.addContent(newStyle);
@@ -232,21 +252,6 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return true;
 	}
 
-	/**
-	 * XPath could do better...
-	 * @param name the name to find in attributes
-	 * @param elements the elements to look at
-	 * @return the matching element, or null 
-	 */
-	private static Element findElementWithName(final String name,
-			final List<Element> elements) {
-		for (final Element element : elements) {
-			if (name.equals(element.getAttributeValue("name")))
-				return element;
-		}
-		return null;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	@Deprecated
@@ -255,12 +260,13 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
 		final List<Element> styles = namedStyles.getChildren("style");
-		Element oldStyle = findElementWithName(styleName, styles);
+		Element oldStyle = OdsJOpenDocumentWriter.findElementWithName(
+				styleName, styles);
 		if (oldStyle == null) {
 			oldStyle = this.styleUtility.createBaseStyle(styleName);
 			this.styleUtility.setStyle(oldStyle, styleString);
 			namedStyles.addContent(oldStyle);
 		}
-		return oldStyle == null; 
+		return oldStyle == null;
 	}
 }

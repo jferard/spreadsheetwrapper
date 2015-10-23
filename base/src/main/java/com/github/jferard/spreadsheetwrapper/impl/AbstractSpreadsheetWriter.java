@@ -61,7 +61,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	public int getCellCount(final int r) {
 		if (r < 0 || r >= this.getRowCount())
 			throw new IllegalArgumentException();
-		
+
 		return this.reader.getCellCount(r);
 	}
 
@@ -121,7 +121,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		return this.reader.getStyleName(r, c);
 	}
 

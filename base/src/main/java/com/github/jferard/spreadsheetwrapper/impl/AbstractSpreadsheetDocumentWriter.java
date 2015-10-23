@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-SpreadsheetDocumentWriter {
+		SpreadsheetDocumentWriter {
 
 	/** the logger */
 	private final Logger logger;
@@ -41,8 +41,10 @@ SpreadsheetDocumentWriter {
 	protected/*@Nullable*/OutputStream outputStream;
 
 	/**
-	 * @param logger the loggier
-	 * @param outputStream where to write
+	 * @param logger
+	 *            the loggier
+	 * @param outputStream
+	 *            where to write
 	 */
 	public AbstractSpreadsheetDocumentWriter(final Logger logger,
 			final/*@Nullable*/OutputStream outputStream) {

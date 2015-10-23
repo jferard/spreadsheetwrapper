@@ -15,31 +15,26 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper;
+package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
 
-@SuppressWarnings("PMD")
-public abstract class SpreadsheetEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentReaderTest {
-	@Rule
-	public TestName name = new TestName();
-	protected SpreadsheetDocumentWriter sdw;
+import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.TestProperties;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
-	protected SpreadsheetWriter sw;
-
+public class OdsSimpleodsEmptyWriterCountsTest extends
+		SpreadSheetEmptyWriterCountsTest {
 	/** set the test up */
-	@Override
 	@Before
+	@Override
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
@@ -47,7 +42,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
-			this.sdr = this.sdw;
+			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -55,8 +50,8 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	}
 
 	/** tear the test down */
-	@Override
 	@After
+	@Override
 	public void tearDown() {
 		try {
 			this.sdw.save();
@@ -67,20 +62,9 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 		}
 	}
 
-	@Test
-	public final void testCreation()
-			throws CantInsertElementInSpreadsheetException {
-		Assert.assertEquals(0, this.sdw.getSheetCount());
-		Assert.assertEquals(Collections.emptyList(), this.sdw.getSheetNames());
-		this.sdw.addSheet("ok");
-		Assert.assertEquals(1, this.sdw.getSheetCount());
-		Assert.assertEquals(Arrays.asList("ok"), this.sdw.getSheetNames());
-		Assert.assertNotNull(this.sdw.getSpreadsheet(0));
-		Assert.assertNotNull(this.sdw.getSpreadsheet("ok"));
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testCreation2() {
-		final SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0);
+	@Override
+	protected TestProperties getProperties() {
+		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(
+				Logger.getGlobal(), new StyleUtility()));
 	}
 }

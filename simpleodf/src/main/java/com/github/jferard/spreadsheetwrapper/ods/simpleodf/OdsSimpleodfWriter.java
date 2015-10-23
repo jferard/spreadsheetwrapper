@@ -37,18 +37,18 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
-
-	/** internal table */
-	private final Table table;
 
 	/** index of the current row, -1 if none */
 	private int curR;
 
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
+
+	/** internal table */
+	private final Table table;
 
 	/**
 	 * @param table
@@ -229,7 +229,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 		// }
 		// // end of HACK
 
-		Cell cell = this.curRow.getCellByIndex(c);
+		final Cell cell = this.curRow.getCellByIndex(c);
 		cell.getStyleHandler().getStyleElementForWrite();
 		return cell;
 	}

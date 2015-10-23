@@ -25,14 +25,9 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
-import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
-import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -51,10 +46,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document) {
 			super(document);
 		}
@@ -95,7 +90,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final OdsOdfdomStyleUtility styleUtility,
 			final OdfSpreadsheetDocument document,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, outputStream);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);

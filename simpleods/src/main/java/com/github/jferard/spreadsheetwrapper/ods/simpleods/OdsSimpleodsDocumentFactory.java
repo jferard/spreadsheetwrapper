@@ -38,15 +38,16 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
-	/** the logger */
-	private final Logger logger;
-	private final StyleUtility styleUtility;
-
-	public static SpreadsheetDocumentFactory create(Logger logger) {
+		implements SpreadsheetDocumentFactory {
+	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodsDocumentFactory(logger, new StyleUtility());
 	}
-	
+
+	/** the logger */
+	private final Logger logger;
+
+	private final StyleUtility styleUtility;
+
 	/**
 	 * @param logger
 	 *            the logger
@@ -84,7 +85,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -122,7 +123,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 

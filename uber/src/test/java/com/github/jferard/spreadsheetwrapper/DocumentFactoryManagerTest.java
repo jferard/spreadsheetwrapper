@@ -13,30 +13,37 @@ import com.github.jferard.spreadsheetwrapper.xls.poi.XlsPoiDocumentFactory;
 
 public class DocumentFactoryManagerTest {
 	@Test
-	public final void testDirect()  {
-		Logger logger = null;
+	public final void testDirect() {
+		final Logger logger = null;
 		SpreadsheetDocumentFactory factory;
 		factory = OdsSimpleodsDocumentFactory.create(logger);
 		factory = OdsSimpleodfDocumentFactory.create(logger);
 		factory = OdsOdfdomDocumentFactory.create(logger);
-		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument12.OdsJOpenDocumentFactory.create(logger);
-		
+		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument12.OdsJOpenDocumentFactory
+				.create(logger);
+
 		factory = XlsJxlDocumentFactory.create(logger);
 		factory = XlsPoiDocumentFactory.create(logger);
 	}
-	
+
 	@Test
-	public final void testManager() throws ClassNotFoundException, InstantiationException, IllegalAccessException, SpreadsheetException, IllegalArgumentException, InvocationTargetException {
-		DocumentFactoryManager manager = new DocumentFactoryManager(null);
+	public final void testManager() throws ClassNotFoundException,
+			InstantiationException, IllegalAccessException,
+			SpreadsheetException, IllegalArgumentException,
+			InvocationTargetException {
+		final DocumentFactoryManager manager = new DocumentFactoryManager(null);
 		SpreadsheetDocumentFactory factory;
-		factory = manager.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");
-		factory = manager.getFactory("ods.simpleods.OdsSimpleodsDocumentFactory");
+		factory = manager
+				.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");
+		factory = manager
+				.getFactory("ods.simpleods.OdsSimpleodsDocumentFactory");
 		factory = manager.getFactory("ods.odfdom.OdsOdfdomDocumentFactory");
-		factory = manager.getFactory("ods.jopendocument12.OdsJOpenDocumentFactory");
-		
+		factory = manager
+				.getFactory("ods.jopendocument12.OdsJOpenDocumentFactory");
+
 		factory = manager.getFactory("xls.jxl.XlsJxlDocumentFactory");
 		factory = manager.getFactory("xls.poi.XlsPoiDocumentFactory");
-		
+
 	}
 
 }
