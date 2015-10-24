@@ -17,13 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownServiceException;
 import java.util.NoSuchElementException;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
@@ -91,7 +84,7 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 			spreadsheet = this.accessor.getByName(sheetName);
 		else
 			spreadsheet = this
-					.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
 
 		return spreadsheet;
 	}

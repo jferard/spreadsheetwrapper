@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 public class AppTest {
 	/**
 	 * Rigourous Test :-)
-	 * 
+	 *
 	 * @throws SpreadsheetException
 	 */
 	@Test

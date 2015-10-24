@@ -18,6 +18,7 @@
 
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
@@ -47,10 +48,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document) {
 			super(document);
 		}
@@ -89,8 +90,8 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 */
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleUtility styleUtility,
-			final OdfSpreadsheetDocument document,
-			final Output output) throws SpreadsheetException {
+			final OdfSpreadsheetDocument document, final Output output)
+			throws SpreadsheetException {
 		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);
@@ -118,6 +119,11 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -188,13 +194,13 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		try {
 			outputStream = this.output.getStream();
 			if (outputStream == null)
-					throw new IllegalStateException(
-							String.format("Use saveAs when output file/stream is not specified"));
+				throw new IllegalStateException(
+						String.format("Use saveAs when output file/stream is not specified"));
 			this.document.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					outputStream), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
 			throw new SpreadsheetException(e);
 		}
 	}

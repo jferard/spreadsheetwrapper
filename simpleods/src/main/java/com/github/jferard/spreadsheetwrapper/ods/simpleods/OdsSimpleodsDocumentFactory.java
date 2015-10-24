@@ -18,8 +18,6 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URISyntaxException;
@@ -33,12 +31,13 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodsDocumentFactory(logger, new StyleUtility());
 	}
@@ -72,14 +71,9 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 			return this.create();
 
 		final OdsFile file = new OdsFile(f.getPath());
-		OutputStream outputStream;
-		try {
-			outputStream = new FileOutputStream(f);
-			return new OdsSimpleodsDocumentWriter(this.logger,
-					this.styleUtility, file, outputStream);
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		}
+		final Output output = new Output(f);
+		return new OdsSimpleodsDocumentWriter(this.logger, this.styleUtility,
+				file, output);
 	}
 
 	@Override
@@ -123,7 +117,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 

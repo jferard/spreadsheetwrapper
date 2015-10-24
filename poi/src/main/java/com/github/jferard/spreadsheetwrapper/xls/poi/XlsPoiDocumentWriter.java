@@ -44,6 +44,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -54,12 +55,12 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 		/** a map styleName -> internal cell style */
 		private final Map<String, CellStyle> cellStyleByName;
 
@@ -133,8 +134,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 */
 	public XlsPoiDocumentWriter(final Logger logger,
 			final XlsPoiStyleUtility styleUtility, final Workbook workbook,
-			final/*@Nullable*/OutputStream outputStream) {
-		super(logger, outputStream);
+			final Output output) {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new XlsPoiDocumentReader(styleUtility, workbook);
 		this.logger = logger;
@@ -166,6 +167,11 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -233,16 +239,18 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when output file is not specified"));
+		OutputStream outputStream = null;
 		try {
-			this.workbook.write(this.outputStream);
-			this.outputStream.close();
+			outputStream = this.output.getStream();
+			if (outputStream == null)
+				throw new IllegalStateException(
+						String.format("Use saveAs when output file/stream is not specified"));
+			this.workbook.write(outputStream);
+			outputStream.flush();
 		} catch (final IOException e) {
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
 			throw new SpreadsheetException(e);
 		}
 	}

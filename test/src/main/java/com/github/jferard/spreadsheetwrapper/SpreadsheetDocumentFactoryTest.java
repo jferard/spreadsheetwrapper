@@ -26,6 +26,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,15 +37,15 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	@Rule
 	public TestName name = new TestName();
 
-	protected SpreadsheetDocumentFactory factory;
-
-	protected String urlString;
-
-	private URL sourceURL;
+	private File destFile;
 
 	private File sourceFile;
 
-	private File destFile;
+	private URL sourceURL;
+
+	protected SpreadsheetDocumentFactory factory;
+
+	protected String urlString;
 
 	public SpreadsheetDocumentFactoryTest() {
 		super();
@@ -55,8 +56,7 @@ public abstract class SpreadsheetDocumentFactoryTest {
 		this.factory = this.getProperties().getFactory();
 		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s", this
 				.getProperties().getExtension());
-		this.sourceURL = this.getClass().getResource(
-				this.urlString);
+		this.sourceURL = this.getClass().getResource(this.urlString);
 		this.sourceFile = new File(this.sourceURL.toURI());
 		this.destFile = SpreadsheetTest.getOutputFile(this.getClass()
 				.getSimpleName(), this.name.getMethodName(), this
@@ -64,13 +64,72 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	}
 
 	@Test
-	public void testCreateEmptyDocumentWithNoName() {
+	public void testCreateEmptyDocumentWithDestinationFile() {
 		try {
-			final SpreadsheetDocumentReader sdr = this.factory.create();
+			final SpreadsheetDocumentWriter sdw = this.factory
+					.create(this.destFile);
+			sdw.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testCreateEmptyDocumentWithNoDestination() {
+		try {
+			final SpreadsheetDocumentWriter sdw = this.factory.create();
+			sdw.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public final void testOpenFileForRead() {
+		try {
+			final SpreadsheetDocumentReader sdr = this.factory
+					.openForRead(this.sourceFile);
 			sdr.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testOpenFileForWriteWithDest() {
+		try {
+			final SpreadsheetDocumentReader sdr = this.factory.openForWrite(
+					this.sourceFile, this.destFile);
+			sdr.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testOpenFileForWriteWithNoDest() {
+		try {
+			final SpreadsheetDocumentWriter sdw = this.factory
+					.openForWrite(this.sourceFile);
+			sdw.save();
+			sdw.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 
@@ -87,18 +146,27 @@ public abstract class SpreadsheetDocumentFactoryTest {
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 
 	@Test
-	public final void testOpenFileForRead() {
+	public void testOpenStreamForWriteWithDest() {
 		try {
-			final SpreadsheetDocumentReader sdr = this.factory
-					.openForRead(this.sourceFile);
-			sdr.close();
+			final InputStream sourceStream = this.sourceURL.openStream();
+			final OutputStream destStream = new FileOutputStream(this.destFile);
+			final SpreadsheetDocumentWriter sdw = this.factory.openForWrite(
+					sourceStream, destStream);
+			sdw.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final IOException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 
@@ -115,47 +183,8 @@ public abstract class SpreadsheetDocumentFactoryTest {
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testOpenFileForWriteWithNoDest() {
-		try {
-			final SpreadsheetDocumentReader sdr = this.factory
-					.openForWrite(this.sourceFile);
-			sdr.close();
-		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testOpenStreamForWriteWithDest() {
-		try {
-			final InputStream sourceStream = this.sourceURL.openStream();
-			final OutputStream destStream = new FileOutputStream(this.destFile);
-			final SpreadsheetDocumentReader sdr = this.factory.openForWrite(
-					sourceStream, destStream);
-			sdr.close();
-		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		} catch (final IOException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public void testOpenFileForWriteWithDest() {
-		try {
-			final SpreadsheetDocumentReader sdr = this.factory.openForWrite(
-					this.sourceFile, this.destFile);
-			sdr.close();
-		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 

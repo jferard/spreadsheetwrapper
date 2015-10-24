@@ -121,7 +121,7 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 		final int c = 6;
 		try {
 			final Date d = this.sw.setDate(r, c, new Date(12345)); // setDate :
-																	// 0
+			// 0
 			// UTC = 1 CET
 			Assert.assertEquals(d, new Date(12345));
 			Assert.assertEquals(new Date(12345), this.sw.getDate(r, c));

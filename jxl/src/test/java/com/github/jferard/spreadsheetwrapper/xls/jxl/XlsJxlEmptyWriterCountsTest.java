@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+SpreadSheetEmptyWriterCountsTest {
 	/** set the test up */
 	@Before
 	@Override

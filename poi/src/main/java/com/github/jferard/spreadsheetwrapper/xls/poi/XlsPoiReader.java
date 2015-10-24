@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsPoiReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */
@@ -188,7 +188,7 @@ class XlsPoiReader extends AbstractSpreadsheetReader implements
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.sheet.getRow(r);
 			assert this.curRow != null; // else this.curRow =
-										// this.sheet.createRow(r);
+			// this.sheet.createRow(r);
 			this.curR = r;
 		}
 		final Cell cell = this.curRow.getCell(c);

@@ -32,12 +32,13 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleUtility());
 	}
@@ -64,11 +65,10 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final Stateful<Workbook> sfWorkbook,
-			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			final Stateful<Workbook> sfWorkbook, final Output output)
+			throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, this.styleUtility,
-				sfWorkbook.getObject(), outputStream);
+				sfWorkbook.getObject(), output);
 	}
 
 	/** {@inheritDoc} */
@@ -78,6 +78,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 		Workbook workbook;
 		try {
 			workbook = WorkbookFactory.create(inputStream);
+			inputStream.close();
 		} catch (final InvalidFormatException e) {
 			throw new SpreadsheetException(e);
 		} catch (final IOException e) {
@@ -89,7 +90,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		final Workbook workbook = new HSSFWorkbook();
 		return workbook;
 	}

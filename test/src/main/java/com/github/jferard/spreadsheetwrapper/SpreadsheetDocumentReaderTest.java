@@ -42,7 +42,7 @@ public abstract class SpreadsheetDocumentReaderTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-									.openStream();
+					.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
 		} catch (final SpreadsheetException e) {
@@ -83,7 +83,7 @@ public abstract class SpreadsheetDocumentReaderTest {
 		try {
 			final SpreadsheetReader sr1 = this.sdr.getSpreadsheet("Feuille1");
 			final SpreadsheetReader sr2 = this.sdr.getSpreadsheet(0); // use
-																		// Accessor
+			// Accessor
 			Assert.assertEquals(sr1, sr2);
 		} catch (final NoSuchElementException e) {
 			e.printStackTrace();

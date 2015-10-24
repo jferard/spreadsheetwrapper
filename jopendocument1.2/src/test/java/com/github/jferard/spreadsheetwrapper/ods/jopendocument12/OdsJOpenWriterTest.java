@@ -17,8 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 
-import org.junit.Assert;
-
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterLevel1Test;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 

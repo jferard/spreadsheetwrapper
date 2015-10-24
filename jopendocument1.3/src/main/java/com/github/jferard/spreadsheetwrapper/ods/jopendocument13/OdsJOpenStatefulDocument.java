@@ -42,7 +42,7 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 
 	/**
 	 * Delegator for addSheet
-	 * 
+	 *
 	 * @param index
 	 *            index of the sheet after the sheet to be inserted
 	 * @param sheetName

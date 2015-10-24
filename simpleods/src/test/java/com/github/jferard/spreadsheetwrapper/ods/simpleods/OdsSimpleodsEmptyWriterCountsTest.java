@@ -18,7 +18,6 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,10 +27,9 @@ import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsSimpleodsEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+SpreadSheetEmptyWriterCountsTest {
 	/** set the test up */
 	@Before
 	@Override
@@ -64,7 +62,6 @@ public class OdsSimpleodsEmptyWriterCountsTest extends
 
 	@Override
 	protected TestProperties getProperties() {
-		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(
-				Logger.getGlobal(), new StyleUtility()));
+		return OdsSimpleodsTestProperties.getProperties();
 	}
 }

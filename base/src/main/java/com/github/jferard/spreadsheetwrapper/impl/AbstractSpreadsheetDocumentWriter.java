@@ -18,9 +18,6 @@
 package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.logging.Level;
@@ -32,15 +29,15 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-		SpreadsheetDocumentWriter {
+SpreadsheetDocumentWriter {
+
+	private Output bkpOutput;
 
 	/** the logger */
 	private final Logger logger;
 
 	/** where to write */
 	protected Output output;
-
-	private Output bkpOutput;
 
 	/**
 	 * @param logger
@@ -54,7 +51,7 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 		this.logger = logger;
 		this.output = output;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public void saveAs(final File outputFile) throws SpreadsheetException {
@@ -65,8 +62,7 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 		} catch (final SpreadsheetException e) {
 			this.output = this.bkpOutput;
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					outputFile), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputFile), e);
 			throw e;
 		}
 	}
@@ -95,8 +91,7 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 			this.save();
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					outputURL), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputURL), e);
 			throw e;
 		}
 	}

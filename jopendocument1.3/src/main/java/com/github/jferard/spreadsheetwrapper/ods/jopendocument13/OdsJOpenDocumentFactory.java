@@ -37,13 +37,14 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-		AbstractDocumentFactory<SpreadSheet> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<SpreadSheet> implements
+SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsJOpenDocumentFactory(logger, new OdsJOpenStyleUtility());
 	}
@@ -97,11 +98,10 @@ public class OdsJOpenDocumentFactory extends
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final Stateful<SpreadSheet> sfDocument,
-			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+			final Stateful<SpreadSheet> sfDocument, final Output output)
+					throws SpreadsheetException {
 		return new OdsJOpenDocumentWriter(this.logger, this.styleUtility,
-				new OdsJOpenStatefulDocument(sfDocument), outputStream);
+				new OdsJOpenStatefulDocument(sfDocument), output);
 	}
 
 	/** {@inheritDoc} */
@@ -120,7 +120,7 @@ public class OdsJOpenDocumentFactory extends
 	@Override
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		try {
 			return SpreadSheet.createEmpty(new DefaultTableModel());
 		} catch (final IOException e) {

@@ -18,6 +18,7 @@
 
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -35,6 +36,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -49,10 +51,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 		}
@@ -67,7 +69,7 @@ implements SpreadsheetDocumentWriter {
 
 	/**
 	 * XPath could do better...
-	 * 
+	 *
 	 * @param name
 	 *            the name to find in attributes
 	 * @param elements
@@ -101,7 +103,7 @@ implements SpreadsheetDocumentWriter {
 	 *            the logger
 	 * @param sfSpreadSheet
 	 *            the *internal* workbook
-	 * @param outputStream
+	 * @param output
 	 *            where to write
 	 * @param newDocument
 	 * @throws SpreadsheetException
@@ -109,10 +111,9 @@ implements SpreadsheetDocumentWriter {
 	 */
 	public OdsJOpenDocumentWriter(final Logger logger,
 			final OdsJOpenStyleUtility styleUtility,
-			final OdsJOpenStatefulDocument sfSpreadSheet,
-			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
-		super(logger, outputStream);
+			final OdsJOpenStatefulDocument sfSpreadSheet, final Output output)
+			throws SpreadsheetException {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
 		this.logger = logger;
@@ -139,6 +140,11 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -216,15 +222,18 @@ implements SpreadsheetDocumentWriter {
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when output file is not specified"));
+		OutputStream outputStream = null;
 		try {
-			this.sfSpreadSheet.save(this.outputStream);
+			outputStream = this.output.getStream();
+			if (outputStream == null)
+				throw new IllegalStateException(
+						String.format("Use saveAs when output file is not specified"));
+
+			this.sfSpreadSheet.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
 			throw new SpreadsheetException(e);
 		}
 	}

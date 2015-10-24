@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+		AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
 
@@ -82,7 +82,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * <table:table>
 	 * <table:table-column number-columns-repeated="1" />
 	 * </table:table>
-	 * 
+	 *
 	 * @param tableElement
 	 *            the odf element
 	 */

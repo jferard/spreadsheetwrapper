@@ -32,12 +32,10 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
-import org.jdom.Text;
-
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -90,19 +88,6 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		this.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
 	}
-	
-	private void setValue(MutableCell<SpreadSheet> cell, ODValueType type, Object value) {
-		final Element odfElement = cell.getElement();
-		final Namespace officeNS = XMLVersion.OD.getOFFICE();
-        final Namespace textNS = XMLVersion.OD.getTEXT();
-        
-		odfElement.setAttribute("value-type", type.getName(), officeNS);
-		odfElement.setAttribute(type.getValueAttribute(), type.format(value), officeNS);
-		final Element child = odfElement.getChild("p", textNS);
-        final Element t = child != null ? child : new Element("p", textNS);
-        t.setContent(new Text(value.toString()));
-        odfElement.setContent(t);
-	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -154,6 +139,21 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
 		cell.setValue(text);
 		return text;
+	}
+
+	private void setValue(final MutableCell<SpreadSheet> cell,
+			final ODValueType type, final Object value) {
+		final Element odfElement = cell.getElement();
+		final Namespace officeNS = XMLVersion.OD.getOFFICE();
+		final Namespace textNS = XMLVersion.OD.getTEXT();
+
+		odfElement.setAttribute("value-type", type.getName(), officeNS);
+		odfElement.setAttribute(type.getValueAttribute(), type.format(value),
+				officeNS);
+		final Element child = odfElement.getChild("p", textNS);
+		final Element t = child != null ? child : new Element("p", textNS);
+		t.setContent(new Text(value.toString()));
+		odfElement.setContent(t);
 	}
 
 	/**

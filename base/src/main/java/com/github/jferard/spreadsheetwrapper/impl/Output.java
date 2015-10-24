@@ -18,14 +18,17 @@ import java.net.UnknownServiceException;
  * the input file while be erased before the spreadsheet is opened).
  */
 public class Output {
-	/** stream output */
-	final/*@Nullable*/OutputStream outputStream;
-
-	/** file output */
-	final/*@Nullable*/File outputFile;
-
-	/** url output */
-	final/*@Nullable*/URL outputURL;
+	/**
+	 * @param outputFile
+	 *            the file to open for write
+	 * @return the output stream on this URL
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public static OutputStream getOutputStream(final File outputFile)
+			throws FileNotFoundException {
+		return new FileOutputStream(outputFile);
+	}
 
 	/**
 	 * @param outputURL
@@ -49,58 +52,57 @@ public class Output {
 		return outputStream;
 	}
 
-	/**
-	 * @param outputFile
-	 *            the file to open for write
-	 * @return the output stream on this URL
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	public static OutputStream getOutputStream(final File outputFile)
-			throws FileNotFoundException {
-		return new FileOutputStream(outputFile);
-	}
+	/** file output */
+	final/*@Nullable*/File outputFile;
 
-	public Output(OutputStream outputStream) {
-		this(outputStream, null, null);
-	}
+	/** stream output */
+	/*@Nullable*/OutputStream outputStream;
 
-	public Output(File outputFile) {
-		this(null, outputFile, null);
-	}
-
-	public Output(URL outputURL) {
-		this(null, null, outputURL);
-	}
+	/** url output */
+	final/*@Nullable*/URL outputURL;
 
 	public Output() {
 		this(null, null, null);
 	}
 
-	private Output(OutputStream outputStream, File outputFile, URL outputURL) {
+	public Output(final File outputFile) {
+		this(null, outputFile, null);
+	}
+
+	public Output(final OutputStream outputStream) {
+		this(outputStream, null, null);
+	}
+
+	public Output(final URL outputURL) {
+		this(null, null, outputURL);
+	}
+
+	private Output(final OutputStream outputStream, final File outputFile,
+			final URL outputURL) {
 		super();
 		this.outputStream = outputStream;
 		this.outputFile = outputFile;
 		this.outputURL = outputURL;
 	}
 
-	public/*@Nullable*/OutputStream getStream() {
-		OutputStream outputStream;
-		try {
-			if (this.outputStream != null)
-				outputStream = this.outputStream;
-			else if (this.outputFile != null)
-				outputStream = getOutputStream(this.outputFile);
-			else if (this.outputURL != null)
-				outputStream = getOutputStream(this.outputURL);
-			else
-				outputStream = null;
-		} catch (FileNotFoundException e) {
-			outputStream = null;
-		} catch (IOException e) {
-			outputStream = null;
-		}
-		return outputStream;
+	public void close() throws IOException {
+		if (this.outputStream != null)
+			this.outputStream.close();
 	}
 
+	public/*@Nullable*/OutputStream getStream() {
+		if (this.outputStream == null) {
+			try {
+				if (this.outputFile != null)
+					this.outputStream = Output.getOutputStream(this.outputFile);
+				else if (this.outputURL != null)
+					this.outputStream = Output.getOutputStream(this.outputURL);
+			} catch (final FileNotFoundException e) {
+				// do nothing
+			} catch (final IOException e) {
+				// do nothing
+			}
+		}
+		return this.outputStream;
+	}
 }

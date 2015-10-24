@@ -17,6 +17,7 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +35,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
 
@@ -44,10 +46,10 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
  *
  */
 public class OdsSimpleodfDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentWriterTrait extends
-			AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
 		/**
 		 * @param value
 		 *            *internal* workbook
@@ -92,10 +94,9 @@ public class OdsSimpleodfDocumentWriter extends
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleUtility styleUtility,
-			final OdsSimpleodfStatefulDocument sfDocument,
-			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
-		super(logger, outputStream);
+			final OdsSimpleodfStatefulDocument sfDocument, final Output output)
+					throws SpreadsheetException {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsSimpleodfDocumentReader(styleUtility, sfDocument);
 		this.logger = logger;
@@ -131,6 +132,11 @@ public class OdsSimpleodfDocumentWriter extends
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -195,15 +201,17 @@ public class OdsSimpleodfDocumentWriter extends
 	/** {@inheritDoc} */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when output file is not specified"));
+		OutputStream outputStream = null;
 		try {
-			this.sfDocument.rawSave(this.outputStream);
+			outputStream = this.output.getStream();
+			if (outputStream == null)
+				throw new IllegalStateException(
+						String.format("Use saveAs when output file is not specified"));
+			this.sfDocument.rawSave(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
 			throw new SpreadsheetException(e);
 		}
 	}

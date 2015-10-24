@@ -27,8 +27,8 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 /**
- * The SpreadSheetEmptyWriterCountsTest class tests the row / cell counts computation by a wrapper.
- * Those tests are now successful for all wrappers.
+ * The SpreadSheetEmptyWriterCountsTest class tests the row / cell counts
+ * computation by a wrapper. Those tests are now successful for all wrappers.
  */
 public abstract class SpreadSheetEmptyWriterCountsTest {
 	@Rule

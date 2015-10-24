@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractBasicDocumentFactory implements
-		SpreadsheetDocumentFactory {
+SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
@@ -67,8 +67,7 @@ public abstract class AbstractBasicDocumentFactory implements
 			return this.create();
 
 		try {
-			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
-					.getOutputStream(outputURL);
+			final OutputStream outputStream = Output.getOutputStream(outputURL);
 			return this.create(outputStream);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
@@ -128,8 +127,7 @@ public abstract class AbstractBasicDocumentFactory implements
 			final URL outputURL) throws SpreadsheetException {
 		try {
 			final InputStream inputStream = inputURL.openStream();
-			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
-					.getOutputStream(outputURL);
+			final OutputStream outputStream = Output.getOutputStream(outputURL);
 			return this.openForWrite(inputStream, outputStream);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);

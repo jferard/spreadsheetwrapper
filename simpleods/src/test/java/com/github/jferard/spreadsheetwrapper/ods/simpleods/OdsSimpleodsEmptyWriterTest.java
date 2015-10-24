@@ -18,7 +18,6 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
-import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -29,7 +28,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	/** set the test up */
@@ -90,7 +88,6 @@ public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 
 	@Override
 	protected TestProperties getProperties() {
-		return new TestProperties("ods", new OdsSimpleodsDocumentFactory(
-				Logger.getGlobal(), new StyleUtility()));
+		return OdsSimpleodsTestProperties.getProperties();
 	}
 }
