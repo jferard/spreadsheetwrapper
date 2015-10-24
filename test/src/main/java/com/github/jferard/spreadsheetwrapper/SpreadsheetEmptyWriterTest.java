@@ -65,8 +65,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 
 	@Test
 	public void testBoolean() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setBoolean(0, 0, true);
+		this.sw.setCellContent(0, 0, true);
 		Assert.assertEquals(true, this.sw.getBoolean(0, 0));
 
 		this.sw.setBoolean(0, 0, true);

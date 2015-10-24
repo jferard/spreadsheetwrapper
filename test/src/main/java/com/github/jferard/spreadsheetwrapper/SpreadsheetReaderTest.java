@@ -30,6 +30,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * The class SpreadsheetReaderTest tests reading an example file.
+ * Works for every wrapper. 
+ *
+ */
 public abstract class SpreadsheetReaderTest {
 	@Rule
 	public TestName name = new TestName();
