@@ -29,6 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -73,10 +74,10 @@ public class OdsOdfdomDocumentFactory extends
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<OdfSpreadsheetDocument> sfDocument,
-			final/*@Nullable*/OutputStream outputStream)
+			final Output output)
 			throws SpreadsheetException {
 		return new OdsOdfdomDocumentWriter(this.logger, this.styleUtility,
-				sfDocument.getObject(), outputStream);
+				sfDocument.getObject(), output);
 	}
 
 	@Override

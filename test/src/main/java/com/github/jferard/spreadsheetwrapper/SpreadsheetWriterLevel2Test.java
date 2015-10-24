@@ -55,7 +55,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 			this.sr = this.sw;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
-			Assert.fail();
+			Assert.fail(e.getMessage());
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Assert.fail();

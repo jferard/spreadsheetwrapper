@@ -38,7 +38,9 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 	private final Logger logger;
 
 	/** where to write */
-	protected/*@Nullable*/OutputStream outputStream;
+	protected Output output;
+
+	private Output bkpOutput;
 
 	/**
 	 * @param logger
@@ -47,23 +49,25 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 	 *            where to write
 	 */
 	public AbstractSpreadsheetDocumentWriter(final Logger logger,
-			final/*@Nullable*/OutputStream outputStream) {
+			final Output output) {
 		super();
 		this.logger = logger;
-		this.outputStream = outputStream;
+		this.output = output;
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public void saveAs(final File outputFile) throws SpreadsheetException {
+		this.bkpOutput = this.output;
 		try {
-			final OutputStream outputStream = new FileOutputStream(outputFile);
-			this.saveAs(outputStream);
-		} catch (final FileNotFoundException e) {
+			this.output = new Output(outputFile);
+			this.save();
+		} catch (final SpreadsheetException e) {
+			this.output = this.bkpOutput;
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
-			throw new SpreadsheetException(e);
+					outputFile), e);
+			throw e;
 		}
 	}
 
@@ -71,13 +75,12 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 	@Override
 	public void saveAs(final OutputStream outputStream)
 			throws SpreadsheetException {
-		final OutputStream bkpOutputStream = this.outputStream;
-
+		this.bkpOutput = this.output;
 		try {
-			this.outputStream = outputStream;
+			this.output = new Output(outputStream);
 			this.save();
 		} catch (final SpreadsheetException e) {
-			this.outputStream = bkpOutputStream;
+			this.output = this.bkpOutput;
 			throw e;
 		}
 	}
@@ -86,21 +89,15 @@ public abstract class AbstractSpreadsheetDocumentWriter implements
 	@Override
 	@Deprecated
 	public void saveAs(final URL outputURL) throws SpreadsheetException {
-		OutputStream outputStream;
+		this.bkpOutput = this.output;
 		try {
-			outputStream = AbstractSpreadsheetDocumentTrait
-					.getOutputStream(outputURL);
-			this.saveAs(outputStream);
-		} catch (final FileNotFoundException e) {
+			this.output = new Output(outputURL);
+			this.save();
+		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
-			throw new SpreadsheetException(e);
+					outputURL), e);
+			throw e;
 		}
 	}
 }

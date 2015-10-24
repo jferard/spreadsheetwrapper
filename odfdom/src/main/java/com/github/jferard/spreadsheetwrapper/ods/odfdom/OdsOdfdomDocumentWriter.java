@@ -36,6 +36,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -46,10 +47,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document) {
 			super(document);
 		}
@@ -89,9 +90,8 @@ implements SpreadsheetDocumentWriter {
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleUtility styleUtility,
 			final OdfSpreadsheetDocument document,
-			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
-		super(logger, outputStream);
+			final Output output) throws SpreadsheetException {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);
 		this.logger = logger;
@@ -184,15 +184,17 @@ implements SpreadsheetDocumentWriter {
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when output file is not specified"));
+		OutputStream outputStream = null;
 		try {
-			this.document.save(this.outputStream);
+			outputStream = this.output.getStream();
+			if (outputStream == null)
+					throw new IllegalStateException(
+							String.format("Use saveAs when output file/stream is not specified"));
+			this.document.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
+					outputStream), e);
 			throw new SpreadsheetException(e);
 		}
 	}

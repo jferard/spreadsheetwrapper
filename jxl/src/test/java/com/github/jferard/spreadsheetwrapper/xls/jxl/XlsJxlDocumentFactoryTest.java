@@ -25,13 +25,13 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
 	@Test
 	@Override
-	public void testLoad1() {
+	public void testCreateEmptyDocumentWithNoName() {
 		// does not work
 	}
 
 	@Test
 	@Override
-	public void testLoad3() {
+	public void testOpenStreamForWriteWithNoDest() {
 		// does not work
 	}
 

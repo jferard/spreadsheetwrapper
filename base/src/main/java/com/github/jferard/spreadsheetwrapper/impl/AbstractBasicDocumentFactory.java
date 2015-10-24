@@ -108,18 +108,6 @@ public abstract class AbstractBasicDocumentFactory implements
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
-			final File outputFile) throws SpreadsheetException {
-		try {
-			return this.openForWrite(new FileInputStream(inputFile),
-					new FileOutputStream(outputFile));
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SpreadsheetDocumentWriter openForWrite(final InputStream inputStream)
 			throws SpreadsheetException {
 		return this.openForWrite(inputStream, (OutputStream) null);
