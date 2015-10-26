@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -34,14 +35,14 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	private final Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
-	
+
 	/**
 	 * the style for cell dates, since Excel does not know the difference
 	 * between a date and a number
@@ -153,7 +154,11 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		final Cell cell = this.getOrCreatePOICell(r, c);
-		cell.setCellFormula(formula);
+		try {
+			cell.setCellFormula(formula);
+		} catch (final FormulaParseException e) {
+			throw new IllegalArgumentException(e);
+		}
 		return formula;
 	}
 
@@ -186,7 +191,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		cell.setCellValue(text);
 		return text;
 	}
-	
+
 	/**
 	 * Simple optimization hidden inside a method.
 	 *
@@ -199,7 +204,7 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	protected Cell getOrCreatePOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		
+
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.sheet.getRow(r);
 			if (this.curRow == null)
@@ -211,6 +216,5 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 			cell = this.curRow.createCell(c);
 		return cell;
 	}
-	
 
 }

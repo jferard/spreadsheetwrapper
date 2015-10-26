@@ -17,14 +17,31 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.net.URL;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TestName;
 
 @SuppressWarnings("unused")
 public abstract class SpreadsheetDocumentFactoryTest {
+	@Rule
+	public TestName name = new TestName();
+
+	private File destFile;
+
+	private File sourceFile;
+
+	private URL sourceURL;
 
 	protected SpreadsheetDocumentFactory factory;
 
@@ -35,49 +52,139 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	}
 
 	@Before
-	public void setUp() {
+	public void setUp() throws URISyntaxException {
 		this.factory = this.getProperties().getFactory();
 		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s", this
+				.getProperties().getExtension());
+		this.sourceURL = this.getClass().getResource(this.urlString);
+		this.sourceFile = new File(this.sourceURL.toURI());
+		this.destFile = SpreadsheetTest.getOutputFile(this.getClass()
+				.getSimpleName(), this.name.getMethodName(), this
 				.getProperties().getExtension());
 	}
 
 	@Test
-	public void testLoad1() {
+	public void testCreateEmptyDocumentWithDestinationFile() {
 		try {
-			final SpreadsheetDocumentReader sdr = this.factory.create();
+			final SpreadsheetDocumentWriter sdw = this.factory
+					.create(this.destFile);
+			sdw.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 
 	@Test
-	public final void testLoad2() {
+	public void testCreateEmptyDocumentWithNoDestination() {
+		try {
+			final SpreadsheetDocumentWriter sdw = this.factory.create();
+			sdw.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public final void testOpenFileForRead() {
 		try {
 			final SpreadsheetDocumentReader sdr = this.factory
-					.openForRead(SpreadsheetDocumentFactoryTest.class
-							.getResource(this.urlString).openStream());
+					.openForRead(this.sourceFile);
+			sdr.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testOpenFileForWriteWithDest() {
+		try {
+			final SpreadsheetDocumentReader sdr = this.factory.openForWrite(
+					this.sourceFile, this.destFile);
+			sdr.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testOpenFileForWriteWithNoDest() {
+		try {
+			final SpreadsheetDocumentWriter sdw = this.factory
+					.openForWrite(this.sourceFile);
+			sdw.save();
+			sdw.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public final void testOpenStreamForRead() {
+		try {
+			final InputStream sourceStream = this.sourceURL.openStream();
+			final SpreadsheetDocumentReader sdr = this.factory
+					.openForRead(sourceStream);
+			sdr.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 
 	@Test
-	public void testLoad3() {
+	public void testOpenStreamForWriteWithDest() {
 		try {
-			final SpreadsheetDocumentReader sdr = this.factory
-					.openForWrite(this.getClass().getResource(this.urlString)
-							.openStream());
+			final InputStream sourceStream = this.sourceURL.openStream();
+			final OutputStream destStream = new FileOutputStream(this.destFile);
+			final SpreadsheetDocumentWriter sdw = this.factory.openForWrite(
+					sourceStream, destStream);
+			sdw.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		} catch (final IOException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testOpenStreamForWriteWithNoDest() {
+		try {
+			final InputStream sourceStream = this.sourceURL.openStream();
+			final SpreadsheetDocumentReader sdr = this.factory
+					.openForWrite(sourceStream);
+			sdr.close();
+		} catch (final SpreadsheetException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final IOException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
 	}
 

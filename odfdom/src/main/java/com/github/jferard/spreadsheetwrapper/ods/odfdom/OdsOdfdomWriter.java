@@ -34,15 +34,15 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
-	private final OdfTable table;
-
+		SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 
 	/** current row, null if none */
 	private/*@Nullable*/OdfTableRow curRow;
-	
+
+	private final OdfTable table;
+
 	/**
 	 * @param table
 	 *            the *internal* sheet
@@ -157,7 +157,7 @@ SpreadsheetWriter {
 		cell.setStringValue(text);
 		return text;
 	}
-	
+
 	/**
 	 * Simple optimization hidden inside a method.
 	 *

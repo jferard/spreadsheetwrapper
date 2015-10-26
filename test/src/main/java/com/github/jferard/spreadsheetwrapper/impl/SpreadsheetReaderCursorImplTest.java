@@ -29,7 +29,8 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public abstract class SpreadsheetReaderCursorImplTest extends CursorAbstractTest {
+public abstract class SpreadsheetReaderCursorImplTest extends
+		CursorAbstractTest {
 
 	private SpreadsheetDocumentFactory factory;
 
@@ -42,7 +43,8 @@ public abstract class SpreadsheetReaderCursorImplTest extends CursorAbstractTest
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension())).openStream();
+									this.getProperties().getExtension()))
+					.openStream();
 			final SpreadsheetDocumentReader sdr = this.factory
 					.openForRead(inputStream);
 			final SpreadsheetReader sheet = sdr.getSpreadsheet(0);

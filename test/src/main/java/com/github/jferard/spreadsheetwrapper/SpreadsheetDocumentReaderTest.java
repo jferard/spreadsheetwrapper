@@ -42,7 +42,7 @@ public abstract class SpreadsheetDocumentReaderTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-					.openStream();
+									.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
 		} catch (final SpreadsheetException e) {
@@ -79,6 +79,19 @@ public abstract class SpreadsheetDocumentReaderTest {
 	}
 
 	@Test
+	public final void testSheetByIndexAndName() {
+		try {
+			final SpreadsheetReader sr1 = this.sdr.getSpreadsheet("Feuille1");
+			final SpreadsheetReader sr2 = this.sdr.getSpreadsheet(0); // use
+			// Accessor
+			Assert.assertEquals(sr1, sr2);
+		} catch (final NoSuchElementException e) {
+			e.printStackTrace();
+			Assert.fail();
+		}
+	}
+
+	@Test
 	public final void testSheetByName() {
 		try {
 			final SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
@@ -91,18 +104,10 @@ public abstract class SpreadsheetDocumentReaderTest {
 		}
 	}
 
-	@Test
-	public final void testSheetByIndexAndName() {
-		try {
-			SpreadsheetReader sr1 = this.sdr.getSpreadsheet("Feuille1");
-			SpreadsheetReader sr2 = this.sdr.getSpreadsheet(0); // use Accessor
-			Assert.assertEquals(sr1, sr2);
-		} catch (final NoSuchElementException e) {
-			e.printStackTrace();
-			Assert.fail();
-		}
+	@Test(expected = NoSuchElementException.class)
+	public final void testSheetDoesntExist() throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet("test");
 	}
-
 
 	@Test
 	public final void testSheetGetCursors() {
@@ -115,15 +120,21 @@ public abstract class SpreadsheetDocumentReaderTest {
 		}
 	}
 
-	@Test(expected = NoSuchElementException.class)
-	public final void testSheetDoesntExist() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("test");
-	}
-
 	@Test
 	public final void testSheetNames() {
 		final List<String> names = this.sdr.getSheetNames();
 		Assert.assertEquals(Arrays.asList("Feuille1"), names);
+	}
+
+	@Test(expected = IndexOutOfBoundsException.class)
+	public final void testSheetOutOfBoundsMinusOne()
+			throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
+	}
+
+	@Test(expected = IndexOutOfBoundsException.class)
+	public final void testSheetOutOfBoundsOne() throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
 	}
 
 	@Test
@@ -132,15 +143,5 @@ public abstract class SpreadsheetDocumentReaderTest {
 		sr = this.sdr.getSpreadsheet("Feuille1");
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetOutOfBoundsOne() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetOutOfBoundsMinusOne() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
-	}
-	
 	protected abstract TestProperties getProperties();
 }

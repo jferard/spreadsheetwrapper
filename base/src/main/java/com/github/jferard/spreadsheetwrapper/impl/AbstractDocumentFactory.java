@@ -17,8 +17,13 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -52,7 +57,8 @@ public abstract class AbstractDocumentFactory<R> extends
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
-		return this.createWriter(Stateful.createNew(document), outputStream);
+		return this.createWriter(Stateful.createNew(document), new Output(
+				outputStream));
 	}
 
 	/** {@inheritDoc} */
@@ -65,13 +71,47 @@ public abstract class AbstractDocumentFactory<R> extends
 
 	/** {@inheritDoc} */
 	@Override
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
+			final/*@Nullable*/File outputFile) throws SpreadsheetException {
+		InputStream inputStream;
+		try {
+			inputStream = new FileInputStream(inputFile);
+			final R document = this.loadSpreadsheetDocument(inputStream);
+			return this.createWriter(Stateful.createInitialized(document),
+					new Output(outputFile));
+		} catch (final FileNotFoundException e) {
+			throw new SpreadsheetException(e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
 		return this.createWriter(Stateful.createInitialized(document),
-				outputStream);
+				new Output(outputStream));
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @throws IOException
+	 * @throws SpreadsheetException
+	 */
+	@Override
+	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
+			final/*@Nullable*/URL outputURL) throws SpreadsheetException {
+		try {
+			final R document = this.loadSpreadsheetDocument(inputURL
+					.openStream());
+			return this.createWriter(Stateful.createInitialized(document),
+					new Output(outputURL));
+		} catch (final IOException e) {
+			throw new SpreadsheetException(e);
+		}
 	}
 
 	/**
@@ -94,9 +134,7 @@ public abstract class AbstractDocumentFactory<R> extends
 	 * @throws SpreadsheetException
 	 */
 	protected abstract SpreadsheetDocumentWriter createWriter(
-			Stateful<R> stateful,
-			/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException;
+			Stateful<R> stateful, Output output) throws SpreadsheetException;
 
 	/**
 	 * @param inputStream

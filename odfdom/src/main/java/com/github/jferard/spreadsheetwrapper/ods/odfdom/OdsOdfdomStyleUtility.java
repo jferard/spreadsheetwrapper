@@ -63,7 +63,7 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		WrapperFont wrapperFont = null;
 		if ("bold".equals(fontWeight))
 			wrapperFont = new WrapperFont(true, false, -1, null);
-		final WrapperColor wrapperColor = this.colorByHex.get	(backgroundColor);
+		final WrapperColor wrapperColor = this.colorByHex.get(backgroundColor);
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 

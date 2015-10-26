@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
 
@@ -77,6 +77,36 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
+	/**
+	 * Cleans the table : remove everything that odftoolkit adds, but let
+	 * <table:table>
+	 * <table:table-column number-columns-repeated="1" />
+	 * </table:table>
+	 *
+	 * @param tableElement
+	 *            the odf element
+	 */
+	private void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		while (colsList.getLength() > 1) {
+			final Node item = colsList.item(1);
+			tableElement.removeChild(item);
+		}
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 0) {
+			final Node item = rowList.item(0);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		assert rowListAfter.getLength() == 0;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	protected T addSheetWithCheckedIndex(final int index, final String sheetName) {
@@ -98,33 +128,6 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 		// the table is added at the end
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
-	}
-
-	/**
-	 * Cleans the table : remove everything that odftoolkit adds, but let
-	 * <table:table>
-	 * 	<table:table-column number-columns-repeated="1" />
-	 * </table:table>
-	 * @param tableElement the odf element
-	 */
-	private void cleanEmptyTable(final TableTableElement tableElement) {
-		final NodeList colsList = tableElement
-				.getElementsByTagName("table:table-column");
-		TableTableColumnElement column = (TableTableColumnElement) colsList.item(0);
-		while (colsList.getLength() > 1) {
-			final Node item = colsList.item(1);
-			tableElement.removeChild(item);
-		}
-		column.setTableNumberColumnsRepeatedAttribute(1);
-		final NodeList rowList = tableElement
-				.getElementsByTagName("table:table-row");
-		while (rowList.getLength() > 0) {
-			final Node item = rowList.item(0);
-			tableElement.removeChild(item);
-		}
-		final NodeList rowListAfter = tableElement
-				.getElementsByTagName("table:table-row");
-		assert rowListAfter.getLength() == 0;
 	}
 
 	/**

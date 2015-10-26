@@ -22,6 +22,7 @@ import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -64,96 +65,6 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public void testBoolean() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setBoolean(0, 0, true);
-		Assert.assertEquals(true, this.sw.getBoolean(0, 0));
-
-		this.sw.setBoolean(0, 0, true);
-		Assert.assertEquals(true, this.sw.getCellContent(0, 0));
-	}
-
-	@Test
-	public void testRowCountZero() {
-		Assert.assertEquals(0, this.sw.getRowCount());
-	}
-
-	@Test
-	public void testGetIsNotCreate1() {
-		this.sw.getCellContent(15, 5);
-		Assert.assertEquals(0, this.sw.getRowCount());
-	}
-
-	@Test
-	public void testGetIsNotCreate2() {
-		this.sw.getCellContent(15, 5);
-		this.sw.setText(1, 3, "a");
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testGetIsNotCreate3() {
-		this.sw.setText(1, 3, "a");
-		this.sw.getCellContent(15, 5);
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testRowCount2() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setInteger(0, 0, 1);
-		Assert.assertEquals(1, this.sw.getRowCount());
-		Assert.assertEquals(1, this.sw.getCellCount(0));
-	}
-
-	@Test
-	public void testRowCount3() {
-		// this.sw.setCellContents(0, 0, true);
-		this.sw.setInteger(1, 3, 1);
-		Assert.assertEquals(2, this.sw.getRowCount());
-		Assert.assertEquals(4, this.sw.getCellCount(1));
-	}
-	
-	@Test
-	public void testCounts() {
-		this.sw.setText(10, 10, "10:10");
-		Assert.assertEquals(11, this.sw.getRowCount());
-		Assert.assertEquals(0, this.sw.getCellCount(1));
-		Assert.assertEquals(0, this.sw.getCellCount(9));
-		Assert.assertEquals(11, this.sw.getCellCount(10));
-	}
-
-	@Test(expected=IllegalArgumentException.class)
-	public void testCounts2() {
-		this.sw.setText(10, 10, "10:10");
-		Assert.assertEquals(0, this.sw.getCellCount(11));
-	}
-	
-	@Test
-	public void testDateDay() {
-		final Date d = new Date(52 * 86400000L);
-		final Date d2 = this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d2, this.sw.getDate(2, 2));
-
-		final Object o2 = this.sw.setCellContent(2, 2, d);
-		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
-		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
-	}
-
-	@Test
-	public void testDateSecond() {
-		final Date d = new Date(5234597000L);
-		final Date d2 = this.sw.setDate(2, 2, d);
-		Assert.assertEquals(d2, this.sw.getDate(2, 2));
-
-		final Object o2 = this.sw.setCellContent(2, 2, d);
-		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
-		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
-	}
-
-	@Test
 	public void testDouble() {
 		this.sw.setDouble(2, 2, 100.7);
 		Assert.assertEquals(Double.valueOf(100.7), this.sw.getDouble(2, 2));
@@ -163,31 +74,104 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public void testFormula() {
-		this.sw.setFormula(1, 1, "A1");
-		Assert.assertEquals("A1", this.sw.getFormula(1, 1));
-
-		this.sw.setFormula(1, 1, "A1");
-		Assert.assertEquals("A1", this.sw.getCellContent(1, 1));
-	}
-
-	@Test
-	public void testFormula2() {
-		this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-		Assert.assertEquals("afdferg'|[{*dfgdrsg]", this.sw.getFormula(1, 1));
-
-		this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-		Assert.assertEquals("afdferg'|[{*dfgdrsg]",
-				this.sw.getCellContent(1, 1));
-	}
-
-	@Test
 	public void testInteger() {
 		this.sw.setInteger(1, 1, 10);
 		Assert.assertEquals(Integer.valueOf(10), this.sw.getInteger(1, 1));
 
 		this.sw.setInteger(1, 1, 10);
 		Assert.assertEquals(Integer.valueOf(10), this.sw.getCellContent(1, 1));
+	}
+
+	@Test
+	public void testSetBadFormula() {
+		try {
+			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
+			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
+					this.sw.getFormula(1, 1));
+
+			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
+			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
+					this.sw.getCellContent(1, 1));
+		} catch (final IllegalArgumentException e) {
+			Assume.assumeNoException(e);
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testSetBoolean() {
+		try {
+			this.sw.setCellContent(0, 0, true);
+			Assert.assertEquals(true, this.sw.getBoolean(0, 0));
+
+			this.sw.setBoolean(0, 0, true);
+			Assert.assertEquals(true, this.sw.getCellContent(0, 0));
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testSetDate() {
+		final Date dd = new Date(52 * 86400000L);
+		final Date ds = new Date(52 * 86400000L + 12345000L);
+		final Date dm = new Date(52 * 86400000L + 12345789L);
+
+		final Date d2 = this.sw.setDate(2, 2, dm);
+		Assert.assertTrue(d2.equals(dm) || d2.equals(ds) || d2.equals(dd));
+		Assert.assertEquals(d2, this.sw.getDate(2, 2));
+		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
+
+		final Object o2 = this.sw.setCellContent(2, 2, dm);
+		Assert.assertTrue(o2.equals(dm) || o2.equals(ds) || o2.equals(dd));
+		Assert.assertEquals(o2, this.sw.getDate(2, 2));
+		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
+	}
+
+	@Test
+	public void testSetFormula() {
+		try {
+			this.sw.setFormula(1, 1, "A1");
+			Assert.assertEquals("A1", this.sw.getFormula(1, 1));
+
+			this.sw.setFormula(1, 1, "A1");
+			Assert.assertEquals("A1", this.sw.getCellContent(1, 1));
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testSetTextOnCol0To1000() {
+		int i = 0;
+		try {
+			for (i = 0; i < 1000; i += 100) {
+				this.sw.setText(1, i, "10");
+				Assert.assertEquals("10", this.sw.getText(1, i));
+			}
+		} catch (final IllegalArgumentException e) {
+			if (i >= 255)
+				Assume.assumeNoException(e);
+			else
+				throw e;
+		}
+	}
+
+	@Test
+	public void testSetTextOnRow0To100000() {
+		int j = 0;
+		try {
+			for (j = 0; j < 100000; j += 20000) {
+				this.sw.setText(j, 1, "10");
+				Assert.assertEquals("10", this.sw.getText(j, 1));
+			}
+		} catch (final IllegalArgumentException e) {
+			if (j >= 65535)
+				Assume.assumeNoException(e);
+			else
+				throw e;
+		}
 	}
 
 	@Test
@@ -237,22 +221,6 @@ public abstract class SpreadsheetEmptyWriterTest {
 
 		this.sw.setText(1, 1, "10");
 		Assert.assertEquals("10", this.sw.getCellContent(1, 1));
-	}
-
-	@Test
-	public void testText1000col() {
-		for (int i = 0; i < 1000; i += 100) {
-			this.sw.setText(1, i, "10");
-			Assert.assertEquals("10", this.sw.getText(1, i));
-		}
-	}
-
-	@Test
-	public void testText1000row() {
-		for (int i = 0; i < 1000; i += 100) {
-			this.sw.setText(i, 1, "10");
-			Assert.assertEquals("10", this.sw.getText(i, 1));
-		}
 	}
 
 	@Test

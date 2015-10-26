@@ -30,6 +30,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * The class SpreadsheetReaderTest tests reading an example file. Works for
+ * every wrapper.
+ *
+ */
 public abstract class SpreadsheetReaderTest {
 	@Rule
 	public TestName name = new TestName();
@@ -70,7 +75,7 @@ public abstract class SpreadsheetReaderTest {
 	}
 
 	@Test
-	public final void testCellContent() {
+	public final void testCellA1Content() {
 		try {
 			Assert.assertEquals("OBJECTID,N,10,0", this.sr.getCellContent(0, 0));
 		} catch (final IllegalArgumentException e) {
@@ -80,73 +85,7 @@ public abstract class SpreadsheetReaderTest {
 	}
 
 	@Test
-	public final void testCellContent2() {
-		try {
-			Assert.assertEquals(170, this.sr.getCellContent(1, 0));
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDate() {
-		this.sr.getDate(0, 0);
-		Assert.fail();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDate2() {
-		this.sr.getDate(1, 0);
-		Assert.fail();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDouble() {
-		this.sr.getDouble(0, 0);
-		Assert.fail();
-	}
-
-	@Test
-	public final void testCellDouble2() {
-		try {
-			Assert.assertEquals(Double.valueOf(170), this.sr.getDouble(1, 0));
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellFormula() {
-		Assert.assertEquals(null, this.sr.getFormula(0, 0));
-		Assert.fail();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellFormula2() {
-		Assert.assertEquals(null, this.sr.getFormula(1, 0));
-		Assert.fail();
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellInteger() {
-		this.sr.getInteger(0, 0);
-		Assert.fail();
-	}
-
-	@Test
-	public final void testCellInteger2() {
-		try {
-			Assert.assertEquals((Integer) 170, this.sr.getInteger(1, 0));
-		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
-			Assert.fail(e.getMessage());
-		}
-	}
-
-	@Test
-	public final void testCellText() {
+	public final void testCellA1IsAText() {
 		try {
 			Assert.assertEquals("OBJECTID,N,10,0", this.sr.getText(0, 0));
 		} catch (final IllegalArgumentException e) {
@@ -156,26 +95,92 @@ public abstract class SpreadsheetReaderTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testCellText2() {
-		Assert.assertEquals("170", this.sr.getText(1, 0));
+	public final void testCellA1IsNotABoolean() {
+		this.sr.getBoolean(0, 0);
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA1IsNotADate() {
+		this.sr.getDate(0, 0);
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA1IsNotADouble() {
+		this.sr.getDouble(0, 0);
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA1IsNotAFormula() {
+		Assert.assertEquals(null, this.sr.getFormula(0, 0));
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA1IsNotAnInteger() {
+		this.sr.getInteger(0, 0);
 		Assert.fail();
 	}
 
 	@Test
-	public final void testGet() {
+	public final void testCellA2AsADouble() {
 		try {
-			Assert.assertEquals("OBJECTID,N,10,0", this.sr.getCellContent(0, 0));
-			final List<Object> list = Arrays.<Object> asList(
-					Integer.valueOf(170),
-					"Monuments historiques classés ou inscrits",
-					"Immeuble dit « Hôtel Lefèvre »",
-					"inscrit Inv. MH 19 11 1985", "En totalité",
-					Double.valueOf(333.810638315),
-					Double.valueOf(93.4774612976));
-			final List<Object> rowContents = this.sr.getRowContents(1);
-			for (int i = 0; i < list.size(); i++)
-				Assert.assertEquals(list.get(i), rowContents.get(i));
-			Assert.assertEquals(list, rowContents);
+			Assert.assertEquals(Double.valueOf(170), this.sr.getDouble(1, 0));
+		} catch (final IllegalArgumentException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public final void testCellA2AsAnInteger() {
+		try {
+			Assert.assertEquals((Integer) 170, this.sr.getInteger(1, 0));
+		} catch (final IllegalArgumentException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test
+	public final void testCellA2Content() {
+		try {
+			Assert.assertEquals(170, this.sr.getCellContent(1, 0));
+		} catch (final IllegalArgumentException e) {
+			e.printStackTrace();
+			Assert.fail(e.getMessage());
+		}
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA2IsNotAFormula() {
+		Assert.assertEquals(null, this.sr.getFormula(1, 0));
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellA2IsNotAText() {
+		Assert.assertEquals("170", this.sr.getText(1, 0));
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellDateA2IsNotABoolean() {
+		this.sr.getBoolean(1, 0);
+		Assert.fail();
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellDateA2IsNotADate() {
+		this.sr.getDate(1, 0);
+		Assert.fail();
+	}
+
+	@Test
+	public final void testGetColC() {
+		try {
 			Assert.assertEquals(
 					Arrays.asList(
 							"ETIQUETTE,C,254",
@@ -290,7 +295,26 @@ public abstract class SpreadsheetReaderTest {
 	}
 
 	@Test
-	public final void testSheet() {
+	public final void testGetRow2() {
+		try {
+			final List<Object> list = Arrays.<Object> asList(
+					Integer.valueOf(170),
+					"Monuments historiques classés ou inscrits",
+					"Immeuble dit « Hôtel Lefèvre »",
+					"inscrit Inv. MH 19 11 1985", "En totalité",
+					Double.valueOf(333.810638315),
+					Double.valueOf(93.4774612976));
+			final List<Object> rowContents = this.sr.getRowContents(1);
+			for (int i = 0; i < list.size(); i++)
+				Assert.assertEquals(list.get(i), rowContents.get(i));
+			Assert.assertEquals(list, rowContents);
+		} catch (final IllegalArgumentException e) {
+			Assert.fail();
+		}
+	}
+
+	@Test
+	public final void testSheetNameAndDimensions() {
 		Assert.assertEquals("Feuille1", this.sr.getName());
 		Assert.assertEquals(117, this.sr.getRowCount());
 		Assert.assertEquals(7, this.sr.getCellCount(0));

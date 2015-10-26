@@ -17,9 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.simpleods.OdsFile;
@@ -35,6 +37,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
@@ -44,10 +47,10 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
 		}
@@ -84,8 +87,8 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	 */
 	public OdsSimpleodsDocumentWriter(final Logger logger,
 			final StyleUtility styleUtility, final OdsFile file,
-			final OutputStream outputStream) {
-		super(logger, outputStream);
+			final Output output) {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsSimpleodsDocumentReader(file);
 		this.logger = logger;
@@ -120,6 +123,11 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -198,14 +206,13 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new SpreadsheetException(
-					"this.spreadsheetDocument.save() not ok : use saveAs");
-
-		if (!this.file.save(this.outputStream))
+		final OutputStream outputStream = this.output.getStream();
+		if (outputStream == null)
+			throw new IllegalStateException(
+					String.format("Use saveAs when output file/stream is not specified"));
+		if (!this.file.save(outputStream))
 			throw new SpreadsheetException(String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream));
+					"this.spreadsheetDocument.save(%s) not ok", outputStream));
 	}
 
 	/** {@inheritDoc} */

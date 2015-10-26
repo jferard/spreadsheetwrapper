@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -99,7 +99,7 @@ SpreadsheetReader {
 	public int getCellCount(final int r) {
 		final int count;
 		final TableRow row = (TableRow) this.table.getRows().get(r);
-		if (row == null) 
+		if (row == null)
 			count = 0;
 		else {
 			final ObjectQueue cells = row.getCells();
@@ -185,13 +185,13 @@ SpreadsheetReader {
 			final ObjectQueue rowsQueue = this.table.getRows();
 			this.curRow = (TableRow) rowsQueue.get(r);
 			assert this.curRow != null;
-// else				final TableRow row = new TableRow();
-//				if (rowsQueue.setAt(r, row))
-//					this.curRow = row;
-//				else {
-//					this.curR = -1;
-//					throw new IllegalArgumentException();
-//				}
+			// else final TableRow row = new TableRow();
+			// if (rowsQueue.setAt(r, row))
+			// this.curRow = row;
+			// else {
+			// this.curR = -1;
+			// throw new IllegalArgumentException();
+			// }
 			this.curR = r;
 		}
 		return this.curRow.getCell(c);

@@ -50,7 +50,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 	private final Map<String, WritableCellFormat> cellStyleByName;
@@ -226,7 +226,8 @@ implements SpreadsheetDocumentWriter {
 			final WrapperColor backgroundColor = wrapperCellStyle
 					.getBackgroundColor();
 			if (backgroundColor != null) {
-				Colour jxlColor = this.styleUtility.getJxlColor(backgroundColor);
+				final Colour jxlColor = this.styleUtility
+						.getJxlColor(backgroundColor);
 				cellFormat.setBackground(jxlColor);
 			}
 			this.cellStyleByName.put(styleName, cellFormat);

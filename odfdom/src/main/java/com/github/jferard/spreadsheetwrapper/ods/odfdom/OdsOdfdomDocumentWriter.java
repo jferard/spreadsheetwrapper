@@ -18,6 +18,7 @@
 
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.logging.Level;
@@ -25,14 +26,9 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
-import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
-import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -41,6 +37,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -93,10 +90,9 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 */
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleUtility styleUtility,
-			final OdfSpreadsheetDocument document,
-			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
-		super(logger, outputStream);
+			final OdfSpreadsheetDocument document, final Output output)
+					throws SpreadsheetException {
+		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);
 		this.logger = logger;
@@ -123,6 +119,11 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
+		try {
+			this.output.close();
+		} catch (final IOException e) {
+			this.logger.log(Level.SEVERE, e.getMessage(), e);
+		}
 		this.reader.close();
 	}
 
@@ -189,15 +190,17 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
-		if (this.outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when output file is not specified"));
+		OutputStream outputStream = null;
 		try {
-			this.document.save(this.outputStream);
+			outputStream = this.output.getStream();
+			if (outputStream == null)
+				throw new IllegalStateException(
+						String.format("Use saveAs when output file/stream is not specified"));
+			this.document.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok",
-					this.outputStream), e);
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
 			throw new SpreadsheetException(e);
 		}
 	}

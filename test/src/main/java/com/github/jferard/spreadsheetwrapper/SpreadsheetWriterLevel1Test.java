@@ -49,8 +49,8 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 			if (resourceURL == null) {
 				Assert.fail();
 				return;
-			}			
-				
+			}
+
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
@@ -81,6 +81,13 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 		}
 	}
 
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellDateToInteger() {
+		this.sw.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
+		Assert.assertEquals((Integer) 0, this.sw.getInteger(0, 1));
+		Assert.fail();
+	}
+
 	@Test
 	public final void testCellDateZero() {
 		try {
@@ -93,13 +100,6 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
 		}
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDateToInteger() {
-		this.sw.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
-		Assert.assertEquals((Integer) 0, this.sw.getInteger(0, 1));
-		Assert.fail();
 	}
 
 	@Test
@@ -120,7 +120,8 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 		final int r = 5;
 		final int c = 6;
 		try {
-			final Date d = this.sw.setDate(r, c, new Date(12345)); // setDate : 0
+			final Date d = this.sw.setDate(r, c, new Date(12345)); // setDate :
+			// 0
 			// UTC = 1 CET
 			Assert.assertEquals(d, new Date(12345));
 			Assert.assertEquals(new Date(12345), this.sw.getDate(r, c));

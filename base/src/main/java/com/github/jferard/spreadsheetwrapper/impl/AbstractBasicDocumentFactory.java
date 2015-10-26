@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractBasicDocumentFactory implements
-SpreadsheetDocumentFactory {
+		SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
@@ -67,8 +67,7 @@ SpreadsheetDocumentFactory {
 			return this.create();
 
 		try {
-			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
-					.getOutputStream(outputURL);
+			final OutputStream outputStream = Output.getOutputStream(outputURL);
 			return this.create(outputStream);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
@@ -108,18 +107,6 @@ SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
-			final File outputFile) throws SpreadsheetException {
-		try {
-			return this.openForWrite(new FileInputStream(inputFile),
-					new FileOutputStream(outputFile));
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SpreadsheetDocumentWriter openForWrite(final InputStream inputStream)
 			throws SpreadsheetException {
 		return this.openForWrite(inputStream, (OutputStream) null);
@@ -140,8 +127,7 @@ SpreadsheetDocumentFactory {
 			final URL outputURL) throws SpreadsheetException {
 		try {
 			final InputStream inputStream = inputURL.openStream();
-			final OutputStream outputStream = AbstractSpreadsheetDocumentTrait
-					.getOutputStream(outputURL);
+			final OutputStream outputStream = Output.getOutputStream(outputURL);
 			return this.openForWrite(inputStream, outputStream);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);

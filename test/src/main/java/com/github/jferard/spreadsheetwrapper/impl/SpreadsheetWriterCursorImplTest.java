@@ -29,16 +29,19 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public abstract class SpreadsheetWriterCursorImplTest extends CursorAbstractTest {
+public abstract class SpreadsheetWriterCursorImplTest extends
+		CursorAbstractTest {
 	@Before
 	public void setUp() {
-		final SpreadsheetDocumentFactory factory = this.getProperties().getFactory();
+		final SpreadsheetDocumentFactory factory = this.getProperties()
+				.getFactory();
 		try {
 			final InputStream inputStream = this
 					.getClass()
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension())).openStream();
+									this.getProperties().getExtension()))
+					.openStream();
 			final SpreadsheetDocumentWriter sdw = factory
 					.openForWrite(inputStream);
 			final SpreadsheetWriter sheet = sdw.getSpreadsheet(0);

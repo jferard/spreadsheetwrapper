@@ -31,7 +31,7 @@ import org.junit.rules.TestName;
 
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetDocumentWriterTest extends
-		SpreadsheetDocumentReaderTest {
+SpreadsheetDocumentReaderTest {
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentWriter sdw;
@@ -49,7 +49,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-					.openStream();
+									.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
 			Assert.assertEquals(1, this.sdw.getSheetCount());
@@ -81,13 +81,13 @@ public abstract class SpreadsheetDocumentWriterTest extends
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testAdd2() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet(10, "ok");
 	}
 
 	@Test
 	public void testAddAt0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet(0, "ok");
 	}
 

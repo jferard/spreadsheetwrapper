@@ -50,7 +50,7 @@ public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> 
 
 	/**
 	 * Raw means that we use the object directly
-	 * 
+	 *
 	 * @param sheetIndex
 	 *            the index of the sheet
 	 * @return the sheet in the document

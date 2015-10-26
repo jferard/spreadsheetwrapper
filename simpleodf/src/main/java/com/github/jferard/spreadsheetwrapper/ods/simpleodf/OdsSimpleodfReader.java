@@ -18,20 +18,11 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
 import java.util.Date;
-import java.util.List;
 
-import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
-import org.odftoolkit.odfdom.dom.element.table.TableTableCellElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
-import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
-import org.odftoolkit.odfdom.pkg.OdfFileDom;
-import org.odftoolkit.odfdom.pkg.OdfName;
-import org.odftoolkit.odfdom.pkg.OdfXMLFactory;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
@@ -41,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  * the sheet reader for SimpleODS.
  */
 class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -132,7 +123,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 		// return row.getCellCount();
 
 		for (int i = this.table.getColumnCount() - 1; i >= 0; i--) {
-			Cell cell = row.getCellByIndex(i);
+			final Cell cell = row.getCellByIndex(i);
 			if (cell.getOdfElement().getChildNodes().getLength() != 0)
 				return i + 1;
 		}
@@ -206,13 +197,13 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))
 			return null;
-		
+
 		if (r != this.curR || this.curRow == null) {
 			final int lastIndex = this.table.getRowCount() - 1;
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
-		Cell cell = this.curRow.getCellByIndex(c);
+		final Cell cell = this.curRow.getCellByIndex(c);
 		cell.getStyleHandler().getStyleElementForWrite();
 		return cell;
 	}

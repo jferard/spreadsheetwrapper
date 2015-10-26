@@ -17,24 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
-import org.junit.Test;
-
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
-	@Test
-	@Override
-	public void testLoad1() {
-		// does not work
-	}
-
-	@Test
-	@Override
-	public void testLoad3() {
-		// does not work
-	}
-
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

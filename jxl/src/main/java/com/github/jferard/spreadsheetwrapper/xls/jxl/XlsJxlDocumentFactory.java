@@ -17,6 +17,7 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,15 +40,16 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
-	/** simple logger */
-	private final Logger logger;
-	private final XlsJxlStyleUtility styleUtility;
-
-	public static SpreadsheetDocumentFactory create(Logger logger) {
+		implements SpreadsheetDocumentFactory {
+	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleUtility());
 	}
-	
+
+	/** simple logger */
+	private final Logger logger;
+
+	private final XlsJxlStyleUtility styleUtility;
+
 	/**
 	 * @param logger
 	 *            simple logger
@@ -68,7 +70,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -102,12 +104,39 @@ implements SpreadsheetDocumentFactory {
 		}
 	}
 
+	@Override
+	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
+			final File outputFile) throws SpreadsheetException {
+		if (outputFile == null)
+			throw new SpreadsheetException("Specify an output file");
+
+		try {
+			final Workbook workbook = Workbook.getWorkbook(inputFile,
+					this.getReadSettings());
+			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
+					outputFile, workbook, this.getWriteSettings());
+			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+					writableWorkbook);
+		} catch (final FileNotFoundException e) {
+			throw new SpreadsheetException(e);
+		} catch (final IOException e) {
+			throw new SpreadsheetException(e);
+		} catch (final BiffException e) {
+			throw new SpreadsheetException(e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SpreadsheetDocumentWriter openForWrite(final InputStream inputStream) {
+		throw new UnsupportedOperationException();
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream,
-			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			final InputStream inputStream, final OutputStream outputStream)
+			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 

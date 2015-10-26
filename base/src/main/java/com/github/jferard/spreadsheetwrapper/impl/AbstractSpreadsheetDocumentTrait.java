@@ -17,40 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownServiceException;
 import java.util.NoSuchElementException;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 
 public abstract class AbstractSpreadsheetDocumentTrait<T> {
-
-	/**
-	 * @param outputURL
-	 *            the URL to open for write
-	 * @return the output stream on this URL
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	public static OutputStream getOutputStream(final URL outputURL)
-			throws IOException, FileNotFoundException {
-		OutputStream outputStream;
-
-		final URLConnection connection = outputURL.openConnection();
-		connection.setDoOutput(true);
-		try {
-			outputStream = connection.getOutputStream(); // NOPMD by Julien on
-			// 30/08/15 12:54
-		} catch (final UnknownServiceException e) {
-			outputStream = new FileOutputStream(outputURL.getPath());
-		}
-		return outputStream;
-	}
 
 	/**
 	 * An accessor on readers/writers, by name and index.
@@ -113,7 +84,7 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 			spreadsheet = this.accessor.getByName(sheetName);
 		else
 			spreadsheet = this
-			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+					.findSpreadsheetAndCreateReaderOrWriter(sheetName);
 
 		return spreadsheet;
 	}
