@@ -150,7 +150,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 				this.sw.setText(1, i, "10");
 				Assert.assertEquals("10", this.sw.getText(1, i));
 			}
-		} catch (final IllegalArgumentException e) {
+		} catch (final UnsupportedOperationException e) {
 			if (i >= 255)
 				Assume.assumeNoException(e);
 			else
@@ -166,7 +166,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 				this.sw.setText(j, 1, "10");
 				Assert.assertEquals("10", this.sw.getText(j, 1));
 			}
-		} catch (final IllegalArgumentException e) {
+		} catch (final UnsupportedOperationException e) {
 			if (j >= 65535)
 				Assume.assumeNoException(e);
 			else

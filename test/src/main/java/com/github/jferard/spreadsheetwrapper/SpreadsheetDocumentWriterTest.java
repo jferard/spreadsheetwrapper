@@ -24,14 +24,19 @@ import java.util.NoSuchElementException;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * Okay for all wrappers
+ *
+ */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetDocumentWriterTest extends
-SpreadsheetDocumentReaderTest {
+		SpreadsheetDocumentReaderTest {
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentWriter sdw;
@@ -49,7 +54,7 @@ SpreadsheetDocumentReaderTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-									.openStream();
+					.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
 			Assert.assertEquals(1, this.sdw.getSheetCount());
@@ -81,14 +86,18 @@ SpreadsheetDocumentReaderTest {
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testAdd2() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
+			CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet(10, "ok");
 	}
 
 	@Test
 	public void testAddAt0() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
-		this.sdw.addSheet(0, "ok");
+			CantInsertElementInSpreadsheetException {
+		try {
+			this.sdw.addSheet(0, "ok");
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
@@ -116,10 +125,14 @@ SpreadsheetDocumentReaderTest {
 	@Test
 	public void testAppendAdd20At0()
 			throws CantInsertElementInSpreadsheetException {
-		for (int i = 0; i < 20; i++) {
-			this.sdw.addSheet(0, "new" + i);
+		try {
+			for (int i = 0; i < 20; i++) {
+				this.sdw.addSheet(0, "new" + i);
+			}
+			Assert.assertTrue(true);
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
 		}
-		Assert.assertTrue(true);
 	}
 
 	@Test

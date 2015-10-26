@@ -28,6 +28,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * Okay for all wrappers
+ *
+ */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetEmptyDocumentWriterTest extends
 		SpreadsheetEmptyDocumentReaderTest {

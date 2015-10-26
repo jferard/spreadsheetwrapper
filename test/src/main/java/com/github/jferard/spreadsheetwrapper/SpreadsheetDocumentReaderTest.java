@@ -28,6 +28,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Okay for all wrappers. No exception
+ *
+ */
 @SuppressWarnings("unused")
 public abstract class SpreadsheetDocumentReaderTest {
 	protected SpreadsheetDocumentFactory factory;

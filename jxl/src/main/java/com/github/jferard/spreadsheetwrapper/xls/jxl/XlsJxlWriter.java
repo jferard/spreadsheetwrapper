@@ -259,7 +259,7 @@ SpreadsheetWriter {
 			throw new IllegalArgumentException();
 		if (r >= XlsJxlWriter.numRowsPerSheet - 1
 				|| c >= XlsJxlWriter.maxColumns - 1)
-			throw new IllegalArgumentException();
+			throw new UnsupportedOperationException();
 
 		WritableCell cell;
 		if (r != this.curR || this.curRow == null) {

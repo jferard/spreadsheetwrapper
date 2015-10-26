@@ -32,6 +32,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * Okay for all wrappers
+ *
+ */
 @SuppressWarnings("unused")
 public abstract class SpreadsheetDocumentFactoryTest {
 	@Rule
