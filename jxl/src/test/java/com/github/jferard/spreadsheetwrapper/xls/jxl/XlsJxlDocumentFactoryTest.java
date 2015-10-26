@@ -21,18 +21,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
-	// @Test
-	// @Override
-	// public void testCreateEmptyDocumentWithNoName() {
-	// // does not work
-	// }
-	//
-	// @Test
-	// @Override
-	// public void testOpenStreamForWriteWithNoDest() {
-	// // does not work
-	// }
-
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

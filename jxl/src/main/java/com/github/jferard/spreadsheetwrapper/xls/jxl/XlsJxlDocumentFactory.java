@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleUtility());
 	}
@@ -70,7 +70,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -136,7 +136,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream, final OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 

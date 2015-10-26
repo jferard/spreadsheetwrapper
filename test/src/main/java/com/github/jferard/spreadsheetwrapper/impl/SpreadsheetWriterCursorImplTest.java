@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetWriterCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 	@Before
 	public void setUp() {
 		final SpreadsheetDocumentFactory factory = this.getProperties()
@@ -41,7 +41,7 @@ CursorAbstractTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-									.openStream();
+					.openStream();
 			final SpreadsheetDocumentWriter sdw = factory
 					.openForWrite(inputStream);
 			final SpreadsheetWriter sheet = sdw.getSpreadsheet(0);

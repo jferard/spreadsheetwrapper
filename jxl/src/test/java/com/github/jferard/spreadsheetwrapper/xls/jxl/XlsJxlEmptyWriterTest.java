@@ -61,16 +61,6 @@ public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	}
 
 	@Override
-	public void testFormula2() {
-		// can't parse a bad formula
-	}
-
-	@Override
-	public void testText1000col() {
-		// not ok, can't add cell over 256
-	}
-
-	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();
 	}

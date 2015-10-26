@@ -44,7 +44,7 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-					.openStream();
+									.openStream();
 			final File outputFile = SpreadsheetTest.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());

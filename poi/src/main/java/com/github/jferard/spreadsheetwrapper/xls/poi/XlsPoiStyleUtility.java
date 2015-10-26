@@ -120,7 +120,7 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color != null && color instanceof HSSFColor)
 			sb.append("background-color:")
-			.append(((HSSFColor) color).getHexString()).append(";");
+					.append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
 	}
 

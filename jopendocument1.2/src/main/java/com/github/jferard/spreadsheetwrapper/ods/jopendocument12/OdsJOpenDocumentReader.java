@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsJOpenDocumentReaderTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
+			AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param sfSpreadSheet
 		 *            *internal* value
@@ -114,7 +114,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		sheetNames = new ArrayList<String>(sheetCount);
 		for (int s = 0; s < sheetCount; s++)
 			sheetNames
-					.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
+			.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
 		return sheetNames;
 	}
 

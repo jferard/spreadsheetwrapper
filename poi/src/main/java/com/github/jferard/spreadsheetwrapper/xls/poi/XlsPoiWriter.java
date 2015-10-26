@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -34,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	private final Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
@@ -153,7 +154,11 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		final Cell cell = this.getOrCreatePOICell(r, c);
-		cell.setCellFormula(formula);
+		try {
+			cell.setCellFormula(formula);
+		} catch (final FormulaParseException e) {
+			throw new IllegalArgumentException(e);
+		}
 		return formula;
 	}
 

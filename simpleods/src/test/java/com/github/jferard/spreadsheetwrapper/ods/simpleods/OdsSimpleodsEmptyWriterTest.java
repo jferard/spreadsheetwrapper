@@ -22,7 +22,6 @@ import java.io.File;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
@@ -58,32 +57,6 @@ public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Test
-	public void testBoolean() {
-		//
-	}
-
-	@Override
-	public void testDateSecond() {
-		//
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Test
-	public void testFormula() {
-		//
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Test
-	public void testFormula2() {
-		//
 	}
 
 	@Override

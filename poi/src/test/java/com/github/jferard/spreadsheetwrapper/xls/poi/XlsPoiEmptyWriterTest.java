@@ -17,24 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import org.junit.Test;
-
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiEmptyWriterTest extends SpreadsheetEmptyWriterTest {
-	@Override
-	@Test
-	public void testFormula2() {
-		// can't parse a bad formula
-	}
-
-	@Override
-	@Test(expected = IllegalArgumentException.class)
-	public void testText1000col() {
-		super.testText1000col();
-	}
-
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

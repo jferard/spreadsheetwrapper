@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;
@@ -113,7 +113,9 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		final Calendar cal = Calendar.getInstance(timeZone);
 		cal.setTime(date);
 		cell.setDateValue(cal);
-		return date;
+		final Date retDate = new Date();
+		retDate.setTime(date.getTime() / 86400000 * 86400000);
+		return retDate;
 	}
 
 	/**

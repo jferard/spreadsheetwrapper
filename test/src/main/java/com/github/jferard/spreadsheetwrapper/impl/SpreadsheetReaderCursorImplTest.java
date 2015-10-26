@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetReaderCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 
 	private SpreadsheetDocumentFactory factory;
 
@@ -44,7 +44,7 @@ CursorAbstractTest {
 					.getResource(
 							String.format("/VilleMTP_MTP_MonumentsHist.%s",
 									this.getProperties().getExtension()))
-									.openStream();
+					.openStream();
 			final SpreadsheetDocumentReader sdr = this.factory
 					.openForRead(inputStream);
 			final SpreadsheetReader sheet = sdr.getSpreadsheet(0);
