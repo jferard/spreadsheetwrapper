@@ -33,7 +33,21 @@ public class AccessorTest {
 	}
 
 	@Test
-	public final void testIndex() {
+	public final void testGetByIndex() {
+		Assert.assertEquals((Double) 10.0, this.accessor.getByIndex(0));
+		Assert.assertEquals((Double) 15.0, this.accessor.getByIndex(1));
+		Assert.assertEquals((Double) 20.0, this.accessor.getByIndex(2));
+	}
+
+	@Test
+	public final void testGetByName() {
+		Assert.assertEquals((Double) 10.0, this.accessor.getByName("first"));
+		Assert.assertEquals((Double) 15.0, this.accessor.getByName("firstb"));
+		Assert.assertEquals((Double) 20.0, this.accessor.getByName("second"));
+	}
+
+	@Test
+	public final void testHasByIndex() {
 		Assert.assertTrue(this.accessor.hasByIndex(0));
 		Assert.assertTrue(this.accessor.hasByIndex(1));
 		Assert.assertTrue(this.accessor.hasByIndex(2));
@@ -42,25 +56,11 @@ public class AccessorTest {
 	}
 
 	@Test
-	public final void testIndex2() {
-		Assert.assertEquals((Double) 10.0, this.accessor.getByIndex(0));
-		Assert.assertEquals((Double) 15.0, this.accessor.getByIndex(1));
-		Assert.assertEquals((Double) 20.0, this.accessor.getByIndex(2));
-	}
-
-	@Test
-	public final void testName() {
+	public final void testHasByName() {
 		Assert.assertTrue(this.accessor.hasByName("first"));
 		Assert.assertTrue(this.accessor.hasByName("firstb"));
 		Assert.assertTrue(this.accessor.hasByName("second"));
 		Assert.assertFalse(this.accessor.hasByName("third"));
-	}
-
-	@Test
-	public final void testName2() {
-		Assert.assertEquals((Double) 10.0, this.accessor.getByName("first"));
-		Assert.assertEquals((Double) 15.0, this.accessor.getByName("firstb"));
-		Assert.assertEquals((Double) 20.0, this.accessor.getByName("second"));
 	}
 
 }

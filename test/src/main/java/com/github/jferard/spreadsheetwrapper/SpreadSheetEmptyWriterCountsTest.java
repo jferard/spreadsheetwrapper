@@ -55,7 +55,7 @@ public abstract class SpreadSheetEmptyWriterCountsTest {
 	@After
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);

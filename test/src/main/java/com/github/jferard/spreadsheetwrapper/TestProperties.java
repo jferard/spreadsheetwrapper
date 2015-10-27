@@ -17,6 +17,8 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+import java.net.URL;
+
 public class TestProperties {
 	final String extension;
 	final SpreadsheetDocumentFactory factory;
@@ -34,4 +36,11 @@ public class TestProperties {
 	public SpreadsheetDocumentFactory getFactory() {
 		return this.factory;
 	}
+
+	public URL getSourceURL() {
+		final String sourceURLString = String.format(
+				"/VilleMTP_MTP_MonumentsHist.%s", this.extension);
+		return this.getClass().getResource(sourceURLString);
+	}
+
 }

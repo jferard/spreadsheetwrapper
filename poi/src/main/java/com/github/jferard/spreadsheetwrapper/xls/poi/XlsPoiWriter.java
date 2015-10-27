@@ -36,10 +36,20 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
+	/**
+	 * COPY FROM JXL : The maximum number of columns
+	 */
+	private static int maxColumns = 256;
+
+	/**
+	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
+	 */
+	private final static int numRowsPerSheet = 65536;
 	private final Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
 	private int curR;
+
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 
@@ -204,6 +214,9 @@ SpreadsheetWriter {
 	protected Cell getOrCreatePOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
+		if (r >= XlsPoiWriter.numRowsPerSheet
+				|| c >= XlsPoiWriter.maxColumns)
+			throw new UnsupportedOperationException();
 
 		if (r != this.curR || this.curRow == null) {
 			this.curRow = this.sheet.getRow(r);

@@ -28,6 +28,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * Okay for all wrappers. No exception
+ *
+ */
 @SuppressWarnings("unused")
 public abstract class SpreadsheetDocumentReaderTest {
 	protected SpreadsheetDocumentFactory factory;
@@ -37,12 +41,8 @@ public abstract class SpreadsheetDocumentReaderTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this
-					.getClass()
-					.getResource(
-							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension()))
-									.openStream();
+			final InputStream inputStream = this.getProperties().getSourceURL()
+					.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
 		} catch (final SpreadsheetException e) {
@@ -62,6 +62,30 @@ public abstract class SpreadsheetDocumentReaderTest {
 			e.printStackTrace();
 			Assert.fail();
 		}
+	}
+
+	@Test
+	public final void testGetSheetNames() {
+		final List<String> names = this.sdr.getSheetNames();
+		Assert.assertEquals(Arrays.asList("Feuille1"), names);
+	}
+
+	@Test(expected = IndexOutOfBoundsException.class)
+	public final void testGetSheetNumberMinusOneThrowsIndexOutOfBounds()
+			throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
+	}
+
+	@Test(expected = IndexOutOfBoundsException.class)
+	public final void testGetSheetNumberOneThrowsIndexOutOfBounds()
+			throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
+	}
+
+	@Test
+	public final void testGetSheetTwice() throws SpreadsheetException {
+		SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
+		sr = this.sdr.getSpreadsheet("Feuille1");
 	}
 
 	@Test
@@ -118,29 +142,6 @@ public abstract class SpreadsheetDocumentReaderTest {
 		} catch (final SpreadsheetException e) {
 			Assert.fail();
 		}
-	}
-
-	@Test
-	public final void testSheetNames() {
-		final List<String> names = this.sdr.getSheetNames();
-		Assert.assertEquals(Arrays.asList("Feuille1"), names);
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetOutOfBoundsMinusOne()
-			throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
-	}
-
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetOutOfBoundsOne() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
-	}
-
-	@Test
-	public final void testSheetTwice() throws SpreadsheetException {
-		SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
-		sr = this.sdr.getSpreadsheet("Feuille1");
 	}
 
 	protected abstract TestProperties getProperties();

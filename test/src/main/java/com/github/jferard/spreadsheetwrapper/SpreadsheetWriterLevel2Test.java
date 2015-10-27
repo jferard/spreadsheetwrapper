@@ -31,12 +31,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest {
+public abstract class SpreadsheetWriterLevel2Test extends
+		SpreadsheetWriterLevel1Test {
 	@Rule
 	public TestName name = new TestName();
-	protected SpreadsheetDocumentWriter sdw;
 
-	protected SpreadsheetWriter sw;
 
 	/** set the test up */
 	@Before
@@ -44,9 +43,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
-							.getProperties().getExtension()));
+			final URL resourceURL = this.getProperties().getSourceURL();
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			final List<String> sheetNames = this.sdw.getSheetNames();
@@ -67,7 +64,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 	@Override
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
@@ -79,7 +76,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 	}
 
 	@Test
-	public final void testCellDate3() {
+	public final void testCellDateTo0() {
 		try {
 			final Date d = this.sw.setDate(0, 1, new Date(0)); // setDate : 0
 			// UTC = 1 CET
@@ -94,12 +91,13 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDate4() {
+	public final void testCellDateTo0AndReadAsInteger() {
 		this.sw.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
 		Assert.assertEquals((Integer) 0, this.sw.getInteger(0, 1));
 		Assert.fail();
 	}
 
+	@Override
 	@Test
 	public void testSetBoolean() {
 		final int r = 5;
@@ -114,7 +112,7 @@ public abstract class SpreadsheetWriterLevel2Test extends SpreadsheetReaderTest 
 	}
 
 	@Test
-	public final void testSetCellDate() {
+	public final void testSetDateTo0b() {
 		final int r = 5;
 		final int c = 6;
 		try {

@@ -53,7 +53,7 @@ public class DocumentFactoryManager {
 		Class<?> clazz;
 		try {
 			clazz = Class.forName(new StringBuilder(startOfClassName)
-			.append('.').append(endOfClassName).toString());
+					.append('.').append(endOfClassName).toString());
 			final Method method = clazz.getMethod("create", Logger.class);
 			return (SpreadsheetDocumentFactory) method
 					.invoke(null, this.logger);

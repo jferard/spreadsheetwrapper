@@ -39,11 +39,7 @@ public abstract class SpreadsheetReaderCursorImplTest extends
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this
-					.getClass()
-					.getResource(
-							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension()))
+			final InputStream inputStream = this.getProperties().getSourceURL()
 					.openStream();
 			final SpreadsheetDocumentReader sdr = this.factory
 					.openForRead(inputStream);

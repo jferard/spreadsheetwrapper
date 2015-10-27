@@ -28,9 +28,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/**
+ * Okay for all wrappers
+ *
+ */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentReaderTest {
+SpreadsheetEmptyDocumentReaderTest {
+	/** the test name */
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentWriter sdw;
@@ -43,7 +48,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
@@ -68,7 +73,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	}
 
 	@Test
-	public final void testCreation()
+	public final void testAddSheet()
 			throws CantInsertElementInSpreadsheetException {
 		Assert.assertEquals(0, this.sdw.getSheetCount());
 		Assert.assertEquals(Collections.emptyList(), this.sdw.getSheetNames());
@@ -80,7 +85,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testCreation2() {
+	public final void testGetNonExistingSheet() {
 		final SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0);
 	}
 }

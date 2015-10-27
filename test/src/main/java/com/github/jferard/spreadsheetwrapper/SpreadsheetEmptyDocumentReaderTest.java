@@ -28,6 +28,7 @@ import org.junit.Test;
 
 @SuppressWarnings("unused")
 public abstract class SpreadsheetEmptyDocumentReaderTest {
+
 	protected SpreadsheetDocumentFactory factory;
 	protected SpreadsheetDocumentReader sdr;
 
@@ -38,55 +39,50 @@ public abstract class SpreadsheetEmptyDocumentReaderTest {
 	public abstract void tearDown();
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheet() {
+	public final void testGetSheetAtIndex0() {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(0);
 	}
 
-	@Test(expected = NoSuchElementException.class)
-	public final void testSheet3() {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
-	}
-
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheet5() throws SpreadsheetException {
+	public final void testGetSheetAtIndex1() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheet6() throws SpreadsheetException {
+	public final void testGetSheetAtNegativeIndex() throws SpreadsheetException {
 		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
 	}
 
 	@Test(expected = NoSuchElementException.class)
-	public final void testSheet7() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("F");
+	public final void testGetSheetByName() {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
+	}
+
+	@Test(expected = NoSuchElementException.class)
+	public final void testGetSheetByWeirdName() throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet("qwerty");
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetCursors() throws SpreadsheetException {
+	public final void testGetSheetCursorAtIndex0() throws SpreadsheetException {
 		final SpreadsheetReaderCursor c1 = this.sdr.getNewCursorByIndex(0);
 	}
 
 	@Test(expected = NoSuchElementException.class)
-	public final void testSheetCursors2() throws SpreadsheetException {
+	public final void testGetSheetCursorsByName() throws SpreadsheetException {
 		final SpreadsheetReaderCursor c2 = this.sdr
 				.getNewCursorByName("Feuille1");
 	}
 
-	@Test(expected = NoSuchElementException.class)
-	public final void testSheetDoesntExist() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("test");
-	}
-
 	@Test
-	public final void testSheetNames() {
+	public final void testGetSheetNames() {
 		final List<String> names = this.sdr.getSheetNames();
 		Assert.assertEquals(Collections.emptyList(), names);
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testSheetOutOfBounds2() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
+	@Test(expected = NoSuchElementException.class)
+	public final void testGetSheetThatDoesntExist() throws SpreadsheetException {
+		final SpreadsheetReader sr = this.sdr.getSpreadsheet("test");
 	}
 
 	protected abstract TestProperties getProperties();

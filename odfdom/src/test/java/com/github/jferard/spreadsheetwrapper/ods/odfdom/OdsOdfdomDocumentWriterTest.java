@@ -17,29 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import org.junit.Test;
-
-import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
-	/** {@inheritDoc} */
-	@Override
-	@Test(expected = UnsupportedOperationException.class)
-	public final void testAddAt0() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
-		super.testAddAt0();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Test(expected = UnsupportedOperationException.class)
-	public final void testAppendAdd20At0()
-			throws CantInsertElementInSpreadsheetException {
-		super.testAppendAdd20At0();
-	}
-
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();
