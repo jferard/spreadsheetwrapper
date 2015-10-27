@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param value
 		 *            *internal* value

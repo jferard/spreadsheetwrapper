@@ -44,7 +44,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	/**
 	 * COPY FROM JXL : The maximum number of columns
@@ -257,8 +257,8 @@ SpreadsheetWriter {
 			final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsJxlWriter.numRowsPerSheet - 1
-				|| c >= XlsJxlWriter.maxColumns - 1)
+		if (r >= XlsJxlWriter.numRowsPerSheet
+				|| c >= XlsJxlWriter.maxColumns)
 			throw new UnsupportedOperationException();
 
 		WritableCell cell;

@@ -36,6 +36,7 @@ import org.junit.rules.TestName;
  *
  */
 public abstract class SpreadsheetReaderTest {
+	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentFactory factory;
@@ -48,9 +49,7 @@ public abstract class SpreadsheetReaderTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
-							.getProperties().getExtension()));
+			final URL resourceURL = this.getProperties().getSourceURL();
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());

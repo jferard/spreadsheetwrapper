@@ -38,18 +38,21 @@ import org.junit.rules.TestName;
  */
 @SuppressWarnings("unused")
 public abstract class SpreadsheetDocumentFactoryTest {
+	/** Name of the test */
 	@Rule
 	public TestName name = new TestName();
 
+	/** the destination file (test are written in a temp directory) */
 	private File destFile;
 
+	/** the source file (from test/resources) */
 	private File sourceFile;
 
+	/** the source URL (from test/resources) */
 	private URL sourceURL;
 
+	/** the factory */
 	protected SpreadsheetDocumentFactory factory;
-
-	protected String urlString;
 
 	public SpreadsheetDocumentFactoryTest() {
 		super();
@@ -58,11 +61,9 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	@Before
 	public void setUp() throws URISyntaxException {
 		this.factory = this.getProperties().getFactory();
-		this.urlString = String.format("/VilleMTP_MTP_MonumentsHist.%s", this
-				.getProperties().getExtension());
-		this.sourceURL = this.getClass().getResource(this.urlString);
+		this.sourceURL = this.getProperties().getSourceURL();
 		this.sourceFile = new File(this.sourceURL.toURI());
-		this.destFile = SpreadsheetTest.getOutputFile(this.getClass()
+		this.destFile = SpreadsheetTestHelper.getOutputFile(this.getClass()
 				.getSimpleName(), this.name.getMethodName(), this
 				.getProperties().getExtension());
 	}
@@ -193,5 +194,4 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	}
 
 	protected abstract TestProperties getProperties();
-
 }

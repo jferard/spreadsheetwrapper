@@ -21,7 +21,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class SpreadsheetTest {
+public class SpreadsheetTestHelper {
 	static int i = 0;
 
 	public static String getCallerClassName() {
@@ -41,16 +41,16 @@ public class SpreadsheetTest {
 			throws MalformedURLException {
 		return new URL(String.format("file:///%s/%s", System
 				.getProperty("java.io.tmpdir"), String.format("test-%s.%d.%s",
-				SpreadsheetTest.getCallerClassName(), SpreadsheetTest.i++,
-				extension)));
+						SpreadsheetTestHelper.getCallerClassName(),
+				SpreadsheetTestHelper.i++, extension)));
 	}
 
 	public static URL getOutputURL(final String className,
 			final String methodName, final String extension)
-			throws MalformedURLException {
+					throws MalformedURLException {
 		return new URL(String.format("file:///%s/%s", System
 				.getProperty("java.io.tmpdir"), String.format("test-%s-%s.%s",
-				className, methodName, extension)));
+						className, methodName, extension)));
 	}
 
 }

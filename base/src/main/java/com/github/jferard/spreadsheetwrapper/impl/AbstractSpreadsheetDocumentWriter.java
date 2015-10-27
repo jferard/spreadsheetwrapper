@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-		SpreadsheetDocumentWriter {
+SpreadsheetDocumentWriter {
 
 	private Output bkpOutput;
 

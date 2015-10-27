@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/**
 	 * COPY FROM JXL : The maximum number of columns
 	 */
@@ -214,8 +214,8 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	protected Cell getOrCreatePOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsPoiWriter.numRowsPerSheet - 1
-				|| c >= XlsPoiWriter.maxColumns - 1)
+		if (r >= XlsPoiWriter.numRowsPerSheet
+				|| c >= XlsPoiWriter.maxColumns)
 			throw new UnsupportedOperationException();
 
 		if (r != this.curR || this.curRow == null) {

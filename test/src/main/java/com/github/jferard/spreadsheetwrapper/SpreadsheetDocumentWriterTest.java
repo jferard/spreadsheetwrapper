@@ -36,11 +36,15 @@ import org.junit.rules.TestName;
  */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetDocumentWriterTest extends
-		SpreadsheetDocumentReaderTest {
+SpreadsheetDocumentReaderTest {
+	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
+
+	/** the document writer */
 	protected SpreadsheetDocumentWriter sdw;
 
+	/** the writer */
 	protected SpreadsheetWriter sw;
 
 	/** set the test up */
@@ -49,11 +53,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this
-					.getClass()
-					.getResource(
-							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension()))
+			final InputStream inputStream = this.getProperties().getSourceURL()
 					.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;
@@ -73,7 +73,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 	@After
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
@@ -84,37 +84,31 @@ public abstract class SpreadsheetDocumentWriterTest extends
 		}
 	}
 
-	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testAdd2() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		this.sdw.addSheet(10, "ok");
-	}
-
 	@Test
-	public void testAddAt0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	public void testAddSheetAtIndex0() throws IndexOutOfBoundsException,
+	CantInsertElementInSpreadsheetException {
 		try {
 			this.sdw.addSheet(0, "ok");
-		} catch (UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
 
 	@Test(expected = IndexOutOfBoundsException.class)
-	public final void testAddAtNegativeIndex()
+	public final void testAddSheetAtIndex10() throws IndexOutOfBoundsException,
+	CantInsertElementInSpreadsheetException {
+		this.sdw.addSheet(10, "ok");
+	}
+
+	@Test(expected = IndexOutOfBoundsException.class)
+	public final void testAddSheetAtNegativeIndex()
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet(-1, "ok");
 	}
 
 	@Test
-	public final void testAppend()
-			throws CantInsertElementInSpreadsheetException {
-		this.sdw.addSheet("ok");
-	}
-
-	@Test
-	public final void testAppend1000()
+	public final void testAppend1000SheetsAtEnd()
 			throws CantInsertElementInSpreadsheetException {
 		for (int i = 0; i < 1000; i++) {
 			this.sdw.addSheet("new" + i);
@@ -123,20 +117,20 @@ public abstract class SpreadsheetDocumentWriterTest extends
 	}
 
 	@Test
-	public void testAppendAdd20At0()
+	public void testAppendAdd20SheetAtIndex0()
 			throws CantInsertElementInSpreadsheetException {
 		try {
 			for (int i = 0; i < 20; i++) {
 				this.sdw.addSheet(0, "new" + i);
 			}
 			Assert.assertTrue(true);
-		} catch (UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
 
 	@Test
-	public final void testAppendAndRead()
+	public final void testAppendAndThenGetSheet()
 			throws CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet("ok");
 		try {
@@ -148,7 +142,13 @@ public abstract class SpreadsheetDocumentWriterTest extends
 	}
 
 	@Test
-	public final void testAppendAndReadIndex()
+	public final void testAppendSheet()
+			throws CantInsertElementInSpreadsheetException {
+		this.sdw.addSheet("ok");
+	}
+
+	@Test
+	public final void testAppendSheetAndThenGetByIndex()
 			throws CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet("ok");
 		try {
@@ -160,7 +160,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testAppendExisting()
+	public final void testAppendSheetWithExistingName()
 			throws CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet("Feuille1");
 	}

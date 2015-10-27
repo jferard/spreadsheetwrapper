@@ -29,7 +29,7 @@ import org.junit.Assert;
 import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterLevel2Test;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
@@ -44,7 +44,7 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
 							.getProperties().getExtension()));
 			final InputStream inputStream = resourceURL.openStream();
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);

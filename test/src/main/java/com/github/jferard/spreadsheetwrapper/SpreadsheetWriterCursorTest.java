@@ -50,13 +50,9 @@ public abstract class SpreadsheetWriterCursorTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this
-					.getClass()
-					.getResource(
-							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension()))
-									.openStream();
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final InputStream inputStream = this.getProperties().getSourceURL()
+					.openStream();
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);

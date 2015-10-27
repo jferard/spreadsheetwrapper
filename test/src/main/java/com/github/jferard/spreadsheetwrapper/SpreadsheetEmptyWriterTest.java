@@ -53,7 +53,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 	@After
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
@@ -65,38 +65,45 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public void testDouble() {
-		this.sw.setDouble(2, 2, 100.7);
-		Assert.assertEquals(Double.valueOf(100.7), this.sw.getDouble(2, 2));
-
-		this.sw.setDouble(2, 2, 100.7);
-		Assert.assertEquals(Double.valueOf(100.7), this.sw.getCellContent(2, 2));
+	public final void testCreate2StylesFromObjectsAndSetStylesWithGap() {
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(2, 2, "Tail");
 	}
 
 	@Test
-	public void testInteger() {
-		this.sw.setInteger(1, 1, 10);
-		Assert.assertEquals(Integer.valueOf(10), this.sw.getInteger(1, 1));
-
-		this.sw.setInteger(1, 1, 10);
-		Assert.assertEquals(Integer.valueOf(10), this.sw.getCellContent(1, 1));
+	public final void testCreate2StylesFromObjectsAndSetStylesWithNoGap() { // buggy
+		// for
+		// simpleodf
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(1, 0, "Tail");
 	}
 
 	@Test
-	public void testSetBadFormula() {
-		try {
-			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
-					this.sw.getFormula(1, 1));
+	public final void testCreateStyleFromObjectsAndSetStyle() {
+		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
+				WrapperColor.BLACK);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
+				WrapperColor.AQUA, wrapperFont);
+		this.sdw.setStyle("mystyle2", wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sw.setCellContent(1, 0, "Tail", "");
+	}
 
-			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
-					this.sw.getCellContent(1, 1));
-		} catch (final IllegalArgumentException e) {
-			Assume.assumeNoException(e);
-		} catch (final UnsupportedOperationException e) {
-			Assume.assumeNoException(e);
-		}
+	@Test
+	public final void testCreateStyleFromStringAndSetStyle() {
+		this.sdw.createStyle("mystyle",
+				"background-color:#999999;font-weight:bold");
+		this.sw.setCellContent(0, 0, "Head", "mystyle");
 	}
 
 	@Test
@@ -130,6 +137,15 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
+	public void testSetDouble() {
+		this.sw.setCellContent(2, 2, 100.7);
+		Assert.assertEquals(Double.valueOf(100.7), this.sw.getDouble(2, 2));
+
+		this.sw.setDouble(2, 2, 100.7);
+		Assert.assertEquals(Double.valueOf(100.7), this.sw.getCellContent(2, 2));
+	}
+
+	@Test
 	public void testSetFormula() {
 		try {
 			this.sw.setFormula(1, 1, "A1");
@@ -140,6 +156,41 @@ public abstract class SpreadsheetEmptyWriterTest {
 		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
+	}
+
+	@Test
+	public void testSetIncorrrectFormula() {
+		try {
+			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
+			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
+					this.sw.getFormula(1, 1));
+
+			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
+			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
+					this.sw.getCellContent(1, 1));
+		} catch (final IllegalArgumentException e) {
+			Assume.assumeNoException(e);
+		} catch (final UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
+	}
+
+	@Test
+	public void testSetInteger() {
+		this.sw.setCellContent(1, 1, 10);
+		Assert.assertEquals(Integer.valueOf(10), this.sw.getInteger(1, 1));
+
+		this.sw.setInteger(1, 1, 10);
+		Assert.assertEquals(Integer.valueOf(10), this.sw.getCellContent(1, 1));
+	}
+
+	@Test
+	public void testSetText() {
+		this.sw.setCellContent(1, 1, "10");
+		Assert.assertEquals("10", this.sw.getText(1, 1));
+
+		this.sw.setText(1, 1, "10");
+		Assert.assertEquals("10", this.sw.getCellContent(1, 1));
 	}
 
 	@Test
@@ -159,6 +210,18 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
+	public void testSetTextOnCol255() {
+		this.sw.setText(1, 255, "100");
+		Assert.assertEquals("100", this.sw.getText(1, 255));
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testSetTextOnColMinus10() {
+		this.sw.setText(1, -10, "10");
+		Assert.assertEquals("10", this.sw.getText(1, -10));
+	}
+
+	@Test
 	public void testSetTextOnRow0To100000() {
 		int j = 0;
 		try {
@@ -175,72 +238,16 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	public final void testStyle() {
-		this.sdw.createStyle("mystyle",
-				"background-color:#999999;font-weight:bold");
-		this.sw.setCellContent(0, 0, "Head", "mystyle");
-	}
-
-	@Test
-	public final void testStyle2() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
-		this.sw.setCellContent(1, 0, "Tail", "");
-	}
-
-	@Test
-	public final void testStyle3() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
-		this.sw.setCellContent(2, 2, "Tail");
-	}
-
-	@Test
-	public final void testStyle4() { // buggy for simpleodf
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
-		this.sw.setCellContent(1, 0, "Tail");
-	}
-
-	@Test
-	public void testText() {
-		this.sw.setText(1, 1, "10");
-		Assert.assertEquals("10", this.sw.getText(1, 1));
-
-		this.sw.setText(1, 1, "10");
-		Assert.assertEquals("10", this.sw.getCellContent(1, 1));
-	}
-
-	@Test
-	public void testText200col() {
-		for (int i = 0; i < 200; i += 50) {
-			this.sw.setText(1, i, "100");
-			Assert.assertEquals("100", this.sw.getText(1, i));
-		}
+	public void testSetTextOnRow65535() {
+		this.sw.setText(0, 1, "0");
+		this.sw.setText(65535, 1, "100");
+		Assert.assertEquals("100", this.sw.getText(65535, 1));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testTextMinus10a() {
+	public void testSetTextOnRowMinus10() {
 		this.sw.setText(-10, 1, "10");
 		Assert.assertEquals("10", this.sw.getText(-10, 1));
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void testTextMinus10b() {
-		this.sw.setText(1, -10, "10");
-		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
 
 	protected abstract TestProperties getProperties();

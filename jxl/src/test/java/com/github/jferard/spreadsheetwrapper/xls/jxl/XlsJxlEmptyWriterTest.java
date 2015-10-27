@@ -25,7 +25,7 @@ import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {
@@ -35,7 +35,7 @@ public class XlsJxlEmptyWriterTest extends SpreadsheetEmptyWriterTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);

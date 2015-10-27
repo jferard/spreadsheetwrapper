@@ -28,18 +28,18 @@ import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetTest;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends
-SpreadsheetEmptyDocumentWriterTest {
+		SpreadsheetEmptyDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);

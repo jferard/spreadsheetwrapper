@@ -30,7 +30,87 @@ public abstract class CursorAbstractTest {
 	protected int rowCount;
 
 	@Test
-	public final void test1() {
+	public final void testCantGoLeftOrUpFromFirstCell() {
+		Assert.assertEquals(Move.JUMP, this.cursor.first());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.left());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.up());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC());
+		Assert.assertEquals(Move.NEXT, this.cursor.right());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(1, this.cursor.getC());
+		Assert.assertEquals(Move.NEXT, this.cursor.down());
+		Assert.assertEquals(1, this.cursor.getR());
+		Assert.assertEquals(1, this.cursor.getC());
+	}
+
+	@Test
+	public final void testCantGoRightOrownFromLastCell() {
+		Assert.assertEquals(Move.JUMP, this.cursor.last());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.right());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.down());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
+		Assert.assertEquals(Move.NEXT, this.cursor.left());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 2, this.cursor.getC());
+		Assert.assertEquals(Move.NEXT, this.cursor.up());
+		Assert.assertEquals(this.rowCount - 2, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 2, this.cursor.getC());
+	}
+
+	@Test
+	public final void testFirstIsA1NextIsA2() {
+		Assert.assertEquals(Move.JUMP, this.cursor.first());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC());
+		Assert.assertEquals(Move.NEXT, this.cursor.next());
+		Assert.assertEquals(Move.NEXT, this.cursor.next());
+		Assert.assertEquals(Move.NEXT, this.cursor.previous());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(1, this.cursor.getC());
+	}
+
+	@Test
+	public final void testIncorrectCoordinatesFail() {
+		Assert.assertEquals(Move.FAIL, this.cursor.set(-1, 2));
+		Assert.assertEquals(Move.FAIL, this.cursor.set(1, -2));
+		Assert.assertEquals(Move.FAIL, this.cursor.set(this.rowCount * 2, 2));
+		Assert.assertEquals(Move.FAIL, this.cursor.set(1, this.colCount * 2));
+	}
+
+	@Test
+	public final void testNoCRLFFromLastCell() {
+		Assert.assertEquals(Move.JUMP, this.cursor.last());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.crlf());
+		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
+		Assert.assertEquals(this.colCount - 1, this.cursor.getC()); // no reset
+		// of the
+		// col
+	}
+
+	@Test
+	public final void testNoPreviousFromlFirstCell() {
+		Assert.assertEquals(Move.JUMP, this.cursor.first());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC());
+		Assert.assertEquals(Move.FAIL, this.cursor.previous());
+		Assert.assertEquals(0, this.cursor.getR());
+		Assert.assertEquals(0, this.cursor.getC()); // no reset of the col
+	}
+
+	@Test
+	public final void testRotation() {
 		final int r = this.rowCount / 2;
 		final int c = this.colCount / 2;
 		Assert.assertEquals(Move.JUMP, this.cursor.set(r, c));
@@ -57,57 +137,7 @@ public abstract class CursorAbstractTest {
 	}
 
 	@Test
-	public final void test2() {
-		Assert.assertEquals(Move.JUMP, this.cursor.first());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.left());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.up());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.NEXT, this.cursor.right());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(1, this.cursor.getC());
-		Assert.assertEquals(Move.NEXT, this.cursor.down());
-		Assert.assertEquals(1, this.cursor.getR());
-		Assert.assertEquals(1, this.cursor.getC());
-	}
-
-	@Test
-	public final void test3() {
-		Assert.assertEquals(Move.JUMP, this.cursor.last());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.right());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.down());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
-		Assert.assertEquals(Move.NEXT, this.cursor.left());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 2, this.cursor.getC());
-		Assert.assertEquals(Move.NEXT, this.cursor.up());
-		Assert.assertEquals(this.rowCount - 2, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 2, this.cursor.getC());
-	}
-
-	@Test
-	public final void test4() {
-		Assert.assertEquals(Move.JUMP, this.cursor.first());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.NEXT, this.cursor.next());
-		Assert.assertEquals(Move.NEXT, this.cursor.next());
-		Assert.assertEquals(Move.NEXT, this.cursor.previous());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(1, this.cursor.getC());
-	}
-
-	@Test
-	public final void test5() {
+	public final void testRowEnd() {
 		Assert.assertEquals(Move.JUMP, this.cursor.set(0, this.colCount - 1));
 		Assert.assertEquals(0, this.cursor.getR());
 		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
@@ -123,42 +153,6 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(Move.JUMP, this.cursor.crlf());
 		Assert.assertEquals(1, this.cursor.getR());
 		Assert.assertEquals(0, this.cursor.getC());
-	}
-
-	@Test
-	public final void testFail() {
-		Assert.assertEquals(Move.FAIL, this.cursor.set(-1, 2));
-		Assert.assertEquals(Move.FAIL, this.cursor.set(1, -2));
-		Assert.assertEquals(Move.FAIL, this.cursor.set(this.rowCount * 2, 2));
-		Assert.assertEquals(Move.FAIL, this.cursor.set(1, this.colCount * 2));
-	}
-
-	@Test
-	public final void testFirst() {
-		Assert.assertEquals(Move.JUMP, this.cursor.first());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.up());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.previous());
-		Assert.assertEquals(0, this.cursor.getR());
-		Assert.assertEquals(0, this.cursor.getC()); // no reset of the col
-	}
-
-	@Test
-	public final void testLast() {
-		Assert.assertEquals(Move.JUMP, this.cursor.last());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.down());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC());
-		Assert.assertEquals(Move.FAIL, this.cursor.crlf());
-		Assert.assertEquals(this.rowCount - 1, this.cursor.getR());
-		Assert.assertEquals(this.colCount - 1, this.cursor.getC()); // no reset
-		// of the
-		// col
 	}
 
 }

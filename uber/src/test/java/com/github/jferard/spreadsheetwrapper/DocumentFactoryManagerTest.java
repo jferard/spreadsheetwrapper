@@ -45,9 +45,9 @@ public class DocumentFactoryManagerTest {
 
 	@Test
 	public final void testManager() throws ClassNotFoundException,
-			InstantiationException, IllegalAccessException,
-			SpreadsheetException, IllegalArgumentException,
-			InvocationTargetException {
+	InstantiationException, IllegalAccessException,
+	SpreadsheetException, IllegalArgumentException,
+	InvocationTargetException {
 		final DocumentFactoryManager manager = new DocumentFactoryManager(null);
 		SpreadsheetDocumentFactory factory;
 		factory = manager

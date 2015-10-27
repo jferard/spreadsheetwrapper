@@ -43,9 +43,7 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
-							.getProperties().getExtension()));
+			final URL resourceURL = this.getProperties().getSourceURL();
 			if (resourceURL == null) {
 				Assert.fail();
 				return;
@@ -70,7 +68,7 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 	@Override
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTest.getOutputFile(this
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw.saveAs(outputFile);
@@ -120,11 +118,16 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 		final int r = 5;
 		final int c = 6;
 		try {
-			final Date d = this.sw.setDate(r, c, new Date(12345)); // setDate :
+			final Date dm = new Date(1234567891);
+			final Date ds = new Date(1234567891 - Math.floorMod(1234567891, 1000));
+			final Date dd = new Date(1234567891 - Math.floorMod(1234567891, 1000*86400));
+			
+			final Date d2 = this.sw.setDate(r, c, dm); // setDate :
 			// 0
 			// UTC = 1 CET
-			Assert.assertEquals(d, new Date(12345));
-			Assert.assertEquals(new Date(12345), this.sw.getDate(r, c));
+			Assert.assertTrue(d2.equals(dm) || d2.equals(ds) || d2.equals(dd));
+			Date d3 = this.sw.getDate(r, c);
+			Assert.assertEquals(d2, d3);
 		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
