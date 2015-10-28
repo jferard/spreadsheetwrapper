@@ -32,6 +32,7 @@ import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetExcep
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
@@ -74,7 +75,8 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
-	public final List<Table> getTableList() {
+	/*>>> @RequiresNonNull("sfDocument")*/
+	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this*/) {
 		final List<Table> tables;
 		if (this.sfDocument.isNew())
 			tables = Collections.emptyList();
@@ -83,7 +85,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return tables;
 	}
 
-	private void cleanEmptyTable(final TableTableElement tableElement) {
+	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");
 		assert colsList.getLength() == 1;
@@ -124,7 +126,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 				throw new CantInsertElementInSpreadsheetException();
 		}
 		final TableTableElement tableElement = table.getOdfElement();
-		this.cleanEmptyTable(tableElement);
+		AbstractOdsSimpleodfDocumentTrait.cleanEmptyTable(tableElement);
 
 		this.sfDocument.setInitialized();
 		final T spreadsheet = this.createNew(table);

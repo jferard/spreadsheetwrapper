@@ -134,7 +134,8 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		try {
 			this.output.close();
 		} catch (final IOException e) {
-			this.logger.log(Level.SEVERE, e.getMessage(), e);
+			final String message = e.getMessage();
+			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
 	}

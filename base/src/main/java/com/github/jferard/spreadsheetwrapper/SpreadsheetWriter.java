@@ -20,14 +20,9 @@ package com.github.jferard.spreadsheetwrapper;
 import java.util.Date;
 import java.util.List;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
- */
-/**
- * @author Julien
- *
- */
-/**
- * @author Julien
  *
  */
 public interface SpreadsheetWriter extends SpreadsheetReader {
@@ -52,13 +47,13 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param c
 	 *            index (0..) of the column to be removed
 	 */
-	List<Object> removeCol(int c);
+	List</*@Nullable*/ Object> removeCol(int c);
 
 	/**
 	 * @param r
 	 *            index (0..) of the column to be removed
 	 */
-	List<Object> removeRow(int r);
+	List</*@Nullable*/ Object> removeRow(int r);
 
 	/**
 	 * @param r
