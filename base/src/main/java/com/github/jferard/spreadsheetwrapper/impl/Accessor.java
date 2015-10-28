@@ -128,7 +128,7 @@ public class Accessor</*@NonNull*/T> {
 			String name = null;
 			for (final Map.Entry<String, T> entry : this.elementByName
 					.entrySet()) {
-				if (entry.getValue().equals(element)) {
+				if (element.equals(entry.getValue())) {
 					name = entry.getKey();
 					break;
 				}

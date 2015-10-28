@@ -35,47 +35,47 @@ public interface SpreadsheetReaderCursor extends Cursor {
 	 *
 	 * @return the date
 	 */
-	Date getDate();
+	/*@Nullable*/ Date getDate();
 
 	/**
 	 * Get the Double at the current position
 	 *
 	 * @return the Double
 	 */
-	Double getDouble();
+	/*@Nullable*/ Double getDouble();
 
 	/**
 	 * Get the formula at the current position
 	 *
 	 * @return the formula text (english)
 	 */
-	String getFormula();
+	/*@Nullable*/ String getFormula();
 
 	/**
 	 * Get the integer at the current position
 	 *
 	 * @return the integer
 	 */
-	Integer getInteger();
+	/*@Nullable*/ Integer getInteger();
 
 	/**
 	 * Get thee format at the current position
 	 *
 	 * @return the name of the format
 	 */
-	/*@Nullable*/String getStyleName();
+	/*@Nullable*/ String getStyleName();
 
 	/**
 	 * Get thee format at the current position
 	 *
 	 * @return the name of the format
 	 */
-	String getStyleString();
+	/*@Nullable*/ String getStyleString();
 
 	/**
 	 * Get the text at the current position
 	 *
 	 * @return the text
 	 */
-	String getText();
+	/*@Nullable*/ String getText();
 }

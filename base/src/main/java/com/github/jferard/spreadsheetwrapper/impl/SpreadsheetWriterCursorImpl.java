@@ -99,25 +99,25 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 
 	/** {@inheritDoc} */
 	@Override
-	public Date getDate() {
+	public/*@Nullable*/Date getDate() {
 		return this.writer.getDate(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Double getDouble() {
+	public/*@Nullable*/Double getDouble() {
 		return this.writer.getDouble(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getFormula() {
+	public/*@Nullable*/String getFormula() {
 		return this.writer.getFormula(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Integer getInteger() {
+	public/*@Nullable*/Integer getInteger() {
 		return this.writer.getInteger(this.cursor.getR(), this.cursor.getC());
 	}
 
@@ -140,14 +140,14 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleString() {
+	public/*@Nullable*/String getStyleString() {
 		return this.writer.getStyleString(this.cursor.getR(),
 				this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getText() {
+	public/*@Nullable*/String getText() {
 		return this.writer.getText(this.cursor.getR(), this.cursor.getC());
 	}
 

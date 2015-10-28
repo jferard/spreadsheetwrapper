@@ -65,20 +65,20 @@ public class Output {
 		this(null, null, null);
 	}
 
-	public Output(final File outputFile) {
+	public Output(final /*@Nullable*/ File outputFile) {
 		this(null, outputFile, null);
 	}
 
-	public Output(final OutputStream outputStream) {
+	public Output(final /*@Nullable*/ OutputStream outputStream) {
 		this(outputStream, null, null);
 	}
 
-	public Output(final URL outputURL) {
+	public Output(final /*@Nullable*/ URL outputURL) {
 		this(null, null, outputURL);
 	}
 
-	private Output(final OutputStream outputStream, final File outputFile,
-			final URL outputURL) {
+	private Output(final /*@Nullable*/ OutputStream outputStream, final /*@Nullable*/ File outputFile,
+			final /*@Nullable*/ URL outputURL) {
 		super();
 		this.outputStream = outputStream;
 		this.outputFile = outputFile;
@@ -90,7 +90,7 @@ public class Output {
 			this.outputStream.close();
 	}
 
-	public/*@Nullable*/OutputStream getStream() {
+	public /*@Nullable*/ OutputStream getStream() {
 		if (this.outputStream == null) {
 			try {
 				if (this.outputFile != null)

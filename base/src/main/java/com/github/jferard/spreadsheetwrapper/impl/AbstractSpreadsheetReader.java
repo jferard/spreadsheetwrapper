@@ -72,8 +72,11 @@ public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public final Integer getInteger(final int r, final int c) {
-		return this.getDouble(r, c).intValue();
+	public final /*@Nullable*/ Integer getInteger(final int r, final int c) {
+		final Double value = this.getDouble(r, c);
+		if (value == null)
+			return null;
+		return value.intValue();
 	}
 
 	/** {@inheritDoc} */

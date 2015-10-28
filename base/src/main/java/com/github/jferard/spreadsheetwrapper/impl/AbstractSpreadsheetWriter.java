@@ -46,13 +46,13 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Boolean getBoolean(final int r, final int c) {
+	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
 		return this.reader.getBoolean(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/Object getCellContent(final int r, final int c) {
+	public /*@Nullable*/ Object getCellContent(final int r, final int c) {
 		return this.reader.getCellContent(r, c);
 	}
 
@@ -67,31 +67,31 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/Object> getColContents(final int c) {
+	public List</*@Nullable*/ Object> getColContents(final int c) {
 		return this.reader.getColContents(c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Date getDate(final int r, final int c) {
+	public /*@Nullable*/ Date getDate(final int r, final int c) {
 		return this.reader.getDate(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Double getDouble(final int r, final int c) {
+	public /*@Nullable*/ Double getDouble(final int r, final int c) {
 		return this.reader.getDouble(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getFormula(final int r, final int c) {
+	public /*@Nullable*/ String getFormula(final int r, final int c) {
 		return this.reader.getFormula(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Integer getInteger(final int r, final int c) {
+	public /*@Nullable*/ Integer getInteger(final int r, final int c) {
 		return this.reader.getInteger(r, c);
 	}
 
@@ -109,7 +109,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/Object> getRowContents(final int r) {
+	public List</*@Nullable*/ Object> getRowContents(final int r) {
 		return this.reader.getRowContents(r);
 	}
 
@@ -127,39 +127,15 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleString(final int r, final int c) {
+	public /*@Nullable*/ String getStyleString(final int r, final int c) {
 		return this.reader.getStyleString(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getText(final int r, final int c) {
+	public /*@Nullable*/ String getText(final int r, final int c) {
 		return this.reader.getText(r, c);
 	}
-
-	// /** {@inheritDoc} */
-	// @Override
-	// public void insertCol(final int r) {
-	// throw new UnsupportedOperationException();
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// public void insertRow(final int r) {
-	// throw new UnsupportedOperationException();
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// public List<Object> removeCol(final int c) {
-	// throw new UnsupportedOperationException();
-	// }
-	//
-	// /** {@inheritDoc} */
-	// @Override
-	// public List<Object> removeRow(final int r) {
-	// throw new UnsupportedOperationException();
-	// }
 
 	/** {@inheritDoc} */
 	@Override

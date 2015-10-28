@@ -28,11 +28,11 @@ public interface SpreadsheetReader {
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the boolean
+	 * @return the boolean, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a boolean
 	 */
-	Boolean getBoolean(int r, int c);
+	/*@Nullable*/ Boolean getBoolean(int r, int c);
 
 	/**
 	 * @param r
@@ -41,7 +41,7 @@ public interface SpreadsheetReader {
 	 *            index of the column (0..)
 	 * @return the content of the cell as Object, null il the cell doesn't exist
 	 */
-	/*@Nullable*/Object getCellContent(int r, int c);
+	/*@Nullable*/ Object getCellContent(int r, int c);
 
 	/**
 	 * @param r
@@ -62,44 +62,44 @@ public interface SpreadsheetReader {
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the date
+	 * @return the date, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a date
 	 */
-	Date getDate(int r, int c);
+	/*@Nullable*/ Date getDate(int r, int c);
 
 	/**
 	 * @param r
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the double
+	 * @return the double, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a double
 	 */
-	Double getDouble(int r, int c);
+	/*@Nullable*/ Double getDouble(int r, int c);
 
 	/**
 	 * @param r
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the formula
+	 * @return the formula, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a formula
 	 */
-	String getFormula(int r, int c);
+	/*@Nullable*/ String getFormula(int r, int c);
 
 	/**
 	 * @param r
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the integer part of the number
+	 * @return the integer part of the number, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a number
 	 */
-	Integer getInteger(int r, int c);
+	/*@Nullable*/ Integer getInteger(int r, int c);
 
 	/**
 	 * @return the name of the reader (ie of the sheet, table, ...)
@@ -128,7 +128,7 @@ public interface SpreadsheetReader {
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the style name
+	 * @return the style name, null if no style or r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist
 	 */
@@ -139,20 +139,20 @@ public interface SpreadsheetReader {
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the style string (@see createStyle)
+	 * @return the style string (@see createStyle), null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist
 	 */
-	String getStyleString(int r, int c);
+	/*@Nullable*/ String getStyleString(int r, int c);
 
 	/**
 	 * @param r
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the text
+	 * @return the text, null if r >= rowCount or c >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist or doesn't contain a text
 	 */
-	String getText(int r, int c);
+	/*@Nullable*/ String getText(int r, int c);
 }
