@@ -39,7 +39,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
@@ -119,7 +118,6 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
 		this.documentTrait = new OdsJOpenDocumentWriterTrait(sfSpreadSheet);
-		new HashMap<String, String>();
 	}
 
 	/** {@inheritDoc} */

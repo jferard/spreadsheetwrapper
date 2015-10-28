@@ -30,6 +30,8 @@ import org.simpleods.TableRow;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
  * writer for simpleods
  */

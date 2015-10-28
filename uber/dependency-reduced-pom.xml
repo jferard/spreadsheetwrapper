@@ -6,10 +6,8 @@
     <version>1.0.1-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.jferard</groupId>
   <artifactId>spreadsheetwrapper</artifactId>
   <name>spreadsheetwrapper</name>
-  <version>1.0.1-SNAPSHOT</version>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>
@@ -69,6 +67,22 @@
       <artifactId>jOpenDocument</artifactId>
       <version>1.2</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.odftoolkit</groupId>
+      <artifactId>simple-odf</artifactId>
+      <version>0.6.6</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>odfdom-java</artifactId>
+          <groupId>org.odftoolkit</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>xercesImpl</artifactId>
+          <groupId>xerces</groupId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.jexcelapi</groupId>

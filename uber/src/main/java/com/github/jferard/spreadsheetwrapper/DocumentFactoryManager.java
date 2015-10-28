@@ -21,8 +21,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-
 public class DocumentFactoryManager {
 	/** simple logger */
 	private final Logger logger;

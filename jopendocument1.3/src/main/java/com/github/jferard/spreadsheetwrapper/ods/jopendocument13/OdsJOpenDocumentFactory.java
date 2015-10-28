@@ -25,11 +25,7 @@ import java.util.logging.Logger;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jopendocument.dom.ODPackage;
-import org.jopendocument.dom.XMLVersion;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -68,18 +64,7 @@ SpreadsheetDocumentFactory {
 		this.styleUtility = styleUtility;
 	}
 
-	// 1.2
-	private final Document createDocument(final String nsPrefix,
-			final String name, final String zipEntry) {
-		final XMLVersion version = XMLVersion.OD;
-		final Element root = new Element(name, version.getNS(nsPrefix));
-		for (final Namespace nameSpace : version.getALL())
-			root.addNamespaceDeclaration(nameSpace);
-
-		return new Document(root);
-	}
-
-	private SpreadSheet getSpreadSheet(final ODPackage odPackage) {
+	private static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
 		return odPackage.getSpreadSheet();
 	}
 
@@ -110,7 +95,7 @@ SpreadsheetDocumentFactory {
 			throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
-			return this.getSpreadSheet(odPackage);
+			return OdsJOpenDocumentFactory.getSpreadSheet(odPackage);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}

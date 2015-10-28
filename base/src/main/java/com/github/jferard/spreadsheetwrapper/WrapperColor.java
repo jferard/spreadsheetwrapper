@@ -17,8 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-
 /**
  * The class WrapperColor wraps a color for ods (hex value) or xls (index). It
  * does not need anymore to have jxl or poi loaded to work.

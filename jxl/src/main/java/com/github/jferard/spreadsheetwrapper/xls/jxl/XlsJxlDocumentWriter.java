@@ -45,8 +45,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Accessor;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter

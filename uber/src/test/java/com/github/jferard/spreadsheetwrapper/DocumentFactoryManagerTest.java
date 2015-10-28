@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.logging.Logger;
 
 import org.junit.Test;
@@ -28,10 +27,12 @@ import com.github.jferard.spreadsheetwrapper.ods.simpleods.OdsSimpleodsDocumentF
 import com.github.jferard.spreadsheetwrapper.xls.jxl.XlsJxlDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.xls.poi.XlsPoiDocumentFactory;
 
+@SuppressWarnings("static-method")
 public class DocumentFactoryManagerTest {
 	@Test
 	public final void testDirect() {
 		final Logger logger = null;
+		@SuppressWarnings("unused")
 		SpreadsheetDocumentFactory factory;
 		factory = OdsSimpleodsDocumentFactory.create(logger);
 		factory = OdsSimpleodfDocumentFactory.create(logger);
@@ -44,11 +45,10 @@ public class DocumentFactoryManagerTest {
 	}
 
 	@Test
-	public final void testManager() throws ClassNotFoundException,
-	InstantiationException, IllegalAccessException,
-	SpreadsheetException, IllegalArgumentException,
-	InvocationTargetException {
+	public final void testManager() throws SpreadsheetException,
+			IllegalArgumentException {
 		final DocumentFactoryManager manager = new DocumentFactoryManager(null);
+		@SuppressWarnings("unused")
 		SpreadsheetDocumentFactory factory;
 		factory = manager
 				.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");
