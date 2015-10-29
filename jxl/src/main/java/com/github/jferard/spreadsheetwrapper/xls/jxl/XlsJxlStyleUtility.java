@@ -61,10 +61,10 @@ public class XlsJxlStyleUtility extends StyleUtility {
 		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
 		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
 		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals("font-weight")) {
+			if (entry.getKey().equals(StyleUtility.FONT_WEIGHT)) {
 				if (entry.getValue().equals("bold"))
 					cellFont.setBoldStyle(WritableFont.BOLD);
-			} else if (entry.getKey().equals("background-color")) {
+			} else if (entry.getKey().equals(StyleUtility.BACKGROUND_COLOR)) {
 				// do nothing
 			}
 		}

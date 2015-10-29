@@ -32,6 +32,8 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
@@ -70,14 +72,15 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeCol(final int c) {
+	public List</*@Nullable*/ Object> removeCol(final int c) {
+		List</*@Nullable*/ Object> ret = this.getColContents(c);
 		this.sheet.removeColumn(c, true);
-		return null;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeRow(final int r) {
+	public List</*@Nullable*/ Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -22,6 +22,9 @@ import java.util.Map;
 
 public class StyleUtility {
 
+	public static final String BACKGROUND_COLOR = "background-color";
+	public static final String FONT_WEIGHT = "font-weight";
+
 	/**
 	 * @param styleString
 	 *            the styleString, format key1:value1;key2:value2

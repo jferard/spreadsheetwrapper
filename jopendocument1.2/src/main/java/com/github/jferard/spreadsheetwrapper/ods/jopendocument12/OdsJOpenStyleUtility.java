@@ -73,7 +73,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (backgroundColor != null) {
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps.setAttribute("background-color",
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
 					backgroundColor.toHex(), OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
 		}
@@ -81,7 +81,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (cellFont != null && cellFont.isBold()) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps.setAttribute("font-weight", "bold",
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
@@ -102,7 +102,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (backgroundColor != null) {
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps.setAttribute("background-color",
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
 					backgroundColor.toHex(), OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
 		}
@@ -110,7 +110,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (cellFont != null && cellFont.isBold()) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps.setAttribute("font-weight", "bold",
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
@@ -127,21 +127,22 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	private Element createStyle(final String styleName,
 			final Map<String, String> propertiesMap) {
 		final Element style = this.getBaseStyle(styleName);
-		if (propertiesMap.containsKey("background-color")) {
+		if (propertiesMap.containsKey(StyleUtility.BACKGROUND_COLOR)) {
+			final String bc = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps.setAttribute("background-color",
-					propertiesMap.get("background-color"),
+			tableCellProps.setAttribute(
+					StyleUtility.BACKGROUND_COLOR, 
+					bc,
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
 		}
-		if (propertiesMap.containsKey("font-weight")) {
+		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
+			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
 			textProps
-					.setAttribute("font-weight",
-							propertiesMap.get("font-weight"),
-							OdsJOpenStyleUtility.foNS);
+					.setAttribute(StyleUtility.FONT_WEIGHT, fw, OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -161,21 +162,20 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	private Element setStyle(final Element style,
 			final Map<String, String> propertiesMap) {
 		style.setAttribute("family", "table-cell", OdsJOpenStyleUtility.styleNS);
-		if (propertiesMap.containsKey("background-color")) {
+		if (propertiesMap.containsKey(StyleUtility.BACKGROUND_COLOR)) {
+			final String bc = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps.setAttribute("background-color",
-					propertiesMap.get("background-color"),
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR, bc,
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
 		}
-		if (propertiesMap.containsKey("font-weight")) {
+		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
+			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
 			textProps
-					.setAttribute("font-weight",
-							propertiesMap.get("font-weight"),
-							OdsJOpenStyleUtility.foNS);
+					.setAttribute(StyleUtility.FONT_WEIGHT, fw, OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;

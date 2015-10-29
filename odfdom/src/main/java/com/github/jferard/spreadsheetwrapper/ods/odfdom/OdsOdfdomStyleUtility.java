@@ -76,9 +76,9 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final Map<String, String> props = this.getPropertiesMap(styleString);
 		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals("font-weight")) {
+			if (entry.getKey().equals(StyleUtility.FONT_WEIGHT)) {
 				properties.put(OdfTextProperties.FontWeight, entry.getValue());
-			} else if (entry.getKey().equals("background-color")) {
+			} else if (entry.getKey().equals(StyleUtility.BACKGROUND_COLOR)) {
 				properties.put(OdfTableCellProperties.BackgroundColor,
 						entry.getValue());
 			}

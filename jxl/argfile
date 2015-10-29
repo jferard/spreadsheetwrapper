@@ -2,4 +2,5 @@
 -Alint
 -AprintErrorStack
 -Awarns
+-AsuppressWarnings=known.nonnull
 -Xmaxwarns 10000

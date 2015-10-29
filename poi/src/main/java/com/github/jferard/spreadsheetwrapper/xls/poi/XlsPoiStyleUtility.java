@@ -84,13 +84,13 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		final CellStyle cellStyle = workbook.createCellStyle();
 		final Map<String, String> props = this.getPropertiesMap(styleString);
 		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals("font-weight")) {
+			if (entry.getKey().equals(StyleUtility.FONT_WEIGHT)) {
 				if (entry.getValue().equals("bold")) {
 					final Font font = workbook.createFont();
 					font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 					cellStyle.setFont(font);
 				}
-			} else if (entry.getKey().equals("background-color")) {
+			} else if (entry.getKey().equals(StyleUtility.BACKGROUND_COLOR)) {
 				// do nothing
 			}
 		}
