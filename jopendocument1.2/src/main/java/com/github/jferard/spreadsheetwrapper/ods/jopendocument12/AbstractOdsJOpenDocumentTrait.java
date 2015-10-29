@@ -38,12 +38,22 @@ AbstractSpreadsheetDocumentTrait<T> {
 			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		super();
 		this.sfSpreadSheet = sfSpreadSheet;
-		for (int s = 0; s < this.getSheetCount(); s++) {
+		final int sheetCount = AbstractOdsJOpenDocumentTrait.getSheetCount(sfSpreadSheet);
+		for (int s = 0; s < sheetCount; s++) {
 			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
 			final String name = sheet.getName();
 			final T reader = this.createNew(sheet);
 			this.accessor.put(name, s, reader);
 		}
+	}
+
+	private static int getSheetCount(OdsJOpenStatefulDocument sfSpreadSheet) {
+		int count;
+		if (sfSpreadSheet.isNew())
+			count = 0;
+		else
+			count = sfSpreadSheet.getRawSheetCount();
+		return count;
 	}
 
 	/**
@@ -124,12 +134,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	protected final int getSheetCount(/*>>> @UnknownInitialization AbstractOdsJOpenDocumentTrait<T> this*/) {
-		int count;
-		if (this.sfSpreadSheet.isNew())
-			count = 0;
-		else
-			count = this.sfSpreadSheet.getRawSheetCount();
-		return count;
+	protected final int getSheetCount() {
+		return AbstractOdsJOpenDocumentTrait.getSheetCount(this.sfSpreadSheet);
 	}
 }

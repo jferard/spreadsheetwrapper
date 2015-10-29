@@ -2,5 +2,5 @@
 -Alint
 -AprintErrorStack
 -Awarns
--AsuppressWarnings=known.nonnull
+-AsuppressWarnings=known.nonnull, argument.type.incompatible, initialization.fields.uninitialized
 -Xmaxwarns 10000
