@@ -43,11 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
- * The sfSpreadSheet writer for Apache JOpen.
- *
- */
-/**
- * @author Julien
+ * The SpreadSheetWriter for JOpendocument1.3.
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
@@ -76,7 +72,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *            the elements to look at
 	 * @return the matching element, or null
 	 */
-	private static Element findElementWithName(final String name,
+	private static /*@Nullable*/ Element findElementWithName(final String name,
 			final List<Element> elements) {
 		for (final Element element : elements) {
 			if (name.equals(element.getAttributeValue("name")))
@@ -142,7 +138,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		try {
 			this.output.close();
 		} catch (final IOException e) {
-			this.logger.log(Level.SEVERE, e.getMessage(), e);
+			final String message = e.getMessage();
+			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
 	}
