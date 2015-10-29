@@ -84,12 +84,12 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeCol(final int c) {
+	public List</*@Nullable*/ Object> removeCol(final int c) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List<Object> removeRow(final int r) {
+	public List</*@Nullable*/ Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
 	}
 
