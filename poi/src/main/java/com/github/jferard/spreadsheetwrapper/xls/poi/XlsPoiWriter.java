@@ -65,7 +65,7 @@ SpreadsheetWriter {
 	 * @param cellStyleByName
 	 */
 	XlsPoiWriter(final Sheet sheet, final/*@Nullable*/CellStyle dateCellStyle,
-			final Map<String, CellStyle> cellStyleByName) {
+			final /*@Nullable*/ Map<String, CellStyle> cellStyleByName) {
 		super(new XlsPoiReader(sheet));
 		this.sheet = sheet;
 		this.cellStyleByName = cellStyleByName;
@@ -109,14 +109,14 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeCol(final int c) {
+	public List</*@Nullable*/ Object> removeCol(final int c) {
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeRow(final int r) {
-		final List<Object> ret = this.getRowContents(r);
+	public List</*@Nullable*/ Object> removeRow(final int r) {
+		final List</*@Nullable*/ Object> ret = this.getRowContents(r);
 		final Row row = this.sheet.getRow(r);
 		this.sheet.removeRow(row);
 		this.sheet.shiftRows(r, this.getRowCount(), 1);

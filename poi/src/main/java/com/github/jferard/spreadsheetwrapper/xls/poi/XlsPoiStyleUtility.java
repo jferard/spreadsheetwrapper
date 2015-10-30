@@ -31,6 +31,8 @@ import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
  * An utility class for style handling
  *
@@ -54,6 +56,8 @@ public class XlsPoiStyleUtility extends StyleUtility {
 						.forName("org.apache.poi.hssf.util.HSSFColor$"
 								+ color.getSimpleName());
 				hssfColor = (HSSFColor) hssfClazz.newInstance();
+				this.hssfColorByColor.put(color, hssfColor);
+				this.colorByHssfColor.put(hssfColor, color);
 			} catch (final ClassNotFoundException e) {
 				hssfColor = null;
 			} catch (final IllegalArgumentException e) {
@@ -65,8 +69,6 @@ public class XlsPoiStyleUtility extends StyleUtility {
 			} catch (final InstantiationException e) {
 				hssfColor = null;
 			}
-			this.hssfColorByColor.put(color, hssfColor);
-			this.colorByHssfColor.put(hssfColor, color);
 		}
 	}
 
@@ -98,7 +100,12 @@ public class XlsPoiStyleUtility extends StyleUtility {
 	}
 
 	public HSSFColor getHSSFColor(final WrapperColor backgroundColor) {
-		return this.hssfColorByColor.get(backgroundColor);
+		HSSFColor hssfColor;
+		if (this.hssfColorByColor.containsKey(backgroundColor))
+			hssfColor = this.hssfColorByColor.get(backgroundColor);
+		else
+			hssfColor = new HSSFColor.WHITE();
+		return hssfColor; 
 	}
 
 	/**
@@ -135,14 +142,22 @@ public class XlsPoiStyleUtility extends StyleUtility {
 			final CellStyle cellStyle) {
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font poiFont = workbook.getFontAt(fontIndex);
-		WrapperCellStyle wrapperCellStyle = null;
-		WrapperFont wrapperFont = null;
+		WrapperCellStyle wrapperCellStyle;
+		WrapperFont wrapperFont;
 		if (poiFont.getBoldweight() == Font.BOLDWEIGHT_BOLD)
 			wrapperFont = new WrapperFont(true, false, fontIndex,
 					WrapperColor.AUTOMATIC);
+		else
+			wrapperFont = new WrapperFont(false, false, fontIndex,
+					WrapperColor.AUTOMATIC);
+		
 		final Color poiColor = cellStyle.getFillBackgroundColorColor();
-		final WrapperColor wrapperColor = this.colorByHssfColor.get(poiColor);
-
+		final WrapperColor wrapperColor;
+		if (this.colorByHssfColor.containsKey(poiColor))
+			wrapperColor = this.colorByHssfColor.get(poiColor);
+		else 
+			wrapperColor = WrapperColor.AUTOMATIC;
+		
 		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;
 	}

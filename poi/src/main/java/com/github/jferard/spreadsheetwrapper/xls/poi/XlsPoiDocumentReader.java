@@ -134,6 +134,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public String getStyleString(final String styleName) {
 		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
 		if (cellStyle == null)

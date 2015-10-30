@@ -42,11 +42,13 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
@@ -54,12 +56,12 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 		/** a map styleName -> internal cell style */
 		private final Map<String, CellStyle> cellStyleByName;
 
@@ -81,7 +83,9 @@ implements SpreadsheetDocumentWriter {
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.dateCellStyle,
+			return new XlsPoiWriter(
+					sheet, 
+					this.dateCellStyle,
 					this.cellStyleByName);
 		}
 	}
@@ -169,7 +173,8 @@ implements SpreadsheetDocumentWriter {
 		try {
 			this.output.close();
 		} catch (final IOException e) {
-			this.logger.log(Level.SEVERE, e.getMessage(), e);
+			final String message = e.getMessage();
+			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
 	}
@@ -186,7 +191,7 @@ implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public com.github.jferard.spreadsheetwrapper.WrapperCellStyle getCellStyle(
+	public /*@Nullable*/ WrapperCellStyle getCellStyle(
 			final String styleName) {
 		return this.reader.getCellStyle(styleName);
 	}
@@ -272,6 +277,7 @@ implements SpreadsheetDocumentWriter {
 		if (backgroundColor != null) {
 			final HSSFColor hssfColor = this.styleUtility
 					.getHSSFColor(backgroundColor);
+
 			final short index = hssfColor.getIndex();
 			cellStyle.setFillForegroundColor(index);
 			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);

@@ -53,8 +53,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public Boolean getBoolean(final int r, final int c) {
+	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+
 		if (cell.getCellType() != Cell.CELL_TYPE_BOOLEAN)
 			throw new IllegalArgumentException(
 					"This cell does not contain a boolean");
@@ -119,8 +122,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public Date getDate(final int r, final int c) {
+	public /*@Nullable*/ Date getDate(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+
 		if (!this.isDate(cell))
 			throw new IllegalArgumentException();
 		return cell.getDateCellValue();
@@ -128,8 +134,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public Double getDouble(final int r, final int c) {
+	public /*@Nullable*/ Double getDouble(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+
 		if (!this.isDouble(cell))
 			throw new IllegalArgumentException();
 
@@ -138,8 +147,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getFormula(final int r, final int c) {
+	public /*@Nullable*/ String getFormula(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+
 		if (cell.getCellType() != Cell.CELL_TYPE_FORMULA)
 			throw new IllegalArgumentException();
 		return cell.getCellFormula();
@@ -162,8 +174,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getText(final int r, final int c) {
+	public /*@Nullable*/ String getText(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+		
 		if (cell.getCellType() != Cell.CELL_TYPE_STRING)
 			throw new IllegalArgumentException(
 					"This cell does not contain text");
@@ -179,7 +194,7 @@ SpreadsheetReader {
 	 *            the column index
 	 * @return the cell
 	 */
-	protected Cell getPOICell(final int r, final int c) {
+	private /*@Nullable*/ Cell getPOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

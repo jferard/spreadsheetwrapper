@@ -102,6 +102,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	 * @throws SpreadsheetException
 	 */
 	@Override
+	@Deprecated
 	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
 			final/*@Nullable*/URL outputURL) throws SpreadsheetException {
 		try {
