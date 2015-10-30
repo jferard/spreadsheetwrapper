@@ -28,6 +28,9 @@ import jxl.write.WriteException;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
+
 public class XlsJxlStyleUtility extends StyleUtility {
 	private final Map<WrapperColor, Colour> jxlColorByColor;
 
@@ -40,6 +43,8 @@ public class XlsJxlStyleUtility extends StyleUtility {
 				final Class<?> jxlClazz = Class.forName("jxl.format.Colour");
 				jxlColor = (Colour) jxlClazz.getDeclaredField(
 						color.getSimpleName()).get(null);
+				if (jxlColor != null)
+					this.jxlColorByColor.put(color, jxlColor);
 			} catch (final ClassNotFoundException e) {
 				jxlColor = null;
 			} catch (final IllegalArgumentException e) {
@@ -51,7 +56,6 @@ public class XlsJxlStyleUtility extends StyleUtility {
 			} catch (final SecurityException e) {
 				jxlColor = null;
 			}
-			this.jxlColorByColor.put(color, jxlColor);
 		}
 	}
 
@@ -71,7 +75,7 @@ public class XlsJxlStyleUtility extends StyleUtility {
 		return cellFormat;
 	}
 
-	public Colour getJxlColor(final WrapperColor backgroundColor) {
+	public /*@Nullable*/ Colour getJxlColor(final WrapperColor backgroundColor) {
 		return this.jxlColorByColor.get(backgroundColor);
 	}
 }

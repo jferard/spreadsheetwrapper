@@ -25,6 +25,7 @@ import java.util.Date;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -40,14 +41,12 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 	/** set the test up */
 	@Before
 	@Override
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getProperties().getSourceURL();
-			if (resourceURL == null) {
-				Assert.fail();
-				return;
-			}
+			Assume.assumeNotNull(resourceURL);
 
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);

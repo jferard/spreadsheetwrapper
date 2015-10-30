@@ -142,6 +142,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	@Deprecated
 	public boolean createStyle(final String styleName, final String styleString) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);

@@ -100,6 +100,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
+	@Deprecated
 	public final void testCreateStyleFromStringAndSetStyle() {
 		this.sdw.createStyle("mystyle",
 				"background-color:#999999;font-weight:bold");

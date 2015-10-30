@@ -45,7 +45,7 @@ SpreadsheetWriter {
 	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
 	 */
 	private final static int numRowsPerSheet = 65536;
-	private final Map<String, CellStyle> cellStyleByName;
+	private final /*@Nullable*/ Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -78,6 +78,9 @@ SpreadsheetWriter {
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final Cell cell = this.getOrCreatePOICell(r, c);
 		final CellStyle cellStyle = cell.getCellStyle();
+		if (this.cellStyleByName == null)
+			return null;
+		
 		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
 				.entrySet()) {
 			if (entry.getValue().equals(cellStyle))
@@ -186,6 +189,9 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
+		if (this.cellStyleByName == null)
+			return false;
+		
 		if (this.cellStyleByName.containsKey(styleName)) {
 			final Cell cell = this.getOrCreatePOICell(r, c);
 			cell.setCellStyle(this.cellStyleByName.get(styleName));

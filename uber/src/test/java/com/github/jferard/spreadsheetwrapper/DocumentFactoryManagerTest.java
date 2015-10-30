@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper;
 import java.util.logging.Logger;
 
 import org.junit.Test;
+import org.powermock.api.easymock.PowerMock;
 
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.ods.simpleodf.OdsSimpleodfDocumentFactory;
@@ -31,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.xls.poi.XlsPoiDocumentFactory;
 public class DocumentFactoryManagerTest {
 	@Test
 	public final void testDirect() {
-		final Logger logger = null;
+		final Logger logger = PowerMock.createNiceMock(Logger.class);
 		@SuppressWarnings("unused")
 		SpreadsheetDocumentFactory factory;
 		factory = OdsSimpleodsDocumentFactory.create(logger);
@@ -45,10 +46,11 @@ public class DocumentFactoryManagerTest {
 	}
 
 	@Test
+	@SuppressWarnings("unused")
 	public final void testManager() throws SpreadsheetException,
 			IllegalArgumentException {
-		final DocumentFactoryManager manager = new DocumentFactoryManager(null);
-		@SuppressWarnings("unused")
+		final Logger logger = PowerMock.createNiceMock(Logger.class);
+		final DocumentFactoryManager manager = new DocumentFactoryManager(logger);
 		SpreadsheetDocumentFactory factory;
 		factory = manager
 				.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");

@@ -267,7 +267,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final CellStyle cellStyle = this.workbook.createCellStyle();
 		final com.github.jferard.spreadsheetwrapper.WrapperFont wrapperFont = wrapperCellStyle
 				.getCellFont();
-		if (wrapperFont.isBold()) {
+		if (wrapperFont != null & wrapperFont.isBold()) {
 			final Font font = this.workbook.createFont();
 			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
 			cellStyle.setFont(font);

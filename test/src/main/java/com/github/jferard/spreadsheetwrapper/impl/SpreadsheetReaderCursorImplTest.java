@@ -19,8 +19,10 @@ package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -36,10 +38,14 @@ public abstract class SpreadsheetReaderCursorImplTest extends
 
 	/** set the test up */
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this.getProperties().getSourceURL()
+			final URL sourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(sourceURL);
+			
+			final InputStream inputStream = sourceURL
 					.openStream();
 			final SpreadsheetDocumentReader sdr = this.factory
 					.openForRead(inputStream);

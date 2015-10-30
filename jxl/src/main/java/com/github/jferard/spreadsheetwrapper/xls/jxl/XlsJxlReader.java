@@ -68,8 +68,11 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public Boolean getBoolean(final int r, final int c) {
+	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+		
 		if (cell instanceof BooleanCell)
 			return ((BooleanCell) cell).getValue();
 
@@ -125,15 +128,21 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public Date getDate(final int r, final int c) {
+	public /*@Nullable*/ Date getDate(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+		
 		return XlsJxlReader.getDate(cell);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Double getDouble(final int r, final int c) {
+	public /*@Nullable*/ Double getDouble(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+		
 		if (cell instanceof NumberCell)
 			return ((NumberCell) cell).getValue();
 
@@ -142,8 +151,11 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public String getFormula(final int r, final int c) {
+	public /*@Nullable*/ String getFormula(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+		
 		String formula;
 		if (cell instanceof FormulaCell) // read
 			try {
@@ -173,8 +185,11 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public String getText(final int r, final int c) {
+	public /*@Nullable*/ String getText(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+		
 		if (!(cell instanceof LabelCell))
 			throw new IllegalArgumentException(cell.toString());
 
@@ -190,7 +205,7 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 	 *            the column index
 	 * @return the cell
 	 */
-	protected Cell getJxlCell(final int r, final int c) {
+	protected /*@Nullable*/ Cell getJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

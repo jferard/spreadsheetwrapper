@@ -30,6 +30,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 /**
  * The class SpreadsheetReaderTest tests reading an example file. Works for
  * every wrapper.
@@ -303,7 +305,7 @@ public abstract class SpreadsheetReaderTest {
 					"inscrit Inv. MH 19 11 1985", "En totalité",
 					Double.valueOf(333.810638315),
 					Double.valueOf(93.4774612976));
-			final List<Object> rowContents = this.sr.getRowContents(1);
+			final List</*@Nullable*/ Object> rowContents = this.sr.getRowContents(1);
 			for (int i = 0; i < list.size(); i++)
 				Assert.assertEquals(list.get(i), rowContents.get(i));
 			Assert.assertEquals(list, rowContents);

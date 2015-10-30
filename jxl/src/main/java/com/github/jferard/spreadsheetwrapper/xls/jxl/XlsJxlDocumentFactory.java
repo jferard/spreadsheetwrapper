@@ -135,7 +135,7 @@ implements SpreadsheetDocumentFactory {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream, final OutputStream outputStream)
+			final InputStream inputStream, final /*@Nullable*/ OutputStream outputStream)
 					throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");

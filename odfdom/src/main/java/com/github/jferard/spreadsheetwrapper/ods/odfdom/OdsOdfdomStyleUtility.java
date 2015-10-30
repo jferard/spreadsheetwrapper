@@ -62,8 +62,12 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 
 		WrapperFont wrapperFont = null;
 		if ("bold".equals(fontWeight))
-			wrapperFont = new WrapperFont(true, false, -1, null);
-		final WrapperColor wrapperColor = this.colorByHex.get(backgroundColor);
+			wrapperFont = new WrapperFont(true, false, -1, WrapperColor.BLACK);
+		final WrapperColor wrapperColor;
+		if (this.colorByHex.containsKey(backgroundColor))
+			wrapperColor = this.colorByHex.get(backgroundColor);
+		else
+			wrapperColor = WrapperColor.WHITE;
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 
@@ -97,9 +101,10 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null && wrapperFont.isBold())
 			properties.put(OdfTextProperties.FontWeight, "bold");
-		if (wrapperCellStyle.getBackgroundColor() != null) {
+		final WrapperColor backgroundColor = wrapperCellStyle.getBackgroundColor();
+		if (backgroundColor != null) {
 			properties.put(OdfTableCellProperties.BackgroundColor,
-					wrapperCellStyle.getBackgroundColor().toHex());
+					backgroundColor.toHex());
 		}
 		return properties;
 	}

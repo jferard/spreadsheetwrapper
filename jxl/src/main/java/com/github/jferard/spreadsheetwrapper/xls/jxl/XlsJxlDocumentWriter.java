@@ -226,7 +226,8 @@ implements SpreadsheetDocumentWriter {
 			if (backgroundColor != null) {
 				final Colour jxlColor = this.styleUtility
 						.getJxlColor(backgroundColor);
-				cellFormat.setBackground(jxlColor);
+				if (jxlColor != null)
+					cellFormat.setBackground(jxlColor);
 			}
 			this.cellStyleByName.put(styleName, cellFormat);
 		} catch (final WriteException e) {

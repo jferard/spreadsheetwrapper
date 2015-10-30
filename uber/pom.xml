@@ -81,7 +81,7 @@
 			<version>18.0</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.jopendocument</groupId>
 			<artifactId>jOpenDocument</artifactId>
@@ -89,14 +89,14 @@
 			<scope>test</scope>
 		</dependency>
 
-		
+
 		<dependency>
 			<groupId>org.odftoolkit</groupId>
 			<artifactId>simple-odf</artifactId>
 			<version>0.6.6</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sourceforge.jexcelapi</groupId>
 			<artifactId>jxl</artifactId>
@@ -122,6 +122,13 @@
 			<groupId>org.checkerframework</groupId>
 			<artifactId>checker-qual</artifactId>
 			<version>1.9.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-easymock</artifactId>
+			<version>1.6.3</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -159,15 +166,9 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-<!-- 							<finalName>spreadsheetwrapper-1.0.1-SNAPSHOT</finalName>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>toto</shadedClassifierName>
---><!--  							<artifactSet>
-								<includes>
-									<include>com.github.jferard:*</include>
-									<include>org.checkerframework:checker-qual</include>
-								</includes>
-							</artifactSet> -->
+							<!-- <finalName>spreadsheetwrapper-1.0.1-SNAPSHOT</finalName> <shadedArtifactAttached>true</shadedArtifactAttached> 
+								<shadedClassifierName>toto</shadedClassifierName> --><!-- <artifactSet> <includes> <include>com.github.jferard:*</include> 
+								<include>org.checkerframework:checker-qual</include> </includes> </artifactSet> -->
 						</configuration>
 					</execution>
 				</executions>

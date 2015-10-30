@@ -45,14 +45,19 @@ public class DocumentFactoryManager {
 	 * @throws SecurityException
 	 * @throws NoSuchMethodException
 	 * */
+	@SuppressWarnings("nullness")
 	public SpreadsheetDocumentFactory getFactory(final String endOfClassName)
 			throws SpreadsheetException {
-		final String startOfClassName = this.getClass().getPackage().getName();
+		final Package package1 = this.getClass().getPackage();
+		if (package1 == null)
+			throw new SpreadsheetException("Package not found :"+this.getClass());
+		final String startOfClassName = package1.getName();
 		Class<?> clazz;
 		try {
 			clazz = Class.forName(new StringBuilder(startOfClassName)
 					.append('.').append(endOfClassName).toString());
 			final Method method = clazz.getMethod("create", Logger.class);
+			
 			return (SpreadsheetDocumentFactory) method
 					.invoke(null, this.logger);
 		} catch (final ClassNotFoundException e) {

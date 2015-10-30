@@ -83,7 +83,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
 		final CellFormat cf = jxlCell.getCellFormat();
 		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
@@ -114,16 +114,16 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeCol(final int c) {
-		final List<Object> ret = this.getColContents(c);
+	public List</*@Nullable*/ Object> removeCol(final int c) {
+		final List</*@Nullable*/ Object> ret = this.getColContents(c);
 		this.sheet.removeColumn(c);
 		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> removeRow(final int r) {
-		final List<Object> ret = this.getRowContents(r);
+	public List</*@Nullable*/ Object> removeRow(final int r) {
+		final List</*@Nullable*/ Object> ret = this.getRowContents(r);
 		this.sheet.removeRow(r);
 		return ret;
 	}
@@ -253,7 +253,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected/*@Nullable*/WritableCell getOrCreateJxlCell(final int r,
+	protected /*@Nullable*/ WritableCell getOrCreateJxlCell(final int r,
 			final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();

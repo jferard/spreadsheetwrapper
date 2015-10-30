@@ -74,15 +74,15 @@ SpreadsheetWriter {
 	}
 
 	@Override
-	public List<Object> removeCol(final int c) {
-		final List<Object> retValue = this.getColContents(c);
+	public List</*@Nullable*/ Object> removeCol(final int c) {
+		final List</*@Nullable*/ Object> retValue = this.getColContents(c);
 		this.table.removeColumnsByIndex(c, 1);
 		return retValue;
 	}
 
 	@Override
-	public List<Object> removeRow(final int r) {
-		final List<Object> retValue = this.getRowContents(r);
+	public List</*@Nullable*/ Object> removeRow(final int r) {
+		final List</*@Nullable*/ Object> retValue = this.getRowContents(r);
 		this.table.removeRowsByIndex(r, 1);
 		return retValue;
 	}

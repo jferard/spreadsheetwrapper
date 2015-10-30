@@ -22,12 +22,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.ListIterator;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -47,10 +49,14 @@ public abstract class SpreadsheetWriterCursorTest {
 
 	/** set the test up */
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this.getProperties().getSourceURL()
+			final URL sourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(sourceURL);
+			
+			final InputStream inputStream = sourceURL
 					.openStream();
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),

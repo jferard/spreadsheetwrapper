@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.NoSuchElementException;
 
 import org.junit.After;
@@ -50,10 +51,14 @@ SpreadsheetDocumentReaderTest {
 	/** set the test up */
 	@Override
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this.getProperties().getSourceURL()
+			final URL sourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(sourceURL);
+
+			final InputStream inputStream = sourceURL
 					.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			this.sdr = this.sdw;

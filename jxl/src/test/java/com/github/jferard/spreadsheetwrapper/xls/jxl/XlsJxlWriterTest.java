@@ -26,6 +26,7 @@ import java.net.URL;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
@@ -37,12 +38,13 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 	/** set the test up */
 	@Before
 	@Override
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getClass().getResource(
-					String.format("/VilleMTP_MTP_MonumentsHist.%s", this
-							.getProperties().getExtension()));
+			final URL resourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(resourceURL);
+			
 			final InputStream inputStream = resourceURL.openStream();
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),

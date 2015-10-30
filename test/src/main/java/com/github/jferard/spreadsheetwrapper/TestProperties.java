@@ -19,6 +19,13 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.net.URL;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
+/**
+ * The class TestProperties is a container for basic properties of tests :
+ * extension of file (xls/ods) and factory used
+ *
+ */
 public class TestProperties {
 	final String extension;
 	final SpreadsheetDocumentFactory factory;
@@ -37,7 +44,7 @@ public class TestProperties {
 		return this.factory;
 	}
 
-	public URL getSourceURL() {
+	public/*@Nullable*/URL getSourceURL() {
 		final String sourceURLString = String.format(
 				"/VilleMTP_MTP_MonumentsHist.%s", this.extension);
 		return this.getClass().getResource(sourceURLString);
