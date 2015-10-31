@@ -58,9 +58,12 @@ public abstract class SpreadsheetDocumentFactoryTest {
 	}
 
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() throws URISyntaxException {
 		this.factory = this.getProperties().getFactory();
 		this.sourceURL = this.getProperties().getSourceURL();
+		Assume.assumeNotNull(this.sourceURL);
+		
 		this.sourceFile = new File(this.sourceURL.toURI());
 		this.destFile = SpreadsheetTestHelper.getOutputFile(this.getClass()
 				.getSimpleName(), this.name.getMethodName(), this

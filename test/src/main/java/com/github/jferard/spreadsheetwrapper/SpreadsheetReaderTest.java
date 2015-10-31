@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -48,10 +49,13 @@ public abstract class SpreadsheetReaderTest {
 
 	/** set the test up */
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
 			final URL resourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(resourceURL);
+			
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());

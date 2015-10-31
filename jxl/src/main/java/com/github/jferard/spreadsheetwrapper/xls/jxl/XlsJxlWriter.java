@@ -56,7 +56,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 */
 	private final static int numRowsPerSheet = 65536;
 
-	private final Map<String, WritableCellFormat> cellFormatByName;
+	private final /*@Nullable*/ Map<String, WritableCellFormat> cellFormatByName;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -73,7 +73,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 * @param cellFormatByName
 	 */
 	XlsJxlWriter(final WritableSheet sheet,
-			final Map<String, WritableCellFormat> cellFormatByName) {
+			final /*@Nullable*/ Map<String, WritableCellFormat> cellFormatByName) {
 		super(new XlsJxlReader(sheet));
 		this.sheet = sheet;
 		this.cellFormatByName = cellFormatByName;
@@ -86,6 +86,9 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
 		final CellFormat cf = jxlCell.getCellFormat();
+		if (this.cellFormatByName == null)
+			return null;
+		
 		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
 				.entrySet()) {
 			if (entry.getValue().equals(cf))
@@ -190,6 +193,9 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
+		if (this.cellFormatByName == null)
+			return false;
+		
 		if (this.cellFormatByName.containsKey(styleName)) {
 			final CellFormat format = this.cellFormatByName.get(styleName);
 			WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
@@ -253,7 +259,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected /*@Nullable*/ WritableCell getOrCreateJxlCell(final int r,
+	protected WritableCell getOrCreateJxlCell(final int r,
 			final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();

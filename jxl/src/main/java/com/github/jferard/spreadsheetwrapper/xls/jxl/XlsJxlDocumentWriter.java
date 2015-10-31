@@ -43,6 +43,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Accessor;
+import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /**
@@ -63,7 +64,7 @@ implements SpreadsheetDocumentWriter {
 	XlsJxlDocumentWriter(final Logger logger,
 			final XlsJxlStyleUtility styleUtility,
 			final WritableWorkbook workbook) {
-		super(logger, null);
+		super(logger, new Output());
 		this.styleUtility = styleUtility;
 		this.writableWorkbook = workbook;
 		this.accessor = new Accessor<SpreadsheetWriter>();

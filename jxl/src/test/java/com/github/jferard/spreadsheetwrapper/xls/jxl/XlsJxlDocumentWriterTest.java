@@ -22,9 +22,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URL;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
@@ -36,14 +38,14 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before
+	@SuppressWarnings("nullness")
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final InputStream inputStream = this
-					.getClass()
-					.getResource(
-							String.format("/VilleMTP_MTP_MonumentsHist.%s",
-									this.getProperties().getExtension()))
+			final URL sourceURL = this.getProperties().getSourceURL();
+			Assume.assumeNotNull(sourceURL);
+			
+			final InputStream inputStream = sourceURL
 					.openStream();
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
