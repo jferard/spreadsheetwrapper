@@ -42,11 +42,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
- * The sfSpreadSheet writer for Apache JOpen.
- *
- */
-/**
- * @author Julien
+ * The spreadSheet writer for JOpendocument 1.2
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter

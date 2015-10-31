@@ -20,19 +20,22 @@ package com.github.jferard.spreadsheetwrapper;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class WrapperCellStyle {
+	public static final int DEFAULT = -1;
+	public static final int YES = 1;
+	public static final int NO = 0;
 	private/*@Nullable*/WrapperColor backgoundColor;
 	private/*@Nullable*/WrapperFont cellFont;
 
 	/**
-	 * @param wrapperColor
+	 * @param backgroundColor
 	 *            the background color of the cell
 	 * @param cellFont
 	 *            the font
 	 */
-	public WrapperCellStyle(final/*@Nullable*/WrapperColor wrapperColor,
+	public WrapperCellStyle(final/*@Nullable*/WrapperColor backgroundColor,
 			final/*@Nullable*/WrapperFont cellFont) {
 		super();
-		this.backgoundColor = wrapperColor;
+		this.backgoundColor = backgroundColor;
 		this.cellFont = cellFont;
 	}
 

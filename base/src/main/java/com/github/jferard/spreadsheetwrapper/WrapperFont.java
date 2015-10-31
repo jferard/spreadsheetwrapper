@@ -17,6 +17,8 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
+
+
 /**
  * the class WrapperFont wraps some font attributes : bold/italic, size and
  * color
@@ -24,13 +26,13 @@ package com.github.jferard.spreadsheetwrapper;
  */
 public class WrapperFont {
 	/** true if the font is bold */
-	private boolean bold;
+	private int bold;
 	/** true if the font is italic */
-	private boolean italic;
-	/** size of the font */
+	private int italic;
+	/** size of the font, -1 if no size specified */
 	private int size;
 	/** color of the font */
-	private final WrapperColor wrapperColor;
+	private /*@Nullable*/ WrapperColor wrapperColor;
 
 	/**
 	 * @param bold
@@ -42,13 +44,17 @@ public class WrapperFont {
 	 * @param wrapperColor
 	 *            color of the font
 	 */
-	public WrapperFont(final boolean bold, final boolean italic,
-			final int size, final WrapperColor wrapperColor) {
+	public WrapperFont(final int bold, final int italic,
+			final int size, final /*@Nullable*/ WrapperColor wrapperColor) {
 		super();
 		this.bold = bold;
 		this.italic = italic;
 		this.size = size;
 		this.wrapperColor = wrapperColor;
+	}
+
+	public WrapperFont(int bold, int italic) {
+		this(bold, italic, WrapperCellStyle.DEFAULT, null);
 	}
 
 	/**
@@ -68,14 +74,14 @@ public class WrapperFont {
 	/**
 	 * @return true if the font is bold
 	 */
-	public boolean isBold() {
+	public int getBold() {
 		return this.bold;
 	}
 
 	/**
 	 * @return true if the font is italic
 	 */
-	public boolean isItalic() {
+	public int getItalic() {
 		return this.italic;
 	}
 
@@ -83,7 +89,7 @@ public class WrapperFont {
 	 * @param bold
 	 *            true toset the font to bold
 	 */
-	public void setBold(final boolean bold) {
+	public void setBold(final int bold) {
 		this.bold = bold;
 	}
 
@@ -91,7 +97,7 @@ public class WrapperFont {
 	 * @param italic
 	 *            true to set thee font to italic
 	 */
-	public void setItalic(final boolean italic) {
+	public void setItalic(final int italic) {
 		this.italic = italic;
 	}
 
@@ -102,5 +108,8 @@ public class WrapperFont {
 	public void setSize(final int size) {
 		this.size = size;
 	}
-
+	
+	public void setColor(final WrapperColor color) {
+		this.wrapperColor = color;
+	}	
 }
