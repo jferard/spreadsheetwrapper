@@ -46,9 +46,8 @@ public abstract class SpreadsheetDocumentReaderTest {
 		try {
 			final URL sourceURL = this.getProperties().getSourceURL();
 			Assume.assumeNotNull(sourceURL);
-			
-			final InputStream inputStream = sourceURL
-					.openStream();
+
+			final InputStream inputStream = sourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
 		} catch (final SpreadsheetException e) {

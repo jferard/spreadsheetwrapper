@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;
@@ -84,12 +84,12 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
+	public List</*@Nullable*/Object> removeCol(final int c) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
+	public List</*@Nullable*/Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
 	}
 

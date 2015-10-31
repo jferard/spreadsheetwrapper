@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  * the sheet reader for SimpleODS.
  */
 class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -68,7 +68,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -134,7 +134,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Date getDate(final int r, final int c) {
+	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -146,7 +146,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Double getDouble(final int r, final int c) {
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -155,7 +155,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getFormula(final int r, final int c) {
+	public/*@Nullable*/String getFormula(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -184,7 +184,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getText(final int r, final int c) {
+	public/*@Nullable*/String getText(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -202,7 +202,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 	 *            the column index
 	 * @return the cell
 	 */
-	protected /*@Nullable*/ Cell getSimpleCell(final int r, final int c) {
+	protected/*@Nullable*/Cell getSimpleCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

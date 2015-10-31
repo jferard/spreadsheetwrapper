@@ -30,7 +30,6 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
-
 public class XlsJxlStyleUtility extends StyleUtility {
 	private final Map<WrapperColor, Colour> jxlColorByColor;
 
@@ -75,7 +74,7 @@ public class XlsJxlStyleUtility extends StyleUtility {
 		return cellFormat;
 	}
 
-	public /*@Nullable*/ Colour getJxlColor(final WrapperColor backgroundColor) {
+	public/*@Nullable*/Colour getJxlColor(final WrapperColor backgroundColor) {
 		return this.jxlColorByColor.get(backgroundColor);
 	}
 }

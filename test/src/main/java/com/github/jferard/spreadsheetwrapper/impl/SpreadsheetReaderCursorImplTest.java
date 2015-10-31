@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetReaderCursorImplTest extends
-		CursorAbstractTest {
+CursorAbstractTest {
 
 	private SpreadsheetDocumentFactory factory;
 
@@ -44,9 +44,8 @@ public abstract class SpreadsheetReaderCursorImplTest extends
 		try {
 			final URL sourceURL = this.getProperties().getSourceURL();
 			Assume.assumeNotNull(sourceURL);
-			
-			final InputStream inputStream = sourceURL
-					.openStream();
+
+			final InputStream inputStream = sourceURL.openStream();
 			final SpreadsheetDocumentReader sdr = this.factory
 					.openForRead(inputStream);
 			final SpreadsheetReader sheet = sdr.getSpreadsheet(0);

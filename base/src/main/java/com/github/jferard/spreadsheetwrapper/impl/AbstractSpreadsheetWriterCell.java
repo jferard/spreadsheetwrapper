@@ -22,7 +22,7 @@ import java.util.Date;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 
 public abstract class AbstractSpreadsheetWriterCell implements
-		SpreadsheetWriterCursor {
+SpreadsheetWriterCursor {
 	AbstractSpreadsheetWriterCell() {
 		// does nothing
 	}

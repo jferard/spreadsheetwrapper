@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetWriterCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 	@Before
 	@SuppressWarnings("nullness")
 	public void setUp() {
@@ -41,9 +41,8 @@ CursorAbstractTest {
 		try {
 			final URL sourceURL = this.getProperties().getSourceURL();
 			Assume.assumeNotNull(sourceURL);
-			
-			final InputStream inputStream = sourceURL
-					.openStream();
+
+			final InputStream inputStream = sourceURL.openStream();
 			final SpreadsheetDocumentWriter sdw = factory
 					.openForWrite(inputStream);
 			final SpreadsheetWriter sheet = sdw.getSpreadsheet(0);

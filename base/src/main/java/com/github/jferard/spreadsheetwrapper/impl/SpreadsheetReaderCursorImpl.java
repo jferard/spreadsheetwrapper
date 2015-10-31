@@ -94,25 +94,25 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Date getDate() {
+	public/*@Nullable*/Date getDate() {
 		return this.reader.getDate(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Double getDouble() {
+	public/*@Nullable*/Double getDouble() {
 		return this.reader.getDouble(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getFormula() {
+	public/*@Nullable*/String getFormula() {
 		return this.reader.getFormula(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Integer getInteger() {
+	public/*@Nullable*/Integer getInteger() {
 		return this.reader.getInteger(this.cursor.getR(), this.cursor.getC());
 	}
 
@@ -135,14 +135,14 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getStyleString() {
+	public/*@Nullable*/String getStyleString() {
 		return this.reader.getStyleString(this.cursor.getR(),
 				this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getText() {
+	public/*@Nullable*/String getText() {
 		return this.reader.getText(this.cursor.getR(), this.cursor.getC());
 	}
 

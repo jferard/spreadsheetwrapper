@@ -39,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
@@ -86,15 +86,15 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	}
 
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
-		final List</*@Nullable*/ Object> retValue = this.getColContents(c);
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		final List</*@Nullable*/Object> retValue = this.getColContents(c);
 		this.table.removeColumnsByIndex(c, 1);
 		return retValue;
 	}
 
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
-		final List</*@Nullable*/ Object> retValue = this.getRowContents(r);
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		final List</*@Nullable*/Object> retValue = this.getRowContents(r);
 		this.table.removeRowsByIndex(r, 1);
 		return retValue;
 	}

@@ -50,14 +50,15 @@ public class DocumentFactoryManager {
 			throws SpreadsheetException {
 		final Package package1 = this.getClass().getPackage();
 		if (package1 == null)
-			throw new SpreadsheetException("Package not found :"+this.getClass());
+			throw new SpreadsheetException("Package not found :"
+					+ this.getClass());
 		final String startOfClassName = package1.getName();
 		Class<?> clazz;
 		try {
 			clazz = Class.forName(new StringBuilder(startOfClassName)
-					.append('.').append(endOfClassName).toString());
+			.append('.').append(endOfClassName).toString());
 			final Method method = clazz.getMethod("create", Logger.class);
-			
+
 			return (SpreadsheetDocumentFactory) method
 					.invoke(null, this.logger);
 		} catch (final ClassNotFoundException e) {

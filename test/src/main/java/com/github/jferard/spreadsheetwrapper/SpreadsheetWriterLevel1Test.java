@@ -118,14 +118,16 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 		final int c = 6;
 		try {
 			final Date dm = new Date(1234567891);
-			final Date ds = new Date(1234567891 - Math.floorMod(1234567891, 1000));
-			final Date dd = new Date(1234567891 - Math.floorMod(1234567891, 1000*86400));
-			
+			final Date ds = new Date(1234567891 - Math.floorMod(1234567891,
+					1000));
+			final Date dd = new Date(1234567891 - Math.floorMod(1234567891,
+					1000 * 86400));
+
 			final Date d2 = this.sw.setDate(r, c, dm); // setDate :
 			// 0
 			// UTC = 1 CET
 			Assert.assertTrue(d2.equals(dm) || d2.equals(ds) || d2.equals(dd));
-			Date d3 = this.sw.getDate(r, c);
+			final Date d3 = this.sw.getDate(r, c);
 			Assert.assertEquals(d2, d3);
 		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();

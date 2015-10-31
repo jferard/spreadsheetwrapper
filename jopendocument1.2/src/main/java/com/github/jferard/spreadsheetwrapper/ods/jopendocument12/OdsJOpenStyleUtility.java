@@ -131,9 +131,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 			final String bc = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
 			final Element tableCellProps = new Element("table-cell-properties",
 					OdsJOpenStyleUtility.styleNS);
-			tableCellProps.setAttribute(
-					StyleUtility.BACKGROUND_COLOR, 
-					bc,
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR, bc,
 					OdsJOpenStyleUtility.foNS);
 			style.addContent(tableCellProps);
 		}
@@ -141,8 +139,8 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps
-					.setAttribute(StyleUtility.FONT_WEIGHT, fw, OdsJOpenStyleUtility.foNS);
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT, fw,
+					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -174,8 +172,8 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps
-					.setAttribute(StyleUtility.FONT_WEIGHT, fw, OdsJOpenStyleUtility.foNS);
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT, fw,
+					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;

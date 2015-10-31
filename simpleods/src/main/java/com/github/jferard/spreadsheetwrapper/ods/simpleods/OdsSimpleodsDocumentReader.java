@@ -39,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** a value for delegation */
 	private final class OdsSimpleodsDocumentReaderTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
+			AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param file
 		 *            *internal* workbook

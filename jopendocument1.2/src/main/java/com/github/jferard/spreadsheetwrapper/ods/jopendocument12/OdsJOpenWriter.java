@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -72,15 +72,15 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
-		List</*@Nullable*/ Object> ret = this.getColContents(c);
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		final List</*@Nullable*/Object> ret = this.getColContents(c);
 		this.sheet.removeColumn(c, true);
 		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
+	public List</*@Nullable*/Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
 	}
 

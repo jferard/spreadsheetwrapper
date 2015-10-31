@@ -101,7 +101,8 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null && wrapperFont.isBold())
 			properties.put(OdfTextProperties.FontWeight, "bold");
-		final WrapperColor backgroundColor = wrapperCellStyle.getBackgroundColor();
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
 		if (backgroundColor != null) {
 			properties.put(OdfTableCellProperties.BackgroundColor,
 					backgroundColor.toHex());

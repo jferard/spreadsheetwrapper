@@ -33,10 +33,9 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class SpreadsheetWriterLevel2Test extends
-		SpreadsheetWriterLevel1Test {
+SpreadsheetWriterLevel1Test {
 	@Rule
 	public TestName name = new TestName();
-
 
 	/** set the test up */
 	@Before

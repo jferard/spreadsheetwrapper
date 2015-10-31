@@ -138,10 +138,9 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps
-					.setAttribute(StyleUtility.FONT_WEIGHT,
-							propertiesMap.get(StyleUtility.FONT_WEIGHT),
-							OdsJOpenStyleUtility.foNS);
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT,
+					propertiesMap.get(StyleUtility.FONT_WEIGHT),
+					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -172,10 +171,9 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
-			textProps
-					.setAttribute(StyleUtility.FONT_WEIGHT,
-							propertiesMap.get(StyleUtility.FONT_WEIGHT),
-							OdsJOpenStyleUtility.foNS);
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT,
+					propertiesMap.get(StyleUtility.FONT_WEIGHT),
+					OdsJOpenStyleUtility.foNS);
 			style.addContent(textProps);
 		}
 		return style;

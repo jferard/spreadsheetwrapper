@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -51,10 +50,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
-			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 		}
@@ -76,7 +75,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *            the elements to look at
 	 * @return the matching element, or null
 	 */
-	private static /*@Nullable*/ Element findElementWithName(final String name,
+	private static/*@Nullable*/Element findElementWithName(final String name,
 			final List<Element> elements) {
 		for (final Element element : elements) {
 			if (name.equals(element.getAttributeValue("name")))
@@ -112,7 +111,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public OdsJOpenDocumentWriter(final Logger logger,
 			final OdsJOpenStyleUtility styleUtility,
 			final OdsJOpenStatefulDocument sfSpreadSheet, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
 		this.styleUtility = styleUtility;
 		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);

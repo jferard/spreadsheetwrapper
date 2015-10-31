@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsPoiReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */
@@ -53,7 +53,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
 			return null;
@@ -122,7 +122,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Date getDate(final int r, final int c) {
+	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
 			return null;
@@ -134,7 +134,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Double getDouble(final int r, final int c) {
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
 			return null;
@@ -147,7 +147,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getFormula(final int r, final int c) {
+	public/*@Nullable*/String getFormula(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
 			return null;
@@ -174,11 +174,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getText(final int r, final int c) {
+	public/*@Nullable*/String getText(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (cell.getCellType() != Cell.CELL_TYPE_STRING)
 			throw new IllegalArgumentException(
 					"This cell does not contain text");
@@ -194,7 +194,7 @@ SpreadsheetReader {
 	 *            the column index
 	 * @return the cell
 	 */
-	private /*@Nullable*/ Cell getPOICell(final int r, final int c) {
+	private/*@Nullable*/Cell getPOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -74,15 +74,15 @@ SpreadsheetWriter {
 	}
 
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
-		final List</*@Nullable*/ Object> retValue = this.getColContents(c);
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		final List</*@Nullable*/Object> retValue = this.getColContents(c);
 		this.table.removeColumnsByIndex(c, 1);
 		return retValue;
 	}
 
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
-		final List</*@Nullable*/ Object> retValue = this.getRowContents(r);
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		final List</*@Nullable*/Object> retValue = this.getRowContents(r);
 		this.table.removeRowsByIndex(r, 1);
 		return retValue;
 	}

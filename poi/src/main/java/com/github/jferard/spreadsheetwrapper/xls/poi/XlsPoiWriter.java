@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/**
 	 * COPY FROM JXL : The maximum number of columns
 	 */
@@ -45,7 +45,7 @@ SpreadsheetWriter {
 	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
 	 */
 	private final static int numRowsPerSheet = 65536;
-	private final /*@Nullable*/ Map<String, CellStyle> cellStyleByName;
+	private final/*@Nullable*/Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -65,7 +65,7 @@ SpreadsheetWriter {
 	 * @param cellStyleByName
 	 */
 	XlsPoiWriter(final Sheet sheet, final/*@Nullable*/CellStyle dateCellStyle,
-			final /*@Nullable*/ Map<String, CellStyle> cellStyleByName) {
+			final/*@Nullable*/Map<String, CellStyle> cellStyleByName) {
 		super(new XlsPoiReader(sheet));
 		this.sheet = sheet;
 		this.cellStyleByName = cellStyleByName;
@@ -80,7 +80,7 @@ SpreadsheetWriter {
 		final CellStyle cellStyle = cell.getCellStyle();
 		if (this.cellStyleByName == null)
 			return null;
-		
+
 		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
 				.entrySet()) {
 			if (entry.getValue().equals(cellStyle))
@@ -112,14 +112,14 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
+	public List</*@Nullable*/Object> removeCol(final int c) {
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
-		final List</*@Nullable*/ Object> ret = this.getRowContents(r);
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		final List</*@Nullable*/Object> ret = this.getRowContents(r);
 		final Row row = this.sheet.getRow(r);
 		this.sheet.removeRow(row);
 		this.sheet.shiftRows(r, this.getRowCount(), 1);
@@ -191,7 +191,7 @@ SpreadsheetWriter {
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		if (this.cellStyleByName == null)
 			return false;
-		
+
 		if (this.cellStyleByName.containsKey(styleName)) {
 			final Cell cell = this.getOrCreatePOICell(r, c);
 			cell.setCellStyle(this.cellStyleByName.get(styleName));
@@ -220,8 +220,7 @@ SpreadsheetWriter {
 	protected Cell getOrCreatePOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsPoiWriter.numRowsPerSheet
-				|| c >= XlsPoiWriter.maxColumns)
+		if (r >= XlsPoiWriter.numRowsPerSheet || c >= XlsPoiWriter.maxColumns)
 			throw new UnsupportedOperationException();
 
 		if (r != this.curR || this.curRow == null) {

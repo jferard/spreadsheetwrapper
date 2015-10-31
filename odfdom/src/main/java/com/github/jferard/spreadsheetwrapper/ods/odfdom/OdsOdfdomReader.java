@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -97,11 +97,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Boolean getBoolean(final int r, final int c) {
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (!"boolean".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
@@ -157,11 +157,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Date getDate(final int r, final int c) {
+	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (!"date".equals(cell.getValueType())
 				&& !"time".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
@@ -173,11 +173,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Double getDouble(final int r, final int c) {
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (!"float".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
@@ -185,11 +185,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getFormula(final int r, final int c) {
+	public/*@Nullable*/String getFormula(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		final String formula = cell.getFormula();
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
@@ -229,11 +229,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getText(final int r, final int c) {
+	public/*@Nullable*/String getText(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (!"string".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
@@ -248,7 +248,7 @@ SpreadsheetReader {
 	 *            the column index
 	 * @return the cell
 	 */
-	protected /*@Nullable*/ OdfTableCell getOdfCell(final int r, final int c) {
+	protected/*@Nullable*/OdfTableCell getOdfCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

@@ -44,7 +44,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 
 	/**
 	 * COPY FROM JXL : The maximum number of columns
@@ -56,7 +56,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 */
 	private final static int numRowsPerSheet = 65536;
 
-	private final /*@Nullable*/ Map<String, WritableCellFormat> cellFormatByName;
+	private final/*@Nullable*/Map<String, WritableCellFormat> cellFormatByName;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -73,7 +73,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 * @param cellFormatByName
 	 */
 	XlsJxlWriter(final WritableSheet sheet,
-			final /*@Nullable*/ Map<String, WritableCellFormat> cellFormatByName) {
+			final/*@Nullable*/Map<String, WritableCellFormat> cellFormatByName) {
 		super(new XlsJxlReader(sheet));
 		this.sheet = sheet;
 		this.cellFormatByName = cellFormatByName;
@@ -83,12 +83,12 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
 		final CellFormat cf = jxlCell.getCellFormat();
 		if (this.cellFormatByName == null)
 			return null;
-		
+
 		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
 				.entrySet()) {
 			if (entry.getValue().equals(cf))
@@ -117,16 +117,16 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeCol(final int c) {
-		final List</*@Nullable*/ Object> ret = this.getColContents(c);
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		final List</*@Nullable*/Object> ret = this.getColContents(c);
 		this.sheet.removeColumn(c);
 		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public List</*@Nullable*/ Object> removeRow(final int r) {
-		final List</*@Nullable*/ Object> ret = this.getRowContents(r);
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		final List</*@Nullable*/Object> ret = this.getRowContents(r);
 		this.sheet.removeRow(r);
 		return ret;
 	}
@@ -195,7 +195,7 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		if (this.cellFormatByName == null)
 			return false;
-		
+
 		if (this.cellFormatByName.containsKey(styleName)) {
 			final CellFormat format = this.cellFormatByName.get(styleName);
 			WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
@@ -259,12 +259,10 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected WritableCell getOrCreateJxlCell(final int r,
-			final int c) {
+	protected WritableCell getOrCreateJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsJxlWriter.numRowsPerSheet
-				|| c >= XlsJxlWriter.maxColumns)
+		if (r >= XlsJxlWriter.numRowsPerSheet || c >= XlsJxlWriter.maxColumns)
 			throw new UnsupportedOperationException();
 
 		WritableCell cell;

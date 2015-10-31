@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -65,7 +65,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Object getCellContent(final int rowIndex,
+	public/*@Nullable*/Object getCellContent(final int rowIndex,
 			final int colIndex) {
 		final TableCell cell = this.getSimpleCell(rowIndex, colIndex);
 		if (cell == null)
@@ -111,11 +111,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Date getDate(final int r, final int c) {
+	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final TableCell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (cell.getValueType() == TableCell.STYLE_DATE) {
 			final String dateAsString = cell.getDateValue();
 			final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd",
@@ -133,11 +133,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ Double getDouble(final int r, final int c) {
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final TableCell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (cell.getValueType() == TableCell.STYLE_FLOAT) {
 			return Double.parseDouble(cell.getValue());
 		}
@@ -164,11 +164,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getText(final int r, final int c) {
+	public/*@Nullable*/String getText(final int r, final int c) {
 		final TableCell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
-		
+
 		if (cell.getValueType() == TableCell.STYLE_STRING) {
 			return cell.getText();
 		}
@@ -184,7 +184,7 @@ SpreadsheetReader {
 	 * @throws IllegalArgumentException
 	 *             if the row does not exist
 	 */
-	protected /*@Nullable*/ TableCell getSimpleCell(final int r, final int c)
+	protected/*@Nullable*/TableCell getSimpleCell(final int r, final int c)
 			throws IllegalArgumentException {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();

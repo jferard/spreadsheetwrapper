@@ -47,13 +47,13 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 * @param c
 	 *            index (0..) of the column to be removed
 	 */
-	List</*@Nullable*/ Object> removeCol(int c);
+	List</*@Nullable*/Object> removeCol(int c);
 
 	/**
 	 * @param r
 	 *            index (0..) of the column to be removed
 	 */
-	List</*@Nullable*/ Object> removeRow(int r);
+	List</*@Nullable*/Object> removeRow(int r);
 
 	/**
 	 * @param r

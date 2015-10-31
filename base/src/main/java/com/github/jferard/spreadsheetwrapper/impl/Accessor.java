@@ -134,7 +134,7 @@ public class Accessor</*@NonNull*/T> {
 				}
 			}
 			stringBuilder.append(index).append('&').append(name).append("->")
-			.append(element).append(',');
+					.append(element).append(',');
 		}
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(']');
 		return stringBuilder.toString();

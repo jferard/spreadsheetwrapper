@@ -26,7 +26,17 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 abstract class AbstractOdsJOpenDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+		AbstractSpreadsheetDocumentTrait<T> {
+	private static int getSheetCount(
+			final OdsJOpenStatefulDocument sfSpreadSheet) {
+		int count;
+		if (sfSpreadSheet.isNew())
+			count = 0;
+		else
+			count = sfSpreadSheet.getRawSheetCount();
+		return count;
+	}
+
 	/** the *internal* value (workbook) */
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
 
@@ -38,22 +48,14 @@ AbstractSpreadsheetDocumentTrait<T> {
 			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		super();
 		this.sfSpreadSheet = sfSpreadSheet;
-		final int sheetCount = AbstractOdsJOpenDocumentTrait.getSheetCount(sfSpreadSheet);
+		final int sheetCount = AbstractOdsJOpenDocumentTrait
+				.getSheetCount(sfSpreadSheet);
 		for (int s = 0; s < sheetCount; s++) {
 			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
 			final String name = sheet.getName();
 			final T reader = this.createNew(sheet);
 			this.accessor.put(name, s, reader);
 		}
-	}
-
-	private static int getSheetCount(OdsJOpenStatefulDocument sfSpreadSheet) {
-		int count;
-		if (sfSpreadSheet.isNew())
-			count = 0;
-		else
-			count = sfSpreadSheet.getRawSheetCount();
-		return count;
 	}
 
 	/**

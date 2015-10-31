@@ -55,7 +55,7 @@ public abstract class SpreadsheetReaderTest {
 		try {
 			final URL resourceURL = this.getProperties().getSourceURL();
 			Assume.assumeNotNull(resourceURL);
-			
+
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdr = this.factory.openForRead(inputStream);
 			Assert.assertEquals(1, this.sdr.getSheetCount());
@@ -309,7 +309,8 @@ public abstract class SpreadsheetReaderTest {
 					"inscrit Inv. MH 19 11 1985", "En totalité",
 					Double.valueOf(333.810638315),
 					Double.valueOf(93.4774612976));
-			final List</*@Nullable*/ Object> rowContents = this.sr.getRowContents(1);
+			final List</*@Nullable*/Object> rowContents = this.sr
+					.getRowContents(1);
 			for (int i = 0; i < list.size(); i++)
 				Assert.assertEquals(list.get(i), rowContents.get(i));
 			Assert.assertEquals(list, rowContents);

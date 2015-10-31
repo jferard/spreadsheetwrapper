@@ -35,7 +35,26 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
 /*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
+	private static void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		assert colsList.getLength() == 1;
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 1) {
+			final Node item = rowList.item(1);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		final int lengthAfter = rowListAfter.getLength();
+		assert lengthAfter == 1;
+	}
+
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
@@ -83,25 +102,6 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		else
 			tables = this.sfDocument.getRawTableList();
 		return tables;
-	}
-
-	private static void cleanEmptyTable(final TableTableElement tableElement) {
-		final NodeList colsList = tableElement
-				.getElementsByTagName("table:table-column");
-		assert colsList.getLength() == 1;
-		final TableTableColumnElement column = (TableTableColumnElement) colsList
-				.item(0);
-		column.setTableNumberColumnsRepeatedAttribute(1);
-		final NodeList rowList = tableElement
-				.getElementsByTagName("table:table-row");
-		while (rowList.getLength() > 1) {
-			final Node item = rowList.item(1);
-			tableElement.removeChild(item);
-		}
-		final NodeList rowListAfter = tableElement
-				.getElementsByTagName("table:table-row");
-		final int lengthAfter = rowListAfter.getLength();
-		assert lengthAfter == 1;
 	}
 
 	/** {@inheritDoc} */

@@ -44,7 +44,7 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 		try {
 			final URL resourceURL = this.getProperties().getSourceURL();
 			Assume.assumeNotNull(resourceURL);
-			
+
 			final InputStream inputStream = resourceURL.openStream();
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),

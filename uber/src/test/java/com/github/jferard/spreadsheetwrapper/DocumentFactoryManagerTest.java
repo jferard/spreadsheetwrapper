@@ -48,9 +48,10 @@ public class DocumentFactoryManagerTest {
 	@Test
 	@SuppressWarnings("unused")
 	public final void testManager() throws SpreadsheetException,
-			IllegalArgumentException {
+	IllegalArgumentException {
 		final Logger logger = PowerMock.createNiceMock(Logger.class);
-		final DocumentFactoryManager manager = new DocumentFactoryManager(logger);
+		final DocumentFactoryManager manager = new DocumentFactoryManager(
+				logger);
 		SpreadsheetDocumentFactory factory;
 		factory = manager
 				.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");
