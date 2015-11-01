@@ -223,9 +223,9 @@ public class OdsSimpleodsDocumentWriter extends
 				styleName, this.file);
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null) {
-			if (wrapperFont.isBold())
+			if (wrapperFont.getBold() == WrapperCellStyle.YES)
 				newStyle.setFontWeightBold();
-			if (wrapperFont.isItalic())
+			if (wrapperFont.getItalic() == WrapperCellStyle.YES)
 				newStyle.setFontWeightItalic();
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle

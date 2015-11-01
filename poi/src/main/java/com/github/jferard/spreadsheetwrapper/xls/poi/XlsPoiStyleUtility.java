@@ -145,11 +145,9 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		WrapperCellStyle wrapperCellStyle;
 		WrapperFont wrapperFont;
 		if (poiFont.getBoldweight() == Font.BOLDWEIGHT_BOLD)
-			wrapperFont = new WrapperFont(true, false, fontIndex,
-					WrapperColor.AUTOMATIC);
+			wrapperFont = new WrapperFont().setBold();
 		else
-			wrapperFont = new WrapperFont(false, false, fontIndex,
-					WrapperColor.AUTOMATIC);
+			wrapperFont = new WrapperFont();
 
 		final Color poiColor = cellStyle.getFillBackgroundColorColor();
 		final WrapperColor wrapperColor;

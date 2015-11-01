@@ -57,17 +57,23 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	public WrapperCellStyle getCellStyle(final OdfStyle style) {
 		final String fontWeight = style
 				.getProperty(OdfTextProperties.FontWeight);
+		final String fontStyle = style
+				.getProperty(OdfTextProperties.FontStyle);
+		final String fontSize = style
+				.getProperty(OdfTextProperties.FontSize);
+		final String fontColor = style
+				.getProperty(OdfTextProperties.Color);
 		final String backgroundColor = style
 				.getProperty(OdfTableCellProperties.BackgroundColor);
 
 		WrapperFont wrapperFont = null;
 		if ("bold".equals(fontWeight))
-			wrapperFont = new WrapperFont(true, false, -1, WrapperColor.BLACK);
+			wrapperFont = new WrapperFont().setBold();
 		final WrapperColor wrapperColor;
 		if (this.colorByHex.containsKey(backgroundColor))
 			wrapperColor = this.colorByHex.get(backgroundColor);
 		else
-			wrapperColor = WrapperColor.WHITE;
+			wrapperColor = null;
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 
@@ -76,6 +82,7 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	 *            the old style string
 	 * @return the properties extracted from the style string
 	 */
+	@Deprecated
 	public Map<OdfStyleProperty, String> getProperties(final String styleString) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final Map<String, String> props = this.getPropertiesMap(styleString);
@@ -99,7 +106,7 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 			final WrapperCellStyle wrapperCellStyle) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null && wrapperFont.isBold())
+		if (wrapperFont != null && wrapperFont.getBold() == WrapperCellStyle.YES)
 			properties.put(OdfTextProperties.FontWeight, "bold");
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();

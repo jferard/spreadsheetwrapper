@@ -66,8 +66,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 
 	@Test
 	public final void testCreate2StylesFromObjectsAndSetStylesWithGap() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
+		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
@@ -79,8 +78,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 	public final void testCreate2StylesFromObjectsAndSetStylesWithNoGap() { // buggy
 		// for
 		// simpleodf
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
+		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
@@ -90,8 +88,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 
 	@Test
 	public final void testCreateStyleFromObjectsAndSetStyle() {
-		final WrapperFont wrapperFont = new WrapperFont(true, false, 0,
-				WrapperColor.BLACK);
+		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);

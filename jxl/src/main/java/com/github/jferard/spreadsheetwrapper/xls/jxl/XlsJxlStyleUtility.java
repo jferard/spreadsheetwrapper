@@ -58,6 +58,7 @@ public class XlsJxlStyleUtility extends StyleUtility {
 		}
 	}
 
+	@Deprecated
 	public WritableCellFormat getCellFormat(final String styleString)
 			throws WriteException {
 		final Map<String, String> props = this.getPropertiesMap(styleString);

@@ -93,6 +93,7 @@ public class StyleUtility {
 		WrapperFont font = cellStyle.getCellFont();
 		final int size = font.getSize();
 		final WrapperColor color = font.getColor();
+		
 		switch (font.getBold()) {
 		case WrapperCellStyle.YES:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)

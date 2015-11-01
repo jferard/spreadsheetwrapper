@@ -219,7 +219,7 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		try {
 			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 			if (wrapperFont != null) {
-				if (wrapperFont.isBold())
+				if (wrapperFont.getBold() == WrapperCellStyle.YES)
 					cellFont.setBoldStyle(WritableFont.BOLD);
 			}
 			final WrapperColor backgroundColor = wrapperCellStyle

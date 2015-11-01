@@ -17,7 +17,7 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper;
 
-
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  * the class WrapperFont wraps some font attributes : bold/italic, size and
@@ -57,6 +57,13 @@ public class WrapperFont {
 		this(bold, italic, WrapperCellStyle.DEFAULT, null);
 	}
 
+	public WrapperFont() {
+		this.bold = WrapperCellStyle.DEFAULT;
+		this.italic = WrapperCellStyle.DEFAULT;
+		this.size = WrapperCellStyle.DEFAULT;
+		this.wrapperColor = null;
+	}
+
 	/**
 	 * @return the color of the font
 	 */
@@ -89,27 +96,45 @@ public class WrapperFont {
 	 * @param bold
 	 *            true toset the font to bold
 	 */
-	public void setBold(final int bold) {
+	public WrapperFont setBold(final int bold) {
 		this.bold = bold;
+		return this;
 	}
 
 	/**
 	 * @param italic
 	 *            true to set thee font to italic
 	 */
-	public void setItalic(final int italic) {
+	public WrapperFont setItalic(final int italic) {
 		this.italic = italic;
+		return this;
 	}
 
+	/**
+	 * @param italic
+	 *            true to set thee font to italic
+	 */
+	public WrapperFont setItalic() {
+		this.italic = WrapperCellStyle.YES;
+		return this;
+	}
+	
 	/**
 	 * @param size
 	 *            size of the font
 	 */
-	public void setSize(final int size) {
+	public WrapperFont setSize(final int size) {
 		this.size = size;
+		return this;
 	}
 	
-	public void setColor(final WrapperColor color) {
+	public WrapperFont setColor(final WrapperColor color) {
 		this.wrapperColor = color;
+		return this;
+	}
+
+	public WrapperFont setBold() {
+		this.bold = WrapperCellStyle.YES;
+		return this;
 	}	
 }

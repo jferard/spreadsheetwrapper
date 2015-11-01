@@ -51,6 +51,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 	 *            the old style string
 	 * @return the DOM element
 	 */
+	@Deprecated
 	public Element createStyleElement(final String styleName,
 			final String styleString) {
 		final Map<String, String> propertiesMap = this
@@ -78,7 +79,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 			style.addContent(tableCellProps);
 		}
 		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
-		if (cellFont != null && cellFont.isBold()) {
+		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
 			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
@@ -88,6 +89,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 		return style;
 	}
 
+	@Deprecated
 	public Element setStyle(final Element style, final String styleString) {
 		final Map<String, String> propertiesMap = this
 				.getPropertiesMap(styleString);
@@ -107,7 +109,7 @@ public class OdsJOpenStyleUtility extends StyleUtility {
 			style.addContent(tableCellProps);
 		}
 		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
-		if (cellFont != null && cellFont.isBold()) {
+		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
 			final Element textProps = new Element("text-properties",
 					OdsJOpenStyleUtility.styleNS);
 			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
