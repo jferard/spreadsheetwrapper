@@ -21,19 +21,26 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 import org.jopendocument.dom.ODValueType;
+import org.jopendocument.dom.spreadsheet.CellStyle;
+import org.jopendocument.dom.spreadsheet.CellStyle.StyleTableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.jopendocument.dom.text.TextStyle.StyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -153,6 +160,42 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		if (rowCount == 1 && this.getCellCount(0) == 0)
 			rowCount = 0;
 		return rowCount;
+	}
+
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final CellStyle cellStyle = cell.getStyle();
+		final StyleTableCellProperties tableCellProperties = cellStyle
+				.getTableCellProperties();
+		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
+		final WrapperColor backgroundColor = WrapperColor
+				.getColorFromString(bColorAsHex);
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		final StyleTextProperties textProperties = cellStyle
+				.getTextProperties();
+		final String fColorAsHex = textProperties.getElement()
+				.getAttributeValue("color", OdsJOpenStyleHelper.foNS);
+		wrapperFont.setColor(WrapperColor.getColorFromString(fColorAsHex));
+		if (textProperties.getElement().getAttribute(StyleUtility.FONT_WEIGHT)
+				.equals("bold"))
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		return cell.getStyleName();
 	}
 
 	/** {@inheritDoc} */

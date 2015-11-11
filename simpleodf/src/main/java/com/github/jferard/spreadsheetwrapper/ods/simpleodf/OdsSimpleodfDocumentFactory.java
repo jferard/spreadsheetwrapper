@@ -31,35 +31,35 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodfDocumentFactory extends
-AbstractDocumentFactory<SpreadsheetDocument> implements
-SpreadsheetDocumentFactory {
+		AbstractDocumentFactory<SpreadsheetDocument> implements
+		SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodfDocumentFactory(logger,
-				new OdsOdfdomStyleUtility());
+				new OdsOdfdomStyleHelper());
 	}
 
 	private final Logger logger;
 
-	private final OdsOdfdomStyleUtility styleUtility;
+	private final OdsOdfdomStyleHelper styleHelper;
 
 	public OdsSimpleodfDocumentFactory(final Logger logger,
-			final OdsOdfdomStyleUtility styleUtility) {
+			final OdsOdfdomStyleHelper styleHelper) {
 		super(logger);
 		this.logger = logger;
-		this.styleUtility = styleUtility;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<SpreadsheetDocument> sfDocument)
-					throws SpreadsheetException {
-		return new OdsSimpleodfDocumentReader(this.styleUtility,
+			throws SpreadsheetException {
+		return new OdsSimpleodfDocumentReader(this.styleHelper,
 				new OdsSimpleodfStatefulDocument(sfDocument));
 	}
 
@@ -67,8 +67,8 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadsheetDocument> sfDocument, final Output output)
-					throws SpreadsheetException {
-		return new OdsSimpleodfDocumentWriter(this.logger, this.styleUtility,
+			throws SpreadsheetException {
+		return new OdsSimpleodfDocumentWriter(this.logger, this.styleHelper,
 				new OdsSimpleodfStatefulDocument(sfDocument), output);
 	}
 
@@ -91,7 +91,7 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		SpreadsheetDocument document;
 		try {
 			document = SpreadsheetDocument.newSpreadsheetDocument();

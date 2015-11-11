@@ -29,6 +29,7 @@ import org.simpleods.TableCell;
 import org.simpleods.TableRow;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -36,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -162,6 +163,18 @@ class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
 		return this.table.getRows().size();
 	}
 
+	@Override
+	public WrapperCellStyle getStyle(final int r, final int c) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final TableCell simpleCell = this.getSimpleCell(r, c);
+		return simpleCell.getStyle();
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
@@ -184,7 +197,7 @@ class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
 	 * @throws IllegalArgumentException
 	 *             if the row does not exist
 	 */
-	protected/*@Nullable*/TableCell getSimpleCell(final int r, final int c)
+	private/*@Nullable*/TableCell getSimpleCell(final int r, final int c)
 			throws IllegalArgumentException {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();

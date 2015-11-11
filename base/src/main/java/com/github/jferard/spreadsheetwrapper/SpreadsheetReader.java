@@ -129,24 +129,24 @@ public interface SpreadsheetReader {
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the style name, null if no style or r >= rowCount or c >=
-	 *         colCount
+	 * @return the style string (@see createStyle), null if r >= rowCount or c
+	 *         >= colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist
 	 */
-	/*@Nullable*/String getStyleName(int r, int c);
+	/*@Nullable*/WrapperCellStyle getStyle(int r, int c);
 
 	/**
 	 * @param r
 	 *            index of the row (0..)
 	 * @param c
 	 *            index of the column (0..)
-	 * @return the style string (@see createStyle), null if r >= rowCount or c
-	 *         >= colCount
+	 * @return the style name, null if no style or r >= rowCount or c >=
+	 *         colCount
 	 * @throws IllegalArgumentException
 	 *             if the cell doesn't exist
 	 */
-	/*@Nullable*/String getStyleString(int r, int c);
+	/*@Nullable*/String getStyleName(int r, int c);
 
 	/**
 	 * @param r

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
+import jxl.write.WritableCellFormat;
 import jxl.write.WritableWorkbook;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -36,28 +37,30 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleUtility());
+		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleHelper(
+				new CellStyleAccessor<WritableCellFormat>()));
 	}
 
 	/** simple logger */
 	private final Logger logger;
 
-	private final XlsJxlStyleUtility styleUtility;
+	private final XlsJxlStyleHelper stylehelper;
 
 	/**
 	 * @param logger
 	 *            simple logger
 	 */
 	public XlsJxlDocumentFactory(final Logger logger,
-			final XlsJxlStyleUtility styleUtility) {
+			final XlsJxlStyleHelper styleHelper) {
 		this.logger = logger;
-		this.styleUtility = styleUtility;
+		this.stylehelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
@@ -70,7 +73,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -78,7 +81,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
 					outputStream, this.getWriteSettings());
 
-			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
 					writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -94,7 +97,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		try {
 			final Workbook workbook = Workbook.getWorkbook(inputStream,
 					this.getReadSettings());
-			return new XlsJxlDocumentReader(workbook);
+			return new XlsJxlDocumentReader(workbook, this.stylehelper);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		} catch (final IOException e) {
@@ -115,7 +118,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 					this.getReadSettings());
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
 					outputFile, workbook, this.getWriteSettings());
-			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
 					writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -137,7 +140,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 
@@ -146,7 +149,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 					this.getReadSettings());
 			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
 					outputStream, workbook, this.getWriteSettings());
-			return new XlsJxlDocumentWriter(this.logger, this.styleUtility,
+			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
 					writableWorkbook);
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);

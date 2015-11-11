@@ -20,11 +20,13 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 import java.util.Date;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -32,20 +34,23 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsPoiReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 	/** *internal* sheet */
 	private final Sheet sheet;
+	private final XlsPoiStyleHelper styleUtility;
 
 	/**
+	 * @param styleUtility
 	 * @param sheet
 	 *            *internal* sheet
 	 */
-	XlsPoiReader(final Sheet sheet) {
+	XlsPoiReader(final XlsPoiStyleHelper styleUtility, final Sheet sheet) {
 		super();
+		this.styleUtility = styleUtility;
 		this.sheet = sheet;
 		this.curRow = null;
 		this.curR = -1;
@@ -170,6 +175,22 @@ class XlsPoiReader extends AbstractSpreadsheetReader implements
 		if (rowCount == 1 && this.getCellCount(0) == 0)
 			rowCount = 0;
 		return rowCount;
+	}
+
+	@Override
+	public WrapperCellStyle getStyle(final int r, final int c) {
+		final Cell poiCell = this.getPOICell(r, c);
+		final CellStyle cellStyle = poiCell.getCellStyle();
+		return this.styleUtility.getWrapperCellStyle(this.sheet.getWorkbook(),
+				cellStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
+		final Cell cell = this.getPOICell(r, c);
+		final CellStyle cellStyle = cell.getCellStyle();
+		return this.styleUtility.getStyleName(cellStyle);
 	}
 
 	/** {@inheritDoc} */

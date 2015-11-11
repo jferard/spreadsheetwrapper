@@ -19,6 +19,7 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.util.Date;
 
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
@@ -28,14 +29,16 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -75,11 +78,16 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		return cellCount;
 	}
 
+	private CellStyleAccessor<CellStyle> cellStyleAccessor;
+
 	/** index of current row, -1 if none */
 	private int curR;
 
 	/** current row, null if none */
 	private/*@Nullable*/OdfTableRow curRow;
+
+	/** helper object for style */
+	private final OdsOdfdomStyleHelper styleHelper;
 
 	/** the *internal* table */
 	private final OdfTable table;
@@ -88,9 +96,10 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 	 * @param table
 	 *            the *internal* table
 	 */
-	OdsOdfdomReader(final OdfTable table) {
+	OdsOdfdomReader(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.table = table;
+		this.styleHelper = styleHelper;
 		this.curR = -1;
 		this.curRow = null;
 	}
@@ -227,6 +236,23 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		return calculatedRowCount;
 	}
 
+	@Override
+	public WrapperCellStyle getStyle(final int r, final int c) {
+		final OdfTableCell odfCell = this.getOdfCell(r, c);
+		if (odfCell == null)
+			return null;
+
+		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
+		return this.styleHelper.getCellStyle(odfElement);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		return cell.getStyleName();
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
@@ -248,7 +274,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 	 *            the column index
 	 * @return the cell
 	 */
-	protected/*@Nullable*/OdfTableCell getOdfCell(final int r, final int c) {
+	private/*@Nullable*/OdfTableCell getOdfCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))
@@ -259,4 +285,5 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		}
 		return this.curRow.getCellByIndex(c);
 	}
+
 }

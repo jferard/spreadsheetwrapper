@@ -22,16 +22,20 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
 import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -39,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
@@ -49,28 +53,32 @@ SpreadsheetWriter {
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 
+	private final OdsOdfdomStyleHelper styleHelper;
+
 	/** internal table */
 	private final Table table;
 
 	/**
+	 * @param styleHelper
 	 * @param table
 	 *            the *internal* table
 	 */
-	OdsSimpleodfWriter(final Table table) {
-		super(new OdsSimpleodfReader(table));
+	OdsSimpleodfWriter(final OdsOdfdomStyleHelper styleHelper, final Table table) {
+		super(new OdsSimpleodfReader(styleHelper, table));
+		this.styleHelper = styleHelper;
 		this.table = table;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell cell = this.getOrCreateSimpleCell(r, c);
-		return cell.getCellStyleName();
+		return null;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleString(final int r, final int c) {
+	public String getStyleName(final int r, final int c) {
 		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		return cell.getCellStyleName();
 	}
@@ -162,6 +170,20 @@ SpreadsheetWriter {
 		cell.setDoubleValue(Double.valueOf(retValue));
 		cell.setFormatString(OdsSimpleodfWriter.INT_FORMAT_STR);
 		return retValue;
+	}
+
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperCellStyle) {
+		final Cell cell = this.getOrCreateSimpleCell(r, c);
+		if (cell == null)
+			return false;
+
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		final Map<OdfStyleProperty, String> properties = this.styleHelper
+				.getProperties(wrapperCellStyle);
+		odfElement.setProperties(properties);
+		return true;
 	}
 
 	/** {@inheritDoc} */

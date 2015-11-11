@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
@@ -28,20 +29,19 @@ import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /**
  * A little style utility for odftoolkit files
  *
  */
-public class OdsOdfdomStyleUtility extends StyleUtility {
+public class OdsOdfdomStyleHelper {
 	private final Map<String, WrapperColor> colorByHex;
 
 	/**
 	 * @param helper
 	 *            a helper for wrapper cell style
 	 */
-	public OdsOdfdomStyleUtility() {
+	public OdsOdfdomStyleHelper() {
 		super();
 		this.colorByHex = new HashMap<String, WrapperColor>();
 
@@ -57,12 +57,9 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	public WrapperCellStyle getCellStyle(final OdfStyle style) {
 		final String fontWeight = style
 				.getProperty(OdfTextProperties.FontWeight);
-		final String fontStyle = style
-				.getProperty(OdfTextProperties.FontStyle);
-		final String fontSize = style
-				.getProperty(OdfTextProperties.FontSize);
-		final String fontColor = style
-				.getProperty(OdfTextProperties.Color);
+		final String fontStyle = style.getProperty(OdfTextProperties.FontStyle);
+		final String fontSize = style.getProperty(OdfTextProperties.FontSize);
+		final String fontColor = style.getProperty(OdfTextProperties.Color);
 		final String backgroundColor = style
 				.getProperty(OdfTableCellProperties.BackgroundColor);
 
@@ -77,24 +74,19 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 
-	/**
-	 * @param styleString
-	 *            the old style string
-	 * @return the properties extracted from the style string
-	 */
-	@Deprecated
-	public Map<OdfStyleProperty, String> getProperties(final String styleString) {
-		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
-		final Map<String, String> props = this.getPropertiesMap(styleString);
-		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals(StyleUtility.FONT_WEIGHT)) {
-				properties.put(OdfTextProperties.FontWeight, entry.getValue());
-			} else if (entry.getKey().equals(StyleUtility.BACKGROUND_COLOR)) {
-				properties.put(OdfTableCellProperties.BackgroundColor,
-						entry.getValue());
-			}
-		}
-		return properties;
+	public WrapperCellStyle getCellStyle(
+			final TableTableCellElementBase odfElement) {
+		final String backgroundColor = odfElement
+				.getProperty(OdfTableCellProperties.BackgroundColor);
+		final String fontWeight = odfElement
+				.getProperty(OdfTextProperties.FontWeight);
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		if ("bold".equals(fontWeight))
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(
+				WrapperColor.getColorFromString(backgroundColor), wrapperFont);
 	}
 
 	/**
@@ -106,7 +98,8 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 			final WrapperCellStyle wrapperCellStyle) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null && wrapperFont.getBold() == WrapperCellStyle.YES)
+		if (wrapperFont != null
+				&& wrapperFont.getBold() == WrapperCellStyle.YES)
 			properties.put(OdfTextProperties.FontWeight, "bold");
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
@@ -122,6 +115,7 @@ public class OdsOdfdomStyleUtility extends StyleUtility {
 	 *            *internal* style
 	 * @return the old style string that contains the properties fo the style
 	 */
+	@Deprecated
 	public String getStyleString(final OdfStyle style) {
 		final String fontWeight = style
 				.getProperty(OdfTextProperties.FontWeight);

@@ -32,7 +32,18 @@ public class WrapperFont {
 	/** size of the font, -1 if no size specified */
 	private int size;
 	/** color of the font */
-	private /*@Nullable*/ WrapperColor wrapperColor;
+	private/*@Nullable*/WrapperColor wrapperColor;
+
+	public WrapperFont() {
+		this.bold = WrapperCellStyle.DEFAULT;
+		this.italic = WrapperCellStyle.DEFAULT;
+		this.size = WrapperCellStyle.DEFAULT;
+		this.wrapperColor = null;
+	}
+
+	public WrapperFont(final int bold, final int italic) {
+		this(bold, italic, WrapperCellStyle.DEFAULT, null);
+	}
 
 	/**
 	 * @param bold
@@ -44,38 +55,13 @@ public class WrapperFont {
 	 * @param wrapperColor
 	 *            color of the font
 	 */
-	public WrapperFont(final int bold, final int italic,
-			final int size, final /*@Nullable*/ WrapperColor wrapperColor) {
+	public WrapperFont(final int bold, final int italic, final int size,
+			final/*@Nullable*/WrapperColor wrapperColor) {
 		super();
 		this.bold = bold;
 		this.italic = italic;
 		this.size = size;
 		this.wrapperColor = wrapperColor;
-	}
-
-	public WrapperFont(int bold, int italic) {
-		this(bold, italic, WrapperCellStyle.DEFAULT, null);
-	}
-
-	public WrapperFont() {
-		this.bold = WrapperCellStyle.DEFAULT;
-		this.italic = WrapperCellStyle.DEFAULT;
-		this.size = WrapperCellStyle.DEFAULT;
-		this.wrapperColor = null;
-	}
-
-	/**
-	 * @return the color of the font
-	 */
-	public WrapperColor getColor() {
-		return this.wrapperColor;
-	}
-
-	/**
-	 * @return the size of the font
-	 */
-	public int getSize() {
-		return this.size;
 	}
 
 	/**
@@ -86,10 +72,29 @@ public class WrapperFont {
 	}
 
 	/**
+	 * @return the color of the font
+	 */
+	public/*@Nullable*/WrapperColor getColor() {
+		return this.wrapperColor;
+	}
+
+	/**
 	 * @return true if the font is italic
 	 */
 	public int getItalic() {
 		return this.italic;
+	}
+
+	/**
+	 * @return the size of the font
+	 */
+	public int getSize() {
+		return this.size;
+	}
+
+	public WrapperFont setBold() {
+		this.bold = WrapperCellStyle.YES;
+		return this;
 	}
 
 	/**
@@ -98,6 +103,20 @@ public class WrapperFont {
 	 */
 	public WrapperFont setBold(final int bold) {
 		this.bold = bold;
+		return this;
+	}
+
+	public WrapperFont setColor(final WrapperColor color) {
+		this.wrapperColor = color;
+		return this;
+	}
+
+	/**
+	 * @param italic
+	 *            true to set thee font to italic
+	 */
+	public WrapperFont setItalic() {
+		this.italic = WrapperCellStyle.YES;
 		return this;
 	}
 
@@ -111,15 +130,6 @@ public class WrapperFont {
 	}
 
 	/**
-	 * @param italic
-	 *            true to set thee font to italic
-	 */
-	public WrapperFont setItalic() {
-		this.italic = WrapperCellStyle.YES;
-		return this;
-	}
-	
-	/**
 	 * @param size
 	 *            size of the font
 	 */
@@ -127,14 +137,4 @@ public class WrapperFont {
 		this.size = size;
 		return this;
 	}
-	
-	public WrapperFont setColor(final WrapperColor color) {
-		this.wrapperColor = color;
-		return this;
-	}
-
-	public WrapperFont setBold() {
-		this.bold = WrapperCellStyle.YES;
-		return this;
-	}	
 }

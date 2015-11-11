@@ -22,6 +22,7 @@ import java.util.Date;
 import com.github.jferard.spreadsheetwrapper.Cursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -29,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
  * Implementation of the writer Cursor, using a writer.
  */
 public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
-implements SpreadsheetWriterCursor {
+		implements SpreadsheetWriterCursor {
 
 	/** the cursor */
 	private final Cursor cursor;
@@ -132,17 +133,15 @@ implements SpreadsheetWriterCursor {
 		return this.writer.getRowCount();
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleName() {
-		return this.writer.getStyleName(this.cursor.getR(), this.cursor.getC());
+	public WrapperCellStyle getStyle() {
+		return this.writer.getStyle(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleString() {
-		return this.writer.getStyleString(this.cursor.getR(),
-				this.cursor.getC());
+	public/*@Nullable*/String getStyleName() {
+		return this.writer.getStyleName(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
@@ -229,19 +228,17 @@ implements SpreadsheetWriterCursor {
 				value);
 	}
 
+	@Override
+	public boolean setStyle(final WrapperCellStyle wrapperStyle) {
+		return this.writer.setStyle(this.cursor.getR(), this.cursor.getC(),
+				wrapperStyle);
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final String styleName) {
 		return this.writer.setStyleName(this.cursor.getR(), this.cursor.getC(),
 				styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean setStyleString(final String styleString) {
-		return this.writer.setStyleString(this.cursor.getR(),
-				this.cursor.getC(), styleString);
 	}
 
 	/** {@inheritDoc} */

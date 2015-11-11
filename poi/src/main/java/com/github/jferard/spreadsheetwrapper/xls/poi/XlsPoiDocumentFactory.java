@@ -24,6 +24,7 @@ import java.util.logging.Logger;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
@@ -32,33 +33,37 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleUtility());
+		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleHelper(
+				new CellStyleAccessor<CellStyle>()));
 	}
+
+	private CellStyleAccessor<CellStyle> cellStyleAccessor;
 
 	private final Logger logger;
 
-	private final XlsPoiStyleUtility styleUtility;
+	private final XlsPoiStyleHelper styleHelper;
 
 	public XlsPoiDocumentFactory(final Logger logger,
-			final XlsPoiStyleUtility styleUtility) {
+			final XlsPoiStyleHelper styleHelper) {
 		super(logger);
 		this.logger = logger;
-		this.styleUtility = styleUtility;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
-		return new XlsPoiDocumentReader(this.styleUtility,
+		return new XlsPoiDocumentReader(this.logger, this.styleHelper,
 				sfWorkbook.getObject());
 	}
 
@@ -66,8 +71,8 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook, final Output output)
-					throws SpreadsheetException {
-		return new XlsPoiDocumentWriter(this.logger, this.styleUtility,
+			throws SpreadsheetException {
+		return new XlsPoiDocumentWriter(this.logger, this.styleHelper,
 				sfWorkbook.getObject(), output);
 	}
 
@@ -90,7 +95,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		final Workbook workbook = new HSSFWorkbook();
 		return workbook;
 	}

@@ -28,6 +28,7 @@ import org.simpleods.TableCell;
 import org.simpleods.TableRow;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -36,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;
@@ -62,12 +63,6 @@ SpreadsheetWriter {
 	public String getStyleName(final int r, final int c) {
 		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
 		return simpleCell.getStyle();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(final int r, final int c) {
-		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
@@ -156,6 +151,15 @@ SpreadsheetWriter {
 		cell.setValue(Integer.valueOf(retValue).toString());
 		cell.setValueType(TableCell.STYLE_FLOAT);
 		return retValue;
+	}
+
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperStyle) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+
+		return true;
 	}
 
 	/** {@inheritDoc} */

@@ -30,10 +30,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.CreationHelper;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
@@ -43,7 +41,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
@@ -56,35 +53,36 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+
 		/** a map styleName -> internal cell style */
-		private final Map<String, CellStyle> cellStyleByName;
+		private final XlsPoiStyleHelper styleHelper;
 
 		/**
+		 * @param styleHelper
+		 * @param cellStyleAccessor
 		 * @param workbook
 		 *            *internal* workbook
 		 * @param dateCellStyle
 		 *            the style for all date cells
 		 * @param cellStyleByName
 		 */
-		XlsPoiDocumentWriterTrait(final Workbook workbook,
-				final CellStyle dateCellStyle,
-				final Map<String, CellStyle> cellStyleByName) {
+		XlsPoiDocumentWriterTrait(final XlsPoiStyleHelper styleHelper,
+				final Workbook workbook, final CellStyle dateCellStyle) {
 			super(workbook, dateCellStyle);
-			this.cellStyleByName = cellStyleByName;
+			this.styleHelper = styleHelper;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.dateCellStyle,
-					this.cellStyleByName);
+			return new XlsPoiWriter(this.styleHelper, sheet, this.dateCellStyle);
 		}
 	}
 
@@ -121,7 +119,7 @@ implements SpreadsheetDocumentWriter {
 	/** for delegation */
 	private final XlsPoiDocumentReader reader;
 	/** for delegation */
-	private final XlsPoiStyleUtility styleUtility;
+	private final XlsPoiStyleHelper styleHelper;
 	/** *internal* workbook */
 	private final Workbook workbook;
 
@@ -134,11 +132,11 @@ implements SpreadsheetDocumentWriter {
 	 *            where to write
 	 */
 	public XlsPoiDocumentWriter(final Logger logger,
-			final XlsPoiStyleUtility styleUtility, final Workbook workbook,
+			final XlsPoiStyleHelper styleHelper, final Workbook workbook,
 			final Output output) {
 		super(logger, output);
-		this.styleUtility = styleUtility;
-		this.reader = new XlsPoiDocumentReader(styleUtility, workbook);
+		this.styleHelper = styleHelper;
+		this.reader = new XlsPoiDocumentReader(logger, styleHelper, workbook);
 		this.logger = logger;
 		this.workbook = workbook;
 		final CreationHelper createHelper = this.workbook.getCreationHelper();
@@ -146,8 +144,8 @@ implements SpreadsheetDocumentWriter {
 		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
-		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
-				dateCellStyle, this.cellStyleByName);
+		this.documentTrait = new XlsPoiDocumentWriterTrait(this.styleHelper,
+				workbook, dateCellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -175,16 +173,6 @@ implements SpreadsheetDocumentWriter {
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean createStyle(final String styleName, final String styleString) {
-		final CellStyle cellStyle = this.styleUtility.getCellStyle(
-				this.workbook, styleString);
-		this.cellStyleByName.put(styleName, cellStyle);
-		return true;
 	}
 
 	/** {@inheritDoc} */
@@ -230,13 +218,6 @@ implements SpreadsheetDocumentWriter {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -258,37 +239,11 @@ implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyle(
-			final String styleName,
-			final com.github.jferard.spreadsheetwrapper.WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = this.workbook.createCellStyle();
-		final com.github.jferard.spreadsheetwrapper.WrapperFont wrapperFont = wrapperCellStyle
-				.getCellFont();
-		if (wrapperFont != null && wrapperFont.getBold() == WrapperCellStyle.YES) {
-			final Font font = this.workbook.createFont();
-			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-			cellStyle.setFont(font);
-		}
-		final WrapperColor backgroundColor = wrapperCellStyle
-				.getBackgroundColor();
-		if (backgroundColor != null) {
-			final HSSFColor hssfColor = this.styleUtility
-					.getHSSFColor(backgroundColor);
-
-			final short index = hssfColor.getIndex();
-			cellStyle.setFillForegroundColor(index);
-			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
-		}
-		this.cellStyleByName.put(styleName, cellStyle);
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
+		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+				this.workbook, wrapperCellStyle);
+		this.styleHelper.putCellStyle(styleName, cellStyle);
 		return true;
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(final String styleName, final String styleString) {
-		this.createStyle(styleName, styleString);
-		return true;
-	}
-
 }

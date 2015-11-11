@@ -28,9 +28,15 @@ import jxl.LabelCell;
 import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.biff.formula.FormulaException;
+import jxl.format.BoldStyle;
+import jxl.format.CellFormat;
+import jxl.format.Font;
 import jxl.write.Formula;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -38,7 +44,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsJxlReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)
 			return ((DateCell) cell).getDate();
@@ -55,13 +61,18 @@ SpreadsheetReader {
 	/** *internal* sheet */
 	private final Sheet sheet;
 
+	/** helper for style */
+	private final XlsJxlStyleHelper styleHelper;
+
 	/**
 	 * @param sheet
 	 *            *internal* sheet
+	 * @param styleHelper
 	 */
-	XlsJxlReader(final Sheet sheet) {
+	XlsJxlReader(final Sheet sheet, final XlsJxlStyleHelper styleHelper) {
 		super();
 		this.sheet = sheet;
+		this.styleHelper = styleHelper;
 		this.curR = -1;
 		this.curRow = null;
 	}
@@ -183,6 +194,30 @@ SpreadsheetReader {
 		return this.sheet.getRows();
 	}
 
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		final CellFormat cellFormat = cell.getCellFormat();
+		final WrapperColor backgroundColor = this.styleHelper
+				.getWrapperColor(cellFormat.getBackgroundColour());
+		final WrapperFont wrapperFont = new WrapperFont();
+		final Font font = cellFormat.getFont();
+		wrapperFont
+				.setColor(this.styleHelper.getWrapperColor(font.getColour()));
+		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+
+	@Override
+	public String getStyleName(final int r, final int c) {
+		throw new UnsupportedOperationException();
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
@@ -205,7 +240,7 @@ SpreadsheetReader {
 	 *            the column index
 	 * @return the cell
 	 */
-	protected/*@Nullable*/Cell getJxlCell(final int r, final int c) {
+	private/*@Nullable*/Cell getJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= this.getRowCount() || c >= this.getCellCount(r))

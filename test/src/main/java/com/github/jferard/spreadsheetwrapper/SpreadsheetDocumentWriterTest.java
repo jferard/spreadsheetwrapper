@@ -37,7 +37,7 @@ import org.junit.rules.TestName;
  */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetDocumentWriterTest extends
-		SpreadsheetDocumentReaderTest {
+SpreadsheetDocumentReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
@@ -90,7 +90,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 
 	@Test
 	public void testAddSheetAtIndex0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		try {
 			this.sdw.addSheet(0, "ok");
 		} catch (final UnsupportedOperationException e) {
@@ -100,7 +100,7 @@ public abstract class SpreadsheetDocumentWriterTest extends
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testAddSheetAtIndex10() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		this.sdw.addSheet(10, "ok");
 	}
 

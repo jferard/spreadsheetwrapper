@@ -22,10 +22,8 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import jxl.Cell;
-import jxl.biff.EmptyCell;
 import jxl.format.CellFormat;
 import jxl.write.DateTime;
 import jxl.write.Formula;
@@ -33,10 +31,12 @@ import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -56,8 +56,6 @@ SpreadsheetWriter {
 	 */
 	private final static int numRowsPerSheet = 65536;
 
-	private final/*@Nullable*/Map<String, WritableCellFormat> cellFormatByName;
-
 	/** current row index, -1 if none */
 	private int curR;
 
@@ -67,16 +65,21 @@ SpreadsheetWriter {
 	/** *internal* sheet */
 	private final WritableSheet sheet;
 
+	/** helper for style */
+	private final XlsJxlStyleHelper styleHelper;
+
+	private final WritableWorkbook workbook;
+
 	/**
 	 * @param sheet
 	 *            *internal* sheet
-	 * @param cellFormatByName
 	 */
-	XlsJxlWriter(final WritableSheet sheet,
-			final/*@Nullable*/Map<String, WritableCellFormat> cellFormatByName) {
-		super(new XlsJxlReader(sheet));
+	public XlsJxlWriter(final WritableWorkbook workbook,
+			final WritableSheet sheet, final XlsJxlStyleHelper styleHelper) {
+		super(new XlsJxlReader(sheet, styleHelper));
+		this.workbook = workbook;
 		this.sheet = sheet;
-		this.cellFormatByName = cellFormatByName;
+		this.styleHelper = styleHelper;
 		this.curR = -1;
 		this.curRow = null;
 	}
@@ -84,23 +87,7 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		final WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
-		final CellFormat cf = jxlCell.getCellFormat();
-		if (this.cellFormatByName == null)
-			return null;
-
-		for (final Map.Entry<String, WritableCellFormat> entry : this.cellFormatByName
-				.entrySet()) {
-			if (entry.getValue().equals(cf))
-				return entry.getKey();
-		}
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(final int r, final int c) {
-		throw new UnsupportedOperationException();
+		return this.reader.getStyleName(r, c);
 	}
 
 	/** {@inheritDoc} */
@@ -190,23 +177,29 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperCellStyle) {
+		final WritableCell cell = this.getOrCreateJxlCell(r, c);
+		if (cell == null)
+			return false;
+
+		cell.setCellFormat(this.styleHelper.getCellFormat(wrapperCellStyle));
+		return true;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		if (this.cellFormatByName == null)
+		final WritableCellFormat cellFormat = this.styleHelper
+				.getCellFormat(styleName);
+		if (cellFormat == null)
 			return false;
-
-		if (this.cellFormatByName.containsKey(styleName)) {
-			final CellFormat format = this.cellFormatByName.get(styleName);
-			WritableCell jxlCell = this.getOrCreateJxlCell(r, c);
-			if (jxlCell instanceof EmptyCell) {
-				this.setText(r, c, "");
-				jxlCell = this.getOrCreateJxlCell(r, c);
-			}
-			jxlCell.setCellFormat(format);
+		else {
+			final WritableCell cell = this.getOrCreateJxlCell(r, c);
+			cell.setCellFormat(cellFormat);
 			return true;
-		} else
-			return false;
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -278,5 +271,4 @@ SpreadsheetWriter {
 		}
 		return cell;
 	}
-
 }

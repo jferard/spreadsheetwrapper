@@ -22,12 +22,19 @@ import java.util.Date;
 
 import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
+import org.jopendocument.dom.spreadsheet.CellStyle;
+import org.jopendocument.dom.spreadsheet.CellStyle.SyleTableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.jopendocument.dom.text.TextStyle.SyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
@@ -155,6 +162,41 @@ SpreadsheetReader {
 		return rowCount;
 	}
 
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final CellStyle cellStyle = cell.getStyle();
+		final SyleTableCellProperties tableCellProperties = cellStyle
+				.getTableCellProperties();
+		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
+		final WrapperColor backgroundColor = WrapperColor
+				.getColorFromString(bColorAsHex);
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		final SyleTextProperties textProperties = cellStyle.getTextProperties();
+		final String fColorAsHex = textProperties.getElement()
+				.getAttributeValue("color", OdsJOpenStyleHelper.foNS);
+		wrapperFont.setColor(WrapperColor.getColorFromString(fColorAsHex));
+		if (textProperties.getElement().getAttribute(StyleUtility.FONT_WEIGHT)
+				.equals("bold"))
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		return cell.getStyleName();
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
@@ -168,16 +210,6 @@ SpreadsheetReader {
 		return (String) cell.getValue();
 	}
 
-	private String getFormula(final MutableCell<SpreadSheet> cell) {
-		final Element element = cell.getElement();
-		return element.getAttributeValue("formula", element.getNamespace());
-	}
-
-	private String getTypeName(final MutableCell<SpreadSheet> cell) {
-		final ODValueType valueType = cell.getValueType();
-		return valueType == null ? "string" : valueType.getName();
-	}
-
 	/**
 	 * Simple optimization hidden inside a method.
 	 *
@@ -188,7 +220,7 @@ SpreadsheetReader {
 	 * @return
 	 * @return the cell
 	 */
-	protected/*@Nullable*/MutableCell<SpreadSheet> getCell(final int r,
+	private/*@Nullable*/MutableCell<SpreadSheet> getCell(final int r,
 			final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
@@ -196,5 +228,15 @@ SpreadsheetReader {
 			return null;
 
 		return this.sheet.getCellAt(c, r);
+	}
+
+	private String getFormula(final MutableCell<SpreadSheet> cell) {
+		final Element element = cell.getElement();
+		return element.getAttributeValue("formula", element.getNamespace());
+	}
+
+	private String getTypeName(final MutableCell<SpreadSheet> cell) {
+		final ODValueType valueType = cell.getValueType();
+		return valueType == null ? "string" : valueType.getName();
 	}
 }

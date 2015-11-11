@@ -25,14 +25,16 @@ import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /**
  * the sheet reader for SimpleODS.
  */
 class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -51,16 +53,21 @@ SpreadsheetReader {
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 
+	private final OdsOdfdomStyleHelper styleHelper;
+
 	/** the *internal* table */
 	private final Table table;
 
 	/**
 	 * Creates a reader from an *internal* table
+	 * 
+	 * @param styleHelper
 	 *
 	 * @param table
 	 */
-	OdsSimpleodfReader(final Table table) {
+	OdsSimpleodfReader(final OdsOdfdomStyleHelper styleHelper, final Table table) {
 		super();
+		this.styleHelper = styleHelper;
 		this.table = table;
 		this.curR = -1;
 		this.curRow = null;
@@ -180,6 +187,25 @@ SpreadsheetReader {
 			rowCount = 0;
 
 		return rowCount;
+	}
+
+	@Override
+	public WrapperCellStyle getStyle(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		return this.styleHelper.getCellStyle(odfElement);
+	}
+
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+
+		return cell.getStyleName();
 	}
 
 	/** {@inheritDoc} */

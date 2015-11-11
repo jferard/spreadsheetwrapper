@@ -24,6 +24,7 @@ import java.util.NoSuchElementException;
 
 import jxl.Sheet;
 import jxl.Workbook;
+import jxl.write.WritableCellFormat;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
@@ -37,6 +38,9 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 	/** accessor by name or index for the readers */
 	private final Accessor<SpreadsheetReader> accessor;
+	/** helper for style */
+	private final XlsJxlStyleHelper styleHelper;
+
 	/** *internal* workbook */
 	private final Workbook workbook;
 
@@ -44,14 +48,17 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 	 * @param workbook
 	 *            *internal* workbook
 	 */
-	XlsJxlDocumentReader(final Workbook workbook) {
+	XlsJxlDocumentReader(final Workbook workbook,
+			final XlsJxlStyleHelper styleHelper) {
 		this.workbook = workbook;
+		this.styleHelper = styleHelper;
 		this.accessor = new Accessor<SpreadsheetReader>();
 		final Sheet[] sheets = this.workbook.getSheets();
 		for (int n = 0; n < sheets.length; n++) {
 			final Sheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetReader reader = new XlsJxlReader(sheet); // NOPMD
+			final SpreadsheetReader reader = new XlsJxlReader(sheet,
+					styleHelper); // NOPMD
 			// by
 			// Julien
 			// on
@@ -70,7 +77,12 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
-		throw new UnsupportedOperationException();
+		final WritableCellFormat cellFormat = this.styleHelper
+				.getCellFormat(styleName);
+		if (cellFormat == null)
+			return null;
+
+		return this.styleHelper.getWrapperCellStyle(cellFormat);
 	}
 
 	/** {@inheritDoc} */
@@ -111,7 +123,7 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 						"No sheet at position %d", index));
 
 			final Sheet sheet = sheets[index];
-			spreadsheet = new XlsJxlReader(sheet);
+			spreadsheet = new XlsJxlReader(sheet, this.styleHelper);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
 		return spreadsheet;
@@ -129,13 +141,6 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		return spreadsheet;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		throw new UnsupportedOperationException();
-	}
-
 	private SpreadsheetReader findSpreadsheet(final String sheetName) {
 		final SpreadsheetReader spreadsheet;
 
@@ -144,7 +149,10 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 			final Sheet sheet = sheets[n];
 
 			if (sheet.getName().equals(sheetName)) {
-				spreadsheet = new XlsJxlReader(sheet); // NOPMD by Julien on
+				spreadsheet = new XlsJxlReader(sheet, this.styleHelper); // NOPMD
+																			// by
+																			// Julien
+																			// on
 				// 03/09/15 21:57
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;

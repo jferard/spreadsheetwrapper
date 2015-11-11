@@ -39,10 +39,10 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-		AbstractDocumentFactory<SpreadSheet> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<SpreadSheet> implements
+SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new OdsJOpenDocumentFactory(logger, new OdsJOpenStyleUtility());
+		return new OdsJOpenDocumentFactory(logger, new OdsJOpenStyleHelper());
 	}
 
 	private static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
@@ -53,19 +53,19 @@ public class OdsJOpenDocumentFactory extends
 	private final Logger logger;
 
 	/** utility for styles */
-	private final OdsJOpenStyleUtility styleUtility;
+	private final OdsJOpenStyleHelper styleHelper;
 
 	/**
 	 * @param logger
 	 *            simple logger
-	 * @param styleUtility
+	 * @param styleHelper
 	 *            utility for styles
 	 */
 	public OdsJOpenDocumentFactory(final Logger logger,
-			final OdsJOpenStyleUtility styleUtility) {
+			final OdsJOpenStyleHelper styleHelper) {
 		super(logger);
 		this.logger = logger;
-		this.styleUtility = styleUtility;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
@@ -84,8 +84,8 @@ public class OdsJOpenDocumentFactory extends
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadSheet> sfDocument, final Output output)
-			throws SpreadsheetException {
-		return new OdsJOpenDocumentWriter(this.logger, this.styleUtility,
+					throws SpreadsheetException {
+		return new OdsJOpenDocumentWriter(this.logger, this.styleHelper,
 				new OdsJOpenStatefulDocument(sfDocument), output);
 	}
 
@@ -105,7 +105,7 @@ public class OdsJOpenDocumentFactory extends
 	@Override
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		try {
 			return SpreadSheet.createEmpty(new DefaultTableModel());
 		} catch (final IOException e) {

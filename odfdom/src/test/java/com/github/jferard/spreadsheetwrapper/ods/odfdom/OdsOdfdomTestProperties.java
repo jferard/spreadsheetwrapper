@@ -24,7 +24,7 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 public class OdsOdfdomTestProperties {
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsOdfdomDocumentFactory(Logger.getGlobal(),
-					new OdsOdfdomStyleUtility()));
+					new OdsOdfdomStyleHelper()));
 
 	public static TestProperties getProperties() {
 		return OdsOdfdomTestProperties.properties;

@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -46,10 +45,10 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
 		}
@@ -133,28 +132,6 @@ public class OdsSimpleodsDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public boolean createStyle(final String styleName, final String styleString) {
-		// add to content because of background-color.
-		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
-				styleName, this.file);
-		final Map<String, String> props = this.styleUtility
-				.getPropertiesMap(styleString);
-		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals("font-weight")) {
-				if (entry.getValue().equals("bold"))
-					newStyle.setFontWeightBold();
-				if (entry.getValue().equals("italic"))
-					newStyle.setFontWeightItalic();
-			} else if (entry.getKey().equals("background-color")) {
-				newStyle.setBackgroundColor(entry.getValue());
-			}
-		}
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		return this.reader.getCellStyle(styleName);
 	}
@@ -198,13 +175,6 @@ public class OdsSimpleodsDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void save() throws SpreadsheetException {
 		final OutputStream outputStream = this.output.getStream();
 		if (outputStream == null)
@@ -234,13 +204,4 @@ public class OdsSimpleodsDocumentWriter extends
 			newStyle.setBackgroundColor(backgroundColor.toHex());
 		return true;
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(final String styleName, final String styleString) {
-		/** @see javadoc */
-		return this.createStyle(styleName, styleString);
-	}
-
 }

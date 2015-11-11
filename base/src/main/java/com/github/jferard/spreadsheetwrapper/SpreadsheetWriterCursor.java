@@ -113,18 +113,18 @@ public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	/**
 	 * Set a format at the current position
 	 *
-	 * @param styleName
-	 *            the name of the format
+	 * @param wrapperStyle
+	 *            the format
 	 */
-	boolean setStyleName(String styleName);
+	boolean setStyle(WrapperCellStyle wrapperStyle);
 
 	/**
 	 * Set a format at the current position
 	 *
-	 * @param styleString
-	 *            the string that contains the format
+	 * @param styleName
+	 *            the name of the format
 	 */
-	boolean setStyleString(String styleString);
+	boolean setStyleName(String styleName);
 
 	/**
 	 * Set a text at the current position

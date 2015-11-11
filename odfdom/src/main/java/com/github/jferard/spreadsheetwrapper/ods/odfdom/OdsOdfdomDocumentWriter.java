@@ -47,19 +47,23 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
-		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document) {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+		private final OdsOdfdomStyleHelper styleHelper;
+
+		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
+				final OdsOdfdomStyleHelper styleHelper) {
 			super(document);
+			this.styleHelper = styleHelper;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
-			return new OdsOdfdomWriter(table);
+			return new OdsOdfdomWriter(table, this.styleHelper);
 		}
 	}
 
@@ -72,7 +76,8 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** delegation reader */
 	private final OdsOdfdomDocumentReader reader;
 
-	private final OdsOdfdomStyleUtility styleUtility;
+	/** helper object for style */
+	private final OdsOdfdomStyleHelper styleHelper;
 
 	/** the logger */
 	final Logger logger;
@@ -88,16 +93,17 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *             if can't open value writer
 	 */
 	public OdsOdfdomDocumentWriter(final Logger logger,
-			final OdsOdfdomStyleUtility styleUtility,
+			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		super(logger, output);
-		this.styleUtility = styleUtility;
-		this.reader = new OdsOdfdomDocumentReader(styleUtility, document);
+		this.styleHelper = styleHelper;
+		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);
 		this.logger = logger;
 		this.document = document;
 		this.documentStyles = this.document.getDocumentStyles();
-		this.documentTrait = new OdsOdfdomDocumentWriterTrait(document);
+		this.documentTrait = new OdsOdfdomDocumentWriterTrait(document,
+				styleHelper);
 	}
 
 	/** {@inheritDoc} */
@@ -125,16 +131,6 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean createStyle(final String styleName, final String styleString) {
-		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.styleUtility.getProperties(styleString));
-		return true;
 	}
 
 	/** {@inheritDoc} */
@@ -180,13 +176,6 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -211,19 +200,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final WrapperCellStyle wrapperCellStyle) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.styleUtility
-				.getProperties(wrapperCellStyle));
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(final String styleName, final String styleString) {
-		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
-				OdfStyleFamily.TableCell);
-		existingStyle.setProperties(this.styleUtility
-				.getProperties(styleString));
+		newStyle.setProperties(this.styleHelper.getProperties(wrapperCellStyle));
 		return true;
 	}
 }

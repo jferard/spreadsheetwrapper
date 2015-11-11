@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
@@ -45,24 +45,28 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleUtility;
  *
  */
 public class OdsSimpleodfDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentWriterTrait extends
-			AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
+		private final OdsOdfdomStyleHelper styleHelper;
+
 		/**
+		 * @param styleHelper
 		 * @param value
 		 *            *internal* workbook
 		 */
-		OdsSimpleodfDocumentWriterTrait(
+		OdsSimpleodfDocumentWriterTrait(final OdsOdfdomStyleHelper styleHelper,
 				final OdsSimpleodfStatefulDocument sfDocument) {
 			super(sfDocument);
+			this.styleHelper = styleHelper;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
-			return new OdsSimpleodfWriter(table);
+			return new OdsSimpleodfWriter(this.styleHelper, table);
 		}
 	}
 
@@ -79,7 +83,7 @@ public class OdsSimpleodfDocumentWriter extends
 	/** *internal* workbook */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
-	private final OdsOdfdomStyleUtility styleUtility;
+	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**
 	 * @param logger
@@ -92,16 +96,17 @@ public class OdsSimpleodfDocumentWriter extends
 	 *             if the value writer can't be created
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
-			final OdsOdfdomStyleUtility styleUtility,
+			final OdsOdfdomStyleHelper styleHelper,
 			final OdsSimpleodfStatefulDocument sfDocument, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
-		this.styleUtility = styleUtility;
-		this.reader = new OdsSimpleodfDocumentReader(styleUtility, sfDocument);
+		this.styleHelper = styleHelper;
+		this.reader = new OdsSimpleodfDocumentReader(styleHelper, sfDocument);
 		this.logger = logger;
 		this.sfDocument = sfDocument;
 		this.documentStyles = this.sfDocument.getStyles();
-		this.documentTrait = new OdsSimpleodfDocumentWriterTrait(sfDocument);
+		this.documentTrait = new OdsSimpleodfDocumentWriterTrait(styleHelper,
+				sfDocument);
 	}
 
 	/**
@@ -138,16 +143,6 @@ public class OdsSimpleodfDocumentWriter extends
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean createStyle(final String styleName, final String styleString) {
-		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.styleUtility.getProperties(styleString));
-		return true;
 	}
 
 	@Override
@@ -194,13 +189,6 @@ public class OdsSimpleodfDocumentWriter extends
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		return this.reader.getStyleString(styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public void save() throws SpreadsheetException {
 		OutputStream outputStream = null;
 		try {
@@ -223,19 +211,7 @@ public class OdsSimpleodfDocumentWriter extends
 			final WrapperCellStyle wrapperCellStyle) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.styleUtility
-				.getProperties(wrapperCellStyle));
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(final String styleName, final String styleString) {
-		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
-				OdfStyleFamily.TableCell);
-		existingStyle.setProperties(this.styleUtility
-				.getProperties(styleString));
+		newStyle.setProperties(this.styleHelper.getProperties(wrapperCellStyle));
 		return true;
 	}
 }

@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetReaderCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 
 	private SpreadsheetDocumentFactory factory;
 

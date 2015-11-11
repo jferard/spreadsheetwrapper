@@ -18,9 +18,8 @@
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -41,38 +40,43 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
-		XlsPoiDocumentReaderTrait(final Workbook workbook) {
+			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+
+		private final XlsPoiStyleHelper styleUtility;
+
+		XlsPoiDocumentReaderTrait(final XlsPoiStyleHelper styleUtility,
+				final Workbook workbook) {
 			super(workbook, null);
+			this.styleUtility = styleUtility;
 		}
 
 		/** {inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
-			return new XlsPoiReader(sheet);
+			return new XlsPoiReader(this.styleUtility, sheet);
 		}
 	}
 
-	/** a map styleName -> internal cell style */
-	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
 	/** for delegation */
-	private final XlsPoiStyleUtility styleUtility;
+	private final XlsPoiStyleHelper styleHelper;
 	/** *internal* workbook */
 	private final Workbook workbook;
 
 	/**
+	 * @param logger
+	 * @param cellStyleAccessor
 	 * @param workbook
 	 *            *internal* workbook
 	 */
-	XlsPoiDocumentReader(final XlsPoiStyleUtility styleUtility,
-			final Workbook workbook) {
+	XlsPoiDocumentReader(final Logger logger,
+			final XlsPoiStyleHelper styleHelper, final Workbook workbook) {
 		this.workbook = workbook;
-		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook);
-		this.styleUtility = styleUtility;
-		this.cellStyleByName = new HashMap<String, CellStyle>();
+		this.documentTrait = new XlsPoiDocumentReaderTrait(this.styleHelper,
+				workbook);
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
@@ -84,11 +88,12 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getCellStyle(final String styleName) {
-		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
+		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+				this.workbook, styleName);
 		if (cellStyle == null)
 			return null;
 
-		return this.styleUtility.getCellStyle(this.workbook, cellStyle);
+		return this.styleHelper.getWrapperCellStyle(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -131,16 +136,4 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		final CellStyle cellStyle = this.cellStyleByName.get(styleName);
-		if (cellStyle == null)
-			return "";
-
-		return this.styleUtility.getStyleString(this.workbook, cellStyle);
-	}
-
 }

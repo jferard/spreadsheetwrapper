@@ -22,13 +22,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -36,31 +39,29 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 
 	/** current row, null if none */
 	private/*@Nullable*/OdfTableRow curRow;
 
+	/** helper object for style */
+	private final OdsOdfdomStyleHelper styleHelper;
+
+	/** *internal* table */
 	private final OdfTable table;
 
 	/**
 	 * @param table
 	 *            the *internal* sheet
 	 */
-	OdsOdfdomWriter(final OdfTable table) {
-		super(new OdsOdfdomReader(table));
+	OdsOdfdomWriter(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
+		super(new OdsOdfdomReader(table, styleHelper));
 		this.table = table;
+		this.styleHelper = styleHelper;
 		this.curR = -1;
 		this.curRow = null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(final int r, final int c) {
-		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
-		return cell.getStyleName();
 	}
 
 	@Override
@@ -142,6 +143,20 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		final int retValue = value.intValue();
 		cell.setDoubleValue(Double.valueOf(retValue));
 		return retValue;
+	}
+
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperCellStyle) {
+		final OdfTableCell odfCell = this.getOrCreateOdfCell(r, c);
+		if (odfCell == null)
+			return false;
+
+		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
+		final Map<OdfStyleProperty, String> properties = this.styleHelper
+				.getProperties(wrapperCellStyle);
+		odfElement.setProperties(properties);
+		return true;
 	}
 
 	/** {@inheritDoc} */

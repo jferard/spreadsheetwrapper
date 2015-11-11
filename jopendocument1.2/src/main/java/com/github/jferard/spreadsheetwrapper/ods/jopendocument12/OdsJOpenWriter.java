@@ -24,20 +24,28 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jdom.Text;
 import org.jopendocument.dom.ODValueType;
+import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.XMLVersion;
+import org.jopendocument.dom.spreadsheet.CellStyle;
+import org.jopendocument.dom.spreadsheet.CellStyle.SyleTableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
+import org.jopendocument.dom.text.TextStyle.SyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -126,6 +134,31 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 		final int retValue = value.intValue();
 		cell.setValue(Double.valueOf(retValue));
 		return retValue;
+	}
+
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperStyle) {
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
+		final CellStyle cellStyle = cell.getStyle();
+		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
+		if (backgroundColor != null) {
+			final SyleTableCellProperties tableCellProperties = cellStyle
+					.getTableCellProperties();
+			tableCellProperties.setBackgroundColor(backgroundColor.toHex());
+		}
+		final WrapperFont font = wrapperStyle.getCellFont();
+		if (font != null) {
+			final SyleTextProperties textProperties = cellStyle
+					.getTextProperties();
+			final WrapperColor color = font.getColor();
+			if (color != null)
+				textProperties.setColor(OOUtils.decodeRGB(color.toHex()));
+			if (font.getBold() == WrapperCellStyle.YES)
+				textProperties.getElement().setAttribute(
+						StyleUtility.FONT_WEIGHT, "bold");
+		}
+		return true;
 	}
 
 	/** {@inheritDoc} */

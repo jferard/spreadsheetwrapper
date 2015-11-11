@@ -46,10 +46,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 		}
@@ -91,11 +91,13 @@ implements SpreadsheetDocumentWriter {
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
 
 	/** utility for style */
-	private final OdsJOpenStyleUtility styleUtility;
+	private final OdsJOpenStyleHelper styleHelper;
 
 	/**
 	 * @param logger
 	 *            the logger
+	 * @param styleHelper
+	 *            the basic style helper
 	 * @param sfSpreadSheet
 	 *            the *internal* workbook
 	 * @param output
@@ -105,11 +107,11 @@ implements SpreadsheetDocumentWriter {
 	 *             if can't open sfSpreadSheet writer
 	 */
 	public OdsJOpenDocumentWriter(final Logger logger,
-			final OdsJOpenStyleUtility styleUtility,
+			final OdsJOpenStyleHelper styleHelper,
 			final OdsJOpenStatefulDocument sfSpreadSheet, final Output output)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		super(logger, output);
-		this.styleUtility = styleUtility;
+		this.styleHelper = styleHelper;
 		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
@@ -145,27 +147,6 @@ implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public boolean createStyle(final String styleName, final String styleString) {
-		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
-		final Element namedStyles = stylesDoc.getChild("styles", true);
-		@SuppressWarnings("unchecked")
-		final List<Element> styles = namedStyles.getChildren("style");
-		Element oldStyle = OdsJOpenDocumentWriter.findElementWithName(
-				styleName, styles);
-		if (oldStyle == null) {
-			oldStyle = this.styleUtility.createBaseStyle(styleName);
-			namedStyles.addContent(oldStyle);
-		} else
-			oldStyle.removeContent();
-
-		this.styleUtility.setStyle(oldStyle, styleString);
-		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		return this.reader.getCellStyle(styleName);
 	}
@@ -207,13 +188,6 @@ implements SpreadsheetDocumentWriter {
 		return this.documentTrait.getSpreadsheet(sheetName);
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		throw new UnsupportedOperationException();
-	}
-
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -247,30 +221,12 @@ implements SpreadsheetDocumentWriter {
 		Element newStyle = OdsJOpenDocumentWriter.findElementWithName(
 				styleName, styles);
 		if (newStyle == null) {
-			newStyle = this.styleUtility.createBaseStyle(styleName);
+			newStyle = this.styleHelper.createBaseStyle(styleName);
 			namedStyles.addContent(newStyle);
 		} else
 			newStyle.removeContent();
 
-		this.styleUtility.setStyle(newStyle, wrapperCellStyle);
+		this.styleHelper.setStyle(newStyle, wrapperCellStyle);
 		return true;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public boolean updateStyle(final String styleName, final String styleString) {
-		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
-		final Element namedStyles = stylesDoc.getChild("styles", true);
-		@SuppressWarnings("unchecked")
-		final List<Element> styles = namedStyles.getChildren("style");
-		Element oldStyle = OdsJOpenDocumentWriter.findElementWithName(
-				styleName, styles);
-		if (oldStyle == null) {
-			oldStyle = this.styleUtility.createBaseStyle(styleName);
-			this.styleUtility.setStyle(oldStyle, styleString);
-			namedStyles.addContent(oldStyle);
-		}
-		return oldStyle == null;
 	}
 }

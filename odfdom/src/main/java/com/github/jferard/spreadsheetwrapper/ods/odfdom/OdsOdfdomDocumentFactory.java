@@ -35,35 +35,35 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsOdfdomDocumentFactory extends
-		AbstractDocumentFactory<OdfSpreadsheetDocument> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<OdfSpreadsheetDocument> implements
+SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new OdsOdfdomDocumentFactory(logger, new OdsOdfdomStyleUtility());
+		return new OdsOdfdomDocumentFactory(logger, new OdsOdfdomStyleHelper());
 	}
 
 	/** simple logger */
 	private final Logger logger;
 
-	private final OdsOdfdomStyleUtility styleUtility;
+	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**
 	 * @param logger
 	 *            simple logger
 	 */
 	public OdsOdfdomDocumentFactory(final Logger logger,
-			final OdsOdfdomStyleUtility styleUtility) {
+			final OdsOdfdomStyleHelper styleHelper) {
 		super(logger);
 		this.logger = logger;
-		this.styleUtility = styleUtility;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<OdfSpreadsheetDocument> sfDocument)
-			throws SpreadsheetException {
-		return new OdsOdfdomDocumentReader(this.styleUtility,
-				sfDocument.getObject());
+					throws SpreadsheetException {
+		return new OdsOdfdomDocumentReader(sfDocument.getObject(),
+				this.styleHelper);
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class OdsOdfdomDocumentFactory extends
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<OdfSpreadsheetDocument> sfDocument,
 			final Output output) throws SpreadsheetException {
-		return new OdsOdfdomDocumentWriter(this.logger, this.styleUtility,
+		return new OdsOdfdomDocumentWriter(this.logger, this.styleHelper,
 				sfDocument.getObject(), output);
 	}
 
@@ -94,7 +94,7 @@ public class OdsOdfdomDocumentFactory extends
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		OdfSpreadsheetDocument document;
 		try {
 			document = OdfSpreadsheetDocument.newSpreadsheetDocument();

@@ -74,15 +74,4 @@ public interface SpreadsheetDocumentReader {
 	 * @return the reader.
 	 */
 	SpreadsheetReader getSpreadsheet(final String name);
-
-	/**
-	 * Gets a style string
-	 *
-	 * @param styleName
-	 *            the name of the style
-	 * @return the style string
-	 * @deprecated
-	 */
-	@Deprecated
-	/*@Nullable*/String getStyleString(String styleName);
 }

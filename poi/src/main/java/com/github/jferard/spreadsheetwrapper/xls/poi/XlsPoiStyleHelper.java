@@ -29,7 +29,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
+import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -37,13 +37,17 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
  * An utility class for style handling
  *
  */
-public class XlsPoiStyleUtility extends StyleUtility {
+public class XlsPoiStyleHelper {
+	private final CellStyleAccessor<CellStyle> cellStyleAccessor;
 	private final Map<HSSFColor, WrapperColor> colorByHssfColor;
 	private final Map<WrapperColor, HSSFColor> hssfColorByColor;
 
 	/**
+	 * @param cellStyleAccessor
 	 */
-	public XlsPoiStyleUtility() {
+	public XlsPoiStyleHelper(
+			final CellStyleAccessor<CellStyle> cellStyleAccessor) {
+		this.cellStyleAccessor = cellStyleAccessor;
 		final WrapperColor[] colors = WrapperColor.values();
 		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(
 				colors.length);
@@ -72,29 +76,24 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		}
 	}
 
-	/**
-	 * Converts the syle string to the CellStyle value
-	 *
-	 * @param workbook
-	 *            the *internal* workbook
-	 * @param styleString
-	 *            the old format style string to use
-	 * @return the style in poi format
-	 */
 	public CellStyle getCellStyle(final Workbook workbook,
-			final String styleString) {
+			final WrapperCellStyle wrapperCellStyle) {
 		final CellStyle cellStyle = workbook.createCellStyle();
-		final Map<String, String> props = this.getPropertiesMap(styleString);
-		for (final Map.Entry<String, String> entry : props.entrySet()) {
-			if (entry.getKey().equals(StyleUtility.FONT_WEIGHT)) {
-				if (entry.getValue().equals("bold")) {
-					final Font font = workbook.createFont();
-					font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-					cellStyle.setFont(font);
-				}
-			} else if (entry.getKey().equals(StyleUtility.BACKGROUND_COLOR)) {
-				// do nothing
-			}
+		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont != null
+				&& wrapperFont.getBold() == WrapperCellStyle.YES) {
+			final Font font = workbook.createFont();
+			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			cellStyle.setFont(font);
+		}
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
+		if (backgroundColor != null) {
+			final HSSFColor hssfColor = this.getHSSFColor(backgroundColor);
+
+			final short index = hssfColor.getIndex();
+			cellStyle.setFillForegroundColor(index);
+			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		}
 		return cellStyle;
 	}
@@ -106,6 +105,14 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		else
 			hssfColor = new HSSFColor.WHITE();
 		return hssfColor;
+	}
+
+	public String getStyleName(final CellStyle cellStyle) {
+		final String name = this.cellStyleAccessor.getName(cellStyle);
+		if (name == null)
+			return "ssw" + cellStyle.getIndex();
+		else
+			return name;
 	}
 
 	/**
@@ -127,8 +134,27 @@ public class XlsPoiStyleUtility extends StyleUtility {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color != null && color instanceof HSSFColor)
 			sb.append("background-color:")
-					.append(((HSSFColor) color).getHexString()).append(";");
+			.append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
+	}
+
+	public void putCellStyle(final String styleName, final CellStyle cellStyle) {
+		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
+	}
+
+	CellStyle getCellStyle(final Workbook workbook, final String styleName) {
+		CellStyle cellStyle = this.cellStyleAccessor.getCellStyle(styleName);
+		if (cellStyle == null) {
+			if (styleName.startsWith("ssw")) {
+				try {
+					final int idx = Integer.valueOf(styleName.substring(3));
+					cellStyle = workbook.getCellStyleAt((short) idx);
+				} catch (final NumberFormatException e) {
+					// do nothing
+				}
+			}
+		}
+		return cellStyle;
 	}
 
 	/**
@@ -138,7 +164,7 @@ public class XlsPoiStyleUtility extends StyleUtility {
 	 *            the style in poi format
 	 * @return the cell style in new format
 	 */
-	WrapperCellStyle getCellStyle(final Workbook workbook,
+	WrapperCellStyle getWrapperCellStyle(final Workbook workbook,
 			final CellStyle cellStyle) {
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font poiFont = workbook.getFontAt(fontIndex);

@@ -95,16 +95,4 @@ public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
 			cellContents.add(this.getCellContent(rowIndex, c));
 		return cellContents;
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final String getStyleName(final int r, final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final String getStyleString(final int r, final int c) {
-		throw new UnsupportedOperationException();
-	}
 }

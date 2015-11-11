@@ -22,6 +22,7 @@ import java.util.Date;
 import com.github.jferard.spreadsheetwrapper.Cursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -129,15 +130,14 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleName() {
-		return this.reader.getStyleName(this.cursor.getR(), this.cursor.getC());
+	public/*@Nullable*/WrapperCellStyle getStyle() {
+		return this.reader.getStyle(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleString() {
-		return this.reader.getStyleString(this.cursor.getR(),
-				this.cursor.getC());
+	public/*@Nullable*/String getStyleName() {
+		return this.reader.getStyleName(this.cursor.getR(), this.cursor.getC());
 	}
 
 	/** {@inheritDoc} */

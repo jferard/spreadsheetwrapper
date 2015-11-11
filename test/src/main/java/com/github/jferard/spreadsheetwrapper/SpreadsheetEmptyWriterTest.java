@@ -28,6 +28,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
+
 public abstract class SpreadsheetEmptyWriterTest {
 	@Rule
 	public TestName name = new TestName();
@@ -97,10 +99,11 @@ public abstract class SpreadsheetEmptyWriterTest {
 	}
 
 	@Test
-	@Deprecated
 	public final void testCreateStyleFromStringAndSetStyle() {
-		this.sdw.createStyle("mystyle",
-				"background-color:#999999;font-weight:bold");
+		final StyleUtility utility = new StyleUtility();
+		this.sdw.setStyle(
+				"mystyle",
+				utility.getWrapperCellStyle("background-color:#999999;font-weight:bold"));
 		this.sw.setCellContent(0, 0, "Head", "mystyle");
 	}
 

@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -28,6 +27,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/**
 	 * COPY FROM JXL : The maximum number of columns
 	 */
@@ -45,7 +45,6 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
 	 */
 	private final static int numRowsPerSheet = 65536;
-	private final/*@Nullable*/Map<String, CellStyle> cellStyleByName;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -61,40 +60,18 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 
 	private final Sheet sheet;
 
+	private final XlsPoiStyleHelper styleHelper;
+
 	/**
-	 * @param cellStyleByName
+	 * @param styleHelper
 	 */
-	XlsPoiWriter(final Sheet sheet, final/*@Nullable*/CellStyle dateCellStyle,
-			final/*@Nullable*/Map<String, CellStyle> cellStyleByName) {
-		super(new XlsPoiReader(sheet));
+	XlsPoiWriter(final XlsPoiStyleHelper styleHelper, final Sheet sheet,
+			final/*@Nullable*/CellStyle dateCellStyle) {
+		super(new XlsPoiReader(styleHelper, sheet));
+		this.styleHelper = styleHelper;
 		this.sheet = sheet;
-		this.cellStyleByName = cellStyleByName;
 		this.dateCellStyle = dateCellStyle;
 
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		final CellStyle cellStyle = cell.getCellStyle();
-		if (this.cellStyleByName == null)
-			return null;
-
-		for (final Map.Entry<String, CellStyle> entry : this.cellStyleByName
-				.entrySet()) {
-			if (entry.getValue().equals(cellStyle))
-				return entry.getKey();
-		}
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleString(final int r, final int c) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		final CellStyle cellStyle = cell.getCellStyle();
-		return ""; // this.xlsPoiUtil.getStyleString(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -186,18 +163,28 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		return retValue;
 	}
 
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperCellStyle) {
+		final Cell poiCell = this.getOrCreatePOICell(r, c);
+		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+				this.sheet.getWorkbook(), wrapperCellStyle);
+		poiCell.setCellStyle(cellStyle);
+		return true;
+	}
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		if (this.cellStyleByName == null)
+		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+				this.sheet.getWorkbook(), styleName);
+		if (cellStyle == null)
 			return false;
-
-		if (this.cellStyleByName.containsKey(styleName)) {
+		else {
 			final Cell cell = this.getOrCreatePOICell(r, c);
-			cell.setCellStyle(this.cellStyleByName.get(styleName));
+			cell.setCellStyle(cellStyle);
 			return true;
-		} else
-			return false;
+		}
 	}
 
 	/** */

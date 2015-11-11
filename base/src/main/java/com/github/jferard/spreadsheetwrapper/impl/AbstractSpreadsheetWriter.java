@@ -26,6 +26,7 @@ import com.github.jferard.spreadsheetwrapper.DataWrapper;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -121,14 +122,14 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		return this.reader.getStyleName(r, c);
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		return this.reader.getStyle(r, c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleString(final int r, final int c) {
-		return this.reader.getStyleString(r, c);
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
+		return this.reader.getStyleName(r, c);
 	}
 
 	/** {@inheritDoc} */
@@ -141,8 +142,9 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value,
 			final String styleName) {
+		final Boolean ret = this.setBoolean(r, c, value);
 		this.setStyleName(r, c, styleName);
-		return this.setBoolean(r, c, value);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -175,8 +177,9 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	@Override
 	public Object setCellContent(final int r, final int c,
 			final Object content, final String styleName) {
+		final Object ret = this.setCellContent(r, c, content);
 		this.setStyleName(r, c, styleName);
-		return this.setCellContent(r, c, content);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -194,32 +197,36 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	@Override
 	public Date setDate(final int r, final int c, final Date date,
 			final String styleName) {
+		final Date ret = this.setDate(r, c, date);
 		this.setStyleName(r, c, styleName);
-		return this.setDate(r, c, date);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value,
 			final String styleName) {
+		final Double ret = this.setDouble(r, c, value);
 		this.setStyleName(r, c, styleName);
-		return this.setDouble(r, c, value);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final int r, final int c, final String formula,
 			final String styleName) {
+		final String ret = this.setFormula(r, c, formula);
 		this.setStyleName(r, c, styleName);
-		return this.setFormula(r, c, formula);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value,
 			final String styleName) {
+		final Integer ret = this.setInteger(r, c, value);
 		this.setStyleName(r, c, styleName);
-		return this.setInteger(r, c, value);
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -241,18 +248,11 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public final boolean setStyleString(final int r, final int c,
-			final String styleString) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String setText(final int r, final int c, final String text,
 			final String styleName) {
+		final String ret = this.setText(r, c, text);
 		this.setStyleName(r, c, styleName);
-		return this.setText(r, c, text);
+		return ret;
 	}
 
 	/** {@inheritDoc} */

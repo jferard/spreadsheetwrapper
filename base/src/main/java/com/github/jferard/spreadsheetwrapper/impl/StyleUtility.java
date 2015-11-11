@@ -17,87 +17,31 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 
 public class StyleUtility {
 	public static final String BACKGROUND_COLOR = "background-color";
-	public static final String FONT_WEIGHT = "font-weight";
-	public static final String FONT_SIZE = "font-size";
 	public static final String FONT_COLOR = "font-color";
+	public static final String FONT_SIZE = "font-size";
 	public static final String FONT_STYLE = "font-style";
+	public static final String FONT_WEIGHT = "font-weight";
 
-	/**
-	 * @param styleString
-	 *            the styleString, format key1:value1;key2:value2
-	 * @return
-	 */
-	@Deprecated
-	public Map<String, String> getPropertiesMap(final String styleString) {
-		final String[] styleProps = styleString.split(";");
-		final Map<String, String> properties = new HashMap<String, String>(
-				styleProps.length);
-		for (final String styleProp : styleProps) {
-			final String[] entry = styleProp.split(":");
-			properties.put(entry[0].trim().toLowerCase(), entry[1].trim());
-		}
-		return properties;
-	}
-
-	protected WrapperCellStyle getWrapperCellStyle(final String styleString) {
-		final String[] styleProps = styleString.split(";");
-		WrapperColor backgroundColor = null;
-		int bold = WrapperCellStyle.DEFAULT;
-		int italic = WrapperCellStyle.DEFAULT;
-		int size = WrapperCellStyle.DEFAULT;
-		WrapperColor color = null;
-		for (final String styleProp : styleProps) {
-			final String[] entry = styleProp.split(":");
-			if (entry.length != 2)
-				throw new IllegalArgumentException(styleString);
-
-			String key = entry[0];
-			String value = entry[1];
-			if (key.equals(StyleUtility.BACKGROUND_COLOR))
-				backgroundColor = WrapperColor.getColorFromString(value);
-			else if (key.equals(StyleUtility.FONT_WEIGHT)) {
-				if (value.equals("bold"))
-					bold = WrapperCellStyle.YES;
-				else if (value.equals("normal"))
-					bold = WrapperCellStyle.NO;
-			} else if (key.equals(StyleUtility.FONT_STYLE)) {
-				if (value.equals("italic"))
-					italic = WrapperCellStyle.YES;
-				else if (value.equals("normal"))
-					italic = WrapperCellStyle.NO;
-			} else if (key.equals(StyleUtility.FONT_SIZE))
-				size = Integer.valueOf(value);
-			else if (key.equals(StyleUtility.FONT_COLOR))
-				color = WrapperColor.getColorFromString(value);
-		}
-
-		return new WrapperCellStyle(backgroundColor, new WrapperFont(bold,
-				italic, size, color));
-	}
-
-	protected String getStyleString(final WrapperCellStyle cellStyle) {
-		StringBuilder styleStringBuilder = new StringBuilder();
-		WrapperColor backgroundColor = cellStyle.getBackgroundColor();
+	public String getStyleString(final WrapperCellStyle cellStyle) {
+		final StringBuilder styleStringBuilder = new StringBuilder();
+		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
-					.append(':').append(backgroundColor.name()).append(';');
-		WrapperFont font = cellStyle.getCellFont();
+			.append(':').append(backgroundColor.name()).append(';');
+		final WrapperFont font = cellStyle.getCellFont();
 		final int size = font.getSize();
 		final WrapperColor color = font.getColor();
-		
+
 		switch (font.getBold()) {
 		case WrapperCellStyle.YES:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
-					.append(":bold;");
+			.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
@@ -121,11 +65,47 @@ public class StyleUtility {
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
-					.append(size).append(';');
+			.append(size).append(';');
 		if (color != null)
 			styleStringBuilder.append(StyleUtility.FONT_COLOR).append(':')
-					.append(color.name()).append(';');
+			.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
+	}
+
+	public WrapperCellStyle getWrapperCellStyle(final String styleString) {
+		final String[] styleProps = styleString.split(";");
+		WrapperColor backgroundColor = null;
+		int bold = WrapperCellStyle.DEFAULT;
+		int italic = WrapperCellStyle.DEFAULT;
+		int size = WrapperCellStyle.DEFAULT;
+		WrapperColor color = null;
+		for (final String styleProp : styleProps) {
+			final String[] entry = styleProp.split(":");
+			if (entry.length != 2)
+				throw new IllegalArgumentException(styleString);
+
+			final String key = entry[0];
+			final String value = entry[1];
+			if (key.equals(StyleUtility.BACKGROUND_COLOR))
+				backgroundColor = WrapperColor.getColorFromString(value);
+			else if (key.equals(StyleUtility.FONT_WEIGHT)) {
+				if (value.equals("bold"))
+					bold = WrapperCellStyle.YES;
+				else if (value.equals("normal"))
+					bold = WrapperCellStyle.NO;
+			} else if (key.equals(StyleUtility.FONT_STYLE)) {
+				if (value.equals("italic"))
+					italic = WrapperCellStyle.YES;
+				else if (value.equals("normal"))
+					italic = WrapperCellStyle.NO;
+			} else if (key.equals(StyleUtility.FONT_SIZE))
+				size = Integer.valueOf(value);
+			else if (key.equals(StyleUtility.FONT_COLOR))
+				color = WrapperColor.getColorFromString(value);
+		}
+
+		return new WrapperCellStyle(backgroundColor, new WrapperFont(bold,
+				italic, size, color));
 	}
 }

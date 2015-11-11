@@ -210,23 +210,22 @@ public interface SpreadsheetWriter extends SpreadsheetReader {
 	 *            row index (0..)
 	 * @param c
 	 *            column index (0..)
-	 * @param styleName
-	 *            the name of the style (@see createStyle)
+	 * @param style
+	 *            the style (@see createStyle)
 	 * @return false if failed
 	 */
-	boolean setStyleName(int r, int c, String styleName);
+	boolean setStyle(int r, int c, WrapperCellStyle wrapperStyle);
 
 	/**
 	 * @param r
 	 *            row index (0..)
 	 * @param c
 	 *            column index (0..)
-	 * @param styleString
-	 *            the style string (@see createStyle)
+	 * @param styleName
+	 *            the name of the style (@see createStyle)
 	 * @return false if failed
 	 */
-	@Deprecated
-	boolean setStyleString(int r, int c, String styleString);
+	boolean setStyleName(int r, int c, String styleName);
 
 	/**
 	 * @param r

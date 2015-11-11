@@ -61,16 +61,16 @@ public interface SpreadsheetReaderCursor extends Cursor {
 	/**
 	 * Get thee format at the current position
 	 *
-	 * @return the name of the format
+	 * @return the style at the current position
 	 */
-	/*@Nullable*/String getStyleName();
+	/*@Nullable*/WrapperCellStyle getStyle();
 
 	/**
 	 * Get thee format at the current position
 	 *
 	 * @return the name of the format
 	 */
-	/*@Nullable*/String getStyleString();
+	/*@Nullable*/String getStyleName();
 
 	/**
 	 * Get the text at the current position

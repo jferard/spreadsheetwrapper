@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.simpleods.OdsFile;
 import org.simpleods.SimpleOdsException;
-import org.simpleods.Styles;
 import org.simpleods.Table;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
@@ -39,7 +38,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** a value for delegation */
 	private final class OdsSimpleodsDocumentReaderTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
 		/**
 		 * @param file
 		 *            *internal* workbook
@@ -125,13 +124,5 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
 		return this.documentTrait.getSpreadsheet(sheetName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public String getStyleString(final String styleName) {
-		final Styles styles = this.file.getStyles();
-		throw new UnsupportedOperationException();
 	}
 }

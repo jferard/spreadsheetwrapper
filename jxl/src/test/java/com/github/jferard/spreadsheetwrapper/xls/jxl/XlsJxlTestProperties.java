@@ -23,8 +23,7 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlTestProperties {
 	private static TestProperties properties = new TestProperties("xls",
-			new XlsJxlDocumentFactory(Logger.getGlobal(),
-					new XlsJxlStyleUtility()));
+			XlsJxlDocumentFactory.create(Logger.getGlobal()));
 
 	public static TestProperties getProperties() {
 		return XlsJxlTestProperties.properties;
