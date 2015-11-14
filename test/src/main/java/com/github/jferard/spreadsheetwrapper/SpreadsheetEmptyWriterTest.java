@@ -76,9 +76,19 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setCellContent(2, 2, "Tail");
 
 		try {
-			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (UnsupportedOperationException e) {
+			WrapperCellStyle otherCellStyle = this.sw.getStyle(1, 0);
+			Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+			otherCellStyle = this.sw.getStyle(2, 0);
+			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+			otherCellStyle = this.sw.getStyle(0, 1);
+			Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+			otherCellStyle = this.sw.getStyle(0, 2);
+			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+			otherCellStyle = this.sw.getStyle(1, 1);
+			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
@@ -95,9 +105,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setCellContent(1, 0, "Tail");
 
 		try {
-			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
@@ -112,9 +122,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setCellContent(1, 0, "Tail", "");
 
 		try {
-			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
@@ -128,9 +138,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setCellContent(0, 0, "Head", "mystyle");
 
 		try {
-			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (UnsupportedOperationException e) {
+		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}
 	}
@@ -264,6 +274,12 @@ public abstract class SpreadsheetEmptyWriterTest {
 			else
 				throw e;
 		}
+	}
+
+	@Test
+	public void testSetTextOnRow50() {
+		this.sw.setText(50, 1, "10");
+		Assert.assertEquals("10", this.sw.getText(50, 1));
 	}
 
 	@Test

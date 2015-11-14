@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 
 		private final XlsPoiStyleHelper styleUtility;
 

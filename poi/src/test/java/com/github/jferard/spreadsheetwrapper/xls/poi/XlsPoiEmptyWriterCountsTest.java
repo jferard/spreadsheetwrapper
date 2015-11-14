@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiEmptyWriterCountsTest extends
-SpreadSheetEmptyWriterCountsTest {
+		SpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

@@ -24,8 +24,6 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.simpleods.ObjectQueue;
-import org.simpleods.OdsFile;
-import org.simpleods.Styles;
 import org.simpleods.Table;
 import org.simpleods.TableCell;
 import org.simpleods.TableRow;
@@ -39,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 

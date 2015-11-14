@@ -18,10 +18,8 @@
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
-import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Color;
@@ -55,21 +53,23 @@ public class XlsPoiStyleHelper {
 				colors.length);
 		this.colorByHssfColor = new HashMap<HSSFColor, WrapperColor>(
 				colors.length);
-		Map<Integer, HSSFColor> hssfColorByIndex = HSSFColor.getIndexHash();
-		for (HSSFColor hssfColor : hssfColorByIndex.values()) {
-			String hssfColorName = hssfColor.getClass().getName();
-			int index = hssfColorName.indexOf("$");
+		final Map<Integer, HSSFColor> hssfColorByIndex = HSSFColor
+				.getIndexHash();
+		for (final HSSFColor hssfColor : hssfColorByIndex.values()) {
+			final String hssfColorName = hssfColor.getClass().getName();
+			final int index = hssfColorName.indexOf("$");
 			if (index == -1) {
 				System.out.println(hssfColorName);
 				continue;
 			}
 
-			String colorName = hssfColorName.substring(index + 1);
+			final String colorName = hssfColorName.substring(index + 1);
 			try {
-				WrapperColor wrapperColor = WrapperColor.valueOf(colorName);
+				final WrapperColor wrapperColor = WrapperColor
+						.valueOf(colorName);
 				this.hssfColorByColor.put(wrapperColor, hssfColor);
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
-			} catch (IllegalArgumentException e) {
+			} catch (final IllegalArgumentException e) {
 				System.out.println(colorName);
 			}
 		}
@@ -133,7 +133,7 @@ public class XlsPoiStyleHelper {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color != null && color instanceof HSSFColor)
 			sb.append("background-color:")
-					.append(((HSSFColor) color).getHexString()).append(";");
+			.append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
 	}
 
@@ -175,9 +175,9 @@ public class XlsPoiStyleHelper {
 			wrapperFont = new WrapperFont();
 
 		WrapperColor wrapperColor = WrapperColor.AUTOMATIC;
-		short index = cellStyle.getFillForegroundColor();
+		final short index = cellStyle.getFillForegroundColor();
 		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
-		final HSSFColor poiColor = indexHash.get(Integer.valueOf((int) index));
+		final HSSFColor poiColor = indexHash.get(Integer.valueOf(index));
 		if (cellStyle.getFillPattern() == CellStyle.SOLID_FOREGROUND
 				&& this.colorByHssfColor.containsKey(poiColor))
 			wrapperColor = this.colorByHssfColor.get(poiColor);

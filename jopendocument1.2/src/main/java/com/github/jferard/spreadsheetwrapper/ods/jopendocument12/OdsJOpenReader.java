@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.jdom.Attribute;
 import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.CellStyle;
@@ -42,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -170,6 +169,9 @@ SpreadsheetReader {
 			return null;
 
 		final CellStyle cellStyle = cell.getStyle();
+		if (cellStyle == null)
+			return null;
+
 		final SyleTableCellProperties tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
@@ -179,10 +181,11 @@ SpreadsheetReader {
 		final WrapperFont wrapperFont = new WrapperFont();
 		final SyleTextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement
-				.getAttributeValue("color", OdsJOpenStyleHelper.foNS);
+		final String fColorAsHex = odfElement.getAttributeValue("color",
+				OdsJOpenStyleHelper.foNS);
 		wrapperFont.setColor(WrapperColor.getColorFromString(fColorAsHex));
-		final String fw = odfElement.getAttributeValue(StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.foNS);
+		final String fw = odfElement.getAttributeValue(
+				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.foNS);
 		if ("bold".equals(fw))
 			wrapperFont.setBold();
 

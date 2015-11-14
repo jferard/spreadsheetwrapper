@@ -22,7 +22,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -41,12 +40,12 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleHelper(
 				new CellStyleAccessor<CellStyle>()));
 	}
-	
+
 	private CellStyleAccessor<CellStyle> cellStyleAccessor;
 
 	private final Logger logger;
@@ -72,7 +71,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, this.styleHelper,
 				sfWorkbook.getObject(), output);
 	}
@@ -96,7 +95,7 @@ implements SpreadsheetDocumentFactory {
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		final Workbook workbook = new HSSFWorkbook();
 		return workbook;
 	}

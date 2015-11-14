@@ -150,9 +150,9 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 
 			if (sheet.getName().equals(sheetName)) {
 				spreadsheet = new XlsJxlReader(sheet, this.styleHelper); // NOPMD
-																			// by
-																			// Julien
-																			// on
+				// by
+				// Julien
+				// on
 				// 03/09/15 21:57
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;

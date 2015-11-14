@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
@@ -208,7 +208,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	 *            the column index
 	 * @return the cell
 	 */
-	protected Cell getOrCreateSimpleCell(final int r, final int c) {
+	private Cell getOrCreateSimpleCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r != this.curR || this.curRow == null) {
@@ -233,19 +233,6 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
 		}
-		// // bad behaviour (to name is not to create) but HACK for writers
-		// final TableTableRowElement aRow = this.curRow.getOdfElement();
-		// NodeList cells = aRow.getElementsByTagName("table:table-cell");
-		// if (cells.getLength() == 0) {
-		// OdfFileDom dom = (OdfFileDom) this.table.getOdfElement()
-		// .getOwnerDocument();
-		// TableTableCellElement aCell = (TableTableCellElement) OdfXMLFactory
-		// .newOdfElement(dom, OdfName.newName(
-		// OdfDocumentNamespace.TABLE, "table-cell"));
-		// aRow.appendChild(aCell);
-		// }
-		// // end of HACK
-
 		final Cell cell = this.curRow.getCellByIndex(c);
 		cell.getStyleHandler().getStyleElementForWrite();
 		return cell;

@@ -47,10 +47,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 		private final OdsOdfdomStyleHelper styleHelper;
 
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
@@ -95,7 +95,7 @@ implements SpreadsheetDocumentWriter {
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);

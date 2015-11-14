@@ -33,7 +33,7 @@ public class StyleUtility {
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
-			.append(':').append(backgroundColor.name()).append(';');
+					.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
 		final int size = font.getSize();
 		final WrapperColor color = font.getColor();
@@ -41,7 +41,7 @@ public class StyleUtility {
 		switch (font.getBold()) {
 		case WrapperCellStyle.YES:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
-			.append(":bold;");
+					.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
@@ -65,10 +65,10 @@ public class StyleUtility {
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
-			.append(size).append(';');
+					.append(size).append(';');
 		if (color != null)
 			styleStringBuilder.append(StyleUtility.FONT_COLOR).append(':')
-			.append(color.name()).append(';');
+					.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
 	}

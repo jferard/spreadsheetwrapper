@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.simpleods.ObjectQueue;
-import org.simpleods.OdsFile;
 import org.simpleods.Table;
 import org.simpleods.TableCell;
 import org.simpleods.TableRow;
@@ -38,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  * writer for simpleods
  */
 class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;

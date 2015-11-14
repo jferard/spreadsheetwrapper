@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsPoiReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;
 	/** current row, null if none */
@@ -180,6 +180,9 @@ SpreadsheetReader {
 	@Override
 	public WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell poiCell = this.getPOICell(r, c);
+		if (poiCell == null)
+			return null;
+
 		final CellStyle cellStyle = poiCell.getCellStyle();
 		return this.styleHelper.getWrapperCellStyle(this.sheet.getWorkbook(),
 				cellStyle);
@@ -227,8 +230,9 @@ SpreadsheetReader {
 			// this.sheet.createRow(r);
 			this.curR = r;
 		}
-		final Cell cell = this.curRow.getCell(c);
-		assert cell != null; // else cell = this.curRow.createCell(c);
+		Cell cell = this.curRow.getCell(c);
+		if (cell == null)
+			cell = this.curRow.createCell(c);
 		return cell;
 	}
 

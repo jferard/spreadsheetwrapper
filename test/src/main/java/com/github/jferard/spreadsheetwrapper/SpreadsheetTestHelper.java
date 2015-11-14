@@ -41,16 +41,16 @@ public class SpreadsheetTestHelper {
 			throws MalformedURLException {
 		return new URL(String.format("file:///%s/%s", System
 				.getProperty("java.io.tmpdir"), String.format("test-%s.%d.%s",
-						SpreadsheetTestHelper.getCallerClassName(),
-				SpreadsheetTestHelper.i++, extension)));
+				SpreadsheetTestHelper.getCallerClassName(),
+						SpreadsheetTestHelper.i++, extension)));
 	}
 
 	public static URL getOutputURL(final String className,
 			final String methodName, final String extension)
-					throws MalformedURLException {
+			throws MalformedURLException {
 		return new URL(String.format("file:///%s/%s", System
 				.getProperty("java.io.tmpdir"), String.format("test-%s-%s.%s",
-						className, methodName, extension)));
+				className, methodName, extension)));
 	}
 
 }

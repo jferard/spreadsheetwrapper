@@ -27,8 +27,10 @@ import java.util.Map;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
+import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
+import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
@@ -39,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -184,12 +186,51 @@ SpreadsheetWriter {
 	 *            the column index
 	 * @return the cell
 	 */
-	protected OdfTableCell getOrCreateOdfCell(final int r, final int c) {
+	private OdfTableCell getOrCreateOdfCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r != this.curR || this.curRow == null) {
+			// Hack for clean style @see Table.appendRows(count, false)
+			// 1. append "manually" the missing rows
+			// 2. clean style
+			final int lastIndex = this.table.getRowCount() - 1;
+			if (r > lastIndex) {
+				final List<OdfTableRow> resultList = this.table.appendRows(r
+						- lastIndex);
+				final String tableNameSpace = OdfDocumentNamespace.TABLE
+						.getUri();
+				for (final OdfTableRow row : resultList) {
+					Node cellE = row.getOdfElement().getFirstChild();
+					while (cellE != null) {
+						((TableTableCellElementBase) cellE).removeAttributeNS(
+								tableNameSpace, "style-name");
+						cellE = cellE.getNextSibling();
+					}
+				}
+			}
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
+			//
+			// final int lastIndex = this.table.getRowCount() - 1;
+			// if (r > lastIndex) { // r - lastIndex rows to append
+			//
+			// // append row and clean style
+			// this.table.getCellByPosition(0, lastIndex + 2); // 2. HACK :
+			// // append two
+			// // rows to clean
+			// // style
+			// OdfTableRow row = this.table.getRowByIndex(lastIndex + 2);
+			// row.getNextRow();
+			// this.table.appendRows(r - lastIndex - 1); // (r - lastIndex - 1)
+			// // + 2 = r -
+			// // lastIndex + 1
+			// this.table.removeRowsByIndex(r + 1, 1); // (r - lastIndex - 1) +
+			// // 2 - 1 = r - lastIndex
+			// // : ok !!
+			// assert this.table.getRowCount() == r + 1;
+			// }
+			// this.curRow = this.table.getRowByIndex(r);
+			// this.curR = r;
 		}
 		return this.curRow.getCellByIndex(c);
 	}

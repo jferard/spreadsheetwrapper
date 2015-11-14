@@ -64,6 +64,19 @@ public class WrapperFont {
 		this.wrapperColor = wrapperColor;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof WrapperFont))
+			return false;
+
+		final WrapperFont other = (WrapperFont) obj;
+		return this.bold == other.bold && this.italic == other.italic
+				&& this.size == other.size
+				&& this.wrapperColor == other.wrapperColor;
+	}
+
 	/**
 	 * @return true if the font is bold
 	 */
@@ -90,6 +103,14 @@ public class WrapperFont {
 	 */
 	public int getSize() {
 		return this.size;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		return prime
+				* (prime * (prime * (prime + this.bold) + this.italic) + this.size)
+				+ Util.hash(this.wrapperColor);
 	}
 
 	public WrapperFont setBold() {
@@ -136,27 +157,6 @@ public class WrapperFont {
 	public WrapperFont setSize(final int size) {
 		this.size = size;
 		return this;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		return prime
-				* (prime * (prime * (prime + this.bold) + this.italic) + this.size)
-				+ Util.hash(this.wrapperColor);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof WrapperFont))
-			return false;
-
-		WrapperFont other = (WrapperFont) obj;
-		return this.bold == other.bold && this.italic == other.italic
-				&& this.size == other.size
-				&& this.wrapperColor == other.wrapperColor;
 	}
 
 	@Override

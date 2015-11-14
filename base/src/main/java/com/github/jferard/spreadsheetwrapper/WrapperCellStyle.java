@@ -39,12 +39,31 @@ public class WrapperCellStyle {
 		this.cellFont = cellFont;
 	}
 
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof WrapperCellStyle))
+			return false;
+
+		final WrapperCellStyle other = (WrapperCellStyle) obj;
+		return this.backgoundColor == other.backgoundColor
+				&& Util.equal(this.cellFont, other.cellFont);
+	}
+
 	public/*@Nullable*/WrapperColor getBackgroundColor() {
 		return this.backgoundColor;
 	}
 
 	public/*@Nullable*/WrapperFont getCellFont() {
 		return this.cellFont;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		return prime * (prime + Util.hash(this.backgoundColor))
+				+ Util.hash(this.cellFont);
 	}
 
 	public void setBackgroundColor(final WrapperColor wrapperColor) {
@@ -56,27 +75,9 @@ public class WrapperCellStyle {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		return prime * (prime + Util.hash(this.backgoundColor)) + Util.hash(this.cellFont);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof WrapperCellStyle))
-			return false;
-
-		WrapperCellStyle other = (WrapperCellStyle) obj;
-		return this.backgoundColor == other.backgoundColor
-				&& Util.equal(this.cellFont, other.cellFont);
-	}
-
-	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-				.append(this.backgoundColor).append(", cellFont=")
-				.append(this.cellFont).append("]").toString();
+		.append(this.backgoundColor).append(", cellFont=")
+		.append(this.cellFont).append("]").toString();
 	}
 }

@@ -41,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -170,6 +170,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final CellStyle cellStyle = cell.getStyle();
+		if (cellStyle == null)
+			return null;
+
 		final StyleTableCellProperties tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();

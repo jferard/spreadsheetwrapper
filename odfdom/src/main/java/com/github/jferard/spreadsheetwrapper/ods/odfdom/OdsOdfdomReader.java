@@ -38,7 +38,7 @@ import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
