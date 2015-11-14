@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper.xls.jxl;
 import java.util.HashMap;
 import java.util.Map;
 
+import jxl.format.BoldStyle;
+import jxl.format.CellFormat;
 import jxl.format.Colour;
 import jxl.format.Font;
 import jxl.write.WritableCellFormat;
@@ -84,25 +86,36 @@ public class XlsJxlStyleHelper {
 
 	public WrapperCellStyle getWrapperCellStyle(
 			final WritableCellFormat cellFormat) {
-		WrapperCellStyle wrapperCellStyle;
-		WrapperFont wrapperFont;
+		final WrapperColor backgroundColor = this
+				.getWrapperColor(cellFormat.getBackgroundColour());
+		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
-		if (font.getBoldWeight() == XlsJxlStyleHelper.BOLDWEIGHT_BOLD)
-			wrapperFont = new WrapperFont().setBold();
-		else
-			wrapperFont = new WrapperFont();
+		final Colour fontColor = font.getColour();
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC)
+			wrapperFont
+					.setColor(this.getWrapperColor(fontColor));
+		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+			wrapperFont.setBold();
 
-		final Colour jxlColor = cellFormat.getBackgroundColour();
-		final WrapperColor wrapperColor;
-		if (this.wrapperColorByJxlColor.containsKey(jxlColor))
-			wrapperColor = this.wrapperColorByJxlColor.get(jxlColor);
-		else
-			wrapperColor = WrapperColor.AUTOMATIC;
-
-		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
-		return wrapperCellStyle;
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
 	}
 
+	public WrapperCellStyle getWrapperCellStyle(
+			final CellFormat cellFormat) {
+		final WrapperColor backgroundColor = this
+				.getWrapperColor(cellFormat.getBackgroundColour());
+		final WrapperFont wrapperFont = new WrapperFont();
+		final Font font = cellFormat.getFont();
+		final Colour fontColor = font.getColour();
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC)
+			wrapperFont
+					.setColor(this.getWrapperColor(fontColor));
+		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+	
 	public/*@Nullable*/WrapperColor getWrapperColor(final Colour color) {
 		return this.wrapperColorByJxlColor.get(color);
 	}

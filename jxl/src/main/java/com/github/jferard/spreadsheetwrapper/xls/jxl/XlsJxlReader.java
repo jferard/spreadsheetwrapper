@@ -28,15 +28,11 @@ import jxl.LabelCell;
 import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.biff.formula.FormulaException;
-import jxl.format.BoldStyle;
 import jxl.format.CellFormat;
-import jxl.format.Font;
 import jxl.write.Formula;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -201,16 +197,7 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final CellFormat cellFormat = cell.getCellFormat();
-		final WrapperColor backgroundColor = this.styleHelper
-				.getWrapperColor(cellFormat.getBackgroundColour());
-		final WrapperFont wrapperFont = new WrapperFont();
-		final Font font = cellFormat.getFont();
-		wrapperFont
-				.setColor(this.styleHelper.getWrapperColor(font.getColour()));
-		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-			wrapperFont.setBold();
-
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
+		return this.styleHelper.getWrapperCellStyle(cellFormat);
 	}
 
 	@Override

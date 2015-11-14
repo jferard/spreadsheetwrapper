@@ -54,4 +54,29 @@ public class WrapperCellStyle {
 	public void setCellFont(final WrapperFont cellFont) {
 		this.cellFont = cellFont;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		return prime * (prime + Util.hash(this.backgoundColor)) + Util.hash(this.cellFont);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof WrapperCellStyle))
+			return false;
+
+		WrapperCellStyle other = (WrapperCellStyle) obj;
+		return this.backgoundColor == other.backgoundColor
+				&& Util.equal(this.cellFont, other.cellFont);
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("WrapperCellStyle [backgoundColor=")
+				.append(this.backgoundColor).append(", cellFont=")
+				.append(this.cellFont).append("]").toString();
+	}
 }

@@ -74,6 +74,13 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(2, 2, "Tail");
+
+		try {
+			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
 	}
 
 	@Test
@@ -86,6 +93,13 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(1, 0, "Tail");
+
+		try {
+			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
 	}
 
 	@Test
@@ -96,15 +110,29 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sdw.setStyle("mystyle2", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle2");
 		this.sw.setCellContent(1, 0, "Tail", "");
+
+		try {
+			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
 	}
 
 	@Test
 	public final void testCreateStyleFromStringAndSetStyle() {
 		final StyleUtility utility = new StyleUtility();
-		this.sdw.setStyle(
-				"mystyle",
-				utility.getWrapperCellStyle("background-color:#999999;font-weight:bold"));
+		final WrapperCellStyle wrapperCellStyle = utility
+				.getWrapperCellStyle("background-color:#999999;font-weight:bold");
+		this.sdw.setStyle("mystyle", wrapperCellStyle);
 		this.sw.setCellContent(0, 0, "Head", "mystyle");
+
+		try {
+			WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (UnsupportedOperationException e) {
+			Assume.assumeNoException(e);
+		}
 	}
 
 	@Test

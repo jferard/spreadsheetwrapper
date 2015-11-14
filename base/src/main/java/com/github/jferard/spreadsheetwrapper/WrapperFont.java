@@ -137,4 +137,33 @@ public class WrapperFont {
 		this.size = size;
 		return this;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		return prime
+				* (prime * (prime * (prime + this.bold) + this.italic) + this.size)
+				+ Util.hash(this.wrapperColor);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof WrapperFont))
+			return false;
+
+		WrapperFont other = (WrapperFont) obj;
+		return this.bold == other.bold && this.italic == other.italic
+				&& this.size == other.size
+				&& this.wrapperColor == other.wrapperColor;
+	}
+
+	@Override
+	public String toString() {
+		return new StringBuilder("WrapperFont [bold=").append(this.bold)
+				.append(", italic=").append(this.italic).append(", size=")
+				.append(this.size).append(", wrapperColor=")
+				.append(this.wrapperColor).append("]").toString();
+	}
 }

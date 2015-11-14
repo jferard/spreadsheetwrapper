@@ -24,6 +24,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 
 import org.simpleods.ObjectQueue;
+import org.simpleods.OdsFile;
+import org.simpleods.Styles;
 import org.simpleods.Table;
 import org.simpleods.TableCell;
 import org.simpleods.TableRow;
@@ -165,8 +167,7 @@ SpreadsheetReader {
 
 	@Override
 	public WrapperCellStyle getStyle(final int r, final int c) {
-		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

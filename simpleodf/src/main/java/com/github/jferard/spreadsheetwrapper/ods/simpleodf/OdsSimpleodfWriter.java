@@ -71,13 +71,6 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 
 	/** {@inheritDoc} */
 	@Override
-	public WrapperCellStyle getStyle(final int r, final int c) {
-		final Cell cell = this.getOrCreateSimpleCell(r, c);
-		return null;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public String getStyleName(final int r, final int c) {
 		final Cell cell = this.getOrCreateSimpleCell(r, c);
 		return cell.getCellStyleName();

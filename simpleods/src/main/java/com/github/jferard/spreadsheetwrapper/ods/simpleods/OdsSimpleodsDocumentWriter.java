@@ -49,6 +49,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
 	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
 		}

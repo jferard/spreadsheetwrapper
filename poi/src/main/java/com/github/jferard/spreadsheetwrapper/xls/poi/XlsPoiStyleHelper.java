@@ -18,8 +18,10 @@
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Color;
@@ -53,25 +55,22 @@ public class XlsPoiStyleHelper {
 				colors.length);
 		this.colorByHssfColor = new HashMap<HSSFColor, WrapperColor>(
 				colors.length);
-		for (final WrapperColor color : colors) {
-			HSSFColor hssfColor;
+		Map<Integer, HSSFColor> hssfColorByIndex = HSSFColor.getIndexHash();
+		for (HSSFColor hssfColor : hssfColorByIndex.values()) {
+			String hssfColorName = hssfColor.getClass().getName();
+			int index = hssfColorName.indexOf("$");
+			if (index == -1) {
+				System.out.println(hssfColorName);
+				continue;
+			}
+
+			String colorName = hssfColorName.substring(index + 1);
 			try {
-				final Class<?> hssfClazz = Class
-						.forName("org.apache.poi.hssf.util.HSSFColor$"
-								+ color.getSimpleName());
-				hssfColor = (HSSFColor) hssfClazz.newInstance();
-				this.hssfColorByColor.put(color, hssfColor);
-				this.colorByHssfColor.put(hssfColor, color);
-			} catch (final ClassNotFoundException e) {
-				hssfColor = null;
-			} catch (final IllegalArgumentException e) {
-				hssfColor = null;
-			} catch (final IllegalAccessException e) {
-				hssfColor = null;
-			} catch (final SecurityException e) {
-				hssfColor = null;
-			} catch (final InstantiationException e) {
-				hssfColor = null;
+				WrapperColor wrapperColor = WrapperColor.valueOf(colorName);
+				this.hssfColorByColor.put(wrapperColor, hssfColor);
+				this.colorByHssfColor.put(hssfColor, wrapperColor);
+			} catch (IllegalArgumentException e) {
+				System.out.println(colorName);
 			}
 		}
 	}
@@ -134,7 +133,7 @@ public class XlsPoiStyleHelper {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color != null && color instanceof HSSFColor)
 			sb.append("background-color:")
-			.append(((HSSFColor) color).getHexString()).append(";");
+					.append(((HSSFColor) color).getHexString()).append(";");
 		return sb.toString();
 	}
 
@@ -175,12 +174,13 @@ public class XlsPoiStyleHelper {
 		else
 			wrapperFont = new WrapperFont();
 
-		final Color poiColor = cellStyle.getFillBackgroundColorColor();
-		final WrapperColor wrapperColor;
-		if (this.colorByHssfColor.containsKey(poiColor))
+		WrapperColor wrapperColor = WrapperColor.AUTOMATIC;
+		short index = cellStyle.getFillForegroundColor();
+		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
+		final HSSFColor poiColor = indexHash.get(Integer.valueOf((int) index));
+		if (cellStyle.getFillPattern() == CellStyle.SOLID_FOREGROUND
+				&& this.colorByHssfColor.containsKey(poiColor))
 			wrapperColor = this.colorByHssfColor.get(poiColor);
-		else
-			wrapperColor = WrapperColor.AUTOMATIC;
 
 		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
 		return wrapperCellStyle;

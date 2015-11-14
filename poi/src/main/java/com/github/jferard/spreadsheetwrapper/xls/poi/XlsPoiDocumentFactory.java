@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
+import org.apache.poi.hssf.usermodel.HSSFPalette;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -45,7 +46,7 @@ implements SpreadsheetDocumentFactory {
 		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleHelper(
 				new CellStyleAccessor<CellStyle>()));
 	}
-
+	
 	private CellStyleAccessor<CellStyle> cellStyleAccessor;
 
 	private final Logger logger;

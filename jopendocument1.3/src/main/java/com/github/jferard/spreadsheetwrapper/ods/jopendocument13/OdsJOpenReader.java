@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument13;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.CellStyle;
 import org.jopendocument.dom.spreadsheet.CellStyle.StyleTableCellProperties;
@@ -40,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -178,11 +179,13 @@ SpreadsheetReader {
 		final WrapperFont wrapperFont = new WrapperFont();
 		final StyleTextProperties textProperties = cellStyle
 				.getTextProperties();
-		final String fColorAsHex = textProperties.getElement()
-				.getAttributeValue("color", OdsJOpenStyleHelper.foNS);
+		final Element odfElement = textProperties.getElement();
+		final String fColorAsHex = odfElement.getAttributeValue("color",
+				OdsJOpenStyleHelper.foNS);
 		wrapperFont.setColor(WrapperColor.getColorFromString(fColorAsHex));
-		if (textProperties.getElement().getAttribute(StyleUtility.FONT_WEIGHT)
-				.equals("bold"))
+		final String fw = odfElement.getAttributeValue(
+				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.foNS);
+		if ("bold".equals(fw))
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
