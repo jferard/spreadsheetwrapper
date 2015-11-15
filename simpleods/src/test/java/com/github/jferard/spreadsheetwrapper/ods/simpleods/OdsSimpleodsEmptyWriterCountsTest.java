@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsSimpleodsEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+SpreadSheetEmptyWriterCountsTest {
 	/** set the test up */
 	@Before
 	@Override

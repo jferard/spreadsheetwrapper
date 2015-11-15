@@ -86,10 +86,13 @@ public class XlsJxlStyleHelper {
 
 	public WrapperCellStyle getWrapperCellStyle(final CellFormat cellFormat) {
 		if (cellFormat == null)
-			return null;
+			return WrapperCellStyle.EMPTY;
 
-		final WrapperColor backgroundColor = this.getWrapperColor(cellFormat
+		WrapperColor backgroundColor = this.getWrapperColor(cellFormat
 				.getBackgroundColour());
+		if (WrapperColor.DEFAULT_BACKGROUND.equals(backgroundColor))
+			backgroundColor = null;
+
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
 		final Colour fontColor = font.getColour();

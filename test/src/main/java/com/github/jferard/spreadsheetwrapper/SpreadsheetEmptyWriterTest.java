@@ -76,18 +76,30 @@ public abstract class SpreadsheetEmptyWriterTest {
 		this.sw.setCellContent(2, 2, "Tail");
 
 		try {
-			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
-			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-			WrapperCellStyle otherCellStyle = this.sw.getStyle(1, 0);
-			Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
-			otherCellStyle = this.sw.getStyle(2, 0);
-			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
-			otherCellStyle = this.sw.getStyle(0, 1);
-			Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
-			otherCellStyle = this.sw.getStyle(0, 2);
-			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
-			otherCellStyle = this.sw.getStyle(1, 1);
-			// Assert.assertNotEquals(wrapperCellStyle, otherCellStyle);
+			for (int r = 0; r <= 3; r++) {
+				for (int c = 0; c <= 3; c++) {
+					final WrapperCellStyle otherCellStyle = this.sw.getStyle(r,
+							c);
+					if (r <= 1) {
+						if (r == 0 && c == 0)
+							Assert.assertEquals(wrapperCellStyle,
+									otherCellStyle);
+						else
+							Assert.assertNull(String.format("%d * %d", r, c),
+									otherCellStyle);
+					} else if (r == 2) {
+						if (c <= 2)
+							Assert.assertEquals(String.format("%d * %d", r, c),
+									WrapperCellStyle.EMPTY, otherCellStyle);
+						else
+							// c == 3
+							Assert.assertNull(String.format("%d * %d", r, c),
+									otherCellStyle);
+					} else
+						Assert.assertNull(String.format("%d * %d", r, c),
+								otherCellStyle);
+				}
+			}
 		} catch (final UnsupportedOperationException e) {
 			Assume.assumeNoException(e);
 		}

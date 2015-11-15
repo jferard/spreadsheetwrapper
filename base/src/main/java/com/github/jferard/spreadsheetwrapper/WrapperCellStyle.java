@@ -21,6 +21,8 @@ package com.github.jferard.spreadsheetwrapper;
 
 public class WrapperCellStyle {
 	public static final int DEFAULT = -1;
+	public static final WrapperCellStyle EMPTY = new WrapperCellStyle(null,
+			new WrapperFont());
 	public static final int NO = 0;
 	public static final int YES = 1;
 	private/*@Nullable*/WrapperColor backgoundColor;
@@ -77,7 +79,7 @@ public class WrapperCellStyle {
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-		.append(this.backgoundColor).append(", cellFont=")
-		.append(this.cellFont).append("]").toString();
+				.append(this.backgoundColor).append(", cellFont=")
+				.append(this.cellFont).append("]").toString();
 	}
 }

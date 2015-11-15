@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiEmptyDocumentWriterTest extends
-SpreadsheetEmptyDocumentWriterTest {
+		SpreadsheetEmptyDocumentWriterTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

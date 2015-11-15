@@ -45,10 +45,10 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
  *
  */
 public class OdsSimpleodfDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentWriterTrait extends
-			AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
 		private final OdsOdfdomStyleHelper styleHelper;
 
 		/**
@@ -98,7 +98,7 @@ public class OdsSimpleodfDocumentWriter extends
 	public OdsSimpleodfDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdsSimpleodfStatefulDocument sfDocument, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.reader = new OdsSimpleodfDocumentReader(styleHelper, sfDocument);
