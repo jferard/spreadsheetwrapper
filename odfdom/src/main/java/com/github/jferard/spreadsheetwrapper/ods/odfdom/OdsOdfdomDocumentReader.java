@@ -35,14 +35,17 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  */
 class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
+			AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
 
 		/**
 		 * @param cellStyleAccessor
@@ -56,6 +59,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 
 		/** {@inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentReaderTrait this,*/final OdfTable table) {
 			return new OdsOdfdomReader(table, this.traitStyleHelper);

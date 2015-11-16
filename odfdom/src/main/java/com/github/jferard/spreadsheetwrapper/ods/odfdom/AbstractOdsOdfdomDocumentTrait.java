@@ -30,7 +30,10 @@ import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
@@ -144,6 +147,7 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 	 * @param table
 	 * @return
 	 */
+	/*@RequiresNonNull("traitStyleHelper")*/
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsOdfdomDocumentTrait<T> this, */final OdfTable table);
 

@@ -39,7 +39,10 @@ import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  *
@@ -62,9 +65,10 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 		/** {@inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
-			return new OdsSimpleodfWriter(table, this.styleHelper);
+			return new OdsSimpleodfWriter(table, this.traitStyleHelper);
 		}
 	}
 

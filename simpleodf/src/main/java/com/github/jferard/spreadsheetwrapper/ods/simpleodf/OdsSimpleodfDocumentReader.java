@@ -34,7 +34,10 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  * The value reader for Apache simple-odf
@@ -51,9 +54,10 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 
 		/** {@inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentReaderTrait this, */final Table table) {
-			return new OdsSimpleodfReader(table, this.styleHelper);
+			return new OdsSimpleodfReader(table, this.traitStyleHelper);
 		}
 	}
 

@@ -45,9 +45,11 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-/*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  * A wrapper for writing in a workbook
@@ -63,7 +65,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		/**
 		 * @param workbook
 		 *            *internal* workbook
-		 * @param styleHelper
+		 * @param traitStyleHelper
 		 * @param dateCellStyle
 		 *            the style for all date cells
 		 * @param cellStyleAccessor
@@ -76,9 +78,10 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 		/** {@inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.styleHelper, this.dateCellStyle);
+			return new XlsPoiWriter(sheet, this.traitStyleHelper, this.dateCellStyle);
 		}
 	}
 
@@ -128,20 +131,20 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *            where to write
 	 */
 	public XlsPoiDocumentWriter(final Logger logger,
-			final XlsPoiStyleHelper styleHelper, final Workbook workbook,
+			final Workbook workbook, final XlsPoiStyleHelper styleHelper,
 			final Output output) {
 		super(logger, output);
-		this.styleHelper = styleHelper;
-		this.reader = new XlsPoiDocumentReader(logger, styleHelper, workbook);
 		this.logger = logger;
 		this.workbook = workbook;
+		this.styleHelper = styleHelper;
+		this.reader = new XlsPoiDocumentReader(logger, workbook, styleHelper);
 		final CreationHelper createHelper = this.workbook.getCreationHelper();
 		final CellStyle dateCellStyle = this.workbook.createCellStyle();
 		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
 		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
-				this.styleHelper, dateCellStyle);
+				styleHelper, dateCellStyle);
 	}
 
 	/** {@inheritDoc} */

@@ -40,7 +40,10 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  * The value writer for Apache odfdom.
@@ -59,6 +62,7 @@ implements SpreadsheetDocumentWriter {
 
 		/** {@inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
 			return new OdsOdfdomWriter(table, this.traitStyleHelper);

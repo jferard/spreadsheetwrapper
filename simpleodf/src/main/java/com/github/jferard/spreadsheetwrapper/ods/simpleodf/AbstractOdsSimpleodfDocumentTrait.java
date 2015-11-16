@@ -32,8 +32,10 @@ import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetExcep
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
-/*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
+/*>>> 
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
@@ -58,7 +60,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
-	protected OdsOdfdomStyleHelper styleHelper;
+	protected OdsOdfdomStyleHelper traitStyleHelper;
 
 	/**
 	 * @param sfDocument
@@ -69,7 +71,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 			final OdsSimpleodfStatefulDocument sfDocument, OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.sfDocument = sfDocument;
-		this.styleHelper = styleHelper;
+		this.traitStyleHelper = styleHelper;
 		final List<Table> tables = this.getTableList();
 		final ListIterator<Table> tablesIterator = tables.listIterator();
 		while (tablesIterator.hasNext()) {
@@ -138,6 +140,7 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
+	/*@RequiresNonNull("traitStyleHelper")*/
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this, */final Table table);
 

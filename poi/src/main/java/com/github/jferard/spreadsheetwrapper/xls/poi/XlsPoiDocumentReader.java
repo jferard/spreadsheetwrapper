@@ -32,8 +32,11 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> 
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+*/
 
 /**
  */
@@ -49,9 +52,10 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 		/** {inheritDoc} */
 		@Override
+		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
-			return new XlsPoiReader(sheet, this.styleHelper);
+			return new XlsPoiReader(sheet, this.traitStyleHelper);
 		}
 	}
 
@@ -64,16 +68,16 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/**
 	 * @param logger
-	 * @param cellStyleAccessor
 	 * @param workbook
 	 *            *internal* workbook
+	 * @param cellStyleAccessor
 	 */
-	XlsPoiDocumentReader(final Logger logger,
-			final XlsPoiStyleHelper styleHelper, final Workbook workbook) {
+	XlsPoiDocumentReader(final Logger logger, final Workbook workbook,
+			final XlsPoiStyleHelper styleHelper) {
 		this.workbook = workbook;
-		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,
-				this.styleHelper);
 		this.styleHelper = styleHelper;
+		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,
+				styleHelper);
 	}
 
 	/** {@inheritDoc} */

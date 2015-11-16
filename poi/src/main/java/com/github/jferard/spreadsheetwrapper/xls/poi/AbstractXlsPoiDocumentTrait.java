@@ -25,30 +25,33 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
-/*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
-/*>>> import org.checkerframework.checker.nullness.qual.PolyNull;*/
+/*>>> 
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.checkerframework.checker.initialization.qual.UnknownInitialization;
+import org.checkerframework.checker.nullness.qual.RequiresNonNull;
+import org.checkerframework.checker.nullness.qual.PolyNull;
+*/
 
 public abstract class AbstractXlsPoiDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
 	/** *internal* workbook */
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
-	protected/*@Nullable*/CellStyle dateCellStyle;
-	protected XlsPoiStyleHelper styleHelper;
+	protected /*@Nullable*/ CellStyle dateCellStyle;
+	protected XlsPoiStyleHelper traitStyleHelper;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
-	 * @param styleHelper 
+	 * @param traitStyleHelper 
 	 * @param dateCellStyle
 	 *            cell syle for dates, since Excel hasn't a real date type
 	 */
-	public AbstractXlsPoiDocumentTrait(final Workbook workbook, /*@Nullable*/
-			XlsPoiStyleHelper styleHelper, final CellStyle dateCellStyle) {
+	public AbstractXlsPoiDocumentTrait(final Workbook workbook,
+			XlsPoiStyleHelper styleHelper, final /*@Nullable*/ CellStyle dateCellStyle) {
 		super();
 		this.workbook = workbook;
-		this.styleHelper = styleHelper;
+		this.traitStyleHelper = styleHelper;
 		this.dateCellStyle = dateCellStyle;
 		final int sheetCount = this.getSheetCount();
 		for (int i = 0; i < sheetCount; i++) {
@@ -100,6 +103,7 @@ public abstract class AbstractXlsPoiDocumentTrait<T> extends
 	 *            the *internal* sheet
 	 * @return reader/writer on that sheet
 	 */
+	/*@RequiresNonNull("traitStyleHelper")*/
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractXlsPoiDocumentTrait<T> this, */final Sheet sheet);
 

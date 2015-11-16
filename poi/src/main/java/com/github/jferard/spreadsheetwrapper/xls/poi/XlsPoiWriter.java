@@ -63,7 +63,7 @@ SpreadsheetWriter {
 	private final XlsPoiStyleHelper styleHelper;
 
 	/**
-	 * @param styleHelper
+	 * @param traitStyleHelper
 	 */
 	XlsPoiWriter(final Sheet sheet, final XlsPoiStyleHelper styleHelper,
 			final/*@Nullable*/CellStyle dateCellStyle) {

@@ -61,8 +61,8 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
-		return new XlsPoiDocumentReader(this.logger, this.styleHelper,
-				sfWorkbook.getObject());
+		return new XlsPoiDocumentReader(this.logger, sfWorkbook.getObject(),
+				this.styleHelper);
 	}
 
 	/** {@inheritDoc} */
@@ -70,8 +70,8 @@ implements SpreadsheetDocumentFactory {
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook, final Output output)
 			throws SpreadsheetException {
-		return new XlsPoiDocumentWriter(this.logger, this.styleHelper,
-				sfWorkbook.getObject(), output);
+		return new XlsPoiDocumentWriter(this.logger, sfWorkbook.getObject(),
+				this.styleHelper, output);
 	}
 
 	/** {@inheritDoc} */

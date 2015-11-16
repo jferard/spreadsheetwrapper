@@ -46,7 +46,7 @@ SpreadsheetReader {
 	/**
 	 * @param sheet
 	 *            *internal* sheet
-	 * @param styleHelper
+	 * @param traitStyleHelper
 	 */
 	XlsPoiReader(final Sheet sheet, final XlsPoiStyleHelper styleHelper) {
 		super();
