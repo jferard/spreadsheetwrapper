@@ -134,7 +134,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 	}
 
 	@Override
-	public WrapperCellStyle getStyle() {
+	public /*@Nullable*/ WrapperCellStyle getStyle() {
 		return this.writer.getStyle(this.cursor.getR(), this.cursor.getC());
 	}
 

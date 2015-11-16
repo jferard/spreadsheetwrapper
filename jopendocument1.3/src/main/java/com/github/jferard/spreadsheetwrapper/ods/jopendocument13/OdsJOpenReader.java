@@ -185,7 +185,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final Element odfElement = textProperties.getElement();
 		final String fColorAsHex = odfElement.getAttributeValue("color",
 				OdsJOpenStyleHelper.foNS);
-		wrapperFont.setColor(WrapperColor.getColorFromString(fColorAsHex));
+		final WrapperColor fontColor = WrapperColor.getColorFromString(fColorAsHex);
+		if (fontColor != null)
+			wrapperFont.setColor(fontColor);
 		final String fw = odfElement.getAttributeValue(
 				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.foNS);
 		if ("bold".equals(fw))
@@ -196,7 +198,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		if (cell == null)
 			return null;

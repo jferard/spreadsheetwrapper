@@ -42,19 +42,16 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	private static final class XlsPoiDocumentReaderTrait extends
 			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 
-		private final XlsPoiStyleHelper styleUtility;
-
-		XlsPoiDocumentReaderTrait(final XlsPoiStyleHelper styleUtility,
-				final Workbook workbook) {
-			super(workbook, null);
-			this.styleUtility = styleUtility;
+		XlsPoiDocumentReaderTrait(final Workbook workbook,
+				final XlsPoiStyleHelper styleHelper) {
+			super(workbook, styleHelper, null);
 		}
 
 		/** {inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
-			return new XlsPoiReader(this.styleUtility, sheet);
+			return new XlsPoiReader(sheet, this.styleHelper);
 		}
 	}
 
@@ -74,8 +71,8 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	XlsPoiDocumentReader(final Logger logger,
 			final XlsPoiStyleHelper styleHelper, final Workbook workbook) {
 		this.workbook = workbook;
-		this.documentTrait = new XlsPoiDocumentReaderTrait(this.styleHelper,
-				workbook);
+		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,
+				this.styleHelper);
 		this.styleHelper = styleHelper;
 	}
 

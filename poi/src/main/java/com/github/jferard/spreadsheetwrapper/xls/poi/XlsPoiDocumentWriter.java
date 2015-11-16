@@ -60,29 +60,25 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	private final class XlsPoiDocumentWriterTrait extends
 			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 
-		/** a map styleName -> internal cell style */
-		private final XlsPoiStyleHelper styleHelper;
-
 		/**
-		 * @param styleHelper
-		 * @param cellStyleAccessor
 		 * @param workbook
 		 *            *internal* workbook
+		 * @param styleHelper
 		 * @param dateCellStyle
 		 *            the style for all date cells
+		 * @param cellStyleAccessor
 		 * @param cellStyleByName
 		 */
-		XlsPoiDocumentWriterTrait(final XlsPoiStyleHelper styleHelper,
-				final Workbook workbook, final CellStyle dateCellStyle) {
-			super(workbook, dateCellStyle);
-			this.styleHelper = styleHelper;
+		XlsPoiDocumentWriterTrait(final Workbook workbook,
+				final XlsPoiStyleHelper styleHelper, final CellStyle dateCellStyle) {
+			super(workbook, styleHelper, dateCellStyle);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(this.styleHelper, sheet, this.dateCellStyle);
+			return new XlsPoiWriter(sheet, this.styleHelper, this.dateCellStyle);
 		}
 	}
 
@@ -144,8 +140,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
-		this.documentTrait = new XlsPoiDocumentWriterTrait(this.styleHelper,
-				workbook, dateCellStyle);
+		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
+				this.styleHelper, dateCellStyle);
 	}
 
 	/** {@inheritDoc} */

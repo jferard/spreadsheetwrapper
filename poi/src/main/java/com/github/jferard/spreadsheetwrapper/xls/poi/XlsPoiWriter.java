@@ -65,9 +65,9 @@ SpreadsheetWriter {
 	/**
 	 * @param styleHelper
 	 */
-	XlsPoiWriter(final XlsPoiStyleHelper styleHelper, final Sheet sheet,
+	XlsPoiWriter(final Sheet sheet, final XlsPoiStyleHelper styleHelper,
 			final/*@Nullable*/CellStyle dateCellStyle) {
-		super(new XlsPoiReader(styleHelper, sheet));
+		super(new XlsPoiReader(sheet, styleHelper));
 		this.styleHelper = styleHelper;
 		this.sheet = sheet;
 		this.dateCellStyle = dateCellStyle;

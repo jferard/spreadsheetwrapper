@@ -33,42 +33,48 @@ public class StyleUtility {
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
-			.append(':').append(backgroundColor.name()).append(';');
+					.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
-		final int size = font.getSize();
-		final WrapperColor color = font.getColor();
+		final int size;
+		final WrapperColor color;
+		if (font == null) {
+			size = WrapperCellStyle.DEFAULT;
+			color = null;
+		} else {
+			size = font.getSize();
+			color = font.getColor();
+			switch (font.getBold()) {
+			case WrapperCellStyle.YES:
+				styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
+						":bold;");
+				break;
+			case WrapperCellStyle.NO:
+				styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
+						":normal;");
+				break;
+			default:
+				break;
 
-		switch (font.getBold()) {
-		case WrapperCellStyle.YES:
-			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
-			.append(":bold;");
-			break;
-		case WrapperCellStyle.NO:
-			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
-					":normal;");
-			break;
-		default:
-			break;
-
-		}
-		switch (font.getItalic()) {
-		case WrapperCellStyle.YES:
-			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
-					":italic;");
-			break;
-		case WrapperCellStyle.NO:
-			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
-					":normal;");
-			break;
-		default:
-			break;
+			}
+			switch (font.getItalic()) {
+			case WrapperCellStyle.YES:
+				styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+						":italic;");
+				break;
+			case WrapperCellStyle.NO:
+				styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+						":normal;");
+				break;
+			default:
+				break;
+			}
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
-			.append(size).append(';');
+					.append(size).append(';');
 		if (color != null)
 			styleStringBuilder.append(StyleUtility.FONT_COLOR).append(':')
-			.append(color.name()).append(';');
+					.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
 	}

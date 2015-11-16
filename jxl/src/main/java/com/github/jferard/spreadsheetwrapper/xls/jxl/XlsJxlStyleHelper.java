@@ -55,9 +55,10 @@ public class XlsJxlStyleHelper {
 				final Class<?> jxlClazz = Class.forName("jxl.format.Colour");
 				jxlColor = (Colour) jxlClazz.getDeclaredField(
 						color.getSimpleName()).get(null);
-				if (jxlColor != null)
+				if (jxlColor != null) {
 					this.jxlColorByWrapperColor.put(color, jxlColor);
-				this.wrapperColorByJxlColor.put(jxlColor, color);
+					this.wrapperColorByJxlColor.put(jxlColor, color);
+				}
 			} catch (final ClassNotFoundException e) {
 				jxlColor = null;
 			} catch (final IllegalArgumentException e) {
@@ -96,8 +97,11 @@ public class XlsJxlStyleHelper {
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
 		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC)
-			wrapperFont.setColor(this.getWrapperColor(fontColor));
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+			final WrapperColor wrapperFontColor = this.getWrapperColor(fontColor);
+			if (wrapperFontColor != null)
+				wrapperFont.setColor(wrapperFontColor);
+		}
 		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
 			wrapperFont.setBold();
 
@@ -107,15 +111,18 @@ public class XlsJxlStyleHelper {
 	public WrapperCellStyle getWrapperCellStyle(
 			final WritableCellFormat cellFormat) {
 		if (cellFormat == null)
-			return null;
+			return WrapperCellStyle.EMPTY;
 
 		final WrapperColor backgroundColor = this.getWrapperColor(cellFormat
 				.getBackgroundColour());
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
 		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC)
-			wrapperFont.setColor(this.getWrapperColor(fontColor));
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+			final WrapperColor wrapperFontColor = this.getWrapperColor(fontColor);
+			if (wrapperFontColor != null)
+				wrapperFont.setColor(wrapperFontColor);
+		}
 		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
 			wrapperFont.setBold();
 
@@ -131,7 +138,7 @@ public class XlsJxlStyleHelper {
 		this.cellStyleAccessor.putCellStyle(styleName, cellFormat);
 	}
 
-	WritableCellFormat getCellFormat(final String styleName) {
+	/*@Nullable*/ WritableCellFormat getCellFormat(final String styleName) {
 		final WritableCellFormat cellFormat = this.cellStyleAccessor
 				.getCellStyle(styleName);
 		// WorkbookParser parser = (WorkbookParser) workbook;

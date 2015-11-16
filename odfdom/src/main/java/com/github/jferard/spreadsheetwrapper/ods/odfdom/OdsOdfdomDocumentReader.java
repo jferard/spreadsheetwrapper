@@ -43,7 +43,6 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderTrait extends
 	AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
-		private final OdsOdfdomStyleHelper styleHelper;
 
 		/**
 		 * @param cellStyleAccessor
@@ -52,15 +51,14 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 		 */
 		OdsOdfdomDocumentReaderTrait(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
-			super(document);
-			this.styleHelper = styleHelper;
+			super(document, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentReaderTrait this,*/final OdfTable table) {
-			return new OdsOdfdomReader(table, this.styleHelper);
+			return new OdsOdfdomReader(table, this.traitStyleHelper);
 		}
 	}
 
@@ -113,18 +111,6 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(index));
 	}
 
-	// private SpreadsheetReaderCursor getPrivateCursorByIndex(final int i)
-	// throws SpreadsheetException {
-	// final SpreadsheetWriterCursor cursor;
-	// final List<OdfTable> sheets = this.document.getTableList();
-	// if (i < 0 || i >= sheets.size())
-	// throw new SpreadsheetException(
-	// String.format("No sheet at index %d", i));
-	// else
-	// cursor = this.getNewCursorByIndex(i);
-	// return cursor;
-	// }
-
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReaderCursor getNewCursorByName(final String sheetName)
@@ -132,25 +118,14 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 		return new SpreadsheetReaderCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
-	// private SpreadsheetReaderCursor getPrivateCursorByName(final String
-	// sheetName)
-	// throws SpreadsheetException {
-	// final SpreadsheetWriterCursor cursor;
-	// if (this.cursorHandler.has(sheetName))
-	// cursor = this.cursorHandler.get(sheetName);
-	// else
-	// cursor = this.getNewCursorByName(sheetName);
-	// return cursor;
-	// }
-
-	/** */
+	/** {@inheritDoc} */
 	@Override
 	public int getSheetCount() {
 		final List<OdfTable> tables = this.document.getTableList();
 		return tables.size();
 	}
 
-	/** */
+	/** {@inheritDoc} */
 	@Override
 	public List<String> getSheetNames() {
 		final List<OdfTable> tables = this.document.getTableList();

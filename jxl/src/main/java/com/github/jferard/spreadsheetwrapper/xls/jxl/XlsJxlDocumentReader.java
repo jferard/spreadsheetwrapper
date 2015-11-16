@@ -80,7 +80,7 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		final WritableCellFormat cellFormat = this.styleHelper
 				.getCellFormat(styleName);
 		if (cellFormat == null)
-			return null;
+			return WrapperCellStyle.EMPTY;
 
 		return this.styleHelper.getWrapperCellStyle(cellFormat);
 	}

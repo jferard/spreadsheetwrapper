@@ -46,8 +46,6 @@ implements SpreadsheetDocumentFactory {
 				new CellStyleAccessor<CellStyle>()));
 	}
 
-	private CellStyleAccessor<CellStyle> cellStyleAccessor;
-
 	private final Logger logger;
 
 	private final XlsPoiStyleHelper styleHelper;

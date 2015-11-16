@@ -59,12 +59,12 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	private final Table table;
 
 	/**
-	 * @param styleHelper
 	 * @param table
 	 *            the *internal* table
+	 * @param traitStyleHelper
 	 */
-	OdsSimpleodfWriter(final OdsOdfdomStyleHelper styleHelper, final Table table) {
-		super(new OdsSimpleodfReader(styleHelper, table));
+	OdsSimpleodfWriter(final Table table, final OdsOdfdomStyleHelper styleHelper) {
+		super(new OdsSimpleodfReader(table, styleHelper));
 		this.styleHelper = styleHelper;
 		this.table = table;
 	}

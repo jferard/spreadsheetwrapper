@@ -51,19 +51,17 @@ implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
 	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
-		private final OdsOdfdomStyleHelper styleHelper;
 
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
-			super(document);
-			this.styleHelper = styleHelper;
+			super(document, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
-			return new OdsOdfdomWriter(table, this.styleHelper);
+			return new OdsOdfdomWriter(table, this.traitStyleHelper);
 		}
 	}
 

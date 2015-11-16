@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 /*>>> import org.checkerframework.checker.nullness.qual.RequiresNonNull;*/
@@ -57,15 +58,18 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
+	protected OdsOdfdomStyleHelper styleHelper;
 
 	/**
 	 * @param sfDocument
 	 *            the stateful (ie inited/not inited) document
+	 * @param traitStyleHelper 
 	 */
 	public AbstractOdsSimpleodfDocumentTrait(
-			final OdsSimpleodfStatefulDocument sfDocument) {
+			final OdsSimpleodfStatefulDocument sfDocument, OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.sfDocument = sfDocument;
+		this.styleHelper = styleHelper;
 		final List<Table> tables = this.getTableList();
 		final ListIterator<Table> tablesIterator = tables.listIterator();
 		while (tablesIterator.hasNext()) {

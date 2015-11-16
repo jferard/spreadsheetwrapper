@@ -44,11 +44,11 @@ SpreadsheetReader {
 	private final XlsPoiStyleHelper styleHelper;
 
 	/**
-	 * @param styleHelper
 	 * @param sheet
 	 *            *internal* sheet
+	 * @param styleHelper
 	 */
-	XlsPoiReader(final XlsPoiStyleHelper styleHelper, final Sheet sheet) {
+	XlsPoiReader(final Sheet sheet, final XlsPoiStyleHelper styleHelper) {
 		super();
 		this.styleHelper = styleHelper;
 		this.sheet = sheet;
@@ -177,8 +177,9 @@ SpreadsheetReader {
 		return rowCount;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public WrapperCellStyle getStyle(final int r, final int c) {
+	public /*@Nullable*/ WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell poiCell = this.getPOICell(r, c);
 		if (poiCell == null)
 			return null;
@@ -192,6 +193,9 @@ SpreadsheetReader {
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
+		if (cell == null)
+			return null;
+		
 		final CellStyle cellStyle = cell.getCellStyle();
 		return this.styleHelper.getStyleName(cellStyle);
 	}

@@ -35,17 +35,20 @@ public abstract class AbstractXlsPoiDocumentTrait<T> extends
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
 	protected/*@Nullable*/CellStyle dateCellStyle;
+	protected XlsPoiStyleHelper styleHelper;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
+	 * @param styleHelper 
 	 * @param dateCellStyle
 	 *            cell syle for dates, since Excel hasn't a real date type
 	 */
 	public AbstractXlsPoiDocumentTrait(final Workbook workbook, /*@Nullable*/
-			final CellStyle dateCellStyle) {
+			XlsPoiStyleHelper styleHelper, final CellStyle dateCellStyle) {
 		super();
 		this.workbook = workbook;
+		this.styleHelper = styleHelper;
 		this.dateCellStyle = dateCellStyle;
 		final int sheetCount = this.getSheetCount();
 		for (int i = 0; i < sheetCount; i++) {

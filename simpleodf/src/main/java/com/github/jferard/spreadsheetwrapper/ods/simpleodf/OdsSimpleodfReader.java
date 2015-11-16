@@ -60,12 +60,10 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 
 	/**
 	 * Creates a reader from an *internal* table
-	 *
-	 * @param styleHelper
-	 *
 	 * @param table
+	 * @param traitStyleHelper
 	 */
-	OdsSimpleodfReader(final OdsOdfdomStyleHelper styleHelper, final Table table) {
+	OdsSimpleodfReader(final Table table, final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.styleHelper = styleHelper;
 		this.table = table;
@@ -189,8 +187,9 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 		return rowCount;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public WrapperCellStyle getStyle(final int r, final int c) {
+	public /*@Nullable*/ WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
@@ -199,8 +198,9 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 		return this.styleHelper.getCellStyle(odfElement);
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;

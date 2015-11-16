@@ -35,7 +35,7 @@ import java.util.Map;
  */
 public class Accessor</*@NonNull*/T> {
 	/** the elements List */
-	private final List<T> elementByIndex;
+	private final List<T> elements;
 	/** the elements map : name->element */
 	private final Map<String, T> elementByName;
 
@@ -43,7 +43,7 @@ public class Accessor</*@NonNull*/T> {
 	 * Creates a new Accessor
 	 */
 	public Accessor() {
-		this.elementByIndex = new ArrayList<T>();
+		this.elements = new ArrayList<T>();
 		this.elementByName = new HashMap<String, T>();
 	}
 
@@ -54,7 +54,7 @@ public class Accessor</*@NonNull*/T> {
 	 *         null otherwise
 	 */
 	public T getByIndex(final int index) {
-		return this.elementByIndex.get(index);
+		return this.elements.get(index);
 	}
 
 	/**
@@ -74,7 +74,7 @@ public class Accessor</*@NonNull*/T> {
 	 */
 	/*>>> @EnsuresNonNullIf(expression="getByIndex(#1)", result=true)*/
 	public boolean hasByIndex(final int index) {
-		return 0 <= index && index < this.elementByIndex.size();
+		return 0 <= index && index < this.elements.size();
 	}
 
 	/**
@@ -100,7 +100,7 @@ public class Accessor</*@NonNull*/T> {
 	public void put(final String elementName, final Integer index,
 			final T element) {
 		this.elementByName.put(elementName, element);
-		this.elementByIndex.add(index, element);
+		this.elements.add(index, element);
 	}
 
 	/**
@@ -112,16 +112,16 @@ public class Accessor</*@NonNull*/T> {
 	 *            the element to put
 	 */
 	public void putAtEnd(final String elementName, final T element) {
-		this.elementByIndex.add(element);
+		this.elements.add(element);
 		this.elementByName.put(elementName, element);
 	}
 
 	/* {@inheritDoc} */
 	@Override
 	public String toString() {
-		assert this.elementByName.size() == this.elementByIndex.size();
+		assert this.elementByName.size() == this.elements.size();
 		final StringBuilder stringBuilder = new StringBuilder("Accessor[");
-		final ListIterator<T> iterator = this.elementByIndex.listIterator();
+		final ListIterator<T> iterator = this.elements.listIterator();
 		while (iterator.hasNext()) {
 			final int index = iterator.nextIndex();
 			final T element = iterator.next();

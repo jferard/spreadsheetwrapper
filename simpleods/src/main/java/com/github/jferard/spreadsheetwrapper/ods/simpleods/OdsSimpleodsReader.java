@@ -169,8 +169,11 @@ SpreadsheetReader {
 	}
 
 	@Override
-	public String getStyleName(final int r, final int c) {
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
 		final TableCell simpleCell = this.getSimpleCell(r, c);
+		if (simpleCell == null)
+			return null;
+		
 		return simpleCell.getStyle();
 	}
 

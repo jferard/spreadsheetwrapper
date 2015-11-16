@@ -43,19 +43,17 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentReaderTrait extends
 	AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
-		private final OdsOdfdomStyleHelper styleHelper;
 
-		OdsSimpleodfDocumentReaderTrait(final OdsOdfdomStyleHelper styleHelper,
-				final OdsSimpleodfStatefulDocument sfDocument) {
-			super(sfDocument);
-			this.styleHelper = styleHelper;
+		OdsSimpleodfDocumentReaderTrait(final OdsSimpleodfStatefulDocument sfDocument,
+				final OdsOdfdomStyleHelper styleHelper) {
+			super(sfDocument, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentReaderTrait this, */final Table table) {
-			return new OdsSimpleodfReader(this.styleHelper, table);
+			return new OdsSimpleodfReader(table, this.styleHelper);
 		}
 	}
 
@@ -84,8 +82,8 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 		// }
 		this.sfDocument.rawSetLocale(Locale.US);
 		this.documentStyles = this.sfDocument.getStyles();
-		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(styleHelper,
-				sfDocument);
+		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(sfDocument,
+				styleHelper);
 	}
 
 	/** {@inheritDoc} */

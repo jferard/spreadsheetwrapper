@@ -141,7 +141,7 @@ public class XlsPoiStyleHelper {
 		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
 	}
 
-	CellStyle getCellStyle(final Workbook workbook, final String styleName) {
+	/*@Nullable*/ CellStyle getCellStyle(final Workbook workbook, final String styleName) {
 		CellStyle cellStyle = this.cellStyleAccessor.getCellStyle(styleName);
 		if (cellStyle == null) {
 			if (styleName.startsWith("ssw")) {

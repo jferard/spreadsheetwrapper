@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.util.Date;
 
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
@@ -31,7 +30,6 @@ import org.w3c.dom.NodeList;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
@@ -77,8 +75,6 @@ SpreadsheetReader {
 		}
 		return cellCount;
 	}
-
-	private CellStyleAccessor<CellStyle> cellStyleAccessor;
 
 	/** index of current row, -1 if none */
 	private int curR;
@@ -236,8 +232,9 @@ SpreadsheetReader {
 		return calculatedRowCount;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public WrapperCellStyle getStyle(final int r, final int c) {
+	public /*@Nullable*/ WrapperCellStyle getStyle(final int r, final int c) {
 		final OdfTableCell odfCell = this.getOdfCell(r, c);
 		if (odfCell == null)
 			return null;
@@ -248,9 +245,12 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public String getStyleName(final int r, final int c) {
-		final OdfTableCell cell = this.getOdfCell(r, c);
-		return cell.getStyleName();
+	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+		final OdfTableCell odfCell = this.getOdfCell(r, c);
+		if (odfCell == null)
+			return null;
+		
+		return odfCell.getStyleName();
 	}
 
 	/** {@inheritDoc} */

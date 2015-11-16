@@ -49,24 +49,22 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentWriterTrait extends
 	AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
-		private final OdsOdfdomStyleHelper styleHelper;
 
 		/**
-		 * @param styleHelper
+		 * @param traitStyleHelper
 		 * @param value
 		 *            *internal* workbook
 		 */
 		OdsSimpleodfDocumentWriterTrait(final OdsOdfdomStyleHelper styleHelper,
 				final OdsSimpleodfStatefulDocument sfDocument) {
-			super(sfDocument);
-			this.styleHelper = styleHelper;
+			super(sfDocument, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
-			return new OdsSimpleodfWriter(this.styleHelper, table);
+			return new OdsSimpleodfWriter(table, this.styleHelper);
 		}
 	}
 

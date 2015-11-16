@@ -36,14 +36,17 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
+	protected OdsOdfdomStyleHelper traitStyleHelper;
 
 	/**
+	 * @param traitStyleHelper 
 	 * @param value
 	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsOdfdomDocumentTrait(final OdfSpreadsheetDocument document) {
+	public AbstractOdsOdfdomDocumentTrait(final OdfSpreadsheetDocument document, OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.document = document;
+		this.traitStyleHelper = styleHelper;
 		final List<OdfTable> tables = this.document.getTableList();
 		final ListIterator<OdfTable> tablesIterator = tables.listIterator();
 		while (tablesIterator.hasNext()) {
