@@ -19,6 +19,8 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.io.File;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -30,12 +32,27 @@ import org.junit.rules.TestName;
 
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
-public abstract class SpreadsheetEmptyWriterTest {
+/**
+ * @author Julien
+ *
+ */
+public abstract class AbstractSpreadsheetEmptyWriterTest {
+	private static final String STYLE_NAME = "mystyle2";
+
+	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
+
+	/** logger, static initialization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+
+	/** factory */
 	protected SpreadsheetDocumentFactory factory;
+
+	/** document writer */
 	protected SpreadsheetDocumentWriter sdw;
 
+	/** the writer */
 	protected SpreadsheetWriter sw;
 
 	/** set the test up */
@@ -46,7 +63,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 			this.sdw = this.factory.create();
 			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
@@ -61,18 +78,23 @@ public abstract class SpreadsheetEmptyWriterTest {
 			this.sdw.saveAs(outputFile);
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
 
+	/**
+	 * must create a A1 blue bold head cell and a C3 simple tail cell
+	 */
 	@Test
 	public final void testCreate2StylesFromObjectsAndSetStylesWithGap() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sdw.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head",
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sw.setCellContent(2, 2, "Tail");
 
 		try {
@@ -80,31 +102,24 @@ public abstract class SpreadsheetEmptyWriterTest {
 				for (int c = 0; c <= 3; c++) {
 					final WrapperCellStyle otherCellStyle = this.sw.getStyle(r,
 							c);
-					if (r <= 1) {
-						if (r == 0 && c == 0)
-							Assert.assertEquals(wrapperCellStyle,
-									otherCellStyle);
-						else
-							Assert.assertNull(String.format("%d * %d", r, c),
-									otherCellStyle);
-					} else if (r == 2) {
-						if (c <= 2)
-							Assert.assertEquals(String.format("%d * %d", r, c),
-									WrapperCellStyle.EMPTY, otherCellStyle);
-						else
-							// c == 3
-							Assert.assertNull(String.format("%d * %d", r, c),
-									otherCellStyle);
-					} else
-						Assert.assertNull(String.format("%d * %d", r, c),
-								otherCellStyle);
+					WrapperCellStyle expectedCellStyle = null;
+					if (r == 0 && c == 0)
+						expectedCellStyle = wrapperCellStyle;
+					else if (r == 2 && c <= 2)
+						expectedCellStyle = WrapperCellStyle.EMPTY;
+					Assert.assertEquals(String.format("%d * %d", r, c),
+							expectedCellStyle, otherCellStyle);
 				}
 			}
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * must create a A1 blue bold head cell and a A2 simple tail cell
+	 */
 	@Test
 	public final void testCreate2StylesFromObjectsAndSetStylesWithNoGap() { // buggy
 		// for
@@ -112,51 +127,69 @@ public abstract class SpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sdw.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head",
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sw.setCellContent(1, 0, "Tail");
 
 		try {
 			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * must create a A1 blue bold head cell and a A2 simple tail cell
+	 */
 	@Test
 	public final void testCreateStyleFromObjectsAndSetStyle() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
-		this.sdw.setStyle("mystyle2", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle2");
+		this.sdw.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head",
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sw.setCellContent(1, 0, "Tail", "");
 
 		try {
 			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * must create a A1 blue bold head cell
+	 */
 	@Test
 	public final void testCreateStyleFromStringAndSetStyle() {
 		final StyleUtility utility = new StyleUtility();
 		final WrapperCellStyle wrapperCellStyle = utility
-				.getWrapperCellStyle("background-color:#999999;font-weight:bold");
-		this.sdw.setStyle("mystyle", wrapperCellStyle);
-		this.sw.setCellContent(0, 0, "Head", "mystyle");
+				.toWrapperCellStyle("background-color:#999999;font-weight:bold");
+		this.sdw.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
+		this.sw.setCellContent(0, 0, "Head",
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 
 		try {
 			final WrapperCellStyle newCellStyle = this.sw.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * set a boolean on A1 and test if it is here
+	 */
 	@Test
 	public void testSetBoolean() {
 		try {
@@ -166,27 +199,52 @@ public abstract class SpreadsheetEmptyWriterTest {
 			this.sw.setBoolean(0, 0, true);
 			Assert.assertEquals(true, this.sw.getCellContent(0, 0));
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * set a date on A1 and test if it is here the date can be truncated to day
+	 * or second
+	 */
 	@Test
 	public void testSetDate() {
-		final Date dd = new Date(52 * 86400000L);
-		final Date ds = new Date(52 * 86400000L + 12345000L);
-		final Date dm = new Date(52 * 86400000L + 12345789L);
+		final long DAY = 52 * 86400000L; // 52 days = 4492800000 ms
+		final long HOUR_MIN_AND_SEC = ((3 * 60 + 25) * 60 + 45) * 1000L; // 3 h
+																			// 25
+																			// min
+																			// 45
+																			// s
+																			// =
+																			// 12345000
+																			// ms
+		final long MILLIS = 789L; // 789 ms
 
-		final Date d2 = this.sw.setDate(2, 2, dm);
-		Assert.assertTrue(d2.equals(dm) || d2.equals(ds) || d2.equals(dd));
+		final Date dateTruncatedToDay = new Date(DAY);
+		final Date dateTruncatedtoSecond = new Date(DAY + HOUR_MIN_AND_SEC);
+		final Date dateNotTruncated = new Date(DAY + HOUR_MIN_AND_SEC + MILLIS);
+
+		final Date d2 = this.sw.setDate(2, 2, dateNotTruncated);
+		Assert.assertTrue(String.format("%d not in (%d, %d, %d)", d2.getTime(),
+				dateNotTruncated.getTime(), dateTruncatedtoSecond.getTime(),
+				dateTruncatedToDay.getTime()),
+						d2.equals(dateNotTruncated) || d2.equals(dateTruncatedtoSecond)
+						|| d2.equals(dateTruncatedToDay));
 		Assert.assertEquals(d2, this.sw.getDate(2, 2));
 		Assert.assertEquals(d2, this.sw.getCellContent(2, 2));
 
-		final Object o2 = this.sw.setCellContent(2, 2, dm);
-		Assert.assertTrue(o2.equals(dm) || o2.equals(ds) || o2.equals(dd));
+		final Object o2 = this.sw.setCellContent(2, 2, dateNotTruncated);
+		Assert.assertTrue(o2.equals(dateNotTruncated)
+				|| o2.equals(dateTruncatedtoSecond)
+				|| o2.equals(dateTruncatedToDay));
 		Assert.assertEquals(o2, this.sw.getDate(2, 2));
 		Assert.assertEquals(o2, this.sw.getCellContent(2, 2));
 	}
 
+	/**
+	 * set a double on C3 and test if it is here
+	 */
 	@Test
 	public void testSetDouble() {
 		this.sw.setCellContent(2, 2, 100.7);
@@ -196,6 +254,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		Assert.assertEquals(Double.valueOf(100.7), this.sw.getCellContent(2, 2));
 	}
 
+	/**
+	 * set a formula on B2 and test if it is here
+	 */
 	@Test
 	public void testSetFormula() {
 		try {
@@ -205,27 +266,34 @@ public abstract class SpreadsheetEmptyWriterTest {
 			this.sw.setFormula(1, 1, "A1");
 			Assert.assertEquals("A1", this.sw.getCellContent(1, 1));
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * set an incorrect formula on B2 and test if it is here
+	 */
 	@Test
 	public void testSetIncorrrectFormula() {
 		try {
-			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
-					this.sw.getFormula(1, 1));
+			final String formula = "afdferg'|[{*dfgdrsg]";
+			this.sw.setFormula(1, 1, formula);
+			Assert.assertEquals(formula, this.sw.getFormula(1, 1));
 
-			this.sw.setFormula(1, 1, "afdferg'|[{*dfgdrsg]");
-			Assert.assertEquals("afdferg'|[{*dfgdrsg]",
-					this.sw.getCellContent(1, 1));
+			this.sw.setFormula(1, 1, formula);
+			Assert.assertEquals(formula, this.sw.getCellContent(1, 1));
 		} catch (final IllegalArgumentException e) {
 			Assume.assumeNoException(e);
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
 	}
 
+	/**
+	 * set an integer on B2 and test if it is here
+	 */
 	@Test
 	public void testSetInteger() {
 		this.sw.setCellContent(1, 1, 10);
@@ -235,6 +303,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		Assert.assertEquals(Integer.valueOf(10), this.sw.getCellContent(1, 1));
 	}
 
+	/**
+	 * set a text on B2 and test if it is here
+	 */
 	@Test
 	public void testSetText() {
 		this.sw.setCellContent(1, 1, "10");
@@ -244,6 +315,9 @@ public abstract class SpreadsheetEmptyWriterTest {
 		Assert.assertEquals("10", this.sw.getCellContent(1, 1));
 	}
 
+	/**
+	 * set a text on B2 to B1001 and test if it is here
+	 */
 	@Test
 	public void testSetTextOnCol0To1000() {
 		int i = 0;
@@ -253,6 +327,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 				Assert.assertEquals("10", this.sw.getText(1, i));
 			}
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			if (i >= 255)
 				Assume.assumeNoException(e);
 			else
@@ -260,18 +335,27 @@ public abstract class SpreadsheetEmptyWriterTest {
 		}
 	}
 
+	/**
+	 * set a text on B256 and test if it is here
+	 */
 	@Test
 	public void testSetTextOnCol255() {
 		this.sw.setText(1, 255, "100");
 		Assert.assertEquals("100", this.sw.getText(1, 255));
 	}
 
+	/**
+	 * set a text on B(-9) and test if it is here. Must throw an exception
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testSetTextOnColMinus10() {
 		this.sw.setText(1, -10, "10");
 		Assert.assertEquals("10", this.sw.getText(1, -10));
 	}
 
+	/**
+	 * set a text on B100000 and test if it is here
+	 */
 	@Test
 	public void testSetTextOnRow0To100000() {
 		int j = 0;
@@ -281,6 +365,7 @@ public abstract class SpreadsheetEmptyWriterTest {
 				Assert.assertEquals("10", this.sw.getText(j, 1));
 			}
 		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
 			if (j >= 65535)
 				Assume.assumeNoException(e);
 			else
@@ -288,12 +373,18 @@ public abstract class SpreadsheetEmptyWriterTest {
 		}
 	}
 
+	/**
+	 * set a text on B51 and test if it is here
+	 */
 	@Test
 	public void testSetTextOnRow50() {
 		this.sw.setText(50, 1, "10");
 		Assert.assertEquals("10", this.sw.getText(50, 1));
 	}
 
+	/**
+	 * set a text on B65536 and test if it is here
+	 */
 	@Test
 	public void testSetTextOnRow65535() {
 		this.sw.setText(0, 1, "0");
@@ -301,11 +392,17 @@ public abstract class SpreadsheetEmptyWriterTest {
 		Assert.assertEquals("100", this.sw.getText(65535, 1));
 	}
 
+	/**
+	 * set a text on row -10 and test if it is here
+	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testSetTextOnRowMinus10() {
 		this.sw.setText(-10, 1, "10");
 		Assert.assertEquals("10", this.sw.getText(-10, 1));
 	}
 
+	/**
+	 * @return the properties of the API for the test
+	 */
 	protected abstract TestProperties getProperties();
 }

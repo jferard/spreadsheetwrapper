@@ -19,6 +19,8 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -37,10 +39,16 @@ import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
  * An utility class for style handling
  *
  */
-public class XlsPoiStyleHelper {
+class XlsPoiStyleHelper {
+	/** name or index -> cellStyle */
 	private final CellStyleAccessor<CellStyle> cellStyleAccessor;
+	/** internal -> wrapper */
 	private final Map<HSSFColor, WrapperColor> colorByHssfColor;
+	/** wrapper -> internal */
 	private final Map<WrapperColor, HSSFColor> hssfColorByColor;
+
+	/** simple logger */
+	private final Logger logger;
 
 	/**
 	 * @param cellStyleAccessor
@@ -48,6 +56,7 @@ public class XlsPoiStyleHelper {
 	public XlsPoiStyleHelper(
 			final CellStyleAccessor<CellStyle> cellStyleAccessor) {
 		this.cellStyleAccessor = cellStyleAccessor;
+		this.logger = Logger.getLogger(this.getClass().getName());
 		final WrapperColor[] colors = WrapperColor.values();
 		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(
 				colors.length);
@@ -57,11 +66,9 @@ public class XlsPoiStyleHelper {
 				.getIndexHash();
 		for (final HSSFColor hssfColor : hssfColorByIndex.values()) {
 			final String hssfColorName = hssfColor.getClass().getName();
-			final int index = hssfColorName.indexOf("$");
-			if (index == -1) {
-				System.out.println(hssfColorName);
+			final int index = hssfColorName.indexOf('$');
+			if (index == -1)
 				continue;
-			}
 
 			final String colorName = hssfColorName.substring(index + 1);
 			try {
@@ -70,9 +77,34 @@ public class XlsPoiStyleHelper {
 				this.hssfColorByColor.put(wrapperColor, hssfColor);
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
 			} catch (final IllegalArgumentException e) {
-				System.out.println(colorName);
+				this.logger
+						.log(Level.WARNING,
+								"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
+								e);
 			}
 		}
+	}
+
+	/**
+	 * @param workbook
+	 *            internal workbook
+	 * @param styleName
+	 *            the name of the style
+	 * @return the internal style, null if none
+	 */
+	public/*@Nullable*/CellStyle getCellStyle(final Workbook workbook,
+			final String styleName) {
+		CellStyle cellStyle = this.cellStyleAccessor.getCellStyle(styleName);
+		if (cellStyle == null && styleName.startsWith("ssw")) {
+			try {
+				final int idx = Integer.valueOf(styleName.substring(3));
+				cellStyle = workbook.getCellStyleAt((short) idx);
+			} catch (final NumberFormatException e) { // NOPMD by Julien on
+														// 22/11/15 07:15
+				// do nothing
+			}
+		}
+		return cellStyle;
 	}
 
 	public CellStyle getCellStyle(final Workbook workbook,
@@ -88,7 +120,7 @@ public class XlsPoiStyleHelper {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
-			final HSSFColor hssfColor = this.getHSSFColor(backgroundColor);
+			final HSSFColor hssfColor = this.toHSSFColor(backgroundColor);
 
 			final short index = hssfColor.getIndex();
 			cellStyle.setFillForegroundColor(index);
@@ -97,15 +129,11 @@ public class XlsPoiStyleHelper {
 		return cellStyle;
 	}
 
-	public HSSFColor getHSSFColor(final WrapperColor backgroundColor) {
-		HSSFColor hssfColor;
-		if (this.hssfColorByColor.containsKey(backgroundColor))
-			hssfColor = this.hssfColorByColor.get(backgroundColor);
-		else
-			hssfColor = new HSSFColor.WHITE();
-		return hssfColor;
-	}
-
+	/**
+	 * @param cellStyle
+	 *            the internal style
+	 * @return the style name, ssw<index> if none.
+	 */
 	public String getStyleName(final CellStyle cellStyle) {
 		final String name = this.cellStyleAccessor.getName(cellStyle);
 		if (name == null)
@@ -125,35 +153,42 @@ public class XlsPoiStyleHelper {
 	 */
 	public String getStyleString(final Workbook workbook,
 			final CellStyle cellStyle) {
-		final StringBuilder sb = new StringBuilder();
+		final StringBuilder styleStringBuilder = new StringBuilder(25);
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font font = workbook.getFontAt(fontIndex);
 		if (font.getBoldweight() == Font.BOLDWEIGHT_BOLD)
-			sb.append("font-weight:bold;");
+			styleStringBuilder.append("font-weight:bold;");
 		final Color color = cellStyle.getFillBackgroundColorColor();
-		if (color != null && color instanceof HSSFColor)
-			sb.append("background-color:")
-					.append(((HSSFColor) color).getHexString()).append(";");
-		return sb.toString();
+		if (color instanceof HSSFColor) // color != null
+			styleStringBuilder.append("background-color:")
+			.append(((HSSFColor) color).getHexString()).append(';');
+		return styleStringBuilder.toString();
 	}
 
+	/**
+	 * Create or update style
+	 * 
+	 * @param styleName
+	 *            the name of the style
+	 * @param cellStyle
+	 *            the internal style to put
+	 */
 	public void putCellStyle(final String styleName, final CellStyle cellStyle) {
 		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
 	}
 
-	/*@Nullable*/ CellStyle getCellStyle(final Workbook workbook, final String styleName) {
-		CellStyle cellStyle = this.cellStyleAccessor.getCellStyle(styleName);
-		if (cellStyle == null) {
-			if (styleName.startsWith("ssw")) {
-				try {
-					final int idx = Integer.valueOf(styleName.substring(3));
-					cellStyle = workbook.getCellStyleAt((short) idx);
-				} catch (final NumberFormatException e) {
-					// do nothing
-				}
-			}
-		}
-		return cellStyle;
+	/**
+	 * @param wrapperColor
+	 *            the color to convert
+	 * @return the HSSF color
+	 */
+	public HSSFColor toHSSFColor(final WrapperColor wrapperColor) {
+		HSSFColor hssfColor;
+		if (this.hssfColorByColor.containsKey(wrapperColor))
+			hssfColor = this.hssfColorByColor.get(wrapperColor);
+		else
+			hssfColor = new HSSFColor.WHITE();
+		return hssfColor;
 	}
 
 	/**
@@ -163,7 +198,7 @@ public class XlsPoiStyleHelper {
 	 *            the style in poi format
 	 * @return the cell style in new format
 	 */
-	WrapperCellStyle getWrapperCellStyle(final Workbook workbook,
+	public WrapperCellStyle toWrapperCellStyle(final Workbook workbook,
 			final CellStyle cellStyle) {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;

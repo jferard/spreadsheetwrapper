@@ -34,6 +34,9 @@ public class WrapperFont {
 	/** color of the font */
 	private/*@Nullable*/WrapperColor wrapperColor;
 
+	/**
+	 * All fields to default
+	 */
 	public WrapperFont() {
 		this.bold = WrapperCellStyle.DEFAULT;
 		this.italic = WrapperCellStyle.DEFAULT;
@@ -41,6 +44,12 @@ public class WrapperFont {
 		this.wrapperColor = null;
 	}
 
+	/**
+	 * @param bold
+	 *            one of YES, NO, DEFAULT
+	 * @param italic
+	 *            one of YES, NO, DEFAULT
+	 */
 	public WrapperFont(final int bold, final int italic) {
 		this(bold, italic, WrapperCellStyle.DEFAULT, null);
 	}
@@ -64,8 +73,9 @@ public class WrapperFont {
 		this.wrapperColor = wrapperColor;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public boolean equals(final /*@Nullable*/ Object obj) {
+	public boolean equals(final/*@Nullable*/Object obj) {
 		if (this == obj)
 			return true;
 		if (!(obj instanceof WrapperFont))
@@ -105,6 +115,7 @@ public class WrapperFont {
 		return this.size;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -113,6 +124,11 @@ public class WrapperFont {
 				+ Util.hash(this.wrapperColor);
 	}
 
+	/**
+	 * sets font to bold
+	 *
+	 * @return this (fluent)
+	 */
 	public WrapperFont setBold() {
 		this.bold = WrapperCellStyle.YES;
 		return this;
@@ -120,21 +136,29 @@ public class WrapperFont {
 
 	/**
 	 * @param bold
-	 *            true toset the font to bold
+	 *            one of YES, NO, DEFAULT
+	 * @return this (fluent)
 	 */
 	public WrapperFont setBold(final int bold) {
 		this.bold = bold;
 		return this;
 	}
 
+	/**
+	 * sets font color
+	 *
+	 * @param color
+	 *            the WrapperColor
+	 * @return this (fluent)
+	 */
 	public WrapperFont setColor(final WrapperColor color) {
 		this.wrapperColor = color;
 		return this;
 	}
 
-	/**
-	 * @param italic
-	 *            true to set thee font to italic
+	/*
+	 * sets font to italic
+	 * @return this (fluent)
 	 */
 	public WrapperFont setItalic() {
 		this.italic = WrapperCellStyle.YES;
@@ -143,7 +167,8 @@ public class WrapperFont {
 
 	/**
 	 * @param italic
-	 *            true to set thee font to italic
+	 *            one of YES, NO, DEFAULT
+	 * @return this (fluent)
 	 */
 	public WrapperFont setItalic(final int italic) {
 		this.italic = italic;
@@ -153,12 +178,14 @@ public class WrapperFont {
 	/**
 	 * @param size
 	 *            size of the font
+	 * @return this (fluent)
 	 */
 	public WrapperFont setSize(final int size) {
 		this.size = size;
 		return this;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperFont [bold=").append(this.bold)

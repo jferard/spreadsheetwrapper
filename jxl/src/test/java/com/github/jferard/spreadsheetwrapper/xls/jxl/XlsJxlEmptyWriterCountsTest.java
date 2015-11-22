@@ -18,6 +18,8 @@
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -29,12 +31,16 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterCountsTest extends
-SpreadSheetEmptyWriterCountsTest {
+		SpreadSheetEmptyWriterCountsTest {
+	/** logger */
+	private Logger logger;
+
 	/** set the test up */
 	@Before
 	@Override
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
+		this.logger = Logger.getLogger(this.getClass().getName());
 		try {
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
@@ -42,7 +48,7 @@ SpreadSheetEmptyWriterCountsTest {
 			this.sdw = this.factory.create(outputFile);
 			this.sw = this.sdw.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
@@ -56,11 +62,12 @@ SpreadSheetEmptyWriterCountsTest {
 			this.sdw.save();
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

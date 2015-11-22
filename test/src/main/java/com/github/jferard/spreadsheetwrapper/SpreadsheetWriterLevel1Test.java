@@ -31,7 +31,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest {
+public abstract class SpreadsheetWriterLevel1Test extends
+		AbstractSpreadsheetReaderTest {
 	@Rule
 	public TestName name = new TestName();
 	protected SpreadsheetDocumentWriter sdw;
@@ -50,9 +51,9 @@ public abstract class SpreadsheetWriterLevel1Test extends SpreadsheetReaderTest 
 
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 			this.sw = this.sdw.getSpreadsheet(0);
-			this.sr = this.sw;
+			this.sheetReader = this.sw;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

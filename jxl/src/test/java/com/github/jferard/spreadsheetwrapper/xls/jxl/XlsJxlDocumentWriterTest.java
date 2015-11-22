@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -35,6 +37,9 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
+	/** the logger */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+
 	/** set the test up */
 	@Override
 	@Before
@@ -51,14 +56,14 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.openForWrite(inputStream, outputStream);
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 			Assert.assertEquals(1, this.sdw.getSheetCount());
 			this.sw = this.sdw.getSpreadsheet(0);
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
@@ -71,11 +76,12 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 			this.sdw.save();
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

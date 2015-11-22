@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentWriterTest {
+SpreadsheetEmptyDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before

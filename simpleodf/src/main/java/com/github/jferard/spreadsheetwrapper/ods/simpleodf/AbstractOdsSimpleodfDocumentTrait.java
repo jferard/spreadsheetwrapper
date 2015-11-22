@@ -32,13 +32,13 @@ import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetExcep
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");
@@ -65,10 +65,11 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	/**
 	 * @param sfDocument
 	 *            the stateful (ie inited/not inited) document
-	 * @param traitStyleHelper 
+	 * @param traitStyleHelper
 	 */
 	public AbstractOdsSimpleodfDocumentTrait(
-			final OdsSimpleodfStatefulDocument sfDocument, OdsOdfdomStyleHelper styleHelper) {
+			final OdsSimpleodfStatefulDocument sfDocument,
+			final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.sfDocument = sfDocument;
 		this.traitStyleHelper = styleHelper;

@@ -17,10 +17,12 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReaderTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentReaderTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlDocumentReaderTest extends SpreadsheetDocumentReaderTest {
+public class XlsJxlDocumentReaderTest extends
+		AbstractSpreadsheetDocumentReaderTest {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

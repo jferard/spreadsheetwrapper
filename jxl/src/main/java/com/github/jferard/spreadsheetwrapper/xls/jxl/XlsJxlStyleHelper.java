@@ -36,9 +36,11 @@ import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlStyleHelper {
-	private static final int BOLDWEIGHT_BOLD = 400;
+	/** name or index -> cellStyle */
 	private final CellStyleAccessor<WritableCellFormat> cellStyleAccessor;
+	/** wrapper -> internal */
 	private final Map<WrapperColor, Colour> jxlColorByWrapperColor;
+	/** internal -> wrapper */
 	private final Map<Colour, WrapperColor> wrapperColorByJxlColor;
 
 	XlsJxlStyleHelper(
@@ -73,10 +75,22 @@ public class XlsJxlStyleHelper {
 		}
 	}
 
-	public/*@Nullable*/Colour getJxlColor(final WrapperColor color) {
-		return this.jxlColorByWrapperColor.get(color);
+	/**
+	 * @param styleName
+	 *            the name of the style
+	 * @return the internal style
+	 */
+	public/*@Nullable*/WritableCellFormat getCellFormat(final String styleName) {
+		final WritableCellFormat cellFormat = this.cellStyleAccessor
+				.getCellStyle(styleName);
+		return cellFormat;
 	}
 
+	/**
+	 * @param cellFormat
+	 *            the internal style
+	 * @return the style name, ssw<index> if none
+	 */
 	public String getStyleName(final WritableCellFormat cellFormat) {
 		final String name = this.cellStyleAccessor.getName(cellFormat);
 		if (name == null)
@@ -85,92 +99,38 @@ public class XlsJxlStyleHelper {
 			return name;
 	}
 
-	public WrapperCellStyle getWrapperCellStyle(final CellFormat cellFormat) {
-		if (cellFormat == null)
-			return WrapperCellStyle.EMPTY;
-
-		WrapperColor backgroundColor = this.getWrapperColor(cellFormat
-				.getBackgroundColour());
-		if (WrapperColor.DEFAULT_BACKGROUND.equals(backgroundColor))
-			backgroundColor = null;
-
-		final WrapperFont wrapperFont = new WrapperFont();
-		final Font font = cellFormat.getFont();
-		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
-			final WrapperColor wrapperFontColor = this.getWrapperColor(fontColor);
-			if (wrapperFontColor != null)
-				wrapperFont.setColor(wrapperFontColor);
-		}
-		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-			wrapperFont.setBold();
-
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
-	}
-
-	public WrapperCellStyle getWrapperCellStyle(
-			final WritableCellFormat cellFormat) {
-		if (cellFormat == null)
-			return WrapperCellStyle.EMPTY;
-
-		final WrapperColor backgroundColor = this.getWrapperColor(cellFormat
-				.getBackgroundColour());
-		final WrapperFont wrapperFont = new WrapperFont();
-		final Font font = cellFormat.getFont();
-		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
-			final WrapperColor wrapperFontColor = this.getWrapperColor(fontColor);
-			if (wrapperFontColor != null)
-				wrapperFont.setColor(wrapperFontColor);
-		}
-		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-			wrapperFont.setBold();
-
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
-	}
-
-	public/*@Nullable*/WrapperColor getWrapperColor(final Colour color) {
-		return this.wrapperColorByJxlColor.get(color);
-	}
-
+	/**
+	 * Create or update a cell style
+	 * 
+	 * @param styleName
+	 *            the name of the style
+	 * @param cellFormat
+	 *            the internal style
+	 */
 	public void putCellStyle(final String styleName,
 			final WritableCellFormat cellFormat) {
 		this.cellStyleAccessor.putCellStyle(styleName, cellFormat);
 	}
 
-	/*@Nullable*/ WritableCellFormat getCellFormat(final String styleName) {
-		final WritableCellFormat cellFormat = this.cellStyleAccessor
-				.getCellStyle(styleName);
-		// WorkbookParser parser = (WorkbookParser) workbook;
-		// if (cellFormat == null) {
-		// if (styleName.startsWith("ssw")) {
-		// try {
-		// int idx = Integer.valueOf(styleName.substring(3));
-		// FormattingRecords formattingRecords = parser
-		// .getFormattingRecords();
-		// cellFormat = (WritableCellFormat) formattingRecords
-		// .getXFRecord(idx);
-		// } catch (NumberFormatException e) {
-		// // do nothing
-		// }
-		// }
-		// }
-		return cellFormat;
-	}
-
-	WritableCellFormat getCellFormat(final WrapperCellStyle wrapperCellStyle) {
+	/**
+	 * @param wrapperCellStyle
+	 *            the wrapper cell style
+	 * @return the internal cell style
+	 */
+	public WritableCellFormat toCellFormat(
+			final WrapperCellStyle wrapperCellStyle) {
 		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
 		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
 		try {
 			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-			if (wrapperFont != null) {
-				if (wrapperFont.getBold() == WrapperCellStyle.YES)
-					cellFont.setBoldStyle(WritableFont.BOLD);
-			}
+			if (wrapperFont != null
+					&& wrapperFont.getBold() == WrapperCellStyle.YES)
+				cellFont.setBoldStyle(WritableFont.BOLD);
+
 			final WrapperColor backgroundColor = wrapperCellStyle
 					.getBackgroundColor();
 			if (backgroundColor != null) {
-				final Colour jxlColor = this.getJxlColor(backgroundColor);
+				final Colour jxlColor = this.toJxlColor(backgroundColor);
 				if (jxlColor != null)
 					cellFormat.setBackground(jxlColor);
 			}
@@ -180,4 +140,77 @@ public class XlsJxlStyleHelper {
 		return cellFormat;
 	}
 
+	/**
+	 * @param wrapperColor
+	 *            the wrapper color
+	 * @return the internal color
+	 */
+	public/*@Nullable*/Colour toJxlColor(final WrapperColor wrapperColor) {
+		return this.jxlColorByWrapperColor.get(wrapperColor);
+	}
+
+	/**
+	 * @param cellFormat
+	 *            the internal cell style
+	 * @return the wrapper cell style
+	 */
+	public WrapperCellStyle toWrapperCellStyle(final CellFormat cellFormat) {
+		if (cellFormat == null)
+			return WrapperCellStyle.EMPTY;
+
+		WrapperColor backgroundColor = this.toWrapperColor(cellFormat
+				.getBackgroundColour());
+		if (WrapperColor.DEFAULT_BACKGROUND.equals(backgroundColor))
+			backgroundColor = null;
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		final Font font = cellFormat.getFont();
+		final Colour fontColor = font.getColour();
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+			final WrapperColor wrapperFontColor = this
+					.toWrapperColor(fontColor);
+			if (wrapperFontColor != null)
+				wrapperFont.setColor(wrapperFontColor);
+		}
+		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+
+	/**
+	 * @param cellFormat
+	 *            the internal cell style
+	 * @return the wrapper cell style
+	 */
+	public WrapperCellStyle toWrapperCellStyle(
+			final WritableCellFormat cellFormat) {
+		if (cellFormat == null)
+			return WrapperCellStyle.EMPTY;
+
+		final WrapperColor backgroundColor = this.toWrapperColor(cellFormat
+				.getBackgroundColour());
+		final WrapperFont wrapperFont = new WrapperFont();
+		final Font font = cellFormat.getFont();
+		final Colour fontColor = font.getColour();
+		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+			final WrapperColor wrapperFontColor = this
+					.toWrapperColor(fontColor);
+			if (wrapperFontColor != null)
+				wrapperFont.setColor(wrapperFontColor);
+		}
+		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+			wrapperFont.setBold();
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
+	}
+
+	/**
+	 * @param jxlColor
+	 *            internal color
+	 * @return wrapper color
+	 */
+	public/*@Nullable*/WrapperColor toWrapperColor(final Colour jxlColor) {
+		return this.wrapperColorByJxlColor.get(jxlColor);
+	}
 }

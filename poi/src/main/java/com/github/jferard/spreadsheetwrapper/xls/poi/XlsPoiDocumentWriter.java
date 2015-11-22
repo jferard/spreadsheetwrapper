@@ -17,13 +17,8 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownServiceException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,22 +40,22 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 /**
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 
 		/**
 		 * @param workbook
@@ -72,7 +67,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		 * @param cellStyleByName
 		 */
 		XlsPoiDocumentWriterTrait(final Workbook workbook,
-				final XlsPoiStyleHelper styleHelper, final CellStyle dateCellStyle) {
+				final XlsPoiStyleHelper styleHelper,
+				final CellStyle dateCellStyle) {
 			super(workbook, styleHelper, dateCellStyle);
 		}
 
@@ -81,30 +77,9 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		/*@RequiresNonNull("traitStyleHelper")*/
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.traitStyleHelper, this.dateCellStyle);
+			return new XlsPoiWriter(sheet, this.traitStyleHelper,
+					this.dateCellStyle);
 		}
-	}
-
-	/**
-	 * @param outputURL
-	 *            the URL of the file to write
-	 * @return the stream on the file
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @deprecated
-	 */
-	@Deprecated
-	private static OutputStream getOutputStream(final URL outputURL)
-			throws IOException, FileNotFoundException {
-		OutputStream outputStream;
-		final URLConnection connection = outputURL.openConnection();
-		connection.setDoOutput(true);
-		try {
-			outputStream = connection.getOutputStream();
-		} catch (final UnknownServiceException e) {
-			outputStream = new FileOutputStream(outputURL.getPath());
-		}
-		return outputStream;
 	}
 
 	/** a map styleName -> internal cell style */
@@ -130,9 +105,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 * @param outputURL
 	 *            where to write
 	 */
-	public XlsPoiDocumentWriter(final Logger logger,
-			final Workbook workbook, final XlsPoiStyleHelper styleHelper,
-			final Output output) {
+	public XlsPoiDocumentWriter(final Logger logger, final Workbook workbook,
+			final XlsPoiStyleHelper styleHelper, final Output output) {
 		super(logger, output);
 		this.logger = logger;
 		this.workbook = workbook;

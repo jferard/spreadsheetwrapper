@@ -5,9 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownServiceException;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -16,6 +13,10 @@ import java.net.UnknownServiceException;
  * is a way to delay the creation of the outputStream. (If the outputStream is
  * created immediately and the output file is the same as the input file, then
  * the input file while be erased before the spreadsheet is opened).
+ */
+/**
+ * @author Julien
+ *
  */
 public class Output {
 	/**
@@ -30,76 +31,73 @@ public class Output {
 		return new FileOutputStream(outputFile);
 	}
 
-	/**
-	 * @param outputURL
-	 *            the URL to open for write
-	 * @return the output stream on this URL
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	public static OutputStream getOutputStream(final URL outputURL)
-			throws IOException, FileNotFoundException {
-		OutputStream outputStream;
-
-		final URLConnection connection = outputURL.openConnection();
-		connection.setDoOutput(true);
-		try {
-			outputStream = connection.getOutputStream(); // NOPMD by Julien on
-			// 30/08/15 12:54
-		} catch (final UnknownServiceException e) {
-			outputStream = new FileOutputStream(outputURL.getPath());
-		}
-		return outputStream;
-	}
-
 	/** file output */
-	final/*@Nullable*/File outputFile;
+	private final/*@Nullable*/File outputFile;
 
 	/** stream output */
-	/*@Nullable*/OutputStream outputStream;
+	private/*@Nullable*/OutputStream outputStream;
 
-	/** url output */
-	final/*@Nullable*/URL outputURL;
-
+	/**
+	 * Empty output
+	 */
 	public Output() {
-		this(null, null, null);
+		this(null, null);
 	}
 
+	/**
+	 * Output to a file
+	 * 
+	 * @param outputFile
+	 */
 	public Output(final/*@Nullable*/File outputFile) {
-		this(null, outputFile, null);
+		this(null, outputFile);
 	}
 
+	/**
+	 * Output to a stream
+	 * 
+	 * @param outputStream
+	 */
 	public Output(final/*@Nullable*/OutputStream outputStream) {
-		this(outputStream, null, null);
+		this(outputStream, null);
 	}
 
-	public Output(final/*@Nullable*/URL outputURL) {
-		this(null, null, outputURL);
-	}
-
+	/**
+	 * Output to file or stream
+	 * 
+	 * @param outputStream
+	 * @param outputFile
+	 */
 	private Output(final/*@Nullable*/OutputStream outputStream,
-			final/*@Nullable*/File outputFile, final/*@Nullable*/URL outputURL) {
+			final/*@Nullable*/File outputFile) {
 		super();
 		this.outputStream = outputStream;
 		this.outputFile = outputFile;
-		this.outputURL = outputURL;
 	}
 
+	/**
+	 * Close the stream if opened
+	 * 
+	 * @throws IOException
+	 *             if can't close the stream
+	 */
 	public void close() throws IOException {
 		if (this.outputStream != null)
 			this.outputStream.close();
 	}
 
+	/**
+	 * Get or open the stream
+	 * 
+	 * @return the stream or null if it can't be opened
+	 */
 	public/*@Nullable*/OutputStream getStream() {
 		if (this.outputStream == null) {
 			try {
 				if (this.outputFile != null)
 					this.outputStream = Output.getOutputStream(this.outputFile);
-				else if (this.outputURL != null)
-					this.outputStream = Output.getOutputStream(this.outputURL);
-			} catch (final FileNotFoundException e) {
-				// do nothing
-			} catch (final IOException e) {
+			} catch (final FileNotFoundException e) { // NOPMD by Julien on
+														// 21/11/15 11:22
 				// do nothing
 			}
 		}

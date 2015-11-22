@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 
@@ -115,7 +115,7 @@ implements SpreadsheetDocumentWriter {
 		if (cellFormat == null)
 			return WrapperCellStyle.EMPTY;
 
-		return this.styleHelper.getWrapperCellStyle(cellFormat);
+		return this.styleHelper.toWrapperCellStyle(cellFormat);
 	}
 
 	/** {@inheritDoc} */
@@ -196,7 +196,7 @@ implements SpreadsheetDocumentWriter {
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
 		final WritableCellFormat cellFormat = this.styleHelper
-				.getCellFormat(wrapperCellStyle);
+				.toCellFormat(wrapperCellStyle);
 		this.styleHelper.putCellStyle(styleName, cellFormat);
 		return true;
 	}

@@ -41,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -176,18 +176,18 @@ SpreadsheetReader {
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final WrapperColor backgroundColor = WrapperColor
-				.getColorFromString(bColorAsHex);
+				.stringToColor(bColorAsHex);
 
 		final WrapperFont wrapperFont = new WrapperFont();
 		final SyleTextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 		final String fColorAsHex = odfElement.getAttributeValue("color",
-				OdsJOpenStyleHelper.foNS);
-		final WrapperColor fontColor = WrapperColor.getColorFromString(fColorAsHex);
+				OdsJOpenStyleHelper.FO_NS);
+		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
 		final String fw = odfElement.getAttributeValue(
-				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.foNS);
+				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
 		if ("bold".equals(fw))
 			wrapperFont.setBold();
 
@@ -196,7 +196,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		if (cell == null)
 			return null;

@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -234,7 +234,7 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ WrapperCellStyle getStyle(final int r, final int c) {
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final OdfTableCell odfCell = this.getOdfCell(r, c);
 		if (odfCell == null)
 			return null;
@@ -245,11 +245,11 @@ SpreadsheetReader {
 
 	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final OdfTableCell odfCell = this.getOdfCell(r, c);
 		if (odfCell == null)
 			return null;
-		
+
 		return odfCell.getStyleName();
 	}
 

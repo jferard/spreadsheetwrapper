@@ -30,23 +30,27 @@ import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
+
+	/** StyleHelper instance in the trait */
 	protected OdsOdfdomStyleHelper traitStyleHelper;
 
 	/**
-	 * @param traitStyleHelper 
+	 * @param traitStyleHelper
 	 * @param value
 	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsOdfdomDocumentTrait(final OdfSpreadsheetDocument document, OdsOdfdomStyleHelper styleHelper) {
+	public AbstractOdsOdfdomDocumentTrait(
+			final OdfSpreadsheetDocument document,
+			final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.document = document;
 		this.traitStyleHelper = styleHelper;

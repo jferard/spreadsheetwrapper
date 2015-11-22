@@ -25,30 +25,31 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.checker.nullness.qual.PolyNull;
-*/
+ */
 
 public abstract class AbstractXlsPoiDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** *internal* workbook */
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
-	protected /*@Nullable*/ CellStyle dateCellStyle;
+	protected/*@Nullable*/CellStyle dateCellStyle;
 	protected XlsPoiStyleHelper traitStyleHelper;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
-	 * @param traitStyleHelper 
+	 * @param traitStyleHelper
 	 * @param dateCellStyle
 	 *            cell syle for dates, since Excel hasn't a real date type
 	 */
 	public AbstractXlsPoiDocumentTrait(final Workbook workbook,
-			XlsPoiStyleHelper styleHelper, final /*@Nullable*/ CellStyle dateCellStyle) {
+			final XlsPoiStyleHelper styleHelper,
+			final/*@Nullable*/CellStyle dateCellStyle) {
 		super();
 		this.workbook = workbook;
 		this.traitStyleHelper = styleHelper;

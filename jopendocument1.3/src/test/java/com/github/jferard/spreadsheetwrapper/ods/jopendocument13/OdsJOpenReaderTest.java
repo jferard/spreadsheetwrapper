@@ -17,10 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument13;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetReaderTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsJOpenReaderTest extends SpreadsheetReaderTest {
+public class OdsJOpenReaderTest extends AbstractSpreadsheetReaderTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

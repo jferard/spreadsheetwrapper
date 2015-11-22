@@ -51,9 +51,9 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.openForWrite(inputStream, outputStream);
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 			this.sw = this.sdw.getSpreadsheet(0);
-			this.sr = this.sw;
+			this.sheetReader = this.sw;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

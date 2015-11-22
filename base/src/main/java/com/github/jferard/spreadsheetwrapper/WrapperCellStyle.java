@@ -19,13 +19,26 @@ package com.github.jferard.spreadsheetwrapper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
+/**
+ * @author Julien
+ *
+ */
 public class WrapperCellStyle {
+	/** attribute : use the default value */
 	public static final int DEFAULT = -1;
+
+	/** empty style */
 	public static final WrapperCellStyle EMPTY = new WrapperCellStyle(null,
 			new WrapperFont());
-	public static final int NO = 0;
+	/** attribute : do not set */
+	public static final int NO = 0; // NOPMD by Julien on 20/11/15 21:04
+	/** attribute : set */
 	public static final int YES = 1;
+
+	/** the backgroundColor of the cell */
 	private/*@Nullable*/WrapperColor backgoundColor;
+
+	/** the text font */
 	private/*@Nullable*/WrapperFont cellFont;
 
 	/**
@@ -41,8 +54,9 @@ public class WrapperCellStyle {
 		this.cellFont = cellFont;
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public boolean equals(final /*@Nullable*/ Object obj) {
+	public boolean equals(final/*@Nullable*/Object obj) {
 		if (this == obj)
 			return true;
 		if (!(obj instanceof WrapperCellStyle))
@@ -53,14 +67,21 @@ public class WrapperCellStyle {
 				&& Util.equal(this.cellFont, other.cellFont);
 	}
 
+	/**
+	 * @return the background color of the cell
+	 */
 	public/*@Nullable*/WrapperColor getBackgroundColor() {
 		return this.backgoundColor;
 	}
 
+	/**
+	 * @return the text font in the cell
+	 */
 	public/*@Nullable*/WrapperFont getCellFont() {
 		return this.cellFont;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -68,18 +89,27 @@ public class WrapperCellStyle {
 				+ Util.hash(this.cellFont);
 	}
 
+	/**
+	 * @param wrapperColor
+	 *            the background color to set
+	 */
 	public void setBackgroundColor(final WrapperColor wrapperColor) {
 		this.backgoundColor = wrapperColor;
 	}
 
+	/**
+	 * @param cellFont
+	 *            the font to set
+	 */
 	public void setCellFont(final WrapperFont cellFont) {
 		this.cellFont = cellFont;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-				.append(this.backgoundColor).append(", cellFont=")
-				.append(this.cellFont).append("]").toString();
+		.append(this.backgoundColor).append(", cellFont=")
+		.append(this.cellFont).append("]").toString();
 	}
 }

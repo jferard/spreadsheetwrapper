@@ -33,7 +33,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class SpreadsheetWriterLevel2Test extends
-		SpreadsheetWriterLevel1Test {
+SpreadsheetWriterLevel1Test {
 	@Rule
 	public TestName name = new TestName();
 
@@ -50,9 +50,9 @@ public abstract class SpreadsheetWriterLevel2Test extends
 			final InputStream inputStream = resourceURL.openStream();
 			this.sdw = this.factory.openForWrite(inputStream);
 			final List<String> sheetNames = this.sdw.getSheetNames();
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 			this.sw = this.sdw.getSpreadsheet(0);
-			this.sr = this.sw;
+			this.sheetReader = this.sw;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());

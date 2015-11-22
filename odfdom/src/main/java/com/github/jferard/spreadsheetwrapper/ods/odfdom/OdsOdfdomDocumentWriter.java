@@ -40,20 +40,20 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWri
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 /**
  * The value writer for Apache odfdom.
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
@@ -97,7 +97,7 @@ implements SpreadsheetDocumentWriter {
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);

@@ -82,7 +82,7 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		if (cellFormat == null)
 			return WrapperCellStyle.EMPTY;
 
-		return this.styleHelper.getWrapperCellStyle(cellFormat);
+		return this.styleHelper.toWrapperCellStyle(cellFormat);
 	}
 
 	/** {@inheritDoc} */

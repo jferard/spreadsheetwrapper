@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class SpreadsheetWriterCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 	@Before
 	@SuppressWarnings("nullness")
 	public void setUp() {

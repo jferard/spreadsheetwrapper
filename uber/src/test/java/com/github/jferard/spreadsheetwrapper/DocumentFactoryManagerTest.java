@@ -19,6 +19,7 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.util.logging.Logger;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.easymock.PowerMock;
 
@@ -28,30 +29,38 @@ import com.github.jferard.spreadsheetwrapper.ods.simpleods.OdsSimpleodsDocumentF
 import com.github.jferard.spreadsheetwrapper.xls.jxl.XlsJxlDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.xls.poi.XlsPoiDocumentFactory;
 
-@SuppressWarnings("static-method")
 public class DocumentFactoryManagerTest {
-	@Test
-	public final void testDirect() {
-		final Logger logger = PowerMock.createNiceMock(Logger.class);
-		@SuppressWarnings("unused")
-		SpreadsheetDocumentFactory factory;
-		factory = OdsSimpleodsDocumentFactory.create(logger);
-		factory = OdsSimpleodfDocumentFactory.create(logger);
-		factory = OdsOdfdomDocumentFactory.create(logger);
-		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument12.OdsJOpenDocumentFactory
-				.create(logger);
+	/** the logger */
+	private Logger logger;
 
-		factory = XlsJxlDocumentFactory.create(logger);
-		factory = XlsPoiDocumentFactory.create(logger);
+	/** create the mock for the logger */
+	@Before
+	public void setUp() {
+		this.logger = PowerMock.createNiceMock(Logger.class);
 	}
 
+	/** the the creation of the factories without the manager */
 	@Test
-	@SuppressWarnings("unused")
+	@SuppressWarnings({ "unused", "PMD.DataflowAnomalyAnalysis" })
+	public final void testDirect() {
+		SpreadsheetDocumentFactory factory;
+		factory = OdsSimpleodsDocumentFactory.create(this.logger);
+		factory = OdsSimpleodfDocumentFactory.create(this.logger);
+		factory = OdsOdfdomDocumentFactory.create(this.logger);
+		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument12.OdsJOpenDocumentFactory
+				.create(this.logger);
+
+		factory = XlsJxlDocumentFactory.create(this.logger);
+		factory = XlsPoiDocumentFactory.create(this.logger);
+	}
+
+	/** the the creation of the factories with thee manager */
+	@Test
+	@SuppressWarnings({ "unused", "PMD.DataflowAnomalyAnalysis" })
 	public final void testManager() throws SpreadsheetException,
-			IllegalArgumentException {
-		final Logger logger = PowerMock.createNiceMock(Logger.class);
+	IllegalArgumentException {
 		final DocumentFactoryManager manager = new DocumentFactoryManager(
-				logger);
+				this.logger);
 		SpreadsheetDocumentFactory factory;
 		factory = manager
 				.getFactory("ods.simpleodf.OdsSimpleodfDocumentFactory");
@@ -63,7 +72,6 @@ public class DocumentFactoryManagerTest {
 
 		factory = manager.getFactory("xls.jxl.XlsJxlDocumentFactory");
 		factory = manager.getFactory("xls.poi.XlsPoiDocumentFactory");
-
 	}
 
 }

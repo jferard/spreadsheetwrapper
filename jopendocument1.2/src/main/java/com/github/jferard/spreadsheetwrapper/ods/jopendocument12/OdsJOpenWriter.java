@@ -45,7 +45,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -136,6 +136,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
@@ -187,9 +188,10 @@ SpreadsheetWriter {
 		odfElement.setAttribute(type.getValueAttribute(), type.format(value),
 				officeNS);
 		final Element child = odfElement.getChild("p", textNS);
-		final Element t = child != null ? child : new Element("p", textNS);
-		t.setContent(new Text(value.toString()));
-		odfElement.setContent(t);
+		final Element element = child == null ? new Element("p", textNS)
+				: child;
+		element.setContent(new Text(value.toString()));
+		odfElement.setContent(element);
 	}
 
 	/**

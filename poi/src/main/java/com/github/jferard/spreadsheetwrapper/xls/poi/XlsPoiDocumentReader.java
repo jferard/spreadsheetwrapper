@@ -32,18 +32,18 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
-/*>>> 
+/*>>>
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 /**
  */
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 
 		XlsPoiDocumentReaderTrait(final Workbook workbook,
 				final XlsPoiStyleHelper styleHelper) {
@@ -94,7 +94,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 		if (cellStyle == null)
 			return null;
 
-		return this.styleHelper.getWrapperCellStyle(this.workbook, cellStyle);
+		return this.styleHelper.toWrapperCellStyle(this.workbook, cellStyle);
 	}
 
 	/** {@inheritDoc} */

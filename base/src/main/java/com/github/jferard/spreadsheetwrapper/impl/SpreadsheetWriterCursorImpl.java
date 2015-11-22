@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
  * Implementation of the writer Cursor, using a writer.
  */
 public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
-		implements SpreadsheetWriterCursor {
+implements SpreadsheetWriterCursor {
 
 	/** the cursor */
 	private final Cursor cursor;
@@ -133,8 +133,9 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 		return this.writer.getRowCount();
 	}
 
+	/** {@inheritDoc} */
 	@Override
-	public /*@Nullable*/ WrapperCellStyle getStyle() {
+	public/*@Nullable*/WrapperCellStyle getStyle() {
 		return this.writer.getStyle(this.cursor.getR(), this.cursor.getC());
 	}
 
@@ -228,6 +229,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 				value);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final WrapperCellStyle wrapperStyle) {
 		return this.writer.setStyle(this.cursor.getR(), this.cursor.getC(),
@@ -250,7 +252,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 
 	/** {@inheritDoc} */
 	@Override
-	public Move up() {
+	public Move up() { // NOPMD by Julien on 21/11/15 11:23
 		return this.cursor.up();
 	}
 }

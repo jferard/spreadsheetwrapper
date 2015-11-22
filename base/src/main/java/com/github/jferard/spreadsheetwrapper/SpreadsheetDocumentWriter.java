@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.net.URL;
 
 /**
  * The SpreadsheetDocumentWriter class provides some basic methods for writing
@@ -96,18 +95,6 @@ public interface SpreadsheetDocumentWriter extends SpreadsheetDocumentReader {
 	 *             if the value can't be saved
 	 */
 	void saveAs(OutputStream outputStream) throws SpreadsheetException;
-
-	/**
-	 * Saves the current value
-	 *
-	 * @param outputURL
-	 *            the destination URL (local file is better)
-	 * @throws SpreadsheetException
-	 *             if the value can't be saved
-	 * @deprecated use saveAs(outputStream)
-	 */
-	@Deprecated
-	void saveAs(URL outputURL) throws SpreadsheetException;
 
 	/**
 	 * Creates a new style

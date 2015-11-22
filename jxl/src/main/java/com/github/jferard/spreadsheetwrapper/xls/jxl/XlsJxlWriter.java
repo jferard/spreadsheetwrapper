@@ -44,17 +44,17 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	/**
 	 * COPY FROM JXL : The maximum number of columns
 	 */
-	private static int maxColumns = 256;
+	private final static int MAX_COLUMNS = 256;
 
 	/**
 	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
 	 */
-	private final static int numRowsPerSheet = 65536;
+	private final static int MAX_ROWS_PER_SHEET = 65536;
 
 	/** current row index, -1 if none */
 	private int curR;
@@ -68,6 +68,7 @@ SpreadsheetWriter {
 	/** helper for style */
 	private final XlsJxlStyleHelper styleHelper;
 
+	/** internal workbook */
 	private final WritableWorkbook workbook;
 
 	/**
@@ -177,6 +178,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
@@ -184,7 +186,7 @@ SpreadsheetWriter {
 		if (cell == null)
 			return false;
 
-		cell.setCellFormat(this.styleHelper.getCellFormat(wrapperCellStyle));
+		cell.setCellFormat(this.styleHelper.toCellFormat(wrapperCellStyle));
 		return true;
 	}
 
@@ -255,7 +257,8 @@ SpreadsheetWriter {
 	protected WritableCell getOrCreateJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsJxlWriter.numRowsPerSheet || c >= XlsJxlWriter.maxColumns)
+		if (r >= XlsJxlWriter.MAX_ROWS_PER_SHEET
+				|| c >= XlsJxlWriter.MAX_COLUMNS)
 			throw new UnsupportedOperationException();
 
 		WritableCell cell;

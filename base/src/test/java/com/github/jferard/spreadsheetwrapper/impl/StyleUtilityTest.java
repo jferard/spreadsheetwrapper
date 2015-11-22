@@ -18,11 +18,11 @@ public class StyleUtilityTest {
 						WrapperCellStyle.YES, WrapperCellStyle.YES, 15,
 						WrapperColor.DARK_BLUE));
 		final String styleString0 = "background-color:GREY_25_PERCENT;font-weight:bold;font-style:italic;font-size:15;font-color:DARK_BLUE;";
-		final String styleString1 = utility.getStyleString(cellStyle);
+		final String styleString1 = utility.toStyleString(cellStyle);
 		Assert.assertEquals(styleString0, styleString1);
 		final WrapperCellStyle cellStyle2 = utility
-				.getWrapperCellStyle(styleString1);
-		final String styleString2 = utility.getStyleString(cellStyle2);
+				.toWrapperCellStyle(styleString1);
+		final String styleString2 = utility.toStyleString(cellStyle2);
 		Assert.assertEquals(styleString1, styleString2);
 	}
 

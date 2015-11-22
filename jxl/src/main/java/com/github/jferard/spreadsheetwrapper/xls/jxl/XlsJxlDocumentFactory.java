@@ -22,7 +22,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.Locale;
 import java.util.logging.Logger;
 
@@ -42,7 +41,13 @@ import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
+	/**
+	 * Called by the manager
+	 * 
+	 * @param logger
+	 * @return a factory
+	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleHelper(
 				new CellStyleAccessor<WritableCellFormat>()));
@@ -51,6 +56,7 @@ implements SpreadsheetDocumentFactory {
 	/** simple logger */
 	private final Logger logger;
 
+	/** helper for style */
 	private final XlsJxlStyleHelper stylehelper;
 
 	/**
@@ -73,7 +79,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -107,6 +113,7 @@ implements SpreadsheetDocumentFactory {
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
 			final File outputFile) throws SpreadsheetException {
@@ -140,7 +147,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 
@@ -158,14 +165,6 @@ implements SpreadsheetDocumentFactory {
 		} catch (final BiffException e) {
 			throw new SpreadsheetException(e);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
-			throws SpreadsheetException {
-		throw new UnsupportedOperationException();
 	}
 
 	private WorkbookSettings getReadSettings() {

@@ -33,8 +33,8 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
  *            reader/writer
  */
 public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
-	/* the *internal* ods file */
+		AbstractSpreadsheetDocumentTrait<T> {
+	/** the *internal* ods file */
 	private final OdsFile file;
 
 	/**
@@ -49,7 +49,6 @@ AbstractSpreadsheetDocumentTrait<T> {
 		final int count = this.getSheetCount();
 		try {
 			for (int i = 0; i < count; i++) {
-				final String name = this.file.getTableName(i); // throws
 				// SimpleOdsException
 				// if i < 0 or i
 				// >= table
@@ -59,6 +58,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 					throw new AssertionError();
 
 				final T reader = this.createNew(table);
+				final String name = this.file.getTableName(i); // throws
 				this.accessor.put(name, i, reader);
 			}
 		} catch (final SimpleOdsException e) {
@@ -88,7 +88,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 				this.accessor.put(name, index, spreadsheet);
 			} catch (final SimpleOdsException e) {
 				throw new AssertionError(String.format(
-						"Can't reach sheet at position %d", index));
+						"Can't reach sheet at position %d", index), e);
 			}
 		}
 		return spreadsheet;

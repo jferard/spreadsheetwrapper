@@ -23,7 +23,7 @@ import org.junit.Before;
  * An abstract test for cursor
  *
  */
-public class AbstractCursorTest extends CursorAbstractTest {
+public abstract class AbstractCursorTest extends CursorAbstractTest {
 	/**
 	 * Sets the test up : a 20*20 table, with a basic cursor.
 	 */
@@ -32,6 +32,7 @@ public class AbstractCursorTest extends CursorAbstractTest {
 		this.rowCount = 19;
 		this.colCount = 19;
 		this.cursor = new AbstractCursor(this.rowCount) {
+			/** {@inheritDoc} */
 			@Override
 			protected int getCellCount(final int r) {
 				return 19;

@@ -21,10 +21,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
@@ -34,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractBasicDocumentFactory implements
-SpreadsheetDocumentFactory {
+		SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
@@ -60,40 +58,11 @@ SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter create(final/*@Nullable*/URL outputURL)
-			throws SpreadsheetException {
-		if (outputURL == null)
-			return this.create();
-
-		try {
-			final OutputStream outputStream = Output.getOutputStream(outputURL);
-			return this.create(outputStream);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public SpreadsheetDocumentReader openForRead(final File inputFile)
 			throws SpreadsheetException {
 		try {
 			return this.openForRead(new FileInputStream(inputFile));
 		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentReader openForRead(final URL inputURL)
-			throws SpreadsheetException {
-		try {
-			final InputStream inputStream = inputURL.openStream();
-			return this.openForRead(inputStream);
-		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}
@@ -111,27 +80,4 @@ SpreadsheetDocumentFactory {
 			throws SpreadsheetException {
 		return this.openForWrite(inputStream, (OutputStream) null);
 	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL)
-			throws SpreadsheetException {
-		return this.openForWrite(inputURL, inputURL);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException {
-		try {
-			final InputStream inputStream = inputURL.openStream();
-			final OutputStream outputStream = Output.getOutputStream(outputURL);
-			return this.openForWrite(inputStream, outputStream);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
 }

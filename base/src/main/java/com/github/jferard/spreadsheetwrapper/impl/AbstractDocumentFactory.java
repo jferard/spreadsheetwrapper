@@ -20,10 +20,8 @@ package com.github.jferard.spreadsheetwrapper.impl;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
@@ -38,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  *            internal workbook
  */
 public abstract class AbstractDocumentFactory<R> extends
-AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
+		AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	/** the logger */
 	private final Logger logger;
 
@@ -55,7 +53,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
 		return this.createWriter(Stateful.createNew(document), new Output(
 				outputStream));
@@ -89,30 +87,10 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
 		return this.createWriter(Stateful.createInitialized(document),
 				new Output(outputStream));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws IOException
-	 * @throws SpreadsheetException
-	 */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
-			final/*@Nullable*/URL outputURL) throws SpreadsheetException {
-		try {
-			final R document = this.loadSpreadsheetDocument(inputURL
-					.openStream());
-			return this.createWriter(Stateful.createInitialized(document),
-					new Output(outputURL));
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
 	}
 
 	/**
@@ -153,6 +131,6 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	 * @throws SpreadsheetException
 	 */
 	protected abstract R newSpreadsheetDocument(
-			/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
+	/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
 
 }

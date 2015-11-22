@@ -20,8 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.logging.Logger;
 
 import org.simpleods.OdsFile;
@@ -37,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodsDocumentFactory(logger, new StyleUtility());
 	}
@@ -79,26 +77,8 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter create(final/*@Nullable*/URL outputURL)
 			throws SpreadsheetException {
-		if (outputURL == null)
-			return this.create();
-
-		try {
-			final File f = new File(outputURL.toURI());
-			return this.create(f);
-		} catch (final IllegalArgumentException e) { // not a file scheme
-			throw new SpreadsheetException(e);
-		} catch (final URISyntaxException e) {
-			throw new SpreadsheetException(e);
-		}
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -117,14 +97,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	@Deprecated
-	public SpreadsheetDocumentWriter openForWrite(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 }

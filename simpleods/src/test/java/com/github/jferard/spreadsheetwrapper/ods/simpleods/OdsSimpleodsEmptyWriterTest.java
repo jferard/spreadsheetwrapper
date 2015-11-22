@@ -23,12 +23,13 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyWriterTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetEmptyWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsSimpleodsEmptyWriterTest extends SpreadsheetEmptyWriterTest {
+public class OdsSimpleodsEmptyWriterTest extends
+		AbstractSpreadsheetEmptyWriterTest {
 	/** set the test up */
 	@Before
 	@Override

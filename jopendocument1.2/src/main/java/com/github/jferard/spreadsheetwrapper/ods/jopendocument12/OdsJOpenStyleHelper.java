@@ -27,20 +27,29 @@ import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
-public class OdsJOpenStyleHelper {
+class OdsJOpenStyleHelper {
 	/** the name space fo (fonts ?) */
-	public static final Namespace foNS = Namespace.getNamespace("fo",
+	public static final Namespace FO_NS = Namespace.getNamespace("fo",
 			"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0");
 	/** the name space office (table, row, cell, etc.) */
-	public static final Namespace officeNS = Namespace.getNamespace("office",
+	public static final Namespace OFFICE_NS = Namespace.getNamespace("office",
 			"urn:oasis:names:tc:opendocument:xmlns:office:1.0");
 	/** the name space style (styles) */
-	public static final Namespace styleNS = Namespace.getNamespace("style",
+	public static final Namespace STYLE_NS = Namespace.getNamespace("style",
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
+	/** XML name for cell properties */
+	private static final String TABLE_CELL_PROPERTIES = "table-cell-properties";
+	/** XML name for text properties */
+	private static final String TEXT_PROPERTIES = "text-properties";
 
+	/**
+	 * @param styleName
+	 *            name of the style
+	 * @return the base Element, which has to be
+	 */
 	public Element createBaseStyle(final String styleName) {
-		final Element style = new Element("style", OdsJOpenStyleHelper.styleNS);
-		style.setAttribute("name", styleName, OdsJOpenStyleHelper.styleNS);
+		final Element style = new Element("style", OdsJOpenStyleHelper.STYLE_NS);
+		style.setAttribute("name", styleName, OdsJOpenStyleHelper.STYLE_NS);
 		return style;
 	}
 
@@ -57,18 +66,20 @@ public class OdsJOpenStyleHelper {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
-			final Element tableCellProps = new Element("table-cell-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element tableCellProps = new Element(
+					OdsJOpenStyleHelper.TABLE_CELL_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
-					backgroundColor.toHex(), OdsJOpenStyleHelper.foNS);
+					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
 		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
 		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
-			final Element textProps = new Element("text-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element textProps = new Element(
+					OdsJOpenStyleHelper.TEXT_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
-					OdsJOpenStyleHelper.foNS);
+					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -76,22 +87,24 @@ public class OdsJOpenStyleHelper {
 
 	public Element setStyle(final Element style,
 			final WrapperCellStyle wrapperCellStyle) {
-		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.styleNS);
+		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
-			final Element tableCellProps = new Element("table-cell-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element tableCellProps = new Element(
+					OdsJOpenStyleHelper.TABLE_CELL_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
-					backgroundColor.toHex(), OdsJOpenStyleHelper.foNS);
+					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
 		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
 		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
-			final Element textProps = new Element("text-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element textProps = new Element(
+					OdsJOpenStyleHelper.TEXT_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			textProps.setAttribute(StyleUtility.FONT_WEIGHT, "bold",
-					OdsJOpenStyleHelper.foNS);
+					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -109,18 +122,20 @@ public class OdsJOpenStyleHelper {
 		final Element style = this.getBaseStyle(styleName);
 		if (propertiesMap.containsKey(StyleUtility.BACKGROUND_COLOR)) {
 			final String bc = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
-			final Element tableCellProps = new Element("table-cell-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element tableCellProps = new Element(
+					OdsJOpenStyleHelper.TABLE_CELL_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR, bc,
-					OdsJOpenStyleHelper.foNS);
+					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
 		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
 			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
-			final Element textProps = new Element("text-properties",
-					OdsJOpenStyleHelper.styleNS);
+			final Element textProps = new Element(
+					OdsJOpenStyleHelper.TEXT_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
 			textProps.setAttribute(StyleUtility.FONT_WEIGHT, fw,
-					OdsJOpenStyleHelper.foNS);
+					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
 		return style;
@@ -133,27 +148,31 @@ public class OdsJOpenStyleHelper {
 	 */
 	private Element getBaseStyle(final String styleName) {
 		final Element style = this.createBaseStyle(styleName);
-		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.styleNS);
+		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
 		return style;
 	}
 
 	private Element setStyle(final Element style,
 			final Map<String, String> propertiesMap) {
-		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.styleNS);
+		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
 		if (propertiesMap.containsKey(StyleUtility.BACKGROUND_COLOR)) {
-			final String bc = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
-			final Element tableCellProps = new Element("table-cell-properties",
-					OdsJOpenStyleHelper.styleNS);
-			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR, bc,
-					OdsJOpenStyleHelper.foNS);
+			final String backgroundColorAsHex = propertiesMap
+					.get(StyleUtility.BACKGROUND_COLOR);
+			final Element tableCellProps = new Element(
+					OdsJOpenStyleHelper.TABLE_CELL_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
+					backgroundColorAsHex, OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
 		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
-			final String fw = propertiesMap.get(StyleUtility.FONT_WEIGHT);
-			final Element textProps = new Element("text-properties",
-					OdsJOpenStyleHelper.styleNS);
-			textProps.setAttribute(StyleUtility.FONT_WEIGHT, fw,
-					OdsJOpenStyleHelper.foNS);
+			final String fontWeight = propertiesMap
+					.get(StyleUtility.FONT_WEIGHT);
+			final Element textProps = new Element(
+					OdsJOpenStyleHelper.TEXT_PROPERTIES,
+					OdsJOpenStyleHelper.STYLE_NS);
+			textProps.setAttribute(StyleUtility.FONT_WEIGHT, fontWeight,
+					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
 		return style;

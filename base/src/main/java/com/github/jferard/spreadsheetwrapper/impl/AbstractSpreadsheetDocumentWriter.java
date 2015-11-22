@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.io.File;
 import java.io.OutputStream;
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,8 +28,9 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-SpreadsheetDocumentWriter {
+		SpreadsheetDocumentWriter {
 
+	/** the output */
 	private/*@MonotonicNonNull*/Output bkpOutput;
 
 	/** the logger */
@@ -77,21 +77,6 @@ SpreadsheetDocumentWriter {
 			this.save();
 		} catch (final SpreadsheetException e) {
 			this.output = this.bkpOutput;
-			throw e;
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	@Deprecated
-	public void saveAs(final URL outputURL) throws SpreadsheetException {
-		this.bkpOutput = this.output;
-		try {
-			this.output = new Output(outputURL);
-			this.save();
-		} catch (final SpreadsheetException e) {
-			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok", outputURL), e);
 			throw e;
 		}
 	}

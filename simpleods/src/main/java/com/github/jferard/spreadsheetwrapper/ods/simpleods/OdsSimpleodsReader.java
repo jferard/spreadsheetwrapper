@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -169,11 +169,11 @@ SpreadsheetReader {
 	}
 
 	@Override
-	public /*@Nullable*/ String getStyleName(final int r, final int c) {
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final TableCell simpleCell = this.getSimpleCell(r, c);
 		if (simpleCell == null)
 			return null;
-		
+
 		return simpleCell.getStyle();
 	}
 

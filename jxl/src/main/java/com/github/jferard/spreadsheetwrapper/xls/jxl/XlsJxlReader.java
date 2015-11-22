@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsJxlReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)
 			return ((DateCell) cell).getDate();
@@ -88,7 +88,12 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/Object getCellContent(final int r, final int c) {
+	public/*@Nullable*/Object getCellContent(final int r, final int c) { // NOPMD
+																			// by
+																			// Julien
+																			// on
+																			// 22/11/15
+																			// 06:30
 		final/*@Nullable*/Cell cell = this.getJxlCell(r, c);
 		if (cell == null)
 			return null;
@@ -166,7 +171,9 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 		String formula;
 		if (cell instanceof FormulaCell) // read
 			try {
-				formula = ((FormulaCell) cell).getFormula();
+				formula = ((FormulaCell) cell).getFormula(); // NOPMD by Julien
+																// on 22/11/15
+																// 06:28
 			} catch (final FormulaException e) {
 				throw new IllegalArgumentException(e);
 			}
@@ -190,6 +197,7 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 		return this.sheet.getRows();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
@@ -197,9 +205,10 @@ class XlsJxlReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final CellFormat cellFormat = cell.getCellFormat();
-		return this.styleHelper.getWrapperCellStyle(cellFormat);
+		return this.styleHelper.toWrapperCellStyle(cellFormat);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String getStyleName(final int r, final int c) {
 		throw new UnsupportedOperationException();

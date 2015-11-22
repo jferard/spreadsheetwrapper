@@ -34,10 +34,10 @@ import java.util.Map;
  *            the type of the elements
  */
 public class Accessor</*@NonNull*/T> {
-	/** the elements List */
-	private final List<T> elements;
 	/** the elements map : name->element */
 	private final Map<String, T> elementByName;
+	/** the elements List */
+	private final List<T> elements;
 
 	/**
 	 * Creates a new Accessor
@@ -134,7 +134,7 @@ public class Accessor</*@NonNull*/T> {
 				}
 			}
 			stringBuilder.append(index).append('&').append(name).append("->")
-			.append(element).append(',');
+					.append(element).append(',');
 		}
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(']');
 		return stringBuilder.toString();

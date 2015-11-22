@@ -86,7 +86,7 @@ public class OdsOdfdomStyleHelper {
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(
-				WrapperColor.getColorFromString(backgroundColor), wrapperFont);
+				WrapperColor.stringToColor(backgroundColor), wrapperFont);
 	}
 
 	/**

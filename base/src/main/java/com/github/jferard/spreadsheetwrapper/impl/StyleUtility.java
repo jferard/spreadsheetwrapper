@@ -17,19 +17,111 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.UnknownServiceException;
+
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 
 public class StyleUtility {
+
+	/** for style string */
 	public static final String BACKGROUND_COLOR = "background-color";
+	/** for style string */
 	public static final String FONT_COLOR = "font-color";
+	/** for style string */
 	public static final String FONT_SIZE = "font-size";
+	/** for style string */
 	public static final String FONT_STYLE = "font-style";
+	/** for style string */
 	public static final String FONT_WEIGHT = "font-weight";
 
-	public String getStyleString(final WrapperCellStyle cellStyle) {
-		final StringBuilder styleStringBuilder = new StringBuilder();
+	/**
+	 * @param outputURL
+	 *            the URL of the file to write
+	 * @return the stream on the file
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public static OutputStream getOutputStream(final URL outputURL)
+			throws IOException, FileNotFoundException {
+		OutputStream outputStream;
+		final URLConnection connection = outputURL.openConnection();
+		connection.setDoOutput(true);
+		try {
+			outputStream = connection.getOutputStream();
+		} catch (final UnknownServiceException e) {
+			outputStream = new FileOutputStream(outputURL.getPath());
+		}
+		return outputStream;
+	}
+
+	private static void appendFontBold(final StringBuilder styleStringBuilder,
+			final int bold) {
+		switch (bold) {
+		case WrapperCellStyle.YES:
+			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
+			.append(":bold;");
+			break;
+		case WrapperCellStyle.NO:
+			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
+					":normal;");
+			break;
+		default:
+			break;
+
+		}
+	}
+
+	private static void appendFontItalic(
+			final StringBuilder styleStringBuilder, final int italic) {
+		switch (italic) {
+		case WrapperCellStyle.YES:
+			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+					":italic;");
+			break;
+		case WrapperCellStyle.NO:
+			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+					":normal;");
+			break;
+		default:
+			break;
+		}
+	}
+
+	private static void setFontBold(final WrapperFont font, final String value) {
+		if (value.equals("bold"))
+			font.setBold();
+		else if (value.equals("normal"))
+			font.setBold(WrapperCellStyle.NO);
+	}
+
+	private static void setFontItalic(final WrapperFont font, final String value) {
+		if (value.equals("italic"))
+			font.setItalic();
+		else if (value.equals("normal"))
+			font.setItalic(WrapperCellStyle.NO);
+	}
+
+	/**
+	 * Convert a WrapperCellStyle to a styleString (CSS-like format)
+	 *
+	 * @param cellStyle
+	 *            the cell style
+	 * @return the string to convert
+	 */
+	/**
+	 * @param cellStyle
+	 * @return
+	 */
+	public String toStyleString(final WrapperCellStyle cellStyle) {
+		final StringBuilder styleStringBuilder = new StringBuilder(20);
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
@@ -43,31 +135,8 @@ public class StyleUtility {
 		} else {
 			size = font.getSize();
 			color = font.getColor();
-			switch (font.getBold()) {
-			case WrapperCellStyle.YES:
-				styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
-						":bold;");
-				break;
-			case WrapperCellStyle.NO:
-				styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
-						":normal;");
-				break;
-			default:
-				break;
-
-			}
-			switch (font.getItalic()) {
-			case WrapperCellStyle.YES:
-				styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
-						":italic;");
-				break;
-			case WrapperCellStyle.NO:
-				styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
-						":normal;");
-				break;
-			default:
-				break;
-			}
+			StyleUtility.appendFontBold(styleStringBuilder, font.getBold());
+			StyleUtility.appendFontItalic(styleStringBuilder, font.getItalic());
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
@@ -79,39 +148,37 @@ public class StyleUtility {
 		return styleStringBuilder.toString();
 	}
 
-	public WrapperCellStyle getWrapperCellStyle(final String styleString) {
+	/**
+	 * Convert a styleString (CSS-like format) to a WrapperCellStyle
+	 *
+	 * @param styleString
+	 *            the string to convert
+	 * @return the cell style
+	 */
+	public WrapperCellStyle toWrapperCellStyle(final String styleString) {
 		final String[] styleProps = styleString.split(";");
 		WrapperColor backgroundColor = null;
-		int bold = WrapperCellStyle.DEFAULT;
-		int italic = WrapperCellStyle.DEFAULT;
-		int size = WrapperCellStyle.DEFAULT;
-		WrapperColor color = null;
+		final WrapperFont font = new WrapperFont();
 		for (final String styleProp : styleProps) {
 			final String[] entry = styleProp.split(":");
-			if (entry.length != 2)
+			if (entry.length != 2) // NOPMD by Julien on 21/11/15 10:38
 				throw new IllegalArgumentException(styleString);
 
 			final String key = entry[0];
 			final String value = entry[1];
 			if (key.equals(StyleUtility.BACKGROUND_COLOR))
-				backgroundColor = WrapperColor.getColorFromString(value);
-			else if (key.equals(StyleUtility.FONT_WEIGHT)) {
-				if (value.equals("bold"))
-					bold = WrapperCellStyle.YES;
-				else if (value.equals("normal"))
-					bold = WrapperCellStyle.NO;
-			} else if (key.equals(StyleUtility.FONT_STYLE)) {
-				if (value.equals("italic"))
-					italic = WrapperCellStyle.YES;
-				else if (value.equals("normal"))
-					italic = WrapperCellStyle.NO;
-			} else if (key.equals(StyleUtility.FONT_SIZE))
-				size = Integer.valueOf(value);
+				backgroundColor = WrapperColor.stringToColor(value);
+			else if (key.equals(StyleUtility.FONT_WEIGHT))
+				StyleUtility.setFontBold(font, value);
+			else if (key.equals(StyleUtility.FONT_STYLE))
+				StyleUtility.setFontItalic(font, value);
+			else if (key.equals(StyleUtility.FONT_SIZE))
+				font.setSize(Integer.valueOf(value));
 			else if (key.equals(StyleUtility.FONT_COLOR))
-				color = WrapperColor.getColorFromString(value);
+				font.setColor(WrapperColor.stringToColor(value));
 		}
 
-		return new WrapperCellStyle(backgroundColor, new WrapperFont(bold,
-				italic, size, color));
+		return new WrapperCellStyle(backgroundColor, font);
 	}
+
 }

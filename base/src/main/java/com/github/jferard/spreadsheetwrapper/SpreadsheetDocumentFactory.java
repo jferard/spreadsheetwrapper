@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -56,19 +55,7 @@ public interface SpreadsheetDocumentFactory {
 	 * */
 	SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException;
-
-	/**
-	 * Creates a workbook writer
-	 *
-	 * @param outputURL
-	 *            the URL to write to
-	 * @return the writer
-	 * @deprecated use create(outputStream)
-	 * */
-	@Deprecated
-	SpreadsheetDocumentWriter create(final URL outputURL)
-			throws SpreadsheetException;
+					throws SpreadsheetException;
 
 	/**
 	 * Creates a workbook reader from an existing workbook
@@ -88,18 +75,6 @@ public interface SpreadsheetDocumentFactory {
 	 * @return the reader
 	 * */
 	SpreadsheetDocumentReader openForRead(final InputStream inputStream)
-			throws SpreadsheetException;
-
-	/**
-	 * Creates a workbook reader from an existing workbook
-	 *
-	 * @param inputURL
-	 *            the URL to read from
-	 * @return the reader
-	 * @deprecated use openForRead(inputStream)
-	 */
-	@Deprecated
-	SpreadsheetDocumentReader openForRead(final URL inputURL)
 			throws SpreadsheetException;
 
 	/**
@@ -151,34 +126,5 @@ public interface SpreadsheetDocumentFactory {
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException;
-
-	/**
-	 * Open a workbook writer from a existing workbook with no output (use
-	 * saveAs). May throw UnsupportedOperationException
-	 *
-	 * @param inputURL
-	 *            the URL to read from
-	 * @return the writer
-	 * @deprecated use openCopyOf(inputURL.getInputStream())
-	 */
-	@Deprecated
-	SpreadsheetDocumentWriter openForWrite(final URL inputURL)
-			throws SpreadsheetException;
-
-	/**
-	 * Creates a workbook writer from an existing workbook
-	 *
-	 * @param inputURL
-	 *            the URL to read from
-	 * @param outputURL
-	 *            the URL to write to
-	 * @return the writer
-	 * @throws SpreadsheetException
-	 *             if can't open the writer
-	 * @deprecated use openCopyOf(stream, stream)
-	 */
-	@Deprecated
-	SpreadsheetDocumentWriter openForWrite(final URL inputURL,
-			final URL outputURL) throws SpreadsheetException;
+					throws SpreadsheetException;
 }
