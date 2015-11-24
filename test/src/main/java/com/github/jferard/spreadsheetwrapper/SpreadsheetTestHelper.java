@@ -18,12 +18,14 @@
 package com.github.jferard.spreadsheetwrapper;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 public class SpreadsheetTestHelper {
-	static int i = 0;
+	/** index for test */
+	private static int index = 0;
 
+	/**
+	 * @return the caller class name
+	 */
 	public static String getCallerClassName() {
 		final StackTraceElement[] stElements = Thread.currentThread()
 				.getStackTrace();
@@ -31,26 +33,18 @@ public class SpreadsheetTestHelper {
 		return stElement.getClassName();
 	}
 
+	/**
+	 * @param className
+	 *            the class name
+	 * @param methodName
+	 *            the method name
+	 * @param extension
+	 *            the extension
+	 * @return a file name to identify the test
+	 */
 	public static File getOutputFile(final String className,
 			final String methodName, final String extension) {
 		return new File(System.getProperty("java.io.tmpdir"), String.format(
 				"test-%s-%s.%s", className, methodName, extension));
 	}
-
-	public static URL getOutputURL(final String extension)
-			throws MalformedURLException {
-		return new URL(String.format("file:///%s/%s", System
-				.getProperty("java.io.tmpdir"), String.format("test-%s.%d.%s",
-				SpreadsheetTestHelper.getCallerClassName(),
-						SpreadsheetTestHelper.i++, extension)));
-	}
-
-	public static URL getOutputURL(final String className,
-			final String methodName, final String extension)
-			throws MalformedURLException {
-		return new URL(String.format("file:///%s/%s", System
-				.getProperty("java.io.tmpdir"), String.format("test-%s-%s.%s",
-				className, methodName, extension)));
-	}
-
 }

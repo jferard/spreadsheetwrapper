@@ -34,7 +34,7 @@ import org.junit.rules.TestName;
  */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentReaderTest {
+AbstractSpreadsheetEmptyDocumentReaderTest {
 	/** the test name */
 	@Rule
 	public TestName name = new TestName();
@@ -52,7 +52,7 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			this.sdw = this.factory.create(outputFile);
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

@@ -17,11 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsOdfdomEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+AbstractSpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

@@ -24,8 +24,7 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsSimpleodsTestProperties {
 	private static TestProperties properties = new TestProperties("ods",
-			new OdsSimpleodsDocumentFactory(Logger.getGlobal(),
-					new StyleUtility()));
+			new OdsSimpleodsDocumentFactory(Logger.getGlobal()));
 
 	public static TestProperties getProperties() {
 		return OdsSimpleodsTestProperties.properties;

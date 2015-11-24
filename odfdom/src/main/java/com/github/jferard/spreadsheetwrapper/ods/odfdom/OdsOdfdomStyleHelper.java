@@ -35,6 +35,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperFont;
  *
  */
 public class OdsOdfdomStyleHelper {
+	/** hex (#000000) -> color */
 	private final Map<String, WrapperColor> colorByHex;
 
 	/**
@@ -49,31 +50,7 @@ public class OdsOdfdomStyleHelper {
 			this.colorByHex.put(wrapperColor.toHex(), wrapperColor);
 	}
 
-	/**
-	 * @param style
-	 *            *internal* cell style
-	 * @return the new cell style format
-	 */
-	public WrapperCellStyle getCellStyle(final OdfStyle style) {
-		final String fontWeight = style
-				.getProperty(OdfTextProperties.FontWeight);
-		final String fontStyle = style.getProperty(OdfTextProperties.FontStyle);
-		final String fontSize = style.getProperty(OdfTextProperties.FontSize);
-		final String fontColor = style.getProperty(OdfTextProperties.Color);
-		final String backgroundColor = style
-				.getProperty(OdfTableCellProperties.BackgroundColor);
-
-		WrapperFont wrapperFont = null;
-		if ("bold".equals(fontWeight))
-			wrapperFont = new WrapperFont().setBold();
-		final WrapperColor wrapperColor;
-		if (this.colorByHex.containsKey(backgroundColor))
-			wrapperColor = this.colorByHex.get(backgroundColor);
-		else
-			wrapperColor = null;
-		return new WrapperCellStyle(wrapperColor, wrapperFont);
-	}
-
+	/** @return the cell style from the element */
 	public WrapperCellStyle getCellStyle(
 			final TableTableCellElementBase odfElement) {
 		final String backgroundColor = odfElement
@@ -96,7 +73,12 @@ public class OdsOdfdomStyleHelper {
 	 */
 	public Map<OdfStyleProperty, String> getProperties(
 			final WrapperCellStyle wrapperCellStyle) {
-		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
+		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>(); // NOPMD
+																									// by
+																									// Julien
+																									// on
+																									// 24/11/15
+																									// 19:24
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null
 				&& wrapperFont.getBold() == WrapperCellStyle.YES)
@@ -123,5 +105,34 @@ public class OdsOdfdomStyleHelper {
 				.getProperty(OdfTableCellProperties.BackgroundColor);
 		return String.format("font-weight:%s;background-color:%s", fontWeight,
 				backgroundColor);
+	}
+
+	/**
+	 * @param style
+	 *            *internal* cell style
+	 * @return the new cell style format
+	 */
+	public WrapperCellStyle toCellStyle(final OdfStyle style) {
+		final String fontWeight = style
+				.getProperty(OdfTextProperties.FontWeight);
+		final String fontStyle = style.getProperty(OdfTextProperties.FontStyle);
+		final String fontSize = style.getProperty(OdfTextProperties.FontSize);
+		final String fontColor = style.getProperty(OdfTextProperties.Color);
+		final String backgroundColor = style
+				.getProperty(OdfTableCellProperties.BackgroundColor);
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		if ("bold".equals(fontWeight))
+			wrapperFont.setBold();
+		if (fontSize != null)
+			wrapperFont.setSize(Integer.valueOf(fontSize));
+		if (fontColor != null && this.colorByHex.containsKey(fontColor))
+			wrapperFont.setColor(this.colorByHex.get(fontColor));
+		final WrapperColor wrapperColor;
+		if (this.colorByHex.containsKey(backgroundColor))
+			wrapperColor = this.colorByHex.get(backgroundColor);
+		else
+			wrapperColor = null;
+		return new WrapperCellStyle(wrapperColor, wrapperFont);
 	}
 }

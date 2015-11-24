@@ -78,9 +78,9 @@ class XlsPoiStyleHelper {
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
 			} catch (final IllegalArgumentException e) {
 				this.logger
-						.log(Level.WARNING,
-								"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
-								e);
+				.log(Level.WARNING,
+						"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
+						e);
 			}
 		}
 	}
@@ -100,7 +100,7 @@ class XlsPoiStyleHelper {
 				final int idx = Integer.valueOf(styleName.substring(3));
 				cellStyle = workbook.getCellStyleAt((short) idx);
 			} catch (final NumberFormatException e) { // NOPMD by Julien on
-														// 22/11/15 07:15
+				// 22/11/15 07:15
 				// do nothing
 			}
 		}
@@ -161,13 +161,13 @@ class XlsPoiStyleHelper {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color instanceof HSSFColor) // color != null
 			styleStringBuilder.append("background-color:")
-			.append(((HSSFColor) color).getHexString()).append(';');
+					.append(((HSSFColor) color).getHexString()).append(';');
 		return styleStringBuilder.toString();
 	}
 
 	/**
 	 * Create or update style
-	 * 
+	 *
 	 * @param styleName
 	 *            the name of the style
 	 * @param cellStyle

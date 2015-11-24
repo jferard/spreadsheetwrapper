@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -31,10 +33,14 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public abstract class SpreadsheetReaderCursorImplTest extends
-CursorAbstractTest {
+public abstract class AbstractSpreadsheetReaderCursorImplTest extends
+		CursorAbstractTest {
 
+	/** the factory */
 	private SpreadsheetDocumentFactory factory;
+
+	/** simple logger, static initilization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/** set the test up */
 	@Before
@@ -42,7 +48,7 @@ CursorAbstractTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL sourceURL = this.getProperties().getSourceURL();
+			final URL sourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(sourceURL);
 
 			final InputStream inputStream = sourceURL.openStream();
@@ -53,13 +59,14 @@ CursorAbstractTest {
 			this.colCount = sheet.getCellCount(0);
 			this.cursor = sheet.getNewCursor();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
 
+	/** @return properties for test */
 	protected abstract TestProperties getProperties();
 }

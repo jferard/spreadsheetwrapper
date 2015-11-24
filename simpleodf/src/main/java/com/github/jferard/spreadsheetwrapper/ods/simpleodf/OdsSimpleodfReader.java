@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
  * the sheet reader for SimpleODS.
  */
 class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -60,7 +60,7 @@ SpreadsheetReader {
 
 	/**
 	 * Creates a reader from an *internal* table
-	 * 
+	 *
 	 * @param table
 	 * @param traitStyleHelper
 	 */

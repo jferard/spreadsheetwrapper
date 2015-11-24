@@ -48,7 +48,7 @@ public class CellStyleAccessor<T> {
 
 	/**
 	 * Adds or update a style
-	 * 
+	 *
 	 * @param name
 	 *            the name
 	 * @param style

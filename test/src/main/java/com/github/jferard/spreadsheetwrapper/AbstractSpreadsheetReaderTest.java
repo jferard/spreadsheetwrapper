@@ -180,7 +180,7 @@ public abstract class AbstractSpreadsheetReaderTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getProperties().getSourceURL();
+			final URL resourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(resourceURL);
 
 			final InputStream inputStream = resourceURL.openStream();

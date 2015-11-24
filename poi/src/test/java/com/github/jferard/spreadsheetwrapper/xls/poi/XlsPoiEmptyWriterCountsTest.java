@@ -17,11 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+AbstractSpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

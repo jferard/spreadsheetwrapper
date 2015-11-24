@@ -41,7 +41,16 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
+	/** type string for boolean */
+	private static final String BOOLEAN_TYPE = "boolean";
+
+	/** type string for float */
+	private static final String FLOAT_TYPE = "float";
+
+	/** type string for string */
+	private static final String STRING_TYPE = "string";
+
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -62,7 +71,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"boolean".equals(type))
+		if (!OdsJOpenReader.BOOLEAN_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Boolean) cell.getValue();
 	}
@@ -124,7 +133,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"float".equals(type))
+		if (!OdsJOpenReader.FLOAT_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
 		if (!(value instanceof BigDecimal))
@@ -162,6 +171,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		return rowCount;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
@@ -186,9 +196,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
-		final String fw = odfElement.getAttributeValue(
+		final String fontWeight = odfElement.getAttributeValue(
 				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
-		if ("bold".equals(fw))
+		if ("bold".equals(fontWeight))
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
@@ -212,7 +222,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"string".equals(type))
+		if (!OdsJOpenReader.STRING_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (String) cell.getValue();
 	}
@@ -244,6 +254,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
 		final ODValueType valueType = cell.getValueType();
-		return valueType == null ? "string" : valueType.getName();
+		return valueType == null ? OdsJOpenReader.STRING_TYPE : valueType
+				.getName();
 	}
 }

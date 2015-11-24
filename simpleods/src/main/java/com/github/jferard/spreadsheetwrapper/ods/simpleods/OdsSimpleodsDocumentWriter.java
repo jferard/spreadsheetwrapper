@@ -38,17 +38,16 @@ import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
@@ -74,8 +73,6 @@ public class OdsSimpleodsDocumentWriter extends
 	/** for delegation */
 	private final OdsSimpleodsDocumentReader reader;
 
-	private final StyleUtility styleUtility;
-
 	/**
 	 * @param logger
 	 *            simple logger
@@ -84,11 +81,9 @@ public class OdsSimpleodsDocumentWriter extends
 	 * @param outputURL
 	 *            where to write
 	 */
-	public OdsSimpleodsDocumentWriter(final Logger logger,
-			final StyleUtility styleUtility, final OdsFile file,
+	public OdsSimpleodsDocumentWriter(final Logger logger, final OdsFile file,
 			final Output output) {
 		super(logger, output);
-		this.styleUtility = styleUtility;
 		this.reader = new OdsSimpleodsDocumentReader(file);
 		this.logger = logger;
 		this.file = file;

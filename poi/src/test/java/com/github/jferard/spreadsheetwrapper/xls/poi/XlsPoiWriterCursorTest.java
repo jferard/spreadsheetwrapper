@@ -17,10 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsPoiWriterCursorTest extends SpreadsheetWriterCursorTest {
+public class XlsPoiWriterCursorTest extends AbstractSpreadsheetWriterCursorTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

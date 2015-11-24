@@ -17,11 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument13;
 
-import com.github.jferard.spreadsheetwrapper.SpreadSheetEmptyWriterCountsTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadSheetEmptyWriterCountsTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenEmptyWriterCountsTest extends
-		SpreadSheetEmptyWriterCountsTest {
+AbstractSpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

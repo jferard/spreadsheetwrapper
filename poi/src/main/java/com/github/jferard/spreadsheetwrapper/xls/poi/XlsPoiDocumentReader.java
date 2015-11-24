@@ -43,7 +43,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
 	private static final class XlsPoiDocumentReaderTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
 
 		XlsPoiDocumentReaderTrait(final Workbook workbook,
 				final XlsPoiStyleHelper styleHelper) {
@@ -61,6 +61,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
+	private final Logger logger;
 	/** for delegation */
 	private final XlsPoiStyleHelper styleHelper;
 	/** *internal* workbook */
@@ -74,6 +75,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	 */
 	XlsPoiDocumentReader(final Logger logger, final Workbook workbook,
 			final XlsPoiStyleHelper styleHelper) {
+		this.logger = logger;
 		this.workbook = workbook;
 		this.styleHelper = styleHelper;
 		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,

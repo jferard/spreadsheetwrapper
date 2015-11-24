@@ -17,10 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsOdfdomDocumentWriterTest extends SpreadsheetDocumentWriterTest {
+public class OdsOdfdomDocumentWriterTest extends
+		AbstractSpreadsheetDocumentWriterTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

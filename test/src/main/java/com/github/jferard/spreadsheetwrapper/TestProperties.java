@@ -26,28 +26,53 @@ import java.net.URL;
  * extension of file (xls/ods) and factory used
  *
  */
+/**
+ * @author Julien
+ *
+ */
+/**
+ * @author Julien
+ *
+ */
 public class TestProperties {
-	final String extension;
-	final SpreadsheetDocumentFactory factory;
+	/** ods or xls */
+	private final String extension;
 
+	/** the factory to use */
+	private final SpreadsheetDocumentFactory factory;
+
+	/**
+	 * @param extension
+	 *            ods or xls
+	 * @param factory
+	 *            the factory to use
+	 */
 	public TestProperties(final String extension,
 			final SpreadsheetDocumentFactory factory) {
 		this.extension = extension;
 		this.factory = factory;
 	}
 
+	/**
+	 * @return th extension
+	 */
 	public String getExtension() {
 		return this.extension;
 	}
 
+	/**
+	 * @return the factory to use
+	 */
 	public SpreadsheetDocumentFactory getFactory() {
 		return this.factory;
 	}
 
-	public/*@Nullable*/URL getSourceURL() {
+	/**
+	 * @return the URL of the resource
+	 */
+	public/*@Nullable*/URL getResourceURL() {
 		final String sourceURLString = String.format(
 				"/VilleMTP_MTP_MonumentsHist.%s", this.extension);
 		return this.getClass().getResource(sourceURLString);
 	}
-
 }

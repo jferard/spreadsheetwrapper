@@ -27,63 +27,88 @@ import org.junit.Before;
 import org.junit.Test;
 
 @SuppressWarnings("unused")
-public abstract class SpreadsheetEmptyDocumentReaderTest {
+public abstract class AbstractSpreadsheetEmptyDocumentReaderTest {
 
+	/** the document reader */
+	protected SpreadsheetDocumentReader documentReader;
+
+	/** the factory */
 	protected SpreadsheetDocumentFactory factory;
-	protected SpreadsheetDocumentReader sdr;
 
+	/** set the test up */
 	@Before
 	public abstract void setUp();
 
+	/** tear the test down */
 	@After
 	public abstract void tearDown();
 
+	/** On creation, no sheet in the document */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetSheetAtIndex0() {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(0);
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet(0);
 	}
 
+	/** On creation, no sheet in the document (confirmation 1) */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetSheetAtIndex1() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(1);
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet(1);
 	}
 
+	/** On creation, no sheet in the document (confirmation -1) */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetSheetAtNegativeIndex() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet(-1);
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet(-1);
 	}
 
+	/** On creation, no sheet in the document (confirmation "Feuille1") */
 	@Test(expected = NoSuchElementException.class)
 	public final void testGetSheetByName() {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("Feuille1");
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet("Feuille1");
 	}
 
+	/** On creation, no sheet in the document (confirmation "qwerty") */
 	@Test(expected = NoSuchElementException.class)
 	public final void testGetSheetByWeirdName() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("qwerty");
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet("qwerty");
 	}
 
+	/** On creation, no sheet in the document. No cursor though. */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetSheetCursorAtIndex0() throws SpreadsheetException {
-		final SpreadsheetReaderCursor c1 = this.sdr.getNewCursorByIndex(0);
+		final SpreadsheetReaderCursor cursor = this.documentReader
+				.getNewCursorByIndex(0);
 	}
 
+	/**
+	 * On creation, no sheet in the document. No cursor though (confirmation
+	 * "Feuille1").
+	 */
 	@Test(expected = NoSuchElementException.class)
 	public final void testGetSheetCursorsByName() throws SpreadsheetException {
-		final SpreadsheetReaderCursor c2 = this.sdr
+		final SpreadsheetReaderCursor cursor = this.documentReader
 				.getNewCursorByName("Feuille1");
 	}
 
+	/** On creation, no sheet in the document (confirmation : empty list). */
 	@Test
 	public final void testGetSheetNames() {
-		final List<String> names = this.sdr.getSheetNames();
+		final List<String> names = this.documentReader.getSheetNames();
 		Assert.assertEquals(Collections.emptyList(), names);
 	}
 
+	/** On creation, no sheet in the document (confirmation : empty list). */
 	@Test(expected = NoSuchElementException.class)
 	public final void testGetSheetThatDoesntExist() throws SpreadsheetException {
-		final SpreadsheetReader sr = this.sdr.getSpreadsheet("test");
+		final SpreadsheetReader sheetReader = this.documentReader
+				.getSpreadsheet("test");
 	}
 
+	/** get the properties */
 	protected abstract TestProperties getProperties();
 }

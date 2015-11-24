@@ -17,10 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsOdfdomWriterCursorTest extends SpreadsheetWriterCursorTest {
+public class OdsOdfdomWriterCursorTest extends
+		AbstractSpreadsheetWriterCursorTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

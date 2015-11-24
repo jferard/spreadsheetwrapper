@@ -36,7 +36,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 
 abstract class AbstractOdsOdfdomDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+		AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
 

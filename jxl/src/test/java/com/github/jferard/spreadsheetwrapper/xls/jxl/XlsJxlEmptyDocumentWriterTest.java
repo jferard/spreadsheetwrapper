@@ -32,7 +32,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends
-SpreadsheetEmptyDocumentWriterTest {
+		SpreadsheetEmptyDocumentWriterTest {
 	/** set the test up */
 	@Override
 	@Before
@@ -44,7 +44,7 @@ SpreadsheetEmptyDocumentWriterTest {
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.sdw = this.factory.create(outputStream);
-			this.sdr = this.sdw;
+			this.documentReader = this.sdw;
 			Assert.assertEquals(0, this.sdw.getSheetCount());
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();

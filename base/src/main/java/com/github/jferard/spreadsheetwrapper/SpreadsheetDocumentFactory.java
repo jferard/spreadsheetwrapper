@@ -55,7 +55,7 @@ public interface SpreadsheetDocumentFactory {
 	 * */
 	SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
 
 	/**
 	 * Creates a workbook reader from an existing workbook
@@ -126,5 +126,5 @@ public interface SpreadsheetDocumentFactory {
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
 }

@@ -22,6 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -31,13 +33,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
-public abstract class SpreadsheetWriterLevel1Test extends
-		AbstractSpreadsheetReaderTest {
+public abstract class AbstractSpreadsheetWriterLevel2Test extends
+		AbstractSpreadsheetWriterLevel1Test {
+	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
-	protected SpreadsheetDocumentWriter sdw;
 
-	protected SpreadsheetWriter sw;
+	/** logger, static initialization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/** set the test up */
 	@Before
@@ -46,20 +49,20 @@ public abstract class SpreadsheetWriterLevel1Test extends
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getProperties().getSourceURL();
+			final URL resourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(resourceURL);
 
 			final InputStream inputStream = resourceURL.openStream();
-			this.sdw = this.factory.openForWrite(inputStream);
-			this.documentReader = this.sdw;
-			this.sw = this.sdw.getSpreadsheet(0);
-			this.sheetReader = this.sw;
+			this.documentWriter = this.factory.openForWrite(inputStream);
+			this.documentReader = this.documentWriter;
+			this.sheetWriter = this.documentWriter.getSpreadsheet(0);
+			this.sheetReader = this.sheetWriter;
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
-			Assert.fail();
+			this.logger.log(Level.WARNING, "", e);
+			Assert.fail(e.getMessage());
 		} catch (final IOException e) {
-			e.printStackTrace();
-			Assert.fail();
+			this.logger.log(Level.WARNING, "", e);
+			Assert.fail(e.getMessage());
 		}
 	}
 
@@ -71,67 +74,69 @@ public abstract class SpreadsheetWriterLevel1Test extends
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
-			this.sdw.saveAs(outputFile);
-			this.sdw.close();
+			this.documentWriter.saveAs(outputFile);
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public final void testCellDateToInteger() {
-		this.sw.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
-		Assert.assertEquals((Integer) 0, this.sw.getInteger(0, 1));
-		Assert.fail();
-	}
-
+	/** set cell A2 content to 0 and read this date */
 	@Test
-	public final void testCellDateZero() {
+	public final void testCellDateTo0() {
 		try {
-			final Date d = this.sw.setDate(0, 1, new Date(0)); // setDate : 0
+			final Date dateSet = this.sheetWriter.setDate(0, 1, new Date(0)); // setDate
+																				// :
+																				// 0
 			// UTC = 1 CET
-			Assert.assertEquals(d, new Date(0));
-			Assert.assertEquals(d, this.sw.getDate(0, 1)); // getDate
+			Assert.assertEquals(dateSet, new Date(0));
+			Assert.assertEquals(dateSet, this.sheetWriter.getCellContent(0, 1));
+			Assert.assertEquals(dateSet, this.sheetWriter.getDate(0, 1)); // getDate
 			// : 0 CET = 0 CET
 		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail(e.getMessage());
 		}
 	}
 
+	/** set cell A2 content to 0 and read this date as integer. FAIL */
+	@Test(expected = IllegalArgumentException.class)
+	public final void testCellDateTo0AndReadAsInteger() {
+		this.sheetWriter.setDate(0, 1, new Date(0)); // setDate : 0 UTC = 1 CET
+		Assert.assertEquals((Integer) 0, this.sheetWriter.getInteger(0, 1));
+		Assert.fail();
+	}
+
+	/** set and read boolean */
+	@Override
 	@Test
 	public void testSetBoolean() {
 		final int r = 5;
 		final int c = 6;
 		try {
-			this.sw.setBoolean(r, c, true);
-			Assert.assertEquals(true, this.sw.getBoolean(r, c));
+			this.sheetWriter.setBoolean(r, c, true);
+			Assert.assertEquals(true, this.sheetWriter.getCellContent(r, c));
 		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail(e.getMessage());
 		}
 	}
 
+	/** set and read date */
 	@Test
-	public final void testSetCellDate() {
+	public final void testSetDateTo0b() {
 		final int r = 5;
 		final int c = 6;
 		try {
-			final Date dm = new Date(1234567891);
-			final Date ds = new Date(1234567891 - Math.floorMod(1234567891,
-					1000));
-			final Date dd = new Date(1234567891 - Math.floorMod(1234567891,
-					1000 * 86400));
-
-			final Date d2 = this.sw.setDate(r, c, dm); // setDate :
-			// 0
+			final Date dateSet = this.sheetWriter.setDate(r, c, new Date(0)); // setDate
+																				// :
+																				// 0
 			// UTC = 1 CET
-			Assert.assertTrue(d2.equals(dm) || d2.equals(ds) || d2.equals(dd));
-			final Date d3 = this.sw.getDate(r, c);
-			Assert.assertEquals(d2, d3);
+			Assert.assertEquals(dateSet, new Date(0));
+			Assert.assertEquals(new Date(0), this.sheetWriter.getDate(r, c));
 		} catch (final IllegalArgumentException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail(e.getMessage());
 		}
 	}

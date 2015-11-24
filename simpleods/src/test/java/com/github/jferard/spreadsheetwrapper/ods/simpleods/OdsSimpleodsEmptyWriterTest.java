@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsSimpleodsEmptyWriterTest extends
-		AbstractSpreadsheetEmptyWriterTest {
+AbstractSpreadsheetEmptyWriterTest {
 	/** set the test up */
 	@Before
 	@Override
@@ -39,8 +39,8 @@ public class OdsSimpleodsEmptyWriterTest extends
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
-			this.sdw = this.factory.create(outputFile);
-			this.sw = this.sdw.addSheet(0, "first sheet");
+			this.documentWriter = this.factory.create(outputFile);
+			this.sheetWriter = this.documentWriter.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -52,8 +52,8 @@ public class OdsSimpleodsEmptyWriterTest extends
 	@Override
 	public void tearDown() {
 		try {
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

@@ -17,10 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterLevel2Test;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterLevel2Test;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsPoiWriterTest extends SpreadsheetWriterLevel2Test {
+public class XlsPoiWriterTest extends AbstractSpreadsheetWriterLevel2Test {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

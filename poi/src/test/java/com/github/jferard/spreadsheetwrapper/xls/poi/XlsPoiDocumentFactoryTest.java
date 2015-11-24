@@ -17,10 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.poi;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactoryTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentFactoryTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsPoiDocumentFactoryTest extends SpreadsheetDocumentFactoryTest {
+public class XlsPoiDocumentFactoryTest extends
+		AbstractSpreadsheetDocumentFactoryTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

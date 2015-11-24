@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsSimpleodfDocumentReaderTrait extends
-			AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
+	AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
 
 		OdsSimpleodfDocumentReaderTrait(
 				final OdsSimpleodfStatefulDocument sfDocument,
@@ -77,7 +77,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	 */
 	OdsSimpleodfDocumentReader(final OdsOdfdomStyleHelper styleHelper,
 			final OdsSimpleodfStatefulDocument sfDocument)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		this.styleHelper = styleHelper;
 		this.sfDocument = sfDocument;
 		// try {
@@ -102,7 +102,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
 				OdfStyleFamily.TableCell);
-		return this.styleHelper.getCellStyle(existingStyle);
+		return this.styleHelper.toCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */

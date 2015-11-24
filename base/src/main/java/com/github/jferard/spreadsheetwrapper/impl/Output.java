@@ -46,7 +46,7 @@ public class Output {
 
 	/**
 	 * Output to a file
-	 * 
+	 *
 	 * @param outputFile
 	 */
 	public Output(final/*@Nullable*/File outputFile) {
@@ -55,7 +55,7 @@ public class Output {
 
 	/**
 	 * Output to a stream
-	 * 
+	 *
 	 * @param outputStream
 	 */
 	public Output(final/*@Nullable*/OutputStream outputStream) {
@@ -64,7 +64,7 @@ public class Output {
 
 	/**
 	 * Output to file or stream
-	 * 
+	 *
 	 * @param outputStream
 	 * @param outputFile
 	 */
@@ -77,7 +77,7 @@ public class Output {
 
 	/**
 	 * Close the stream if opened
-	 * 
+	 *
 	 * @throws IOException
 	 *             if can't close the stream
 	 */
@@ -88,7 +88,7 @@ public class Output {
 
 	/**
 	 * Get or open the stream
-	 * 
+	 *
 	 * @return the stream or null if it can't be opened
 	 */
 	public/*@Nullable*/OutputStream getStream() {
@@ -97,7 +97,7 @@ public class Output {
 				if (this.outputFile != null)
 					this.outputStream = Output.getOutputStream(this.outputFile);
 			} catch (final FileNotFoundException e) { // NOPMD by Julien on
-														// 21/11/15 11:22
+				// 21/11/15 11:22
 				// do nothing
 			}
 		}

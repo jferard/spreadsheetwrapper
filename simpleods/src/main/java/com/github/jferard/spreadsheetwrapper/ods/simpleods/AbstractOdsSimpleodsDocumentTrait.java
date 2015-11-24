@@ -33,7 +33,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
  *            reader/writer
  */
 public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** the *internal* ods file */
 	private final OdsFile file;
 

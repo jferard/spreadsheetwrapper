@@ -17,10 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlWriterCursorTest extends SpreadsheetWriterCursorTest {
+public class XlsJxlWriterCursorTest extends AbstractSpreadsheetWriterCursorTest {
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

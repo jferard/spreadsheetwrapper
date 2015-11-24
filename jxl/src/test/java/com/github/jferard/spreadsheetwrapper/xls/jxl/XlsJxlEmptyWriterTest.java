@@ -44,8 +44,8 @@ public class XlsJxlEmptyWriterTest extends AbstractSpreadsheetEmptyWriterTest {
 			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
-			this.sdw = this.factory.create(outputFile);
-			this.sw = this.sdw.addSheet(0, "first sheet");
+			this.documentWriter = this.factory.create(outputFile);
+			this.sheetWriter = this.documentWriter.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
@@ -58,8 +58,8 @@ public class XlsJxlEmptyWriterTest extends AbstractSpreadsheetEmptyWriterTest {
 	public void tearDown() {
 		try {
 
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.INFO, "", e);
 			Assert.fail();

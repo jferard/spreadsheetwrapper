@@ -58,7 +58,7 @@ public class DocumentFactoryManagerTest {
 	@Test
 	@SuppressWarnings({ "unused", "PMD.DataflowAnomalyAnalysis" })
 	public final void testManager() throws SpreadsheetException,
-	IllegalArgumentException {
+			IllegalArgumentException {
 		final DocumentFactoryManager manager = new DocumentFactoryManager(
 				this.logger);
 		SpreadsheetDocumentFactory factory;

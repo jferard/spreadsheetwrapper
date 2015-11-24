@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
  * A sheet writer for simple odf sheet.
  */
 class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** format string for integers (internal : double) */
 	private static final String INT_FORMAT_STR = "#";
 
@@ -53,6 +53,7 @@ SpreadsheetWriter {
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 
+	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/** internal table */
@@ -76,16 +77,19 @@ SpreadsheetWriter {
 		return cell.getCellStyleName();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertCol(final int c) {
 		this.table.insertColumnsBefore(c, 1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertRow(final int r) {
 		this.table.insertRowsBefore(r, 1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
 		final List</*@Nullable*/Object> retValue = this.getColContents(c);
@@ -93,6 +97,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
 		final List</*@Nullable*/Object> retValue = this.getRowContents(r);
@@ -100,11 +105,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final Cell cell = this.getOrCreateSimpleCell(r, c);
@@ -165,6 +166,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {

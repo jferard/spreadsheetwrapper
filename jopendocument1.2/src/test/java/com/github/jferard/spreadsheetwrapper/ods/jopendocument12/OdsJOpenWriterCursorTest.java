@@ -17,10 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursorTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsJOpenWriterCursorTest extends SpreadsheetWriterCursorTest {
+public class OdsJOpenWriterCursorTest extends
+		AbstractSpreadsheetWriterCursorTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

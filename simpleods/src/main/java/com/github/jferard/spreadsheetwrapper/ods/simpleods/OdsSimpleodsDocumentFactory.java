@@ -35,24 +35,20 @@ import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new OdsSimpleodsDocumentFactory(logger, new StyleUtility());
+		return new OdsSimpleodsDocumentFactory(logger);
 	}
 
 	/** the logger */
 	private final Logger logger;
 
-	private final StyleUtility styleUtility;
-
 	/**
 	 * @param logger
 	 *            the logger
 	 */
-	public OdsSimpleodsDocumentFactory(final Logger logger,
-			final StyleUtility styleUtility) {
+	public OdsSimpleodsDocumentFactory(final Logger logger) {
 		this.logger = logger;
-		this.styleUtility = styleUtility;
 	}
 
 	/** {@inheritDoc} */
@@ -63,21 +59,20 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter create(final/*@Nullable*/File f)
+	public SpreadsheetDocumentWriter create(final/*@Nullable*/File file)
 			throws SpreadsheetException {
-		if (f == null)
+		if (file == null)
 			return this.create();
 
-		final OdsFile file = new OdsFile(f.getPath());
-		final Output output = new Output(f);
-		return new OdsSimpleodsDocumentWriter(this.logger, this.styleUtility,
-				file, output);
+		final OdsFile odsFile = new OdsFile(file.getPath());
+		final Output output = new Output(file);
+		return new OdsSimpleodsDocumentWriter(this.logger, odsFile, output);
 	}
 
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -97,7 +92,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 }

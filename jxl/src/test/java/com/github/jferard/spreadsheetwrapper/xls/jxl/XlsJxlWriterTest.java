@@ -29,12 +29,12 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterLevel2Test;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterLevel2Test;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
+public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test {
 	/** set the test up */
 	@Before
 	@Override
@@ -42,7 +42,7 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL resourceURL = this.getProperties().getSourceURL();
+			final URL resourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(resourceURL);
 
 			final InputStream inputStream = resourceURL.openStream();
@@ -50,10 +50,10 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
-			this.sdw = this.factory.openForWrite(inputStream, outputStream);
-			this.documentReader = this.sdw;
-			this.sw = this.sdw.getSpreadsheet(0);
-			this.sheetReader = this.sw;
+			this.documentWriter = this.factory.openForWrite(inputStream, outputStream);
+			this.documentReader = this.documentWriter;
+			this.sheetWriter = this.documentWriter.getSpreadsheet(0);
+			this.sheetReader = this.sheetWriter;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -68,8 +68,8 @@ public class XlsJxlWriterTest extends SpreadsheetWriterLevel2Test {
 	@Override
 	public void tearDown() {
 		try {
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();

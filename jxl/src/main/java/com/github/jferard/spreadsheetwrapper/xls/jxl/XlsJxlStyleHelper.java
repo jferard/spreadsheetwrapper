@@ -101,7 +101,7 @@ public class XlsJxlStyleHelper {
 
 	/**
 	 * Create or update a cell style
-	 * 
+	 *
 	 * @param styleName
 	 *            the name of the style
 	 * @param cellFormat
@@ -134,7 +134,7 @@ public class XlsJxlStyleHelper {
 				if (jxlColor != null)
 					cellFormat.setBackground(jxlColor);
 			}
-		} catch (final WriteException e) {
+		} catch (final WriteException e) { // NOPMD by Julien on 24/11/15 19:48
 			// do nothing
 		}
 		return cellFormat;

@@ -31,12 +31,13 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
+public class XlsJxlDocumentWriterTest extends
+		AbstractSpreadsheetDocumentWriterTest {
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -47,7 +48,7 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final URL sourceURL = this.getProperties().getSourceURL();
+			final URL sourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(sourceURL);
 
 			final InputStream inputStream = sourceURL.openStream();
@@ -55,10 +56,11 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
-			this.sdw = this.factory.openForWrite(inputStream, outputStream);
-			this.documentReader = this.sdw;
-			Assert.assertEquals(1, this.sdw.getSheetCount());
-			this.sw = this.sdw.getSpreadsheet(0);
+			this.documentWriter = this.factory.openForWrite(inputStream,
+					outputStream);
+			this.documentReader = this.documentWriter;
+			Assert.assertEquals(1, this.documentWriter.getSheetCount());
+			this.sheetWriter = this.documentWriter.getSpreadsheet(0);
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.INFO, "", e);
 			Assert.fail();
@@ -73,8 +75,8 @@ public class XlsJxlDocumentWriterTest extends SpreadsheetDocumentWriterTest {
 	@After
 	public void tearDown() {
 		try {
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.INFO, "", e);
 			Assert.fail();

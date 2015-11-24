@@ -50,12 +50,12 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 
 		/**
 		 * @param workbook

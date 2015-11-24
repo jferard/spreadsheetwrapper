@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsJxlReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)
 			return ((DateCell) cell).getDate();
@@ -89,11 +89,11 @@ SpreadsheetReader {
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Object getCellContent(final int r, final int c) { // NOPMD
-																			// by
-																			// Julien
-																			// on
-																			// 22/11/15
-																			// 06:30
+		// by
+		// Julien
+		// on
+		// 22/11/15
+		// 06:30
 		final/*@Nullable*/Cell cell = this.getJxlCell(r, c);
 		if (cell == null)
 			return null;
@@ -172,8 +172,8 @@ SpreadsheetReader {
 		if (cell instanceof FormulaCell) // read
 			try {
 				formula = ((FormulaCell) cell).getFormula(); // NOPMD by Julien
-																// on 22/11/15
-																// 06:28
+				// on 22/11/15
+				// 06:28
 			} catch (final FormulaException e) {
 				throw new IllegalArgumentException(e);
 			}

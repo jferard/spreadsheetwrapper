@@ -23,12 +23,18 @@ import org.junit.Test;
 import com.github.jferard.spreadsheetwrapper.Cursor;
 import com.github.jferard.spreadsheetwrapper.Cursor.Move;
 
-public abstract class CursorAbstractTest {
+public class CursorAbstractTest {
 
+	/** the column count */
 	protected int colCount;
+
+	/** the cursor */
 	protected Cursor cursor;
+
+	/** the row count */
 	protected int rowCount;
 
+	/** A1 + left = fail, A1 + up = fail, A1 + right = B1, A1 + down = A2 */
 	@Test
 	public final void testCantGoLeftOrUpFromFirstCell() {
 		Assert.assertEquals(Move.JUMP, this.cursor.first());
@@ -48,6 +54,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(1, this.cursor.getC());
 	}
 
+	/** RC + right = fail, RC + down = fail, RC + left= RC-1, RC + up = R-1C */
 	@Test
 	public final void testCantGoRightOrownFromLastCell() {
 		Assert.assertEquals(Move.JUMP, this.cursor.last());
@@ -67,6 +74,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(this.colCount - 2, this.cursor.getC());
 	}
 
+	/** A1 + next + next + previous = B1 */
 	@Test
 	public final void testFirstIsA1NextIsA2() {
 		Assert.assertEquals(Move.JUMP, this.cursor.first());
@@ -79,6 +87,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(1, this.cursor.getC());
 	}
 
+	/** cursor.set + various incorrect values */
 	@Test
 	public final void testIncorrectCoordinatesFail() {
 		Assert.assertEquals(Move.FAIL, this.cursor.set(-1, 2));
@@ -87,6 +96,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(Move.FAIL, this.cursor.set(1, this.colCount * 2));
 	}
 
+	/** RC + crlf = fail */
 	@Test
 	public final void testNoCRLFFromLastCell() {
 		Assert.assertEquals(Move.JUMP, this.cursor.last());
@@ -99,6 +109,7 @@ public abstract class CursorAbstractTest {
 		// col
 	}
 
+	/** A1 + previous = fail */
 	@Test
 	public final void testNoPreviousFromlFirstCell() {
 		Assert.assertEquals(Move.JUMP, this.cursor.first());
@@ -109,6 +120,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(0, this.cursor.getC()); // no reset of the col
 	}
 
+	/** a rotation around a cell */
 	@Test
 	public final void testRotation() {
 		final int r = this.rowCount / 2;
@@ -136,6 +148,7 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(c, this.cursor.getC());
 	}
 
+	/** a line jump with next */
 	@Test
 	public final void testRowEnd() {
 		Assert.assertEquals(Move.JUMP, this.cursor.set(0, this.colCount - 1));
@@ -154,5 +167,4 @@ public abstract class CursorAbstractTest {
 		Assert.assertEquals(1, this.cursor.getR());
 		Assert.assertEquals(0, this.cursor.getC());
 	}
-
 }
