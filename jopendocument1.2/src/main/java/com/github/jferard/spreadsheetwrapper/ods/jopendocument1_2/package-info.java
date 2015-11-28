@@ -22,4 +22,4 @@
  * @author Julien
  *
  */
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2;

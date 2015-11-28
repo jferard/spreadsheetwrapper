@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument12;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2;
 
 import java.util.ArrayList;
 import java.util.List;
