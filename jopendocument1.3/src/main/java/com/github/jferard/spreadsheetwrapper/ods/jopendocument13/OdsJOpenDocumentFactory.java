@@ -63,7 +63,6 @@ SpreadsheetDocumentFactory {
 	 */
 	public OdsJOpenDocumentFactory(final Logger logger,
 			final OdsJOpenStyleHelper styleHelper) {
-		super(logger);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}

@@ -38,6 +38,8 @@ public abstract class AbstractXlsPoiDocumentTrait<T> extends
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
 	protected/*@Nullable*/CellStyle dateCellStyle;
+	
+	/** the style helper */
 	protected XlsPoiStyleHelper traitStyleHelper;
 
 	/**

@@ -64,7 +64,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 			this.documentWriter = this.factory.create();
 			this.sheetWriter = this.documentWriter.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
-			this.logger.log(Level.INFO, "", e);
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}

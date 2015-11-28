@@ -62,11 +62,13 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 		}
 	}
 
+	/** internal styles */
 	private final OdfOfficeStyles documentStyles;
 	/** for delegation */
 	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> documentTrait;
 	/** *internal* workbook */
 	private final OdsSimpleodfStatefulDocument sfDocument;
+	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**

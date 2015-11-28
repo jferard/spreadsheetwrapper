@@ -55,6 +55,9 @@ public enum WrapperColor {
 			"VIOLET2", "#800080"), WHITE("WHITE", "#ffffff"), YELLOW("YELLOW",
 			"#ffff00"), YELLOW2("YELLOW2", "#ffff00");
 
+	/** the start char for hex strings */ 
+	private static final char HASH_FOR_HEX = '#';
+
 	/**
 	 * @param colorString
 	 *            #000000
@@ -66,7 +69,7 @@ public enum WrapperColor {
 			return null;
 
 		WrapperColor wrapperColor = null;
-		if (colorString.charAt(0) == '#') {
+		if (colorString.charAt(0) == HASH_FOR_HEX) {
 			int minDistance = 1024;
 			for (final WrapperColor otherWrapperColor : WrapperColor.values()) {
 				final String otherColorAsHex = otherWrapperColor.toHex();

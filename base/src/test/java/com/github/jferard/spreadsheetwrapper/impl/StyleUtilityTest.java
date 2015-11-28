@@ -7,8 +7,12 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 
+/**
+ * Test class for style
+ */
 public class StyleUtilityTest {
 
+	/** the single test */
 	@SuppressWarnings("static-method")
 	@Test
 	public final void test() {

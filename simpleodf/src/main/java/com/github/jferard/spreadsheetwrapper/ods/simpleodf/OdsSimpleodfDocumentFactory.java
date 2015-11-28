@@ -64,7 +64,6 @@ public class OdsSimpleodfDocumentFactory extends
 	 */
 	public OdsSimpleodfDocumentFactory(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper) {
-		super(logger);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}

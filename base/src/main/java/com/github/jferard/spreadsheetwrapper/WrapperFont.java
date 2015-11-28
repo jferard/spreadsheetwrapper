@@ -156,7 +156,7 @@ public class WrapperFont {
 		return this;
 	}
 
-	/*
+	/**
 	 * sets font to italic
 	 * @return this (fluent)
 	 */

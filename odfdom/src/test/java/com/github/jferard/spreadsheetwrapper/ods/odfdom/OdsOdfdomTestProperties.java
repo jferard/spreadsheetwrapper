@@ -21,11 +21,19 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsOdfdomTestProperties {
+public final class OdsOdfdomTestProperties {
+	private OdsOdfdomTestProperties() {}
+	
+	/**
+	 * create the properties 
+	 */
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsOdfdomDocumentFactory(Logger.getGlobal(),
 					new OdsOdfdomStyleHelper()));
 
+	/**
+	 * @return the properties for test classes
+	 */
 	public static TestProperties getProperties() {
 		return OdsOdfdomTestProperties.properties;
 	}

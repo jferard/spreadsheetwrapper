@@ -82,8 +82,6 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		}
 	}
 
-	/** a map styleName -> internal cell style */
-	private final Map<String, CellStyle> cellStyleByName;
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetWriter> documentTrait;
 
@@ -111,10 +109,9 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		this.logger = logger;
 		this.workbook = workbook;
 		this.styleHelper = styleHelper;
-		this.reader = new XlsPoiDocumentReader(logger, workbook, styleHelper);
+		this.reader = new XlsPoiDocumentReader(workbook, styleHelper);
 		final CreationHelper createHelper = this.workbook.getCreationHelper();
 		final CellStyle dateCellStyle = this.workbook.createCellStyle();
-		this.cellStyleByName = new HashMap<String, CellStyle>();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
 		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
@@ -214,7 +211,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+		final CellStyle cellStyle = this.styleHelper.toCellStyle(
 				this.workbook, wrapperCellStyle);
 		this.styleHelper.putCellStyle(styleName, cellStyle);
 		return true;

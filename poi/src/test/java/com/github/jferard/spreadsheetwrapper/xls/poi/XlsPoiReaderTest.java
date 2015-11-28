@@ -21,6 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetReaderTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiReaderTest extends AbstractSpreadsheetReaderTest {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

@@ -31,7 +31,6 @@ import jxl.write.Label;
 import jxl.write.WritableCell;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
@@ -68,17 +67,13 @@ SpreadsheetWriter {
 	/** helper for style */
 	private final XlsJxlStyleHelper styleHelper;
 
-	/** internal workbook */
-	private final WritableWorkbook workbook;
-
 	/**
 	 * @param sheet
 	 *            *internal* sheet
 	 */
-	public XlsJxlWriter(final WritableWorkbook workbook,
-			final WritableSheet sheet, final XlsJxlStyleHelper styleHelper) {
+	public XlsJxlWriter(final WritableSheet sheet,
+			final XlsJxlStyleHelper styleHelper) {
 		super(new XlsJxlReader(sheet, styleHelper));
-		this.workbook = workbook;
 		this.sheet = sheet;
 		this.styleHelper = styleHelper;
 		this.curR = -1;

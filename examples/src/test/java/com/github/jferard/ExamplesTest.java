@@ -17,12 +17,17 @@
  *******************************************************************************/
 package com.github.jferard;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import com.github.jferard.spreadsheetwrapper.DocumentFactoryManager;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+
 /**
- * Hello world!
- *
+ * Unit test for Examples.
  */
-public class App {
-	public static void main(final String[] args) {
-		System.out.println("Hello World!");
-	}
+public class ExamplesTest {
 }

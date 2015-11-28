@@ -19,10 +19,9 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.io.File;
 
-public class SpreadsheetTestHelper {
-	/** index for test */
-	private static int index = 0;
-
+public final class SpreadsheetTestHelper {
+	private SpreadsheetTestHelper() {}
+	
 	/**
 	 * @return the caller class name
 	 */

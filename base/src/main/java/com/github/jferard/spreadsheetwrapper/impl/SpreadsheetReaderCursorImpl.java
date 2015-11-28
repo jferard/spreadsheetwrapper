@@ -184,7 +184,7 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 
 	/** {@inheritDoc} */
 	@Override
-	public Move up() {
+	public Move up() { // NOPMD by Julien on 27/11/15 20:48
 		return this.cursor.up();
 	}
 }

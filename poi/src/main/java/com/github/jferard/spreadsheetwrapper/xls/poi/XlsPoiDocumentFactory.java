@@ -41,18 +41,28 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 implements SpreadsheetDocumentFactory {
+	/**
+	 * static function for the manager
+	 * @param logger the logger
+	 * @return a factory
+	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new XlsPoiDocumentFactory(logger, new XlsPoiStyleHelper(
 				new CellStyleAccessor<CellStyle>()));
 	}
 
+	/** the logger */
 	private final Logger logger;
 
+	/** the style helper */
 	private final XlsPoiStyleHelper styleHelper;
 
+	/**
+	 * @param logger the logger
+	 * @param styleHelper the style helper
+	 */
 	public XlsPoiDocumentFactory(final Logger logger,
 			final XlsPoiStyleHelper styleHelper) {
-		super(logger);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}
@@ -61,8 +71,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
-		return new XlsPoiDocumentReader(this.logger, sfWorkbook.getObject(),
-				this.styleHelper);
+		return new XlsPoiDocumentReader(sfWorkbook.getObject(), this.styleHelper);
 	}
 
 	/** {@inheritDoc} */
@@ -94,7 +103,6 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	protected Workbook newSpreadsheetDocument(
 			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
-		final Workbook workbook = new HSSFWorkbook();
-		return workbook;
+		return new HSSFWorkbook();
 	}
 }

@@ -21,6 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlWriterCursorTest extends AbstractSpreadsheetWriterCursorTest {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

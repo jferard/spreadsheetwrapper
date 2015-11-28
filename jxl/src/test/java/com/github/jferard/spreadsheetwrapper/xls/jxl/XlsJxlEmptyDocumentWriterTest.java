@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -31,8 +33,11 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlEmptyDocumentWriterTest extends
-		SpreadsheetEmptyDocumentWriterTest {
+public class XlsJxlEmptyDocumentWriterTest extends // NOPMD by Julien on 27/11/15 20:38
+SpreadsheetEmptyDocumentWriterTest {
+	/** the logger */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+
 	/** set the test up */
 	@Override
 	@Before
@@ -47,10 +52,10 @@ public class XlsJxlEmptyDocumentWriterTest extends
 			this.documentReader = this.sdw;
 			Assert.assertEquals(0, this.sdw.getSheetCount());
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
@@ -64,11 +69,12 @@ public class XlsJxlEmptyDocumentWriterTest extends
 			this.sdw.save();
 			this.sdw.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsJxlTestProperties.getProperties();

@@ -86,6 +86,6 @@ AbstractSpreadsheetEmptyDocumentReaderTest {
 
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetNonExistingSheet() {
-		final SpreadsheetWriter spreadsheet = this.sdw.getSpreadsheet(0);
+		this.sdw.getSpreadsheet(0);
 	}
 }

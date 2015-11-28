@@ -20,7 +20,7 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentReaderTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsPoiDocumentReaderTest extends
+public class XlsPoiDocumentReaderTest extends // NOPMD by Julien on 27/11/15 20:36
 AbstractSpreadsheetDocumentReaderTest {
 	/** {@inheritDoc} */
 	@Override

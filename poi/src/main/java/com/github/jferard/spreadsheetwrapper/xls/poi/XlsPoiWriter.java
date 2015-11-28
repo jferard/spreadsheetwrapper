@@ -170,7 +170,7 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final Cell poiCell = this.getOrCreatePOICell(r, c);
-		final CellStyle cellStyle = this.styleHelper.getCellStyle(
+		final CellStyle cellStyle = this.styleHelper.toCellStyle(
 				this.sheet.getWorkbook(), wrapperCellStyle);
 		poiCell.setCellStyle(cellStyle);
 		return true;

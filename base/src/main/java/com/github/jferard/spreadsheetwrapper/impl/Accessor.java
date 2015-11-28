@@ -116,7 +116,7 @@ public class Accessor</*@NonNull*/T> {
 		this.elementByName.put(elementName, element);
 	}
 
-	/* {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public String toString() {
 		assert this.elementByName.size() == this.elements.size();

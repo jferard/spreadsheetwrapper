@@ -163,11 +163,13 @@ SpreadsheetReader {
 		return this.table.getRows().size();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getStyle(final int r, final int c) {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final TableCell simpleCell = this.getSimpleCell(r, c);

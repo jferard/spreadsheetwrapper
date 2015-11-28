@@ -24,11 +24,19 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
-public class XlsPoiTestProperties {
+public final class XlsPoiTestProperties {
+	private XlsPoiTestProperties() {}
+	
+	/**
+	 * create the properties 
+	 */
 	private static TestProperties properties = new TestProperties("xls",
 			new XlsPoiDocumentFactory(Logger.getGlobal(),
 					new XlsPoiStyleHelper(new CellStyleAccessor<CellStyle>())));
 
+	/**
+	 * @return the properties for test classes
+	 */
 	public static TestProperties getProperties() {
 		return XlsPoiTestProperties.properties;
 	}

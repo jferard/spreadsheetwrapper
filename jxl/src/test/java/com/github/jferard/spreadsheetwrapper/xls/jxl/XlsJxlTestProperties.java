@@ -21,10 +21,18 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlTestProperties {
+public final class XlsJxlTestProperties {
+	private XlsJxlTestProperties() {} 
+	
+	/**
+	 * create the properties
+	 */
 	private static TestProperties properties = new TestProperties("xls",
 			XlsJxlDocumentFactory.create(Logger.getGlobal()));
 
+	/**
+	 * @return properties for class tests
+	 */
 	public static TestProperties getProperties() {
 		return XlsJxlTestProperties.properties;
 	}

@@ -111,7 +111,7 @@ public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> 
 	 * @throws Exception
 	 *             if odftoolkit throws an exception !
 	 */
-	public void rawSave(final OutputStream outputStream) throws Exception {
+	public void rawSave(final OutputStream outputStream) throws Exception { // NOPMD by Julien on 27/11/15 20:36
 		this.object.save(outputStream);
 	}
 

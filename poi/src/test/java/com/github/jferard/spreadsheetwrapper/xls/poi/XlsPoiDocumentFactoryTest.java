@@ -22,6 +22,7 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiDocumentFactoryTest extends
 		AbstractSpreadsheetDocumentFactoryTest {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return XlsPoiTestProperties.getProperties();

@@ -68,7 +68,7 @@ implements SpreadsheetDocumentWriter {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
 			final SpreadsheetWriter reader = new XlsJxlWriter(
-					this.writableWorkbook, sheet, styleHelper);
+					sheet, styleHelper);
 			this.accessor.put(name, n, reader);
 		}
 	}
@@ -82,8 +82,7 @@ implements SpreadsheetDocumentWriter {
 			throw new IllegalArgumentException();
 		final WritableSheet createSheet = this.writableWorkbook.createSheet(
 				sheetName, index);
-		return new XlsJxlWriter(this.writableWorkbook, createSheet,
-				this.styleHelper);
+		return new XlsJxlWriter(createSheet, this.styleHelper);
 	}
 
 	/** {@inheritDoc} */
@@ -156,8 +155,7 @@ implements SpreadsheetDocumentWriter {
 						"No sheet at position %d", index));
 
 			final WritableSheet sheet = sheets[index];
-			spreadsheet = new XlsJxlWriter(this.writableWorkbook, sheet,
-					this.styleHelper);
+			spreadsheet = new XlsJxlWriter(sheet, this.styleHelper);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
 		return spreadsheet;
@@ -209,8 +207,7 @@ implements SpreadsheetDocumentWriter {
 			final WritableSheet sheet = sheets[n];
 
 			if (sheet.getName().equals(sheetName)) {
-				spreadsheet = new XlsJxlWriter(this.writableWorkbook, sheet,
-						this.styleHelper);
+				spreadsheet = new XlsJxlWriter(sheet, this.styleHelper);
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;
 			}

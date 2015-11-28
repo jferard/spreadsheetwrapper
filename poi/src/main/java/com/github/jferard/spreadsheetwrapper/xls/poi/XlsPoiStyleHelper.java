@@ -47,16 +47,13 @@ class XlsPoiStyleHelper {
 	/** wrapper -> internal */
 	private final Map<WrapperColor, HSSFColor> hssfColorByColor;
 
-	/** simple logger */
-	private final Logger logger;
-
 	/**
 	 * @param cellStyleAccessor
 	 */
 	public XlsPoiStyleHelper(
 			final CellStyleAccessor<CellStyle> cellStyleAccessor) {
 		this.cellStyleAccessor = cellStyleAccessor;
-		this.logger = Logger.getLogger(this.getClass().getName());
+		final Logger logger = Logger.getLogger(this.getClass().getName());
 		final WrapperColor[] colors = WrapperColor.values();
 		this.hssfColorByColor = new HashMap<WrapperColor, HSSFColor>(
 				colors.length);
@@ -77,7 +74,7 @@ class XlsPoiStyleHelper {
 				this.hssfColorByColor.put(wrapperColor, hssfColor);
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
 			} catch (final IllegalArgumentException e) {
-				this.logger
+				logger
 				.log(Level.WARNING,
 						"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
 						e);
@@ -107,7 +104,12 @@ class XlsPoiStyleHelper {
 		return cellStyle;
 	}
 
-	public CellStyle getCellStyle(final Workbook workbook,
+	/**
+	 * @param workbook workbook for conversion
+	 * @param wrapperCellStyle the cell style
+	 * @return the internal cell style
+	 */
+	public CellStyle toCellStyle(final Workbook workbook,
 			final WrapperCellStyle wrapperCellStyle) {
 		final CellStyle cellStyle = workbook.createCellStyle();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();

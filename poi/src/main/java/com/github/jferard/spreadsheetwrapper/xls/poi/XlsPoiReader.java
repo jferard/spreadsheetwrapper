@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.xls.poi;
+package com.github.jferard.spreadsheetwrapper.xls.poi; // NOPMD by Julien on 28/11/15 07:24
 
 import java.util.Date;
 
@@ -41,6 +41,7 @@ SpreadsheetReader {
 	private/*@Nullable*/Row curRow;
 	/** *internal* sheet */
 	private final Sheet sheet;
+	/** the style helper */
 	private final XlsPoiStyleHelper styleHelper;
 
 	/**

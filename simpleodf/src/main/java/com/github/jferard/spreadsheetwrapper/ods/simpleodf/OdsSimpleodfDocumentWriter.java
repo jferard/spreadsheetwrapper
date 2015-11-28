@@ -72,6 +72,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		}
 	}
 
+	/** internal styles */
 	private final OdfOfficeStyles documentStyles;
 
 	/** for delegation */
@@ -85,6 +86,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** *internal* workbook */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
+	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**
@@ -147,6 +149,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		this.reader.close();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		return this.reader.getCellStyle(styleName);

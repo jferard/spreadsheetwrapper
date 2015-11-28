@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.ods.odfdom; // NOPMD by Julien on 27/11/15 20:37
 
 import java.util.Date;
 
@@ -37,6 +37,13 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 SpreadsheetReader {
+	/** type name for string cells */
+	private static final String STRING_TYPE = "string";
+	/** type name for boolean cells */
+	private static final String BOOLEAN_TYPE = "boolean";
+	/** type name for float cells */
+	private static final String FLOAT_TYPE = "float";
+
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
@@ -107,7 +114,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!"boolean".equals(cell.getValueType()))
+		if (!BOOLEAN_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
 	}
@@ -131,18 +138,18 @@ SpreadsheetReader {
 		// "string" or "time".
 		if (type == null)
 			result = null;
-		else if (type.equals("boolean"))
+		else if (type.equals(BOOLEAN_TYPE))
 			result = cell.getBooleanValue();
 		else if (type.equals("date") || type.equals("time"))
 			result = OdsOdfdomReader.getDate(cell);
-		else if (type.equals("float") || type.equals("currency")
+		else if (type.equals(FLOAT_TYPE) || type.equals("currency")
 				|| type.equals("percentage")) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
 			else
 				result = Double.valueOf(value);
-		} else if (type.equals("string"))
+		} else if (type.equals(STRING_TYPE))
 			result = cell.getStringValue();
 		else
 			throw new IllegalArgumentException(String.format(
@@ -183,7 +190,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!"float".equals(cell.getValueType()))
+		if (!FLOAT_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
 	}
@@ -260,7 +267,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!"string".equals(cell.getValueType()))
+		if (!STRING_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
 	}

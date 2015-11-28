@@ -45,6 +45,11 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 public class OdsJOpenDocumentFactory extends
 AbstractDocumentFactory<SpreadSheet> implements
 SpreadsheetDocumentFactory {
+	/**
+	 * static method for the manager
+	 * @param logger the logger
+	 * @return a factory
+	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsJOpenDocumentFactory(logger, new OdsJOpenStyleHelper());
 	}
@@ -63,7 +68,6 @@ SpreadsheetDocumentFactory {
 	 */
 	public OdsJOpenDocumentFactory(final Logger logger,
 			final OdsJOpenStyleHelper styleHelper) {
-		super(logger);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}

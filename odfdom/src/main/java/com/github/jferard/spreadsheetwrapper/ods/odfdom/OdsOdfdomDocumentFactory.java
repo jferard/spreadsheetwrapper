@@ -37,13 +37,19 @@ import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 public class OdsOdfdomDocumentFactory extends
 AbstractDocumentFactory<OdfSpreadsheetDocument> implements
 SpreadsheetDocumentFactory {
+	/**
+	 * static function for the manager
+	 * @param logger the logger
+	 * @return a factory
+	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsOdfdomDocumentFactory(logger, new OdsOdfdomStyleHelper());
 	}
 
 	/** simple logger */
 	private final Logger logger;
-
+	
+	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**
@@ -52,7 +58,6 @@ SpreadsheetDocumentFactory {
 	 */
 	public OdsOdfdomDocumentFactory(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper) {
-		super(logger);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}
@@ -79,6 +84,7 @@ SpreadsheetDocumentFactory {
 				sfDocument.getObject(), output);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected OdfSpreadsheetDocument loadSpreadsheetDocument(
 			final InputStream inputStream) throws SpreadsheetException {
@@ -91,6 +97,7 @@ SpreadsheetDocumentFactory {
 		return document;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)

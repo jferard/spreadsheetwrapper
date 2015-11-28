@@ -83,6 +83,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
 		throw new UnsupportedOperationException();
@@ -90,8 +91,6 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 
 	/**
 	 * {@inheritDoc}
-	 *
-	 * @return
 	 */
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
@@ -124,7 +123,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	public Double setDouble(final int r, final int c, final Number value) {
 		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		final double retValue = value.doubleValue();
-		cell.setValue(Double.valueOf(retValue).toString());
+		cell.setValue(Double.toString(retValue));
 		cell.setValueType(TableCell.STYLE_FLOAT);
 		return retValue;
 	}
@@ -148,11 +147,12 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final TableCell cell = this.getOrCreateSimpleCell(r, c);
 		final int retValue = value.intValue();
-		cell.setValue(Integer.valueOf(retValue).toString());
+		cell.setValue(Integer.toString(retValue));
 		cell.setValueType(TableCell.STYLE_FLOAT);
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {

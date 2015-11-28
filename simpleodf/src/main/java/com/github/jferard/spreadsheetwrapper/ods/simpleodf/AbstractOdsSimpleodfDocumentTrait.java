@@ -35,9 +35,9 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 /*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
- */
+*/
 
-public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
+abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		AbstractSpreadsheetDocumentTrait<T> {
 	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
@@ -60,6 +60,8 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
+	
+	/** the style helper */
 	protected OdsOdfdomStyleHelper traitStyleHelper;
 
 	/**
@@ -84,6 +86,10 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		}
 	}
 
+	/**
+	 * @param index index of the spreadsheet in the document
+	 * @return the spreadsheet reader or writer
+	 */
 	public T getSpreadsheet(final int index) {
 		final T spreadsheet;
 		if (this.accessor.hasByIndex(index))
@@ -101,6 +107,9 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
+	/**
+	 * @return a list of internal tables
+	 */
 	/*>>> @RequiresNonNull("sfDocument")*/
 	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this*/) {
 		final List<Table> tables;
@@ -141,6 +150,10 @@ public abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 		return spreadsheet;
 	}
 
+	/**
+	 * @param table internal table
+	 * @return reader or writer sheet
+	 */
 	/*@RequiresNonNull("traitStyleHelper")*/
 	protected abstract T createNew(
 			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this, */final Table table);

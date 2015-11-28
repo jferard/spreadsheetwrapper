@@ -20,12 +20,19 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
-public class OdsSimpleodsTestProperties {
+public final class OdsSimpleodsTestProperties {
+	private OdsSimpleodsTestProperties() {}
+	
+	/**
+	 * create the properties 
+	 */
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsSimpleodsDocumentFactory(Logger.getGlobal()));
 
+	/**
+	 * @return the properties for test classes
+	 */
 	public static TestProperties getProperties() {
 		return OdsSimpleodsTestProperties.properties;
 	}

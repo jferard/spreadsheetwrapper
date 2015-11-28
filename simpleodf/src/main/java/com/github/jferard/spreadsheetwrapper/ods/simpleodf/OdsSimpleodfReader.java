@@ -53,6 +53,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 	/** current row, null if none */
 	private/*@Nullable*/Row curRow;
 
+	/** the style helper */ 
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/** the *internal* table */

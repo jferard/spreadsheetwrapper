@@ -37,18 +37,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  */
 public abstract class AbstractDocumentFactory<R> extends
 AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
-	/** the logger */
-	private final Logger logger;
-
-	/**
-	 * @param logger
-	 *            the logger
-	 */
-	protected AbstractDocumentFactory(final Logger logger) {
-		super();
-		this.logger = logger;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter create(

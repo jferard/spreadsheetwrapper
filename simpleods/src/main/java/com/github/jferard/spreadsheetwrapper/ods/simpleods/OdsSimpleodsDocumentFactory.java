@@ -30,12 +30,16 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.Output;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 implements SpreadsheetDocumentFactory {
+	/**
+	 * static fuction for the manager
+	 * @param logger the logger
+	 * @return the factory
+	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodsDocumentFactory(logger);
 	}
@@ -69,6 +73,7 @@ implements SpreadsheetDocumentFactory {
 		return new OdsSimpleodsDocumentWriter(this.logger, odsFile, output);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
@@ -76,18 +81,21 @@ implements SpreadsheetDocumentFactory {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
 			final File outputFile) throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,

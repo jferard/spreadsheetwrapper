@@ -163,17 +163,17 @@ public abstract class AbstractSpreadsheetDocumentReaderTest {
 	@Test
 	public final void testSheetByName() {
 		try {
-			final SpreadsheetReader sr = this.documentReader
+			final SpreadsheetReader sheetReader = this.documentReader
 					.getSpreadsheet(AbstractSpreadsheetDocumentReaderTest.SHEET_NAME);
 			Assert.assertEquals(
 					AbstractSpreadsheetDocumentReaderTest.SHEET_NAME,
-					sr.getName());
+					sheetReader.getName());
 			Assert.assertEquals(
 					AbstractSpreadsheetDocumentReaderTest.ROW_COUNT,
-					sr.getRowCount());
+					sheetReader.getRowCount());
 			Assert.assertEquals(
 					AbstractSpreadsheetDocumentReaderTest.COL_COUNT,
-					sr.getCellCount(0));
+					sheetReader.getCellCount(0));
 		} catch (final NoSuchElementException e) {
 			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();

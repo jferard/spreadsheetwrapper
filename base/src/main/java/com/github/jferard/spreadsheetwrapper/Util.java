@@ -5,7 +5,8 @@ package com.github.jferard.spreadsheetwrapper;
 /**
  * Tiny Util class.
  */
-public class Util {
+public final class Util {
+	private Util() {}
 	/**
 	 * @param object
 	 * @param otherObject

@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -61,21 +60,18 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 
 	/** for delegation */
 	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
-	private final Logger logger;
+	
 	/** for delegation */
 	private final XlsPoiStyleHelper styleHelper;
 	/** *internal* workbook */
 	private final Workbook workbook;
 
 	/**
-	 * @param logger
 	 * @param workbook
 	 *            *internal* workbook
 	 * @param cellStyleAccessor
 	 */
-	XlsPoiDocumentReader(final Logger logger, final Workbook workbook,
-			final XlsPoiStyleHelper styleHelper) {
-		this.logger = logger;
+	XlsPoiDocumentReader(final Workbook workbook, final XlsPoiStyleHelper styleHelper) {
 		this.workbook = workbook;
 		this.styleHelper = styleHelper;
 		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,

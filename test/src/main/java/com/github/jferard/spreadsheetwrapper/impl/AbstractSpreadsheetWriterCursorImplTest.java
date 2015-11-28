@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper.impl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.Assert;
 import org.junit.Assume;
@@ -31,8 +33,12 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public abstract class SpreadsheetWriterCursorImplTest extends
+public abstract class AbstractSpreadsheetWriterCursorImplTest extends
 CursorAbstractTest {
+	/** logger, static initialization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+	
+	/** set the test up */
 	@Before
 	@SuppressWarnings("nullness")
 	public void setUp() {
@@ -50,13 +56,17 @@ CursorAbstractTest {
 			this.colCount = sheet.getCellCount(0);
 			this.cursor = sheet.getNewCursor();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		} catch (final IOException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
 
+	
+	/**
+	 * @return the test properties 
+	 */
 	protected abstract TestProperties getProperties();
 }

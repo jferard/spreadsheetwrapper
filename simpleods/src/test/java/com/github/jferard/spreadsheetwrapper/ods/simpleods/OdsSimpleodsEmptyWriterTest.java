@@ -18,6 +18,8 @@
 package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,8 +30,11 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsSimpleodsEmptyWriterTest extends
+public class OdsSimpleodsEmptyWriterTest extends // NOPMD by Julien on 27/11/15 20:25
 AbstractSpreadsheetEmptyWriterTest {
+	/** logger, static initialization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
+	
 	/** set the test up */
 	@Before
 	@Override
@@ -42,7 +47,7 @@ AbstractSpreadsheetEmptyWriterTest {
 			this.documentWriter = this.factory.create(outputFile);
 			this.sheetWriter = this.documentWriter.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
@@ -55,11 +60,12 @@ AbstractSpreadsheetEmptyWriterTest {
 			this.documentWriter.save();
 			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
+			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
 		}
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return OdsSimpleodsTestProperties.getProperties();

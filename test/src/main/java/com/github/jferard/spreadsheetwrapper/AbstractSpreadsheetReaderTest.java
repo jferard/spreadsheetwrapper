@@ -40,7 +40,7 @@ import org.junit.rules.TestName;
  * for every wrapper.
  *
  */
-public abstract class AbstractSpreadsheetReaderTest {
+public abstract class AbstractSpreadsheetReaderTest { // NOPMD by Julien on 27/11/15 20:34
 	/** content of cell A1 */
 	private static final String CELL_A1_CONTENT = "OBJECTID,N,10,0";
 
