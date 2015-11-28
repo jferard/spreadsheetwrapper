@@ -26,7 +26,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
-public class Examples {
+public final class Examples {
 	/**
 	 * First example. Needs odfdom in path.
 	 * 

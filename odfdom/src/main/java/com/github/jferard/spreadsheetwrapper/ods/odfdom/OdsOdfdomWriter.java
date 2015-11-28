@@ -66,16 +66,19 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		this.curRow = null;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertCol(final int c) {
 		this.table.insertColumnsBefore(c, 1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void insertRow(final int r) {
 		this.table.insertRowsBefore(r, 1);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
 		final List</*@Nullable*/Object> retValue = this.getColContents(c);
@@ -83,6 +86,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
 		final List</*@Nullable*/Object> retValue = this.getRowContents(r);
@@ -98,8 +102,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return value;
 	}
 
-	/**
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Date setDate(final int r, final int c, final Date date) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
@@ -116,9 +119,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return retDate;
 	}
 
-	/**
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Double setDouble(final int r, final int c, final Number value) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
@@ -127,7 +128,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return retValue;
 	}
 
-	/**  */
+	/** {@inheritDoc} */
 	@Override
 	public String setFormula(final int r, final int c, final String formula) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
@@ -136,9 +137,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return formula;
 	}
 
-	/**
-	 * @return
-	 */
+	/** {@inheritDoc} */
 	@Override
 	public Integer setInteger(final int r, final int c, final Number value) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
@@ -147,6 +146,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
@@ -169,7 +169,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		return true;
 	}
 
-	/**  */
+	/** {@inheritDoc} */
 	@Override
 	public String setText(final int r, final int c, final String text) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
@@ -210,27 +210,6 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 			}
 			this.curRow = this.table.getRowByIndex(r);
 			this.curR = r;
-			//
-			// final int lastIndex = this.table.getRowCount() - 1;
-			// if (r > lastIndex) { // r - lastIndex rows to append
-			//
-			// // append row and clean style
-			// this.table.getCellByPosition(0, lastIndex + 2); // 2. HACK :
-			// // append two
-			// // rows to clean
-			// // style
-			// OdfTableRow row = this.table.getRowByIndex(lastIndex + 2);
-			// row.getNextRow();
-			// this.table.appendRows(r - lastIndex - 1); // (r - lastIndex - 1)
-			// // + 2 = r -
-			// // lastIndex + 1
-			// this.table.removeRowsByIndex(r + 1, 1); // (r - lastIndex - 1) +
-			// // 2 - 1 = r - lastIndex
-			// // : ok !!
-			// assert this.table.getRowCount() == r + 1;
-			// }
-			// this.curRow = this.table.getRowByIndex(r);
-			// this.curR = r;
 		}
 		return this.curRow.getCellByIndex(c);
 	}

@@ -95,7 +95,7 @@ SpreadsheetDocumentFactory {
 			document = SpreadsheetDocument.loadDocument(inputStream);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
-		} catch (final Exception e) {
+		} catch (final Exception e) { // NOPMD by Julien on 28/11/15 16:11
 			throw new SpreadsheetException(e);
 		}
 		return document;
@@ -109,7 +109,7 @@ SpreadsheetDocumentFactory {
 		SpreadsheetDocument document;
 		try {
 			document = SpreadsheetDocument.newSpreadsheetDocument();
-		} catch (final Exception e) {
+		} catch (final Exception e) { // NOPMD by Julien on 28/11/15 16:11
 			throw new SpreadsheetException(e);
 		}
 		return document;

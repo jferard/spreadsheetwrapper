@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
+package com.github.jferard.spreadsheetwrapper.ods.simpleodf; // NOPMD by Julien on 28/11/15 16:07
 
 import java.util.Date;
 
@@ -27,6 +27,7 @@ import org.odftoolkit.simple.table.Table;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -79,7 +80,7 @@ SpreadsheetReader {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
-		if (!"boolean".equals(cell.getValueType()))
+		if (!OdsConstants.BOOLEAN_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
 	}
@@ -216,7 +217,7 @@ SpreadsheetReader {
 		final Cell cell = this.getSimpleCell(r, c);
 		if (cell == null)
 			return null;
-		if (!"string".equals(cell.getValueType()))
+		if (!OdsConstants.STRING_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
 	}

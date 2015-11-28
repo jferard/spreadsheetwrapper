@@ -1,5 +1,8 @@
 package com.github.jferard.spreadsheetwrapper.ods;
 
+/**
+ * Constants for ODS.
+ */
 public final class OdsConstants {
 	private OdsConstants() {}
 	

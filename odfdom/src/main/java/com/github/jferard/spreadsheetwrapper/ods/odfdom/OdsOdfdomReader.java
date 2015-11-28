@@ -38,6 +38,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		SpreadsheetReader {
+	/** format for dates */
 	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {

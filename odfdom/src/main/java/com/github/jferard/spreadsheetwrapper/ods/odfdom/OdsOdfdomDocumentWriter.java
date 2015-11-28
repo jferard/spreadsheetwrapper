@@ -72,6 +72,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** the *internal* workbook */
 	private final OdfSpreadsheetDocument document;
 
+	/** the document styles */
 	private final OdfOfficeStyles documentStyles;
 	/** delegation value */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> documentTrait;
@@ -82,7 +83,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/** the logger */
-	final Logger logger;
+	private final Logger logger;
 
 	/**
 	 * @param logger

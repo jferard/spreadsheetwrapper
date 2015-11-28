@@ -22,6 +22,7 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsOdfdomWriterCursorTest extends
 AbstractSpreadsheetWriterCursorTest {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

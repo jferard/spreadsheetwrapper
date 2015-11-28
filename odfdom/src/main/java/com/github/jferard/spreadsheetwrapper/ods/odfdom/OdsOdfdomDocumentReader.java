@@ -68,9 +68,11 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 
 	/** the *internal* value */
 	private final OdfSpreadsheetDocument document;
+	/** the document styles */
 	private final OdfOfficeStyles documentStyles;
 	/** for delegation only */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> documentTrait;
+	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
 	/**

@@ -407,8 +407,10 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@Test
 	public void testSetTextOnRow65535() {
 		this.sheetWriter.setText(0, 1, "0");
-		this.sheetWriter.setText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1, "100");
-		Assert.assertEquals("100", this.sheetWriter.getText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1));
+		final String setAndExpected = "100";
+		final String set = this.sheetWriter.setText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1, setAndExpected);
+		Assert.assertEquals(setAndExpected, set);
+		Assert.assertEquals(setAndExpected, this.sheetWriter.getText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1));
 	}
 
 	/**

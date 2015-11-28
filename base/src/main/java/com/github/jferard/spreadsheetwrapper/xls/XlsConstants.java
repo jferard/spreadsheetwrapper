@@ -1,6 +1,10 @@
 package com.github.jferard.spreadsheetwrapper.xls;
 
-public class XlsConstants {
+/**
+ * Only two constants for XLS.
+ *
+ */
+public final class XlsConstants {
 	private XlsConstants() {}
 	
 	/**
