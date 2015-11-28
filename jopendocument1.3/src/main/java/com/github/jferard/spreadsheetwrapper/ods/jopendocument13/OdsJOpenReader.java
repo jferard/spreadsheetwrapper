@@ -35,6 +35,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
@@ -62,7 +63,7 @@ SpreadsheetReader {
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"boolean".equals(type))
+		if (!OdsConstants.BOOLEAN_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Boolean) cell.getValue();
 	}
@@ -112,7 +113,7 @@ SpreadsheetReader {
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"date".equals(type) && !"time".equals(type))
+		if (!OdsConstants.DATE_TYPE.equals(type) && !OdsConstants.TIME_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
 	}
@@ -125,7 +126,7 @@ SpreadsheetReader {
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"float".equals(type))
+		if (!OdsConstants.FLOAT_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
 		if (!(value instanceof BigDecimal))
@@ -183,14 +184,14 @@ SpreadsheetReader {
 		final StyleTextProperties textProperties = cellStyle
 				.getTextProperties();
 		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement.getAttributeValue("color",
+		final String fColorAsHex = odfElement.getAttributeValue(OdsConstants.COLOR_ATTR_NAME,
 				OdsJOpenStyleHelper.FO_NS);
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
 		final String fw = odfElement.getAttributeValue(
-				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
-		if ("bold".equals(fw))
+				OdsConstants.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
+		if (OdsConstants.BOLD_ATTR_NAME.equals(fw))
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
@@ -214,7 +215,7 @@ SpreadsheetReader {
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"string".equals(type))
+		if (!OdsConstants.STRING_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (String) cell.getValue();
 	}
@@ -225,7 +226,7 @@ SpreadsheetReader {
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
 		final ODValueType valueType = cell.getValueType();
-		return valueType == null ? "string" : valueType.getName();
+		return valueType == null ? OdsConstants.STRING_TYPE : valueType.getName();
 	}
 
 	/**

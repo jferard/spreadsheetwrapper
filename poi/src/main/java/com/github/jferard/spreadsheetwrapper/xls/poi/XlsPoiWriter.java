@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -36,16 +37,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
  */
 class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 		SpreadsheetWriter {
-	/**
-	 * COPY FROM JXL : The maximum number of columns
-	 */
-	private final static int MAX_COLUMNS = 256;
-
-	/**
-	 * COPY FROM JXL : The maximum number of rows excel allows in a worksheet
-	 */
-	private final static int MAX_ROWS_PER_SHEET = 65536;
-
 	/** current row index, -1 if none */
 	private int curR;
 
@@ -210,8 +201,8 @@ class XlsPoiWriter extends AbstractSpreadsheetWriter implements
 	protected Cell getOrCreatePOICell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
-		if (r >= XlsPoiWriter.MAX_ROWS_PER_SHEET
-				|| c >= XlsPoiWriter.MAX_COLUMNS)
+		if (r >= XlsConstants.MAX_ROWS_PER_SHEET
+				|| c >= XlsConstants.MAX_COLUMNS)
 			throw new UnsupportedOperationException();
 
 		if (r != this.curR || this.curRow == null) {

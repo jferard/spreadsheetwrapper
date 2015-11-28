@@ -30,11 +30,11 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.SyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
@@ -42,15 +42,6 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		SpreadsheetReader {
-	/** type string for boolean */
-	private static final String BOOLEAN_TYPE = "boolean";
-
-	/** type string for float */
-	private static final String FLOAT_TYPE = "float";
-
-	/** type string for string */
-	private static final String STRING_TYPE = "string";
-
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -71,7 +62,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!OdsJOpenReader.BOOLEAN_TYPE.equals(type))
+		if (!OdsConstants.BOOLEAN_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Boolean) cell.getValue();
 	}
@@ -120,7 +111,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!"date".equals(type) && !"time".equals(type))
+		if (!OdsConstants.DATE_TYPE.equals(type) && !OdsConstants.TIME_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
 	}
@@ -133,7 +124,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!OdsJOpenReader.FLOAT_TYPE.equals(type))
+		if (!OdsConstants.FLOAT_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		final Object value = cell.getValue();
 		if (!(value instanceof BigDecimal))
@@ -191,14 +182,14 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final WrapperFont wrapperFont = new WrapperFont();
 		final SyleTextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement.getAttributeValue("color",
+		final String fColorAsHex = odfElement.getAttributeValue(OdsConstants.COLOR_ATTR_NAME,
 				OdsJOpenStyleHelper.FO_NS);
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
 		final String fontWeight = odfElement.getAttributeValue(
-				StyleUtility.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
-		if ("bold".equals(fontWeight))
+				OdsConstants.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
+		if (OdsConstants.BOLD_ATTR_NAME.equals(fontWeight))
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
@@ -222,7 +213,7 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!OdsJOpenReader.STRING_TYPE.equals(type))
+		if (!OdsConstants.STRING_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (String) cell.getValue();
 	}
@@ -249,12 +240,12 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 
 	private String getFormula(final MutableCell<SpreadSheet> cell) {
 		final Element element = cell.getElement();
-		return element.getAttributeValue("formula", element.getNamespace());
+		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME, element.getNamespace());
 	}
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
 		final ODValueType valueType = cell.getValueType();
-		return valueType == null ? OdsJOpenReader.STRING_TYPE : valueType
+		return valueType == null ? OdsConstants.STRING_TYPE : valueType
 				.getName();
 	}
 }

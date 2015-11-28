@@ -25,19 +25,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+
 public class StyleUtility {
-
-	/** for style string */
-	public static final String BACKGROUND_COLOR = "background-color";
-	/** for style string */
-	public static final String FONT_COLOR = "font-color";
-	/** for style string */
-	public static final String FONT_SIZE = "font-size";
-	/** for style string */
-	public static final String FONT_STYLE = "font-style";
-	/** for style string */
-	public static final String FONT_WEIGHT = "font-weight";
-
 	/**
 	 * @param outputURL
 	 *            the URL of the file to write
@@ -62,11 +52,11 @@ public class StyleUtility {
 			final int bold) {
 		switch (bold) {
 		case WrapperCellStyle.YES:
-			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
+			styleStringBuilder.append(OdsConstants.FONT_WEIGHT)
 			.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
+			styleStringBuilder.append(OdsConstants.FONT_WEIGHT).append(
 					":normal;");
 			break;
 		default:
@@ -79,11 +69,11 @@ public class StyleUtility {
 			final StringBuilder styleStringBuilder, final int italic) {
 		switch (italic) {
 		case WrapperCellStyle.YES:
-			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+			styleStringBuilder.append(OdsConstants.FONT_STYLE).append(
 					":italic;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(StyleUtility.FONT_STYLE).append(
+			styleStringBuilder.append(OdsConstants.FONT_STYLE).append(
 					":normal;");
 			break;
 		default:
@@ -120,7 +110,7 @@ public class StyleUtility {
 		final StringBuilder styleStringBuilder = new StringBuilder(20);
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
-			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
+			styleStringBuilder.append(OdsConstants.BACKGROUND_COLOR)
 					.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
 		final int size;
@@ -135,10 +125,10 @@ public class StyleUtility {
 			StyleUtility.appendFontItalic(styleStringBuilder, font.getItalic());
 		}
 		if (size != WrapperCellStyle.DEFAULT)
-			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
+			styleStringBuilder.append(OdsConstants.FONT_SIZE).append(':')
 					.append(size).append(';');
 		if (color != null)
-			styleStringBuilder.append(StyleUtility.FONT_COLOR).append(':')
+			styleStringBuilder.append(OdsConstants.FONT_COLOR).append(':')
 					.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
@@ -162,15 +152,15 @@ public class StyleUtility {
 
 			final String key = entry[0];
 			final String value = entry[1];
-			if (key.equals(StyleUtility.BACKGROUND_COLOR))
+			if (key.equals(OdsConstants.BACKGROUND_COLOR))
 				backgroundColor = WrapperColor.stringToColor(value);
-			else if (key.equals(StyleUtility.FONT_WEIGHT))
+			else if (key.equals(OdsConstants.FONT_WEIGHT))
 				StyleUtility.setFontBold(font, value);
-			else if (key.equals(StyleUtility.FONT_STYLE))
+			else if (key.equals(OdsConstants.FONT_STYLE))
 				StyleUtility.setFontItalic(font, value);
-			else if (key.equals(StyleUtility.FONT_SIZE))
+			else if (key.equals(OdsConstants.FONT_SIZE))
 				font.setSize(Integer.valueOf(value));
-			else if (key.equals(StyleUtility.FONT_COLOR))
+			else if (key.equals(OdsConstants.FONT_COLOR))
 				font.setColor(WrapperColor.stringToColor(value));
 		}
 

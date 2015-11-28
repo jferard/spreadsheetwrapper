@@ -30,6 +30,7 @@ import org.w3c.dom.NodeList;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
@@ -37,12 +38,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		SpreadsheetReader {
-	/** type name for boolean cells */
-	private static final String BOOLEAN_TYPE = "boolean";
-	/** type name for float cells */
-	private static final String FLOAT_TYPE = "float";
-	/** type name for string cells */
-	private static final String STRING_TYPE = "string";
+	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
@@ -52,7 +48,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 			return null;
 		}
 		final Date date = AbstractSpreadsheetReader.parseString(dateStr,
-				"yyyy-MM-dd'T'HH:mm:ss");
+				DATE_FORMAT);
 		return date;
 	}
 
@@ -114,7 +110,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		if (cell == null)
 			return null;
 
-		if (!OdsOdfdomReader.BOOLEAN_TYPE.equals(cell.getValueType()))
+		if (!OdsConstants.BOOLEAN_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
 	}
@@ -138,18 +134,18 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		// "string" or "time".
 		if (type == null)
 			result = null;
-		else if (type.equals(OdsOdfdomReader.BOOLEAN_TYPE))
+		else if (type.equals(OdsConstants.BOOLEAN_TYPE))
 			result = cell.getBooleanValue();
-		else if (type.equals("date") || type.equals("time"))
+		else if (type.equals(OdsConstants.DATE_TYPE) || type.equals(OdsConstants.TIME_TYPE))
 			result = OdsOdfdomReader.getDate(cell);
-		else if (type.equals(OdsOdfdomReader.FLOAT_TYPE)
-				|| type.equals("currency") || type.equals("percentage")) {
+		else if (type.equals(OdsConstants.FLOAT_TYPE)
+				|| type.equals(OdsConstants.CURRENCY_TYPE) || type.equals(OdsConstants.PERCENTAGE_TYPE)) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
 			else
 				result = Double.valueOf(value);
-		} else if (type.equals(OdsOdfdomReader.STRING_TYPE))
+		} else if (type.equals(OdsConstants.STRING_TYPE))
 			result = cell.getStringValue();
 		else
 			throw new IllegalArgumentException(String.format(
@@ -190,7 +186,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		if (cell == null)
 			return null;
 
-		if (!OdsOdfdomReader.FLOAT_TYPE.equals(cell.getValueType()))
+		if (!OdsConstants.FLOAT_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
 	}
@@ -267,7 +263,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 		if (cell == null)
 			return null;
 
-		if (!OdsOdfdomReader.STRING_TYPE.equals(cell.getValueType()))
+		if (!OdsConstants.STRING_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
 	}

@@ -39,6 +39,7 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -157,7 +158,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 				textProperties.setColor(OOUtils.decodeRGB(color.toHex()));
 			if (font.getBold() == WrapperCellStyle.YES)
 				textProperties.getElement().setAttribute(
-						StyleUtility.FONT_WEIGHT, "bold");
+						OdsConstants.FONT_WEIGHT, "bold");
 		}
 		return true;
 	}

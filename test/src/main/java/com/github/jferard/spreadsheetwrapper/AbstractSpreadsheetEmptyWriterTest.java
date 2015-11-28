@@ -30,6 +30,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
+
 /**
  * @author Julien
  *
@@ -343,7 +345,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 			}
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
-			if (colIndex >= 255)
+			if (colIndex >= XlsConstants.MAX_COLUMNS)
 				Assume.assumeNoException(e);
 			else
 				throw e;
@@ -356,9 +358,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@Test
 	public void testSetTextOnCol255() {
 		final String HUNDRED = "100";
-		final String text = this.sheetWriter.setText(1, 255, HUNDRED);
+		final String text = this.sheetWriter.setText(1, XlsConstants.MAX_COLUMNS-1, HUNDRED);
 		Assert.assertEquals(HUNDRED, text);
-		Assert.assertEquals(HUNDRED, this.sheetWriter.getText(1, 255));
+		Assert.assertEquals(HUNDRED, this.sheetWriter.getText(1, XlsConstants.MAX_COLUMNS-1));
 	}
 
 	/**
@@ -383,7 +385,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 			}
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
-			if (rowIndex >= 65535)
+			if (rowIndex >= XlsConstants.MAX_ROWS_PER_SHEET)
 				Assume.assumeNoException(e);
 			else
 				throw e;
@@ -405,8 +407,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@Test
 	public void testSetTextOnRow65535() {
 		this.sheetWriter.setText(0, 1, "0");
-		this.sheetWriter.setText(65535, 1, "100");
-		Assert.assertEquals("100", this.sheetWriter.getText(65535, 1));
+		this.sheetWriter.setText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1, "100");
+		Assert.assertEquals("100", this.sheetWriter.getText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1));
 	}
 
 	/**
