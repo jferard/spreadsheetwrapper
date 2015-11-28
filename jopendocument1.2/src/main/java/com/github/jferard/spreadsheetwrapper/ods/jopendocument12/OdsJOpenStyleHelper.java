@@ -22,10 +22,10 @@ import java.util.Map;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 class OdsJOpenStyleHelper {
 	/** the name space fo (fonts ?) */
@@ -86,8 +86,10 @@ class OdsJOpenStyleHelper {
 	}
 
 	/**
-	 * @param style the style Node
-	 * @param wrapperCellStyle the style to set
+	 * @param style
+	 *            the style Node
+	 * @param wrapperCellStyle
+	 *            the style to set
 	 * @return the style Node itself
 	 */
 	public Element setStyle(final Element style,
@@ -126,16 +128,18 @@ class OdsJOpenStyleHelper {
 			final Map<String, String> propertiesMap) {
 		final Element style = this.getBaseStyle(styleName);
 		if (propertiesMap.containsKey(StyleUtility.BACKGROUND_COLOR)) {
-			final String backgroundColor = propertiesMap.get(StyleUtility.BACKGROUND_COLOR);
+			final String backgroundColor = propertiesMap
+					.get(StyleUtility.BACKGROUND_COLOR);
 			final Element tableCellProps = new Element(
 					OdsJOpenStyleHelper.TABLE_CELL_PROPERTIES,
 					OdsJOpenStyleHelper.STYLE_NS);
-			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR, backgroundColor,
-					OdsJOpenStyleHelper.FO_NS);
+			tableCellProps.setAttribute(StyleUtility.BACKGROUND_COLOR,
+					backgroundColor, OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
 		if (propertiesMap.containsKey(StyleUtility.FONT_WEIGHT)) {
-			final String fontWeight = propertiesMap.get(StyleUtility.FONT_WEIGHT);
+			final String fontWeight = propertiesMap
+					.get(StyleUtility.FONT_WEIGHT);
 			final Element textProps = new Element(
 					OdsJOpenStyleHelper.TEXT_PROPERTIES,
 					OdsJOpenStyleHelper.STYLE_NS);

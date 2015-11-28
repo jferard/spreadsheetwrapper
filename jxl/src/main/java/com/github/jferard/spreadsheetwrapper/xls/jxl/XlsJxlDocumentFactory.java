@@ -31,17 +31,17 @@ import jxl.read.biff.BiffException;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableWorkbook;
 
+import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	/**
 	 * Called by the manager
 	 *
@@ -79,7 +79,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -147,7 +147,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 

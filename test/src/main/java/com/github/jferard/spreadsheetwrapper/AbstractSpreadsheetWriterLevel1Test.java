@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class AbstractSpreadsheetWriterLevel1Test extends
-AbstractSpreadsheetReaderTest {
+		AbstractSpreadsheetReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
@@ -100,8 +100,8 @@ AbstractSpreadsheetReaderTest {
 	public final void testCellDateZero() {
 		try {
 			final Date date = this.sheetWriter.setDate(0, 1, new Date(0)); // setDate
-																			// :
-																			// 0
+			// :
+			// 0
 			// UTC = 1 CET
 			Assert.assertEquals(date, new Date(0));
 			Assert.assertEquals(date, this.sheetWriter.getDate(0, 1)); // getDate
@@ -139,7 +139,7 @@ AbstractSpreadsheetReaderTest {
 					1234567891, 1000 * 86400));
 
 			final Date dateSet = this.sheetWriter.setDate(r, c, dateMillis); // setDate
-																				// :
+			// :
 			// 0
 			// UTC = 1 CET
 			Assert.assertTrue(dateSet.equals(dateMillis)

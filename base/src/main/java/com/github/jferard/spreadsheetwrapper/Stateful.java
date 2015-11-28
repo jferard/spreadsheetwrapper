@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.impl;
+package com.github.jferard.spreadsheetwrapper;
 
 /**
  * The class Stateful is used to keep a trace of the state, new or initialized,

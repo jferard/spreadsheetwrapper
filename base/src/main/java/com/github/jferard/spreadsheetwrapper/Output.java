@@ -1,4 +1,4 @@
-package com.github.jferard.spreadsheetwrapper.impl;
+package com.github.jferard.spreadsheetwrapper;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -22,13 +22,14 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-SpreadsheetDocumentWriter {
+		SpreadsheetDocumentWriter {
 
 	/** the output */
 	private/*@MonotonicNonNull*/Output bkpOutput;

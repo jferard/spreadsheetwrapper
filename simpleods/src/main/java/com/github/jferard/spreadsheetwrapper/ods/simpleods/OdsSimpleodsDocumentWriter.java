@@ -28,6 +28,7 @@ import org.simpleods.Table;
 import org.simpleods.TableStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -36,7 +37,6 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -44,10 +44,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);

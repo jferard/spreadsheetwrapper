@@ -26,11 +26,11 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.write.WritableCellFormat;
 
+import com.github.jferard.spreadsheetwrapper.Accessor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.impl.Accessor;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 
 /**
@@ -57,8 +57,12 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 		for (int n = 0; n < sheets.length; n++) {
 			final Sheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetReader reader = new XlsJxlReader(sheet, // NOPMD by Julien on 03/09/15 21:56
-					styleHelper); 
+			final SpreadsheetReader reader = new XlsJxlReader(sheet, // NOPMD by
+																		// Julien
+																		// on
+																		// 03/09/15
+																		// 21:56
+					styleHelper);
 			this.accessor.put(name, n, reader);
 		}
 	}

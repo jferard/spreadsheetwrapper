@@ -24,22 +24,24 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsOdfdomDocumentFactory extends
-AbstractDocumentFactory<OdfSpreadsheetDocument> implements
-SpreadsheetDocumentFactory {
+		AbstractDocumentFactory<OdfSpreadsheetDocument> implements
+		SpreadsheetDocumentFactory {
 	/**
 	 * static function for the manager
-	 * @param logger the logger
+	 * 
+	 * @param logger
+	 *            the logger
 	 * @return a factory
 	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
@@ -48,7 +50,7 @@ SpreadsheetDocumentFactory {
 
 	/** simple logger */
 	private final Logger logger;
-	
+
 	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
@@ -66,7 +68,7 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<OdfSpreadsheetDocument> sfDocument)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new OdsOdfdomDocumentReader(sfDocument.getObject(),
 				this.styleHelper);
 	}
@@ -101,7 +103,7 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		OdfSpreadsheetDocument document;
 		try {
 			document = OdfSpreadsheetDocument.newSpreadsheetDocument();

@@ -31,13 +31,13 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>>
@@ -50,10 +50,10 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
@@ -97,7 +97,7 @@ implements SpreadsheetDocumentWriter {
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);

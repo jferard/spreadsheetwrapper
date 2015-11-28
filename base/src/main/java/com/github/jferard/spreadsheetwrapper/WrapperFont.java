@@ -158,6 +158,7 @@ public class WrapperFont {
 
 	/**
 	 * sets font to italic
+	 * 
 	 * @return this (fluent)
 	 */
 	public WrapperFont setItalic() {

@@ -34,10 +34,10 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class AbstractSpreadsheetWriterCursorImplTest extends
-CursorAbstractTest {
+		CursorAbstractTest {
 	/** logger, static initialization */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	
+
 	/** set the test up */
 	@Before
 	@SuppressWarnings("nullness")
@@ -64,9 +64,8 @@ CursorAbstractTest {
 		}
 	}
 
-	
 	/**
-	 * @return the test properties 
+	 * @return the test properties
 	 */
 	protected abstract TestProperties getProperties();
 }

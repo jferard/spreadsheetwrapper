@@ -30,20 +30,20 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
+import com.github.jferard.spreadsheetwrapper.Accessor;
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.Accessor;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 
@@ -67,8 +67,8 @@ implements SpreadsheetDocumentWriter {
 		for (int n = 0; n < sheets.length; n++) {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetWriter reader = new XlsJxlWriter(
-					sheet, styleHelper);
+			final SpreadsheetWriter reader = new XlsJxlWriter(sheet,
+					styleHelper);
 			this.accessor.put(name, n, reader);
 		}
 	}

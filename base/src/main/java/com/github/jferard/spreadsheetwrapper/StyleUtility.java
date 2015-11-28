@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.impl;
+package com.github.jferard.spreadsheetwrapper;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,10 +24,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
-
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 
 public class StyleUtility {
 
@@ -67,7 +63,7 @@ public class StyleUtility {
 		switch (bold) {
 		case WrapperCellStyle.YES:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT)
-					.append(":bold;");
+			.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
 			styleStringBuilder.append(StyleUtility.FONT_WEIGHT).append(
@@ -125,7 +121,7 @@ public class StyleUtility {
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(StyleUtility.BACKGROUND_COLOR)
-			.append(':').append(backgroundColor.name()).append(';');
+					.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
 		final int size;
 		final WrapperColor color;
@@ -140,10 +136,10 @@ public class StyleUtility {
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(StyleUtility.FONT_SIZE).append(':')
-			.append(size).append(';');
+					.append(size).append(';');
 		if (color != null)
 			styleStringBuilder.append(StyleUtility.FONT_COLOR).append(':')
-			.append(color.name()).append(';');
+					.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
 	}

@@ -19,9 +19,7 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -31,13 +29,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
 /*>>>
@@ -50,12 +48,12 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  * A wrapper for writing in a workbook
  */
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/**
 	 * A helper, for delegation
 	 */
 	private final class XlsPoiDocumentWriterTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+	AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
 
 		/**
 		 * @param workbook
@@ -211,8 +209,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = this.styleHelper.toCellStyle(
-				this.workbook, wrapperCellStyle);
+		final CellStyle cellStyle = this.styleHelper.toCellStyle(this.workbook,
+				wrapperCellStyle);
 		this.styleHelper.putCellStyle(styleName, cellStyle);
 		return true;
 	}

@@ -36,13 +36,13 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
-	/** type name for string cells */
-	private static final String STRING_TYPE = "string";
+		SpreadsheetReader {
 	/** type name for boolean cells */
 	private static final String BOOLEAN_TYPE = "boolean";
 	/** type name for float cells */
 	private static final String FLOAT_TYPE = "float";
+	/** type name for string cells */
+	private static final String STRING_TYPE = "string";
 
 	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
@@ -114,7 +114,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!BOOLEAN_TYPE.equals(cell.getValueType()))
+		if (!OdsOdfdomReader.BOOLEAN_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getBooleanValue();
 	}
@@ -138,18 +138,18 @@ SpreadsheetReader {
 		// "string" or "time".
 		if (type == null)
 			result = null;
-		else if (type.equals(BOOLEAN_TYPE))
+		else if (type.equals(OdsOdfdomReader.BOOLEAN_TYPE))
 			result = cell.getBooleanValue();
 		else if (type.equals("date") || type.equals("time"))
 			result = OdsOdfdomReader.getDate(cell);
-		else if (type.equals(FLOAT_TYPE) || type.equals("currency")
-				|| type.equals("percentage")) {
+		else if (type.equals(OdsOdfdomReader.FLOAT_TYPE)
+				|| type.equals("currency") || type.equals("percentage")) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);
 			else
 				result = Double.valueOf(value);
-		} else if (type.equals(STRING_TYPE))
+		} else if (type.equals(OdsOdfdomReader.STRING_TYPE))
 			result = cell.getStringValue();
 		else
 			throw new IllegalArgumentException(String.format(
@@ -190,7 +190,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!FLOAT_TYPE.equals(cell.getValueType()))
+		if (!OdsOdfdomReader.FLOAT_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
 	}
@@ -267,7 +267,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		if (!STRING_TYPE.equals(cell.getValueType()))
+		if (!OdsOdfdomReader.STRING_TYPE.equals(cell.getValueType()))
 			throw new IllegalArgumentException();
 		return cell.getStringValue();
 	}

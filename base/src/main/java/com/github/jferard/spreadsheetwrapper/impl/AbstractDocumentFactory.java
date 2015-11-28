@@ -22,12 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
 
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -36,12 +37,12 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  *            internal workbook
  */
 public abstract class AbstractDocumentFactory<R> extends
-AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
+		AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
 		return this.createWriter(Stateful.createNew(document), new Output(
 				outputStream));
@@ -75,7 +76,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
 		return this.createWriter(Stateful.createInitialized(document),
 				new Output(outputStream));
@@ -119,6 +120,6 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	 * @throws SpreadsheetException
 	 */
 	protected abstract R newSpreadsheetDocument(
-			/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
+	/*@Nullable*/OutputStream outputStream) throws SpreadsheetException;
 
 }

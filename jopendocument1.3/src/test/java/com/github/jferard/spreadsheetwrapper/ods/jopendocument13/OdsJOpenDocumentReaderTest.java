@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentReaderTe
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenDocumentReaderTest extends
-AbstractSpreadsheetDocumentReaderTest {
+		AbstractSpreadsheetDocumentReaderTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

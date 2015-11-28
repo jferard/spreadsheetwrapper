@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadSheetEmptyWriterCount
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsOdfdomEmptyWriterCountsTest extends
-AbstractSpreadSheetEmptyWriterCountsTest {
+		AbstractSpreadSheetEmptyWriterCountsTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

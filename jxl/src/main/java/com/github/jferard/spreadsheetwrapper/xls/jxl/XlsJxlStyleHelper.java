@@ -28,10 +28,10 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WriteException;
 
+import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 

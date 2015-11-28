@@ -20,8 +20,6 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 
 public final class SpreadsheetTestHelper {
-	private SpreadsheetTestHelper() {}
-	
 	/**
 	 * @return the caller class name
 	 */
@@ -45,5 +43,8 @@ public final class SpreadsheetTestHelper {
 			final String methodName, final String extension) {
 		return new File(System.getProperty("java.io.tmpdir"), String.format(
 				"test-%s-%s.%s", className, methodName, extension));
+	}
+
+	private SpreadsheetTestHelper() {
 	}
 }

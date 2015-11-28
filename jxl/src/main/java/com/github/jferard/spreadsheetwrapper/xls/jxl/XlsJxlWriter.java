@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	/**
 	 * COPY FROM JXL : The maximum number of columns

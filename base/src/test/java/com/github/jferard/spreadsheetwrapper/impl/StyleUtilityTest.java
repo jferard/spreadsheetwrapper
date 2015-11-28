@@ -3,6 +3,7 @@ package com.github.jferard.spreadsheetwrapper.impl;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;

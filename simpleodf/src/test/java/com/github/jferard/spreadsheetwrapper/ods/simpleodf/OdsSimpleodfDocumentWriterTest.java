@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsSimpleodfDocumentWriterTest extends
-		SpreadsheetEmptyDocumentWriterTest {
+SpreadsheetEmptyDocumentWriterTest {
 	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {

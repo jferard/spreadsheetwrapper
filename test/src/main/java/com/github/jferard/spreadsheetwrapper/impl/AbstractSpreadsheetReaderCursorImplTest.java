@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class AbstractSpreadsheetReaderCursorImplTest extends
-		CursorAbstractTest {
+CursorAbstractTest {
 
 	/** simple logger, static initilization */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
@@ -43,7 +43,8 @@ public abstract class AbstractSpreadsheetReaderCursorImplTest extends
 	@Before
 	@SuppressWarnings("nullness")
 	public void setUp() {
-		final SpreadsheetDocumentFactory factory = this.getProperties().getFactory();
+		final SpreadsheetDocumentFactory factory = this.getProperties()
+				.getFactory();
 		try {
 			final URL sourceURL = this.getProperties().getResourceURL();
 			Assume.assumeNotNull(sourceURL);

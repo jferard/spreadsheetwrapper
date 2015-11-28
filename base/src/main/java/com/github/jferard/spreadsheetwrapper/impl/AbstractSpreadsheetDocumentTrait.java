@@ -19,6 +19,7 @@ package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.util.NoSuchElementException;
 
+import com.github.jferard.spreadsheetwrapper.Accessor;
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 
 public abstract class AbstractSpreadsheetDocumentTrait<T> {
@@ -84,7 +85,7 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 			spreadsheet = this.accessor.getByName(sheetName);
 		else
 			spreadsheet = this
-			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+					.findSpreadsheetAndCreateReaderOrWriter(sheetName);
 
 		return spreadsheet;
 	}

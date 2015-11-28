@@ -1,4 +1,4 @@
-package com.github.jferard.spreadsheetwrapper.impl;
+package com.github.jferard.spreadsheetwrapper;
 
 import java.util.HashMap;
 import java.util.Map;

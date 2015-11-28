@@ -17,14 +17,6 @@
  *******************************************************************************/
 package com.github.jferard;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import com.github.jferard.spreadsheetwrapper.DocumentFactoryManager;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
 /**
  * Unit test for Examples.

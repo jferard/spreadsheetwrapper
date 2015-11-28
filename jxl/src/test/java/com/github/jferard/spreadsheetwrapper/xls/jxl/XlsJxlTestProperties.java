@@ -22,8 +22,6 @@ import java.util.logging.Logger;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public final class XlsJxlTestProperties {
-	private XlsJxlTestProperties() {} 
-	
 	/**
 	 * create the properties
 	 */
@@ -35,5 +33,8 @@ public final class XlsJxlTestProperties {
 	 */
 	public static TestProperties getProperties() {
 		return XlsJxlTestProperties.properties;
+	}
+
+	private XlsJxlTestProperties() {
 	}
 }

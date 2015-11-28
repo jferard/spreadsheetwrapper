@@ -35,10 +35,10 @@ import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 /*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
-*/
+ */
 
 abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");
@@ -60,7 +60,7 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 
 	/** the value wrapper for delegation */
 	private final OdsSimpleodfStatefulDocument sfDocument;
-	
+
 	/** the style helper */
 	protected OdsOdfdomStyleHelper traitStyleHelper;
 
@@ -87,7 +87,8 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	}
 
 	/**
-	 * @param index index of the spreadsheet in the document
+	 * @param index
+	 *            index of the spreadsheet in the document
 	 * @return the spreadsheet reader or writer
 	 */
 	public T getSpreadsheet(final int index) {
@@ -151,7 +152,8 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	}
 
 	/**
-	 * @param table internal table
+	 * @param table
+	 *            internal table
 	 * @return reader or writer sheet
 	 */
 	/*@RequiresNonNull("traitStyleHelper")*/

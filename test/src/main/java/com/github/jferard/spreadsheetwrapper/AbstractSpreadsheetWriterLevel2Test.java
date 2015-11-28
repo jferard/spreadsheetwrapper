@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class AbstractSpreadsheetWriterLevel2Test extends
-		AbstractSpreadsheetWriterLevel1Test {
+AbstractSpreadsheetWriterLevel1Test {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
@@ -87,8 +87,8 @@ public abstract class AbstractSpreadsheetWriterLevel2Test extends
 	public final void testCellDateTo0() {
 		try {
 			final Date dateSet = this.sheetWriter.setDate(0, 1, new Date(0)); // setDate
-																				// :
-																				// 0
+			// :
+			// 0
 			// UTC = 1 CET
 			Assert.assertEquals(dateSet, new Date(0));
 			Assert.assertEquals(dateSet, this.sheetWriter.getCellContent(0, 1));
@@ -130,8 +130,8 @@ public abstract class AbstractSpreadsheetWriterLevel2Test extends
 		final int c = 6;
 		try {
 			final Date dateSet = this.sheetWriter.setDate(r, c, new Date(0)); // setDate
-																				// :
-																				// 0
+			// :
+			// 0
 			// UTC = 1 CET
 			Assert.assertEquals(dateSet, new Date(0));
 			Assert.assertEquals(new Date(0), this.sheetWriter.getDate(r, c));

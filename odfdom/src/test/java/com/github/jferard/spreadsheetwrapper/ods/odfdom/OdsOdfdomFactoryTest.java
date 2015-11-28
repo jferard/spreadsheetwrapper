@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentFactoryT
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsOdfdomFactoryTest extends
-		AbstractSpreadsheetDocumentFactoryTest {
+AbstractSpreadsheetDocumentFactoryTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsOdfdomTestProperties.getProperties();

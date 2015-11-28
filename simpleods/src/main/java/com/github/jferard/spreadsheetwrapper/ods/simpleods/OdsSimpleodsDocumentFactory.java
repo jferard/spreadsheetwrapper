@@ -24,20 +24,22 @@ import java.util.logging.Logger;
 
 import org.simpleods.OdsFile;
 
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	/**
 	 * static fuction for the manager
-	 * @param logger the logger
+	 * 
+	 * @param logger
+	 *            the logger
 	 * @return the factory
 	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
@@ -77,7 +79,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -100,7 +102,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 }

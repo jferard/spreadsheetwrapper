@@ -33,12 +33,12 @@ import org.checkerframework.checker.nullness.qual.PolyNull;
  */
 
 public abstract class AbstractXlsPoiDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+AbstractSpreadsheetDocumentTrait<T> {
 	/** *internal* workbook */
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
 	protected/*@Nullable*/CellStyle dateCellStyle;
-	
+
 	/** the style helper */
 	protected XlsPoiStyleHelper traitStyleHelper;
 

@@ -36,7 +36,12 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // NOPMD by Julien on 27/11/15 20:10
+public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // NOPMD
+																			// by
+																			// Julien
+																			// on
+																			// 27/11/15
+																			// 20:10
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -55,7 +60,8 @@ public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // N
 					.getClass().getSimpleName(), this.name.getMethodName(),
 					this.getProperties().getExtension());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
-			this.documentWriter = this.factory.openForWrite(inputStream, outputStream);
+			this.documentWriter = this.factory.openForWrite(inputStream,
+					outputStream);
 			this.documentReader = this.documentWriter;
 			this.sheetWriter = this.documentWriter.getSpreadsheet(0);
 			this.sheetReader = this.sheetWriter;

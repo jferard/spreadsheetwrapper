@@ -34,7 +34,7 @@ import org.junit.rules.TestName;
  */
 @SuppressWarnings("PMD")
 public abstract class SpreadsheetEmptyDocumentWriterTest extends
-AbstractSpreadsheetEmptyDocumentReaderTest {
+		AbstractSpreadsheetEmptyDocumentReaderTest {
 	/** the test name */
 	@Rule
 	public TestName name = new TestName();

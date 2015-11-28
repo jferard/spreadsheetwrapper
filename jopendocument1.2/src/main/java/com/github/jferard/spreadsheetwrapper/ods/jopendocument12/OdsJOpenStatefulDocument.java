@@ -25,7 +25,7 @@ import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
+import com.github.jferard.spreadsheetwrapper.Stateful;
 
 /**
  * Stateful means that there is a marker if the document is unitialized.

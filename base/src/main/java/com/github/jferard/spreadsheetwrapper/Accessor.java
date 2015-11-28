@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.impl;
+package com.github.jferard.spreadsheetwrapper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -134,7 +134,7 @@ public class Accessor</*@NonNull*/T> {
 				}
 			}
 			stringBuilder.append(index).append('&').append(name).append("->")
-			.append(element).append(',');
+					.append(element).append(',');
 		}
 		stringBuilder.deleteCharAt(stringBuilder.length() - 1).append(']');
 		return stringBuilder.toString();

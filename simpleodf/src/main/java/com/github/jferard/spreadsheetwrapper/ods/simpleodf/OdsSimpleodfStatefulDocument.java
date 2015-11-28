@@ -25,7 +25,7 @@ import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.simple.SpreadsheetDocument;
 import org.odftoolkit.simple.table.Table;
 
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
+import com.github.jferard.spreadsheetwrapper.Stateful;
 
 /**
  * A OdsSimpleodfStatefulDocument is a specific Stateful SpreadsheetDocument.
@@ -111,7 +111,12 @@ public class OdsSimpleodfStatefulDocument extends Stateful<SpreadsheetDocument> 
 	 * @throws Exception
 	 *             if odftoolkit throws an exception !
 	 */
-	public void rawSave(final OutputStream outputStream) throws Exception { // NOPMD by Julien on 27/11/15 20:36
+	public void rawSave(final OutputStream outputStream) throws Exception { // NOPMD
+																			// by
+																			// Julien
+																			// on
+																			// 27/11/15
+																			// 20:36
 		this.object.save(outputStream);
 	}
 

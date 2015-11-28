@@ -38,10 +38,13 @@ import org.junit.rules.TestName;
  *
  */
 public abstract class AbstractSpreadsheetDocumentWriterTest extends
-AbstractSpreadsheetDocumentReaderTest {
+		AbstractSpreadsheetDocumentReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
+
+	/** logger, static initialization */
+	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	/** the document writer */
 	protected SpreadsheetDocumentWriter documentWriter;
@@ -49,9 +52,6 @@ AbstractSpreadsheetDocumentReaderTest {
 	/** the writer */
 	protected SpreadsheetWriter sheetWriter;
 
-	/** logger, static initialization */
-	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	
 	/** set the test up */
 	@Override
 	@Before
@@ -95,7 +95,7 @@ AbstractSpreadsheetDocumentReaderTest {
 	/** add a sheet "ok" at index 0 */
 	@Test
 	public void testAddSheetAtIndex0() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
+			CantInsertElementInSpreadsheetException {
 		try {
 			this.documentWriter.addSheet(0, "ok");
 		} catch (final UnsupportedOperationException e) {
@@ -106,7 +106,7 @@ AbstractSpreadsheetDocumentReaderTest {
 	/** add a sheet "ok" at index 10 : not ok because there is no other sheet */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testAddSheetAtIndex10() throws IndexOutOfBoundsException,
-	CantInsertElementInSpreadsheetException {
+			CantInsertElementInSpreadsheetException {
 		this.documentWriter.addSheet(10, "ok");
 	}
 
@@ -128,7 +128,7 @@ AbstractSpreadsheetDocumentReaderTest {
 		Assert.assertTrue(true);
 	}
 
-	/** add 20 sheets at index 0*/
+	/** add 20 sheets at index 0 */
 	@Test
 	public void testAppendAdd20SheetAtIndex0()
 			throws CantInsertElementInSpreadsheetException {

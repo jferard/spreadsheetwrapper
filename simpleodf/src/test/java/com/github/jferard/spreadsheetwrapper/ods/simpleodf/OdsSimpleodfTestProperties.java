@@ -23,10 +23,8 @@ import com.github.jferard.spreadsheetwrapper.TestProperties;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 public final class OdsSimpleodfTestProperties {
-	private OdsSimpleodfTestProperties() {}
-	
 	/**
-	 * create the properties 
+	 * create the properties
 	 */
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
@@ -37,5 +35,8 @@ public final class OdsSimpleodfTestProperties {
 	 */
 	public static TestProperties getProperties() {
 		return OdsSimpleodfTestProperties.properties;
+	}
+
+	private OdsSimpleodfTestProperties() {
 	}
 }

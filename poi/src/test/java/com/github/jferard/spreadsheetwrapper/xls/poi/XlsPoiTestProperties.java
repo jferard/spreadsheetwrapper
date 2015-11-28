@@ -21,14 +21,12 @@ import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
+import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 public final class XlsPoiTestProperties {
-	private XlsPoiTestProperties() {}
-	
 	/**
-	 * create the properties 
+	 * create the properties
 	 */
 	private static TestProperties properties = new TestProperties("xls",
 			new XlsPoiDocumentFactory(Logger.getGlobal(),
@@ -39,5 +37,8 @@ public final class XlsPoiTestProperties {
 	 */
 	public static TestProperties getProperties() {
 		return XlsPoiTestProperties.properties;
+	}
+
+	private XlsPoiTestProperties() {
 	}
 }

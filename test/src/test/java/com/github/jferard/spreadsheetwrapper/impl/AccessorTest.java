@@ -21,6 +21,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.github.jferard.spreadsheetwrapper.Accessor;
+
 public class AccessorTest {
 	/** value for tests */
 	private static final double FIRST_VALUE = 10.0;

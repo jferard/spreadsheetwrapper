@@ -28,10 +28,10 @@ import org.apache.poi.ss.usermodel.Color;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.CellStyleAccessor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -74,8 +74,8 @@ class XlsPoiStyleHelper {
 				this.hssfColorByColor.put(wrapperColor, hssfColor);
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
 			} catch (final IllegalArgumentException e) {
-				logger
-				.log(Level.WARNING,
+				logger.log(
+						Level.WARNING,
 						"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
 						e);
 			}
@@ -100,33 +100,6 @@ class XlsPoiStyleHelper {
 				// 22/11/15 07:15
 				// do nothing
 			}
-		}
-		return cellStyle;
-	}
-
-	/**
-	 * @param workbook workbook for conversion
-	 * @param wrapperCellStyle the cell style
-	 * @return the internal cell style
-	 */
-	public CellStyle toCellStyle(final Workbook workbook,
-			final WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = workbook.createCellStyle();
-		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null
-				&& wrapperFont.getBold() == WrapperCellStyle.YES) {
-			final Font font = workbook.createFont();
-			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-			cellStyle.setFont(font);
-		}
-		final WrapperColor backgroundColor = wrapperCellStyle
-				.getBackgroundColor();
-		if (backgroundColor != null) {
-			final HSSFColor hssfColor = this.toHSSFColor(backgroundColor);
-
-			final short index = hssfColor.getIndex();
-			cellStyle.setFillForegroundColor(index);
-			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		}
 		return cellStyle;
 	}
@@ -163,7 +136,7 @@ class XlsPoiStyleHelper {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color instanceof HSSFColor) // color != null
 			styleStringBuilder.append("background-color:")
-					.append(((HSSFColor) color).getHexString()).append(';');
+			.append(((HSSFColor) color).getHexString()).append(';');
 		return styleStringBuilder.toString();
 	}
 
@@ -177,6 +150,35 @@ class XlsPoiStyleHelper {
 	 */
 	public void putCellStyle(final String styleName, final CellStyle cellStyle) {
 		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
+	}
+
+	/**
+	 * @param workbook
+	 *            workbook for conversion
+	 * @param wrapperCellStyle
+	 *            the cell style
+	 * @return the internal cell style
+	 */
+	public CellStyle toCellStyle(final Workbook workbook,
+			final WrapperCellStyle wrapperCellStyle) {
+		final CellStyle cellStyle = workbook.createCellStyle();
+		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont != null
+				&& wrapperFont.getBold() == WrapperCellStyle.YES) {
+			final Font font = workbook.createFont();
+			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			cellStyle.setFont(font);
+		}
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
+		if (backgroundColor != null) {
+			final HSSFColor hssfColor = this.toHSSFColor(backgroundColor);
+
+			final short index = hssfColor.getIndex();
+			cellStyle.setFillForegroundColor(index);
+			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
+		}
+		return cellStyle;
 	}
 
 	/**

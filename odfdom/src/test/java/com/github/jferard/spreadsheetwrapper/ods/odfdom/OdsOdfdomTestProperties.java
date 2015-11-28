@@ -22,10 +22,8 @@ import java.util.logging.Logger;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public final class OdsOdfdomTestProperties {
-	private OdsOdfdomTestProperties() {}
-	
 	/**
-	 * create the properties 
+	 * create the properties
 	 */
 	private static TestProperties properties = new TestProperties("ods",
 			new OdsOdfdomDocumentFactory(Logger.getGlobal(),
@@ -36,5 +34,8 @@ public final class OdsOdfdomTestProperties {
 	 */
 	public static TestProperties getProperties() {
 		return OdsOdfdomTestProperties.properties;
+	}
+
+	private OdsOdfdomTestProperties() {
 	}
 }

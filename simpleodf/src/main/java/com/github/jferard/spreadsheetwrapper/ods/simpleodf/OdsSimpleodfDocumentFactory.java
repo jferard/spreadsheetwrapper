@@ -24,23 +24,23 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.impl.Output;
-import com.github.jferard.spreadsheetwrapper.impl.Stateful;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodfDocumentFactory extends
-		AbstractDocumentFactory<SpreadsheetDocument> implements
-		SpreadsheetDocumentFactory {
+AbstractDocumentFactory<SpreadsheetDocument> implements
+SpreadsheetDocumentFactory {
 	/**
 	 * Static method used by the manager for creating a factory
-	 * 
+	 *
 	 * @param logger
 	 *            the logger
 	 * @return the factory
@@ -72,7 +72,7 @@ public class OdsSimpleodfDocumentFactory extends
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<SpreadsheetDocument> sfDocument)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		return new OdsSimpleodfDocumentReader(this.styleHelper,
 				new OdsSimpleodfStatefulDocument(sfDocument));
 	}
@@ -81,7 +81,7 @@ public class OdsSimpleodfDocumentFactory extends
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<SpreadsheetDocument> sfDocument, final Output output)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		return new OdsSimpleodfDocumentWriter(this.logger, this.styleHelper,
 				new OdsSimpleodfStatefulDocument(sfDocument), output);
 	}
@@ -105,7 +105,7 @@ public class OdsSimpleodfDocumentFactory extends
 	@Override
 	protected SpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		SpreadsheetDocument document;
 		try {
 			document = SpreadsheetDocument.newSpreadsheetDocument();

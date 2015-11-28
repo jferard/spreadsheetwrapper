@@ -159,16 +159,14 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 		list.addAll(AbstractSpreadsheetWriterCursorTest.ROW_2);
 		final ListIterator<Object> iterator = list.listIterator();
 
-		final int COL_COUNT = ROW_1.size();
-		
+		final int COL_COUNT = AbstractSpreadsheetWriterCursorTest.ROW_1.size();
+
 		try {
 			while (iterator.hasNext()) {
 				final int index = iterator.nextIndex();
-				Assert.assertEquals(index
-						/ COL_COUNT,
+				Assert.assertEquals(index / COL_COUNT,
 						this.sheetWriterCursor.getR());
-				Assert.assertEquals(index
-						% COL_COUNT,
+				Assert.assertEquals(index % COL_COUNT,
 						this.sheetWriterCursor.getC());
 				Assert.assertEquals(iterator.next(),
 						this.sheetWriterCursor.getCellContent());
@@ -193,16 +191,14 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 		final ListIterator<Object> iterator = AbstractSpreadsheetWriterCursorTest.LAST_ROW
 				.listIterator();
 
-		final int COL_COUNT = ROW_1.size();
-		
+		final int COL_COUNT = AbstractSpreadsheetWriterCursorTest.ROW_1.size();
+
 		try {
 			while (iterator.hasNext()) {
 				final int index = iterator.nextIndex();
-				Assert.assertEquals(lastRow + index
-						/ COL_COUNT,
+				Assert.assertEquals(lastRow + index / COL_COUNT,
 						this.sheetWriterCursor.getR());
-				Assert.assertEquals(index
-						% COL_COUNT,
+				Assert.assertEquals(index % COL_COUNT,
 						this.sheetWriterCursor.getC());
 				Assert.assertEquals(iterator.next(),
 						this.sheetWriterCursor.getCellContent());
@@ -215,8 +211,8 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 			}
 			Assert.assertEquals(
 					AbstractSpreadsheetWriterCursorTest.LAST_ROW
-							.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
-									.size() - 1), this.sheetWriterCursor
+					.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
+							.size() - 1), this.sheetWriterCursor
 							.getCellContent());
 		} catch (final IllegalArgumentException e) {
 			this.logger.log(Level.WARNING, "", e);
@@ -232,12 +228,12 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 		Assert.assertEquals(Move.JUMP, this.sheetWriterCursor.set(r, c));
 		try {
 			this.sheetWriterCursor.setDate(new Date(0)); // setDate : 0 UTC = 1
-															// CET
+			// CET
 			Assert.assertEquals(new Date(0),
 					this.sheetWriterCursor.getCellContent());
 			Assert.assertEquals(new Date(0), this.sheetWriterCursor.getDate()); // getDate
-																				// :
-																				// 0
+			// :
+			// 0
 			// CET = 0
 			// CET
 		} catch (final IllegalArgumentException e) {

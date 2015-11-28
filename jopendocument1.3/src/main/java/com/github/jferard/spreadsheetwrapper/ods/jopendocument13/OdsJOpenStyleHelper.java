@@ -22,10 +22,10 @@ import java.util.Map;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
+import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 public class OdsJOpenStyleHelper extends StyleUtility {
 	/** the name space fo (fonts ?) */

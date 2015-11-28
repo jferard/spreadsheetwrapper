@@ -74,11 +74,11 @@ public class OdsOdfdomStyleHelper {
 	public Map<OdfStyleProperty, String> getProperties(
 			final WrapperCellStyle wrapperCellStyle) {
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>(); // NOPMD
-																									// by
-																									// Julien
-																									// on
-																									// 24/11/15
-																									// 19:24
+		// by
+		// Julien
+		// on
+		// 24/11/15
+		// 19:24
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null
 				&& wrapperFont.getBold() == WrapperCellStyle.YES)

@@ -141,10 +141,10 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 
 	/**
 	 * a beginning, row count = 0
-	 * 
+	 *
 	 * @Test public void testRowCountZero() { Assert.assertEquals(0,
 	 *       this.sheetWriter.getRowCount()); }
-	 * 
+	 *
 	 *       /** get the properties
 	 */
 	protected abstract TestProperties getProperties();

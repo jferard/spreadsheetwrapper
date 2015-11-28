@@ -30,18 +30,18 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.StyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.StyleUtility;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable; */
 
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 

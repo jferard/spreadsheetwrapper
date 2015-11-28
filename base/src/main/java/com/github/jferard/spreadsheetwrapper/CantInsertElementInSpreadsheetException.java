@@ -21,7 +21,7 @@ package com.github.jferard.spreadsheetwrapper;
  * A simple wrapper for some exceptions.
  */
 public class CantInsertElementInSpreadsheetException extends
-SpreadsheetException {
+		SpreadsheetException {
 	/** for serialization */
 	private static final long serialVersionUID = 1L;
 

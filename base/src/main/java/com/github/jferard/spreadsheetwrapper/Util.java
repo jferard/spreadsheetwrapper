@@ -6,7 +6,6 @@ package com.github.jferard.spreadsheetwrapper;
  * Tiny Util class.
  */
 public final class Util {
-	private Util() {}
 	/**
 	 * @param object
 	 * @param otherObject
@@ -25,5 +24,8 @@ public final class Util {
 	 */
 	public static int hash(final/*@Nullable*/Object object) {
 		return object == null ? 0 : object.hashCode();
+	}
+
+	private Util() {
 	}
 }
