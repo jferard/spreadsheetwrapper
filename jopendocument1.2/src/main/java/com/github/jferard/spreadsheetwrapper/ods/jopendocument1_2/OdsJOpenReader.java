@@ -41,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -111,7 +111,8 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!OdsConstants.DATE_TYPE.equals(type) && !OdsConstants.TIME_TYPE.equals(type))
+		if (!OdsConstants.DATE_TYPE.equals(type)
+				&& !OdsConstants.TIME_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
 	}
@@ -182,8 +183,8 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final WrapperFont wrapperFont = new WrapperFont();
 		final SyleTextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement.getAttributeValue(OdsConstants.COLOR_ATTR_NAME,
-				OdsJOpenStyleHelper.FO_NS);
+		final String fColorAsHex = odfElement.getAttributeValue(
+				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
@@ -240,7 +241,8 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 
 	private String getFormula(final MutableCell<SpreadSheet> cell) {
 		final Element element = cell.getElement();
-		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME, element.getNamespace());
+		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
+				element.getNamespace());
 	}
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {

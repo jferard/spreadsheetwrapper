@@ -109,7 +109,7 @@ public class WrapperCellStyle {
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-		.append(this.backgoundColor).append(", cellFont=")
-		.append(this.cellFont).append("]").toString();
+				.append(this.backgoundColor).append(", cellFont=")
+				.append(this.cellFont).append("]").toString();
 	}
 }

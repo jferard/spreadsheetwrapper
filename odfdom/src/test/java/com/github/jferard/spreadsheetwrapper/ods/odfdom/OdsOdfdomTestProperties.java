@@ -25,7 +25,7 @@ public final class OdsOdfdomTestProperties {
 	/**
 	 * create the properties
 	 */
-	private static TestProperties properties = new TestProperties("ods",
+	private static TestProperties properties = new TestProperties(
 			new OdsOdfdomDocumentFactory(Logger.getGlobal(),
 					new OdsOdfdomStyleHelper()));
 

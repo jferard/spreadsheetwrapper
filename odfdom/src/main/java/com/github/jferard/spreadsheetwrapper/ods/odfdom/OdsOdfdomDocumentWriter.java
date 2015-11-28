@@ -50,10 +50,10 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  *
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentWriterTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
 
 		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
@@ -76,14 +76,14 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	private final OdfOfficeStyles documentStyles;
 	/** delegation value */
 	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> documentTrait;
+	/** the logger */
+	private final Logger logger;
+
 	/** delegation reader */
 	private final OdsOdfdomDocumentReader reader;
 
 	/** helper object for style */
 	private final OdsOdfdomStyleHelper styleHelper;
-
-	/** the logger */
-	private final Logger logger;
 
 	/**
 	 * @param logger
@@ -98,7 +98,7 @@ class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);

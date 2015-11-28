@@ -58,10 +58,10 @@ public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 			final Sheet sheet = sheets[n];
 			final String name = sheet.getName();
 			final SpreadsheetReader reader = new XlsJxlReader(sheet, // NOPMD by
-																		// Julien
-																		// on
-																		// 03/09/15
-																		// 21:56
+					// Julien
+					// on
+					// 03/09/15
+					// 21:56
 					styleHelper);
 			this.accessor.put(name, n, reader);
 		}

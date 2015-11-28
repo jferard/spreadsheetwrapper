@@ -28,7 +28,7 @@ public final class XlsPoiTestProperties {
 	/**
 	 * create the properties
 	 */
-	private static TestProperties properties = new TestProperties("xls",
+	private static TestProperties properties = new TestProperties(
 			new XlsPoiDocumentFactory(Logger.getGlobal(),
 					new XlsPoiStyleHelper(new CellStyleAccessor<CellStyle>())));
 

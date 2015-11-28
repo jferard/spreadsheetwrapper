@@ -32,15 +32,17 @@ import org.junit.rules.TestName;
  * Okay for all wrappers
  *
  */
-@SuppressWarnings("PMD")
-public abstract class SpreadsheetEmptyDocumentWriterTest extends
-		AbstractSpreadsheetEmptyDocumentReaderTest {
+public abstract class AbstractSpreadsheetEmptyDocumentWriterTest extends
+AbstractSpreadsheetEmptyDocumentReaderTest {
 	/** the test name */
 	@Rule
 	public TestName name = new TestName();
-	protected SpreadsheetDocumentWriter sdw;
 
-	protected SpreadsheetWriter sw;
+	/** the document writer */
+	protected SpreadsheetDocumentWriter documentWriter;
+
+	/** a sheet writer */
+	protected SpreadsheetWriter sheetWriter;
 
 	/** set the test up */
 	@Override
@@ -48,11 +50,11 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
-			this.sdw = this.factory.create(outputFile);
-			this.documentReader = this.sdw;
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
+			this.documentWriter = this.factory.create(outputFile);
+			this.documentReader = this.documentWriter;
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();
@@ -64,28 +66,33 @@ public abstract class SpreadsheetEmptyDocumentWriterTest extends
 	@After
 	public void tearDown() {
 		try {
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			e.printStackTrace();
 			Assert.fail();
 		}
 	}
 
+	/** test if there is no sheet and then add one */
 	@Test
 	public final void testAddSheet()
 			throws CantInsertElementInSpreadsheetException {
-		Assert.assertEquals(0, this.sdw.getSheetCount());
-		Assert.assertEquals(Collections.emptyList(), this.sdw.getSheetNames());
-		this.sdw.addSheet("ok");
-		Assert.assertEquals(1, this.sdw.getSheetCount());
-		Assert.assertEquals(Arrays.asList("ok"), this.sdw.getSheetNames());
-		Assert.assertNotNull(this.sdw.getSpreadsheet(0));
-		Assert.assertNotNull(this.sdw.getSpreadsheet("ok"));
+		final String SHEET_NAME = "ok";
+		Assert.assertEquals(0, this.documentWriter.getSheetCount());
+		Assert.assertEquals(Collections.emptyList(),
+				this.documentWriter.getSheetNames());
+		this.documentWriter.addSheet(SHEET_NAME);
+		Assert.assertEquals(1, this.documentWriter.getSheetCount());
+		Assert.assertEquals(Arrays.asList(SHEET_NAME),
+				this.documentWriter.getSheetNames());
+		Assert.assertNotNull(this.documentWriter.getSpreadsheet(0));
+		Assert.assertNotNull(this.documentWriter.getSpreadsheet(SHEET_NAME));
 	}
 
+	/** there is no sheet a beginning */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testGetNonExistingSheet() {
-		this.sdw.getSpreadsheet(0);
+		this.documentWriter.getSpreadsheet(0);
 	}
 }

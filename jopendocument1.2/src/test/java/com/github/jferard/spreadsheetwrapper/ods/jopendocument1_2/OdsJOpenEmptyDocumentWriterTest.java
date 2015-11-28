@@ -17,11 +17,11 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenEmptyDocumentWriterTest extends
-SpreadsheetEmptyDocumentWriterTest {
+		AbstractSpreadsheetEmptyDocumentWriterTest {
 	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {

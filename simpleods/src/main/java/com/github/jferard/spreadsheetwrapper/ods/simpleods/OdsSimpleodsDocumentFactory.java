@@ -30,14 +30,15 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	/**
 	 * static fuction for the manager
-	 * 
+	 *
 	 * @param logger
 	 *            the logger
 	 * @return the factory
@@ -54,6 +55,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	 *            the logger
 	 */
 	public OdsSimpleodsDocumentFactory(final Logger logger) {
+		super(OdsConstants.EXTENSION);
 		this.logger = logger;
 	}
 
@@ -79,7 +81,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -102,7 +104,7 @@ public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException {
+					throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 }

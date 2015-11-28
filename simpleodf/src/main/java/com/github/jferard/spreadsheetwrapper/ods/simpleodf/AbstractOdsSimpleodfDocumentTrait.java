@@ -38,7 +38,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 
 abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+		AbstractSpreadsheetDocumentTrait<T> {
 	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");

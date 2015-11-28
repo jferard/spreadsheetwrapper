@@ -34,7 +34,6 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.SyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -46,7 +45,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /**
  */
 class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
@@ -190,7 +189,7 @@ class OdsJOpenWriter extends AbstractSpreadsheetWriter implements
 				officeNS);
 		final Element child = odfElement.getChild("p", textNS);
 		final Element element = child == null ? new Element("p", textNS)
-				: child;
+		: child;
 		element.setContent(new Text(value.toString()));
 		odfElement.setContent(element);
 	}

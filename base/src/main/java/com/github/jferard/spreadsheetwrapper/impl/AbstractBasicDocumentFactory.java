@@ -32,7 +32,18 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public abstract class AbstractBasicDocumentFactory implements
-		SpreadsheetDocumentFactory {
+SpreadsheetDocumentFactory {
+
+	/** the extension */
+	private final String extension;
+
+	/**
+	 * @param extension
+	 *            the extension (ods or xls)
+	 */
+	protected AbstractBasicDocumentFactory(final String extension) {
+		this.extension = extension;
+	}
 
 	/** {@inheritDoc} */
 	@Override
@@ -54,6 +65,30 @@ public abstract class AbstractBasicDocumentFactory implements
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public File createNewFile(final File parent, final String child) {
+		return new File(parent, child + "." + this.getExtension());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public File createNewFile(final String pathname) {
+		return new File(pathname + "." + this.getExtension());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public File createNewFile(final String parent, final String child) {
+		return new File(parent, child + "." + this.getExtension());
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getExtension() {
+		return this.extension;
 	}
 
 	/** {@inheritDoc} */

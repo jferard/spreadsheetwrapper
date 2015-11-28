@@ -25,7 +25,7 @@ public final class XlsJxlTestProperties {
 	/**
 	 * create the properties
 	 */
-	private static TestProperties properties = new TestProperties("xls",
+	private static TestProperties properties = new TestProperties(
 			XlsJxlDocumentFactory.create(Logger.getGlobal()));
 
 	/**

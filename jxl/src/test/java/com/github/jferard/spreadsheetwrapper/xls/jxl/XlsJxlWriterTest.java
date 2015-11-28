@@ -37,11 +37,11 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // NOPMD
-																			// by
-																			// Julien
-																			// on
-																			// 27/11/15
-																			// 20:10
+	// by
+	// Julien
+	// on
+	// 27/11/15
+	// 20:10
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -56,9 +56,9 @@ public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // N
 			Assume.assumeNotNull(resourceURL);
 
 			final InputStream inputStream = resourceURL.openStream();
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.documentWriter = this.factory.openForWrite(inputStream,
 					outputStream);

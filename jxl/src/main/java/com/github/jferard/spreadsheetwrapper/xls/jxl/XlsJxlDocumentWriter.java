@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-		implements SpreadsheetDocumentWriter {
+implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 
@@ -67,7 +67,11 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		for (int n = 0; n < sheets.length; n++) {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
-			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, // NOPMD by Julien on 28/11/15 16:09
+			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, // NOPMD by
+																		// Julien
+																		// on
+																		// 28/11/15
+																		// 16:09
 					styleHelper);
 			this.accessor.put(name, n, reader);
 		}
@@ -199,7 +203,8 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		return true;
 	}
 
-	private SpreadsheetWriter findSpreadsheetNotYetInAccessor(final String sheetName) {
+	private SpreadsheetWriter findSpreadsheetNotYetInAccessor(
+			final String sheetName) {
 		final SpreadsheetWriter spreadsheet;
 
 		final WritableSheet[] sheets = this.writableWorkbook.getSheets();
@@ -207,7 +212,12 @@ public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final WritableSheet sheet = sheets[n];
 
 			if (sheet.getName().equals(sheetName)) {
-				spreadsheet = new XlsJxlWriter(sheet, this.styleHelper); // NOPMD by Julien on 28/11/15 16:09
+				spreadsheet = new XlsJxlWriter(sheet, this.styleHelper); // NOPMD
+																			// by
+																			// Julien
+																			// on
+																			// 28/11/15
+																			// 16:09
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;
 			}

@@ -22,7 +22,6 @@ import java.util.Map;
 import org.jdom.Element;
 import org.jdom.Namespace;
 
-import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -30,13 +29,16 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 class OdsJOpenStyleHelper {
 	/** the name space fo (fonts ?) */
-	public static final Namespace FO_NS = Namespace.getNamespace(OdsConstants.FO_NS_NAME,
+	public static final Namespace FO_NS = Namespace.getNamespace(
+			OdsConstants.FO_NS_NAME,
 			"urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0");
 	/** the name space office (table, row, cell, etc.) */
-	public static final Namespace OFFICE_NS = Namespace.getNamespace(OdsConstants.OFFICE_NS_NAME,
+	public static final Namespace OFFICE_NS = Namespace.getNamespace(
+			OdsConstants.OFFICE_NS_NAME,
 			"urn:oasis:names:tc:opendocument:xmlns:office:1.0");
 	/** the name space style (styles) */
-	public static final Namespace STYLE_NS = Namespace.getNamespace(OdsConstants.STYLE_NS_NAME,
+	public static final Namespace STYLE_NS = Namespace.getNamespace(
+			OdsConstants.STYLE_NS_NAME,
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 
 	/**

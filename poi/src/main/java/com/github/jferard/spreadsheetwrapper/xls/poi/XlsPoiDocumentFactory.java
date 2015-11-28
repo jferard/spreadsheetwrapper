@@ -36,14 +36,15 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
-		implements SpreadsheetDocumentFactory {
+implements SpreadsheetDocumentFactory {
 	/**
 	 * static function for the manager
-	 * 
+	 *
 	 * @param logger
 	 *            the logger
 	 * @return a factory
@@ -67,6 +68,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	 */
 	public XlsPoiDocumentFactory(final Logger logger,
 			final XlsPoiStyleHelper styleHelper) {
+		super(XlsConstants.EXTENSION1);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
 	}
@@ -83,7 +85,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final Stateful<Workbook> sfWorkbook, final Output output)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, sfWorkbook.getObject(),
 				this.styleHelper, output);
 	}
@@ -107,7 +109,7 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected Workbook newSpreadsheetDocument(
-	/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
+			/*@Nullable*/final OutputStream outputStream) throws SpreadsheetException {
 		return new HSSFWorkbook();
 	}
 }

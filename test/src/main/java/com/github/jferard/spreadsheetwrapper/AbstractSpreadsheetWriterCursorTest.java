@@ -92,9 +92,9 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 			Assume.assumeNotNull(sourceURL);
 
 			final InputStream inputStream = sourceURL.openStream();
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
 			this.documentWriter = this.factory.openForWrite(inputStream,
 					outputStream);
@@ -211,8 +211,8 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 			}
 			Assert.assertEquals(
 					AbstractSpreadsheetWriterCursorTest.LAST_ROW
-					.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
-							.size() - 1), this.sheetWriterCursor
+							.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
+									.size() - 1), this.sheetWriterCursor
 							.getCellContent());
 		} catch (final IllegalArgumentException e) {
 			this.logger.log(Level.WARNING, "", e);

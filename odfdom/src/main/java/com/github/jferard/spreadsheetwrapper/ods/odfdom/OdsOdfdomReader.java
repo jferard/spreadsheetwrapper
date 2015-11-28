@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /**
  */
 class OdsOdfdomReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	/** format for dates */
 	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
 
@@ -49,7 +49,7 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 			return null;
 		}
 		final Date date = AbstractSpreadsheetReader.parseString(dateStr,
-				DATE_FORMAT);
+				OdsOdfdomReader.DATE_FORMAT);
 		return date;
 	}
 
@@ -137,10 +137,12 @@ class OdsOdfdomReader extends AbstractSpreadsheetReader implements
 			result = null;
 		else if (type.equals(OdsConstants.BOOLEAN_TYPE))
 			result = cell.getBooleanValue();
-		else if (type.equals(OdsConstants.DATE_TYPE) || type.equals(OdsConstants.TIME_TYPE))
+		else if (type.equals(OdsConstants.DATE_TYPE)
+				|| type.equals(OdsConstants.TIME_TYPE))
 			result = OdsOdfdomReader.getDate(cell);
 		else if (type.equals(OdsConstants.FLOAT_TYPE)
-				|| type.equals(OdsConstants.CURRENCY_TYPE) || type.equals(OdsConstants.PERCENTAGE_TYPE)) {
+				|| type.equals(OdsConstants.CURRENCY_TYPE)
+				|| type.equals(OdsConstants.PERCENTAGE_TYPE)) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
 				result = Integer.valueOf((int) value);

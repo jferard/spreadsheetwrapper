@@ -67,9 +67,8 @@ public abstract class AbstractSpreadsheetDocumentFactoryTest {
 		Assume.assumeNotNull(this.sourceURL);
 
 		this.sourceFile = new File(this.sourceURL.toURI());
-		this.destFile = SpreadsheetTestHelper.getOutputFile(this.getClass()
-				.getSimpleName(), this.name.getMethodName(), this
-				.getProperties().getExtension());
+		this.destFile = SpreadsheetTestHelper.getOutputFile(this.factory, this
+				.getClass().getSimpleName(), this.name.getMethodName());
 	}
 
 	/** destination as file */

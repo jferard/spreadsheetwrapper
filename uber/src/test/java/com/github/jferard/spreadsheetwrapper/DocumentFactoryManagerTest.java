@@ -47,7 +47,9 @@ public class DocumentFactoryManagerTest {
 		factory = OdsSimpleodsDocumentFactory.create(this.logger);
 		factory = OdsSimpleodfDocumentFactory.create(this.logger);
 		factory = OdsOdfdomDocumentFactory.create(this.logger);
-		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument12.OdsJOpenDocumentFactory
+		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2.OdsJOpenDocumentFactory
+				.create(this.logger);
+		factory = com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3.OdsJOpenDocumentFactory
 				.create(this.logger);
 
 		factory = XlsJxlDocumentFactory.create(this.logger);
@@ -58,7 +60,7 @@ public class DocumentFactoryManagerTest {
 	@Test
 	@SuppressWarnings({ "unused", "PMD.DataflowAnomalyAnalysis" })
 	public final void testManager() throws SpreadsheetException,
-	IllegalArgumentException {
+			IllegalArgumentException {
 		final DocumentFactoryManager manager = new DocumentFactoryManager(
 				this.logger);
 		SpreadsheetDocumentFactory factory;
@@ -68,7 +70,9 @@ public class DocumentFactoryManagerTest {
 				.getFactory("ods.simpleods.OdsSimpleodsDocumentFactory");
 		factory = manager.getFactory("ods.odfdom.OdsOdfdomDocumentFactory");
 		factory = manager
-				.getFactory("ods.jopendocument12.OdsJOpenDocumentFactory");
+				.getFactory("ods.jopendocument1_2.OdsJOpenDocumentFactory");
+		factory = manager
+				.getFactory("ods.jopendocument1_3.OdsJOpenDocumentFactory");
 
 		factory = manager.getFactory("xls.jxl.XlsJxlDocumentFactory");
 		factory = manager.getFactory("xls.poi.XlsPoiDocumentFactory");

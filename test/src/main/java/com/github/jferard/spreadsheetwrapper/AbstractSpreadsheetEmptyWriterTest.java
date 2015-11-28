@@ -73,9 +73,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@After
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			this.documentWriter.saveAs(outputFile);
 			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
@@ -93,8 +93,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-				wrapperCellStyle);
+				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+						wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(2, 2, "Tail");
@@ -130,8 +130,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-				wrapperCellStyle);
+				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+						wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail");
@@ -155,8 +155,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-				wrapperCellStyle);
+				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+						wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail", "");
@@ -180,8 +180,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = utility
 				.toWrapperCellStyle("background-color:#999999;font-weight:bold");
 		this.documentWriter
-		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-				wrapperCellStyle);
+				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+						wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 
@@ -239,7 +239,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 						dateNotTruncated.getTime(),
 						dateTruncatedtoSecond.getTime(),
 						dateTruncatedToDay.getTime()),
-						dateSet.equals(dateNotTruncated)
+				dateSet.equals(dateNotTruncated)
 						|| dateSet.equals(dateTruncatedtoSecond)
 						|| dateSet.equals(dateTruncatedToDay));
 		Assert.assertEquals(dateSet, this.sheetWriter.getDate(2, 2));
@@ -358,9 +358,11 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@Test
 	public void testSetTextOnCol255() {
 		final String HUNDRED = "100";
-		final String text = this.sheetWriter.setText(1, XlsConstants.MAX_COLUMNS-1, HUNDRED);
+		final String text = this.sheetWriter.setText(1,
+				XlsConstants.MAX_COLUMNS - 1, HUNDRED);
 		Assert.assertEquals(HUNDRED, text);
-		Assert.assertEquals(HUNDRED, this.sheetWriter.getText(1, XlsConstants.MAX_COLUMNS-1));
+		Assert.assertEquals(HUNDRED,
+				this.sheetWriter.getText(1, XlsConstants.MAX_COLUMNS - 1));
 	}
 
 	/**
@@ -408,9 +410,11 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	public void testSetTextOnRow65535() {
 		this.sheetWriter.setText(0, 1, "0");
 		final String setAndExpected = "100";
-		final String set = this.sheetWriter.setText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1, setAndExpected);
+		final String set = this.sheetWriter.setText(
+				XlsConstants.MAX_ROWS_PER_SHEET - 1, 1, setAndExpected);
 		Assert.assertEquals(setAndExpected, set);
-		Assert.assertEquals(setAndExpected, this.sheetWriter.getText(XlsConstants.MAX_ROWS_PER_SHEET-1, 1));
+		Assert.assertEquals(setAndExpected, this.sheetWriter.getText(
+				XlsConstants.MAX_ROWS_PER_SHEET - 1, 1));
 	}
 
 	/**

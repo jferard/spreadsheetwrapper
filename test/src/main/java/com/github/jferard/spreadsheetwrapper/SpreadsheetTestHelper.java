@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 
 public final class SpreadsheetTestHelper {
+	private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
+
 	/**
 	 * @return the caller class name
 	 */
@@ -31,18 +33,18 @@ public final class SpreadsheetTestHelper {
 	}
 
 	/**
+	 * @param factory
+	 *            the factory
 	 * @param className
 	 *            the class name
 	 * @param methodName
 	 *            the method name
-	 * @param extension
-	 *            the extension
 	 * @return a file name to identify the test
 	 */
-	public static File getOutputFile(final String className,
-			final String methodName, final String extension) {
-		return new File(System.getProperty("java.io.tmpdir"), String.format(
-				"test-%s-%s.%s", className, methodName, extension));
+	public static File getOutputFile(final SpreadsheetDocumentFactory factory,
+			final String className, final String methodName) {
+		return factory.createNewFile(SpreadsheetTestHelper.TEMP_DIR,
+				String.format("test-%s-%s", className, methodName));
 	}
 
 	private SpreadsheetTestHelper() {

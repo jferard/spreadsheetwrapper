@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class AbstractSpreadsheetWriterLevel1Test extends
-		AbstractSpreadsheetReaderTest {
+AbstractSpreadsheetReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
@@ -76,9 +76,9 @@ public abstract class AbstractSpreadsheetWriterLevel1Test extends
 	@Override
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			this.documentWriter.saveAs(outputFile);
 			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {

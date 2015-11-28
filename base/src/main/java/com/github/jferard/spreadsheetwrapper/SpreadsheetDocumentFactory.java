@@ -55,7 +55,43 @@ public interface SpreadsheetDocumentFactory {
 	 * */
 	SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
+
+	/**
+	 * creates a new File object
+	 * 
+	 * @param parent
+	 *            parent file
+	 * @param childWithoutExtension
+	 *            child filename without extension
+	 * @return the File object
+	 */
+	File createNewFile(File parent, String childWithoutExtension);
+
+	/**
+	 * creates a new File object
+	 * 
+	 * @param pathname
+	 *            filename without extension
+	 * @return the File object
+	 */
+	File createNewFile(String pathname);
+
+	/**
+	 * creates a new File object
+	 * 
+	 * @param parent
+	 *            parent directory name
+	 * @param childWithoutExtension
+	 *            child filename without extension
+	 * @return the File object
+	 */
+	File createNewFile(String parent, String child);
+
+	/**
+	 * @return the extension for the files created and read by the factory
+	 */
+	String getExtension();
 
 	/**
 	 * Creates a workbook reader from an existing workbook
@@ -126,5 +162,5 @@ public interface SpreadsheetDocumentFactory {
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException;
+			throws SpreadsheetException;
 }

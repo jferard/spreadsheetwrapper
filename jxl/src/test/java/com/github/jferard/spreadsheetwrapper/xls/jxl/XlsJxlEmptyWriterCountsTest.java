@@ -31,7 +31,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterCountsTest extends
-		AbstractSpreadSheetEmptyWriterCountsTest {
+AbstractSpreadSheetEmptyWriterCountsTest {
 	/** logger */
 	private Logger logger;
 
@@ -42,9 +42,9 @@ public class XlsJxlEmptyWriterCountsTest extends
 		this.factory = this.getProperties().getFactory();
 		this.logger = Logger.getLogger(this.getClass().getName());
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			this.documentWriter = this.factory.create(outputFile);
 			this.sheetWriter = this.documentWriter.addSheet(0, "first sheet");
 		} catch (final SpreadsheetException e) {

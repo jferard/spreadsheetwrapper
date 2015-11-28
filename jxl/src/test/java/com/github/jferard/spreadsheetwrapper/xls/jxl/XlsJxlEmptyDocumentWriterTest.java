@@ -28,14 +28,14 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.SpreadsheetEmptyDocumentWriterTest;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetEmptyDocumentWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends // NOPMD by Julien on
-													// 27/11/15 20:38
-		SpreadsheetEmptyDocumentWriterTest {
+// 27/11/15 20:38
+AbstractSpreadsheetEmptyDocumentWriterTest {
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -45,13 +45,13 @@ public class XlsJxlEmptyDocumentWriterTest extends // NOPMD by Julien on
 	public void setUp() {
 		this.factory = this.getProperties().getFactory();
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			final OutputStream outputStream = new FileOutputStream(outputFile);
-			this.sdw = this.factory.create(outputStream);
-			this.documentReader = this.sdw;
-			Assert.assertEquals(0, this.sdw.getSheetCount());
+			this.documentWriter = this.factory.create(outputStream);
+			this.documentReader = this.documentWriter;
+			Assert.assertEquals(0, this.documentWriter.getSheetCount());
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();
@@ -66,9 +66,9 @@ public class XlsJxlEmptyDocumentWriterTest extends // NOPMD by Julien on
 	@After
 	public void tearDown() {
 		try {
-			this.sdw.addSheet("for save");
-			this.sdw.save();
-			this.sdw.close();
+			this.documentWriter.addSheet("for save");
+			this.documentWriter.save();
+			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
 			this.logger.log(Level.WARNING, "", e);
 			Assert.fail();

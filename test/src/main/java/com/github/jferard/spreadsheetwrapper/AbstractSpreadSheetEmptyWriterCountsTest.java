@@ -67,9 +67,9 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 	@After
 	public void tearDown() {
 		try {
-			final File outputFile = SpreadsheetTestHelper.getOutputFile(this
-					.getClass().getSimpleName(), this.name.getMethodName(),
-					this.getProperties().getExtension());
+			final File outputFile = SpreadsheetTestHelper.getOutputFile(
+					this.factory, this.getClass().getSimpleName(),
+					this.name.getMethodName());
 			this.documentWriter.saveAs(outputFile);
 			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {

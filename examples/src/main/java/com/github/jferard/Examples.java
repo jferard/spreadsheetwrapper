@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard;
 
-import java.io.File;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.DocumentFactoryManager;
@@ -29,7 +28,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 public final class Examples {
 	/**
 	 * First example. Needs odfdom in path.
-	 * 
+	 *
 	 * @throws SpreadsheetException
 	 */
 	public static void createSimpleDocument() throws SpreadsheetException {
@@ -41,7 +40,7 @@ public final class Examples {
 		final SpreadsheetWriter newSheet = documentWriter
 				.addSheet("first_sheet");
 		newSheet.setText(0, 0, "First text");
-		documentWriter.saveAs(new File("test.ods"));
+		documentWriter.saveAs(factory.createNewFile("test"));
 	}
 
 	private Examples() {

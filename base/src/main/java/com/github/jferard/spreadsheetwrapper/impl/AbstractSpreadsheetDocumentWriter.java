@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
 public abstract class AbstractSpreadsheetDocumentWriter implements
-		SpreadsheetDocumentWriter {
+SpreadsheetDocumentWriter {
 
 	/** the output */
 	private/*@MonotonicNonNull*/Output bkpOutput;

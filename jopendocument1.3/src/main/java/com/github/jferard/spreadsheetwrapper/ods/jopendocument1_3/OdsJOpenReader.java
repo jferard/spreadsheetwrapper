@@ -30,7 +30,6 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.StyleTextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.StyleUtility;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -42,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /**
  */
 class OdsJOpenReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
@@ -113,7 +112,8 @@ SpreadsheetReader {
 			return null;
 
 		final String type = this.getTypeName(cell);
-		if (!OdsConstants.DATE_TYPE.equals(type) && !OdsConstants.TIME_TYPE.equals(type))
+		if (!OdsConstants.DATE_TYPE.equals(type)
+				&& !OdsConstants.TIME_TYPE.equals(type))
 			throw new IllegalArgumentException();
 		return (Date) cell.getValue();
 	}
@@ -184,8 +184,8 @@ SpreadsheetReader {
 		final StyleTextProperties textProperties = cellStyle
 				.getTextProperties();
 		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement.getAttributeValue(OdsConstants.COLOR_ATTR_NAME,
-				OdsJOpenStyleHelper.FO_NS);
+		final String fColorAsHex = odfElement.getAttributeValue(
+				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
@@ -226,7 +226,8 @@ SpreadsheetReader {
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
 		final ODValueType valueType = cell.getValueType();
-		return valueType == null ? OdsConstants.STRING_TYPE : valueType.getName();
+		return valueType == null ? OdsConstants.STRING_TYPE : valueType
+				.getName();
 	}
 
 	/**
