@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -38,11 +38,11 @@ import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 
-/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
- * The SpreadSheetWriter for JOpendocument1.3.
+ * The SpreadSheetWriter for JOpendocument
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
@@ -96,9 +96,11 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/**
 	 * @param logger
 	 *            the logger
+	 * @param styleHelper
+	 *            the basic style helper
 	 * @param sfSpreadSheet
 	 *            the *internal* workbook
-	 * @param outputStream
+	 * @param output
 	 *            where to write
 	 * @param newDocument
 	 * @throws SpreadsheetException
@@ -194,7 +196,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			outputStream = this.output.getStream();
 			if (outputStream == null)
 				throw new IllegalStateException(
-						String.format("Use saveAs when output file/stream is not specified"));
+						String.format("Use saveAs when output file/stream is not specified at opening"));
+
 			this.sfSpreadSheet.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
 			this.logger.log(Level.SEVERE, String.format(
