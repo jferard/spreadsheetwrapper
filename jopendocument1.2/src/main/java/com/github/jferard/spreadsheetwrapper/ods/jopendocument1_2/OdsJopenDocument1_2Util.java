@@ -9,6 +9,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jopendocument.dom.ODPackage;
+import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.XMLVersion;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
@@ -50,5 +51,15 @@ public class OdsJopenDocument1_2Util {
 		final Element element = cell.getElement();
 		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
 				element.getNamespace());
+	}
+
+	public static ODXMLDocument getStyles(SpreadSheet spreadSheet) {
+		final ODXMLDocument res;
+		final ODPackage odPackage = spreadSheet.getPackage();
+		if (odPackage.isSingle())
+			res = odPackage.getContent();
+		else
+			res = odPackage.getXMLFile("styles.xml");
+		return res;
 	}
 }

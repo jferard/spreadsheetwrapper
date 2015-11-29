@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import javax.swing.table.DefaultTableModel;
 
 import org.jopendocument.dom.ODPackage;
+import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
@@ -27,5 +28,10 @@ public class OdsJopenDocument1_3Util {
 	
 	public static String getFormula(final MutableCell<SpreadSheet> cell) {
 		return cell.getFormula();
+	}
+	
+	public static ODXMLDocument getStyles(SpreadSheet spreadSheet) {
+		final ODPackage odPackage = spreadSheet.getPackage();
+		return odPackage.getStyles();
 	}
 }

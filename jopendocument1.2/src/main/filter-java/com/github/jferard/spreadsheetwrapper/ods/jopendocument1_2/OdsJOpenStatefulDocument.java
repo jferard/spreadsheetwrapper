@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -82,8 +82,7 @@ public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	 * @return the *internal* styles.xml document
 	 */
 	public ODXMLDocument getStyles() {
-		final ODPackage odPackage = this.object.getPackage();
-		return odPackage.getStyles();
+		return OdsJopenDocument${jopendocument.version}Util.getStyles(this.object);
 	}
 
 	/**
