@@ -1,11 +1,11 @@
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
 import javax.swing.table.DefaultTableModel;
 
 import org.jopendocument.dom.ODPackage;
+import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
@@ -33,5 +33,10 @@ public class OdsJopenDocument1_3Util {
 	public static ODXMLDocument getStyles(SpreadSheet spreadSheet) {
 		final ODPackage odPackage = spreadSheet.getPackage();
 		return odPackage.getStyles();
+	}
+
+	public static void setValue(MutableCell<SpreadSheet> cell, ODValueType type,
+			Object value) {
+		cell.setValue(value);
 	}
 }

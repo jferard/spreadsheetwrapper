@@ -15,18 +15,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
 
 import java.util.Date;
 import java.util.List;
 
+import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.spreadsheet.CellStyle;
-import org.jopendocument.dom.spreadsheet.CellStyle.StyleTableCellProperties;
+import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.jopendocument.dom.text.TextStyle.StyleTextProperties;
+import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
@@ -52,6 +53,13 @@ SpreadsheetWriter {
 		super(new OdsJOpenReader(sheet));
 		this.sheet = sheet;
 
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
+		return cell.getStyleName();
 	}
 
 	/** {@inheritDoc} */
@@ -84,7 +92,7 @@ SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		cell.setValue(value);
+		OdsJopenDocument${jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
 	}
 
@@ -124,6 +132,7 @@ SpreadsheetWriter {
 		return retValue;
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
@@ -131,13 +140,13 @@ SpreadsheetWriter {
 		final CellStyle cellStyle = cell.getStyle();
 		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
 		if (backgroundColor != null) {
-			final StyleTableCellProperties tableCellProperties = cellStyle
+			final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
 					.getTableCellProperties();
 			tableCellProperties.setBackgroundColor(backgroundColor.toHex());
 		}
 		final WrapperFont font = wrapperStyle.getCellFont();
 		if (font != null) {
-			final StyleTextProperties textProperties = cellStyle
+			final ${jopendocument.style}TextProperties textProperties = cellStyle
 					.getTextProperties();
 			final WrapperColor color = font.getColor();
 			if (color != null)
