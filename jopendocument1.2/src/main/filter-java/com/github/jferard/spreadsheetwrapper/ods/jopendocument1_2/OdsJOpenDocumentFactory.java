@@ -16,20 +16,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.logging.Logger;
 
-import javax.swing.table.DefaultTableModel;
-
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.Namespace;
 import org.jopendocument.dom.ODPackage;
-import org.jopendocument.dom.XMLVersion;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.Output;
@@ -76,24 +70,6 @@ SpreadsheetDocumentFactory {
 		this.styleHelper = styleHelper;
 	}
 
-	// 1.2
-	private final Document createDocument(final String nsPrefix,
-			final String name, final String zipEntry) {
-		final XMLVersion version = XMLVersion.OD;
-		final Element root = new Element(name, version.getNS(nsPrefix));
-		for (final Namespace nameSpace : version.getALL())
-			root.addNamespaceDeclaration(nameSpace);
-
-		return new Document(root);
-	}
-
-	private SpreadSheet getSpreadSheet(final ODPackage odPackage) {
-		// 1.3b1
-		// return odPackage.getSpreadSheet();
-		// 1.2
-		return SpreadSheet.create(odPackage);
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
@@ -121,7 +97,7 @@ SpreadsheetDocumentFactory {
 			throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
-			return this.getSpreadSheet(odPackage);
+			return OdsJopenDocument${jopendocument.version}Util.getSpreadSheet(odPackage);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -132,20 +108,7 @@ SpreadsheetDocumentFactory {
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
-		try {
-			// 1.3b1
-			// return SpreadSheet.createEmpty(new DefaultTableModel());
-			// 1.2
-			final SpreadSheet spreadSheet = SpreadSheet
-					.createEmpty(new DefaultTableModel());
-			spreadSheet.getPackage().putFile(
-					"styles.xml",
-					this.createDocument("office", "document-styles",
-							"styles.xml"));
-			return spreadSheet;
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
+		return OdsJopenDocument${jopendocument.version}Util.newSpreadsheetDocument();
 	}
 
 }

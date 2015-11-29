@@ -189,9 +189,9 @@ class OdsJOpenReader extends AbstractSpreadsheetReader implements
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
-		final String fw = odfElement.getAttributeValue(
+		final String fontWeight = odfElement.getAttributeValue(
 				OdsConstants.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
-		if (OdsConstants.BOLD_ATTR_NAME.equals(fw))
+		if (OdsConstants.BOLD_ATTR_NAME.equals(fontWeight))
 			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
