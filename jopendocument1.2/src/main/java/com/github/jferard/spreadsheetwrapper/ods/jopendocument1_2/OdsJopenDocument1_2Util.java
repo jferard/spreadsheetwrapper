@@ -10,9 +10,11 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jopendocument.dom.ODPackage;
 import org.jopendocument.dom.XMLVersion;
+import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 public class OdsJopenDocument1_2Util {
 	public static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
@@ -42,5 +44,11 @@ public class OdsJopenDocument1_2Util {
 			root.addNamespaceDeclaration(nameSpace);
 
 		return new Document(root);
+	}
+	
+	public static String getFormula(final MutableCell<SpreadSheet> cell) {
+		final Element element = cell.getElement();
+		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
+				element.getNamespace());
 	}
 }

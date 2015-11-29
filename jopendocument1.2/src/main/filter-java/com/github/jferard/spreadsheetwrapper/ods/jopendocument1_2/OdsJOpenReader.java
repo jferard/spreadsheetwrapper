@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_2;
+package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -23,11 +23,11 @@ import java.util.Date;
 import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.CellStyle;
-import org.jopendocument.dom.spreadsheet.CellStyle.SyleTableCellProperties;
+import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.jopendocument.dom.text.TextStyle.SyleTextProperties;
+import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
@@ -74,7 +74,7 @@ SpreadsheetReader {
 		final MutableCell<SpreadSheet> cell = this.getCell(rowIndex, colIndex);
 		if (cell == null)
 			return null;
-		final String formula = this.getFormula(cell);
+		final String formula = OdsJopenDocument${jopendocument.version}Util.getFormula(cell);
 		if (formula != null && formula.charAt(0) == '=')
 			return formula.substring(1);
 
@@ -141,7 +141,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		final String formula = this.getFormula(cell);
+		final String formula = OdsJopenDocument${jopendocument.version}Util.getFormula(cell);
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
 
@@ -174,14 +174,14 @@ SpreadsheetReader {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;
 
-		final SyleTableCellProperties tableCellProperties = cellStyle
+		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final WrapperColor backgroundColor = WrapperColor
 				.stringToColor(bColorAsHex);
 
 		final WrapperFont wrapperFont = new WrapperFont();
-		final SyleTextProperties textProperties = cellStyle.getTextProperties();
+		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 		final String fColorAsHex = odfElement.getAttributeValue(
 				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
@@ -237,12 +237,6 @@ SpreadsheetReader {
 			return null;
 
 		return this.sheet.getCellAt(c, r);
-	}
-
-	private String getFormula(final MutableCell<SpreadSheet> cell) {
-		final Element element = cell.getElement();
-		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
-				element.getNamespace());
 	}
 
 	private String getTypeName(final MutableCell<SpreadSheet> cell) {
