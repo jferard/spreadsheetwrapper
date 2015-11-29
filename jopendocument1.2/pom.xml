@@ -10,9 +10,15 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<github.global.server>github</github.global.server>
 		<jacoco.ut.execution.data.file>${project.build.directory}/coverage-reports/jacoco-ut.exec</jacoco.ut.execution.data.file>
-		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file> 
+		<jacoco.it.execution.data.file>${project.build.directory}/coverage-reports/jacoco-it.exec</jacoco.it.execution.data.file>
 		<skip.integration.tests>true</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
+
+		<jopendocument.version>1_2</jopendocument.version>
+		<javaSourceFilterDirectory>
+			${project.basedir}/src/main/filter-java
+		</javaSourceFilterDirectory>
+		<javaDestFilterDirectory>${project.basedir}/target/generated-sources/java</javaDestFilterDirectory>
 	</properties>
 
 	<parent>
@@ -64,6 +70,18 @@
 	</dependencies>
 
 	<build>
+		<resources>
+			<resource>
+				<directory>${javaSourceFilterDirectory}</directory>
+				<targetPath>${javaDestFilterDirectory}</targetPath>
+				<filtering>true</filtering>
+				<includes>
+					<include>**/*.java</include>
+				</includes>
+			</resource>
+		</resources>
+
+
 		<plugins>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -87,6 +105,24 @@
 			<plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>site-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.7</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>add-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>${javaDestFilterDirectory}</source>
+							</sources>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
