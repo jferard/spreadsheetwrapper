@@ -136,7 +136,7 @@ class XlsPoiStyleHelper {
 		final Color color = cellStyle.getFillBackgroundColorColor();
 		if (color instanceof HSSFColor) // color != null
 			styleStringBuilder.append("background-color:")
-					.append(((HSSFColor) color).getHexString()).append(';');
+			.append(((HSSFColor) color).getHexString()).append(';');
 		return styleStringBuilder.toString();
 	}
 

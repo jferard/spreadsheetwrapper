@@ -13,30 +13,30 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
 public class OdsJopenDocument1_3Util {
+	public static String getFormula(final MutableCell<SpreadSheet> cell) {
+		return cell.getFormula();
+	}
+
 	public static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
 		return odPackage.getSpreadSheet();
 	}
-	
+
+	public static ODXMLDocument getStyles(final SpreadSheet spreadSheet) {
+		final ODPackage odPackage = spreadSheet.getPackage();
+		return odPackage.getStyles();
+	}
+
 	public static SpreadSheet newSpreadsheetDocument()
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		try {
 			return SpreadSheet.createEmpty(new DefaultTableModel());
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
 	}
-	
-	public static String getFormula(final MutableCell<SpreadSheet> cell) {
-		return cell.getFormula();
-	}
-	
-	public static ODXMLDocument getStyles(SpreadSheet spreadSheet) {
-		final ODPackage odPackage = spreadSheet.getPackage();
-		return odPackage.getStyles();
-	}
 
-	public static void setValue(MutableCell<SpreadSheet> cell, ODValueType type,
-			Object value) {
+	public static void setValue(final MutableCell<SpreadSheet> cell,
+			final ODValueType type, final Object value) {
 		cell.setValue(value);
 	}
 }

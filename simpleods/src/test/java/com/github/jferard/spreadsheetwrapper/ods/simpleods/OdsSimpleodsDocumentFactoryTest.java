@@ -21,8 +21,8 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentFactoryT
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsSimpleodsDocumentFactoryTest extends // NOPMD by Julien on
-// 27/11/15 20:13
-		AbstractSpreadsheetDocumentFactoryTest {
+		// 27/11/15 20:13
+AbstractSpreadsheetDocumentFactoryTest {
 	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {

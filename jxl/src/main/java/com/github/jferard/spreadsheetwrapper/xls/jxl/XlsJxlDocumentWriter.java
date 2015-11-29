@@ -43,7 +43,7 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 
@@ -68,10 +68,10 @@ implements SpreadsheetDocumentWriter {
 			final WritableSheet sheet = sheets[n];
 			final String name = sheet.getName();
 			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, // NOPMD by
-																		// Julien
-																		// on
-																		// 28/11/15
-																		// 16:09
+					// Julien
+					// on
+					// 28/11/15
+					// 16:09
 					styleHelper);
 			this.accessor.put(name, n, reader);
 		}
@@ -213,11 +213,11 @@ implements SpreadsheetDocumentWriter {
 
 			if (sheet.getName().equals(sheetName)) {
 				spreadsheet = new XlsJxlWriter(sheet, this.styleHelper); // NOPMD
-																			// by
-																			// Julien
-																			// on
-																			// 28/11/15
-																			// 16:09
+				// by
+				// Julien
+				// on
+				// 28/11/15
+				// 16:09
 				this.accessor.put(sheetName, n, spreadsheet);
 				return spreadsheet;
 			}

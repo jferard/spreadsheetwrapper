@@ -45,7 +45,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
+	AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
 
 		/**
 		 * @param cellStyleAccessor

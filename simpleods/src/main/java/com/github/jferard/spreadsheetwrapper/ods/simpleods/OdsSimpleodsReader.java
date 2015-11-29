@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
-SpreadsheetReader {
+		SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;
 

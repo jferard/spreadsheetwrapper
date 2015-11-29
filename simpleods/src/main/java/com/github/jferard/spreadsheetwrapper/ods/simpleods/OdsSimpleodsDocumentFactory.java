@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsSimpleodsDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	/**
 	 * static fuction for the manager
 	 *
@@ -81,7 +81,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -104,7 +104,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		throw new UnsupportedOperationException();
 	}
 }

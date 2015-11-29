@@ -31,7 +31,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyWriterCountsTest extends
-AbstractSpreadSheetEmptyWriterCountsTest {
+		AbstractSpreadSheetEmptyWriterCountsTest {
 	/** logger */
 	private Logger logger;
 

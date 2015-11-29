@@ -93,8 +93,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(2, 2, "Tail");
@@ -130,8 +130,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail");
@@ -155,8 +155,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
 				WrapperColor.AQUA, wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail", "");
@@ -180,8 +180,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = utility
 				.toWrapperCellStyle("background-color:#999999;font-weight:bold");
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 
@@ -239,7 +239,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 						dateNotTruncated.getTime(),
 						dateTruncatedtoSecond.getTime(),
 						dateTruncatedToDay.getTime()),
-				dateSet.equals(dateNotTruncated)
+						dateSet.equals(dateNotTruncated)
 						|| dateSet.equals(dateTruncatedtoSecond)
 						|| dateSet.equals(dateTruncatedToDay));
 		Assert.assertEquals(dateSet, this.sheetWriter.getDate(2, 2));

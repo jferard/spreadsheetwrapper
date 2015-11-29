@@ -33,7 +33,7 @@ import org.junit.rules.TestName;
  *
  */
 public abstract class AbstractSpreadsheetEmptyDocumentWriterTest extends
-AbstractSpreadsheetEmptyDocumentReaderTest {
+		AbstractSpreadsheetEmptyDocumentReaderTest {
 	/** the test name */
 	@Rule
 	public TestName name = new TestName();

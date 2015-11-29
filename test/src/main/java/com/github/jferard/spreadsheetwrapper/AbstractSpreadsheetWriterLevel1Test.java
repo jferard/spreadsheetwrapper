@@ -34,7 +34,7 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 
 public abstract class AbstractSpreadsheetWriterLevel1Test extends
-AbstractSpreadsheetReaderTest {
+		AbstractSpreadsheetReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();

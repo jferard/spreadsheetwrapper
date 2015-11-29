@@ -36,8 +36,8 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsOdfdomDocumentFactory extends
-AbstractDocumentFactory<OdfSpreadsheetDocument> implements
-SpreadsheetDocumentFactory {
+		AbstractDocumentFactory<OdfSpreadsheetDocument> implements
+		SpreadsheetDocumentFactory {
 	/**
 	 * static function for the manager
 	 *
@@ -70,7 +70,7 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<OdfSpreadsheetDocument> sfDocument)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		return new OdsOdfdomDocumentReader(sfDocument.getObject(),
 				this.styleHelper);
 	}
@@ -105,7 +105,7 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected OdfSpreadsheetDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		OdfSpreadsheetDocument document;
 		try {
 			document = OdfSpreadsheetDocument.newSpreadsheetDocument();

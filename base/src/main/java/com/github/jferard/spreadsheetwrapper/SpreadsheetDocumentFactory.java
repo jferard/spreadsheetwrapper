@@ -55,11 +55,11 @@ public interface SpreadsheetDocumentFactory {
 	 * */
 	SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException;
+					throws SpreadsheetException;
 
 	/**
 	 * creates a new File object
-	 * 
+	 *
 	 * @param parent
 	 *            parent file
 	 * @param childWithoutExtension
@@ -70,7 +70,7 @@ public interface SpreadsheetDocumentFactory {
 
 	/**
 	 * creates a new File object
-	 * 
+	 *
 	 * @param pathname
 	 *            filename without extension
 	 * @return the File object
@@ -79,7 +79,7 @@ public interface SpreadsheetDocumentFactory {
 
 	/**
 	 * creates a new File object
-	 * 
+	 *
 	 * @param parent
 	 *            parent directory name
 	 * @param childWithoutExtension
@@ -162,5 +162,5 @@ public interface SpreadsheetDocumentFactory {
 	 */
 	SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-			throws SpreadsheetException;
+					throws SpreadsheetException;
 }

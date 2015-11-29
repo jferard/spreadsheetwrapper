@@ -85,7 +85,7 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 			spreadsheet = this.accessor.getByName(sheetName);
 		else
 			spreadsheet = this
-			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+					.findSpreadsheetAndCreateReaderOrWriter(sheetName);
 
 		return spreadsheet;
 	}

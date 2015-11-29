@@ -41,7 +41,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 

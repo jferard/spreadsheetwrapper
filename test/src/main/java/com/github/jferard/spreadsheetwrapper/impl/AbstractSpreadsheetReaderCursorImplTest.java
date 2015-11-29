@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public abstract class AbstractSpreadsheetReaderCursorImplTest extends
-		CursorAbstractTest {
+CursorAbstractTest {
 
 	/** simple logger, static initilization */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());

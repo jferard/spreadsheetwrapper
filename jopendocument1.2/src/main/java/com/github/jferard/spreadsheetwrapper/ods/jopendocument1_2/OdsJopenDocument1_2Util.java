@@ -19,42 +19,17 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 public class OdsJopenDocument1_2Util {
-	public static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
-		return SpreadSheet.create(odPackage);
-	}
-	
-	public static SpreadSheet newSpreadsheetDocument()
-					throws SpreadsheetException {
-		try {
-			final SpreadSheet spreadSheet = SpreadSheet
-					.createEmpty(new DefaultTableModel());
-			spreadSheet.getPackage().putFile(
-					"styles.xml",
-					OdsJopenDocument1_2Util.createDocument("office", "document-styles",
-							"styles.xml"));
-			return spreadSheet;
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	private static Document createDocument(final String nsPrefix,
-			final String name, final String zipEntry) {
-		final XMLVersion version = XMLVersion.OD;
-		final Element root = new Element(name, version.getNS(nsPrefix));
-		for (final Namespace nameSpace : version.getALL())
-			root.addNamespaceDeclaration(nameSpace);
-
-		return new Document(root);
-	}
-	
 	public static String getFormula(final MutableCell<SpreadSheet> cell) {
 		final Element element = cell.getElement();
 		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
 				element.getNamespace());
 	}
 
-	public static ODXMLDocument getStyles(SpreadSheet spreadSheet) {
+	public static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
+		return SpreadSheet.create(odPackage);
+	}
+
+	public static ODXMLDocument getStyles(final SpreadSheet spreadSheet) {
 		final ODXMLDocument res;
 		final ODPackage odPackage = spreadSheet.getPackage();
 		if (odPackage.isSingle())
@@ -63,7 +38,22 @@ public class OdsJopenDocument1_2Util {
 			res = odPackage.getXMLFile("styles.xml");
 		return res;
 	}
-	
+
+	public static SpreadSheet newSpreadsheetDocument()
+			throws SpreadsheetException {
+		try {
+			final SpreadSheet spreadSheet = SpreadSheet
+					.createEmpty(new DefaultTableModel());
+			spreadSheet.getPackage().putFile(
+					"styles.xml",
+					OdsJopenDocument1_2Util.createDocument("office",
+							"document-styles", "styles.xml"));
+			return spreadSheet;
+		} catch (final IOException e) {
+			throw new SpreadsheetException(e);
+		}
+	}
+
 	public static void setValue(final MutableCell<SpreadSheet> cell,
 			final ODValueType type, final Object value) {
 		final Element odfElement = cell.getElement();
@@ -75,8 +65,18 @@ public class OdsJopenDocument1_2Util {
 				officeNS);
 		final Element child = odfElement.getChild("p", textNS);
 		final Element element = child == null ? new Element("p", textNS)
-		: child;
+				: child;
 		element.setContent(new Text(value.toString()));
 		odfElement.setContent(element);
+	}
+
+	private static Document createDocument(final String nsPrefix,
+			final String name, final String zipEntry) {
+		final XMLVersion version = XMLVersion.OD;
+		final Element root = new Element(name, version.getNS(nsPrefix));
+		for (final Namespace nameSpace : version.getALL())
+			root.addNamespaceDeclaration(nameSpace);
+
+		return new Document(root);
 	}
 }

@@ -44,10 +44,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);

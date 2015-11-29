@@ -92,7 +92,7 @@ SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		OdsJopenDocument${jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
+		final OdsJopenDocument${final jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
 	}
 
@@ -140,13 +140,13 @@ SpreadsheetWriter {
 		final CellStyle cellStyle = cell.getStyle();
 		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
 		if (backgroundColor != null) {
-			final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+			final ${final jopendocument.style}final TableCellProperties tableCellProperties = cellStyle
 					.getTableCellProperties();
 			tableCellProperties.setBackgroundColor(backgroundColor.toHex());
 		}
 		final WrapperFont font = wrapperStyle.getCellFont();
 		if (font != null) {
-			final ${jopendocument.style}TextProperties textProperties = cellStyle
+			final ${final jopendocument.style}final TextProperties textProperties = cellStyle
 					.getTextProperties();
 			final WrapperColor color = font.getColor();
 			if (color != null)

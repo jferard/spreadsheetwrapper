@@ -174,14 +174,14 @@ SpreadsheetReader {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;
 
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+		final ${final jopendocument.style}final TableCellProperties tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final WrapperColor backgroundColor = WrapperColor
 				.stringToColor(bColorAsHex);
 
 		final WrapperFont wrapperFont = new WrapperFont();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
+		final ${final jopendocument.style}final TextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 		final String fColorAsHex = odfElement.getAttributeValue(
 				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);

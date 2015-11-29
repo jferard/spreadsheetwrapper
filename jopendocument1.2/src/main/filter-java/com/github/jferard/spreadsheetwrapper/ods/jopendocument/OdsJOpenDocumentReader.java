@@ -112,7 +112,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		sheetNames = new ArrayList<String>(sheetCount);
 		for (int s = 0; s < sheetCount; s++)
 			sheetNames
-					.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
+			.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
 		return sheetNames;
 	}
 

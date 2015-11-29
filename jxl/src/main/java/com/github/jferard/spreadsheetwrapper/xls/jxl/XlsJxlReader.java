@@ -40,7 +40,7 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 /**
  */
 class XlsJxlReader extends AbstractSpreadsheetReader implements
-		SpreadsheetReader {
+SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)
 			return ((DateCell) cell).getDate();

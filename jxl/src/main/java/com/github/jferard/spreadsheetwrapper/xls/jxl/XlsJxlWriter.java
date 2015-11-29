@@ -44,7 +44,7 @@ import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 /**
  */
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 
 	/** current row index, -1 if none */
 	private int curR;
