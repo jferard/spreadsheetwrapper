@@ -31,10 +31,21 @@ public final class OdsConstants {
 	public static final String FONT_COLOR = "font-color";
 	/** size of the font */
 	public static final String FONT_SIZE = "font-size";
+	
 	/** style of the font */
-	public static final String FONT_STYLE = "font-style";
+	public static final String FONT_STYLE_ATTR_NAME = "font-style";
+	/** style of the font, asian version*/
+	public static final String FONT_STYLE_ASIAN_ATTR_NAME = "font-style-asian";
+	/** style of the font, complex version */
+	public static final String FONT_STYLE_COMPLEX_ATTR_NAME = "font-style-complex";
+	
 	/** weight of the font */
-	public static final String FONT_WEIGHT = "font-weight";
+	public static final String FONT_WEIGHT_ATTR_NAME = "font-weight";
+	/** weight of the font asian version */
+	public static final String FONT_WEIGHT_ASIAN_ATTR_NAME = "font-weight-asian";
+	/** weight of the font complex version */
+	public static final String FONT_WEIGHT_COMPLEX_ATTR_NAME = "font-weight-complex";
+	
 	/** name of the bold attribute in fo */
 	public static final String FORMULA_ATTR_NAME = "formula";
 

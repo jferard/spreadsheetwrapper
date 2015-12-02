@@ -174,14 +174,14 @@ SpreadsheetReader {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;
 
-		final ${final jopendocument.style}final TableCellProperties tableCellProperties = cellStyle
+		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final WrapperColor backgroundColor = WrapperColor
 				.stringToColor(bColorAsHex);
 
 		final WrapperFont wrapperFont = new WrapperFont();
-		final ${final jopendocument.style}final TextProperties textProperties = cellStyle.getTextProperties();
+		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 		final String fColorAsHex = odfElement.getAttributeValue(
 				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
@@ -189,7 +189,7 @@ SpreadsheetReader {
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
 		final String fontWeight = odfElement.getAttributeValue(
-				OdsConstants.FONT_WEIGHT, OdsJOpenStyleHelper.FO_NS);
+				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
 		if (OdsConstants.BOLD_ATTR_NAME.equals(fontWeight))
 			wrapperFont.setBold();
 

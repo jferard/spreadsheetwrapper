@@ -189,10 +189,25 @@ public class OdsSimpleodsDocumentWriter extends
 				styleName, this.file);
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null) {
-			if (wrapperFont.getBold() == WrapperCellStyle.YES)
+			final WrapperColor fontColor = wrapperFont.getColor();
+			final int bold = wrapperFont.getBold();
+			final int italic = wrapperFont.getItalic();
+			final int size = wrapperFont.getSize();
+			
+			if (fontColor != null)
+				newStyle.setFontColor(fontColor.toHex());
+			if (bold == WrapperCellStyle.YES) {
 				newStyle.setFontWeightBold();
-			if (wrapperFont.getItalic() == WrapperCellStyle.YES)
-				newStyle.setFontWeightItalic();
+				if (italic == WrapperCellStyle.YES)
+					newStyle.setFontWeightItalic();
+			} else {
+				if (italic == WrapperCellStyle.YES)
+					newStyle.setFontWeightItalic();
+				else
+					newStyle.setFontWeightNormal();
+			}
+			if (size != WrapperCellStyle.DEFAULT)
+				newStyle.setFontSize(size);
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();

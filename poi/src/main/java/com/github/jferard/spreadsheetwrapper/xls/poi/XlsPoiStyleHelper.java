@@ -163,10 +163,26 @@ class XlsPoiStyleHelper {
 			final WrapperCellStyle wrapperCellStyle) {
 		final CellStyle cellStyle = workbook.createCellStyle();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null
-				&& wrapperFont.getBold() == WrapperCellStyle.YES) {
+		if (wrapperFont != null) {
 			final Font font = workbook.createFont();
-			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		
+			final int bold = wrapperFont.getBold();
+			final int italic = wrapperFont.getItalic();
+			final int size = wrapperFont.getSize();
+
+			if (bold == WrapperCellStyle.YES)
+				font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+			else if (bold == WrapperCellStyle.NO)
+				font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+				
+			if (italic == WrapperCellStyle.YES)
+				font.setItalic(true);
+			else if (italic == WrapperCellStyle.NO)
+				font.setItalic(false);
+			
+			if (size != WrapperCellStyle.DEFAULT)
+				font.setFontHeightInPoints((short) size);
+				
 			cellStyle.setFont(font);
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle

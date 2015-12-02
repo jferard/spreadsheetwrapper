@@ -123,9 +123,15 @@ public class XlsJxlStyleHelper {
 		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
 		try {
 			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-			if (wrapperFont != null
-					&& wrapperFont.getBold() == WrapperCellStyle.YES)
-				cellFont.setBoldStyle(WritableFont.BOLD);
+			if (wrapperFont != null) {
+					if (wrapperFont.getBold() == WrapperCellStyle.YES)
+						cellFont.setBoldStyle(WritableFont.BOLD);
+					if (wrapperFont.getItalic() == WrapperCellStyle.YES)
+						cellFont.setItalic(true);
+					final WrapperColor fontColor = wrapperFont.getColor();
+					if (fontColor != null)
+						cellFont.setColour(this.toJxlColor(fontColor));
+			}
 
 			final WrapperColor backgroundColor = wrapperCellStyle
 					.getBackgroundColor();

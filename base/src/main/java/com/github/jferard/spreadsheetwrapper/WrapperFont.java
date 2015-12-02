@@ -25,9 +25,9 @@ package com.github.jferard.spreadsheetwrapper;
  *
  */
 public class WrapperFont {
-	/** true if the font is bold */
+	/** YES if the font is bold */
 	private int bold;
-	/** true if the font is italic */
+	/** YES if the font is italic */
 	private int italic;
 	/** size of the font, -1 if no size specified */
 	private int size;

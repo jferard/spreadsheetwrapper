@@ -52,11 +52,11 @@ public class StyleUtility {
 			final int bold) {
 		switch (bold) {
 		case WrapperCellStyle.YES:
-			styleStringBuilder.append(OdsConstants.FONT_WEIGHT)
+			styleStringBuilder.append(OdsConstants.FONT_WEIGHT_ATTR_NAME)
 			.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(OdsConstants.FONT_WEIGHT).append(
+			styleStringBuilder.append(OdsConstants.FONT_WEIGHT_ATTR_NAME).append(
 					":normal;");
 			break;
 		default:
@@ -69,11 +69,11 @@ public class StyleUtility {
 			final StringBuilder styleStringBuilder, final int italic) {
 		switch (italic) {
 		case WrapperCellStyle.YES:
-			styleStringBuilder.append(OdsConstants.FONT_STYLE).append(
+			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME).append(
 					":italic;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(OdsConstants.FONT_STYLE).append(
+			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME).append(
 					":normal;");
 			break;
 		default:
@@ -154,9 +154,9 @@ public class StyleUtility {
 			final String value = entry[1];
 			if (key.equals(OdsConstants.BACKGROUND_COLOR))
 				backgroundColor = WrapperColor.stringToColor(value);
-			else if (key.equals(OdsConstants.FONT_WEIGHT))
+			else if (key.equals(OdsConstants.FONT_WEIGHT_ATTR_NAME))
 				StyleUtility.setFontBold(font, value);
-			else if (key.equals(OdsConstants.FONT_STYLE))
+			else if (key.equals(OdsConstants.FONT_STYLE_ATTR_NAME))
 				StyleUtility.setFontItalic(font, value);
 			else if (key.equals(OdsConstants.FONT_SIZE))
 				font.setSize(Integer.valueOf(value));

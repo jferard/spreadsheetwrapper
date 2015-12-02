@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.v
 import java.util.Date;
 import java.util.List;
 
+import org.jdom.Namespace;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.spreadsheet.CellStyle;
@@ -92,7 +93,7 @@ SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		final OdsJopenDocument${final jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
+		OdsJopenDocument${jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
 	}
 
@@ -140,22 +141,50 @@ SpreadsheetWriter {
 		final CellStyle cellStyle = cell.getStyle();
 		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
 		if (backgroundColor != null) {
-			final ${final jopendocument.style}final TableCellProperties tableCellProperties = cellStyle
+			final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
 					.getTableCellProperties();
 			tableCellProperties.setBackgroundColor(backgroundColor.toHex());
 		}
 		final WrapperFont font = wrapperStyle.getCellFont();
 		if (font != null) {
-			final ${final jopendocument.style}final TextProperties textProperties = cellStyle
+			final ${jopendocument.style}TextProperties textProperties = cellStyle
 					.getTextProperties();
 			final WrapperColor color = font.getColor();
 			if (color != null)
 				textProperties.setColor(OOUtils.decodeRGB(color.toHex()));
-			if (font.getBold() == WrapperCellStyle.YES)
-				textProperties.getElement().setAttribute(
-						OdsConstants.FONT_WEIGHT, "bold");
+			this.setBold(textProperties, font.getBold());
+			this.setItalic(textProperties, font.getItalic());
+//			this.setAttribute(textProperties, OdsConstants.FONT_SIZE, font.getItalic(), font, "normal");
 		}
 		return true;
+	}
+	
+	/**
+	 * <style:text-properties fo:font-size="14pt" fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+	 * <style:text-properties fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+	 */
+	private void setBold(final ${jopendocument.style}TextProperties textProperties, int boldKey) {
+		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS, boldKey, "bold", "normal");
+		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, boldKey, "bold", "normal");
+		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, boldKey, "bold", "normal");
+	}	
+
+	private void setItalic(final ${jopendocument.style}TextProperties textProperties, int italicKey) {
+		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS, italicKey, "italic", "normal");
+		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, italicKey, "italic", "normal");
+		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, italicKey, "italic", "normal");
+	}	
+	
+	
+	private void setAttribute(final ${jopendocument.style}TextProperties textProperties, 
+				String attribute, Namespace namespace, int key, String valueYes, String valueNo) {
+		switch (key) {
+			case WrapperCellStyle.YES: textProperties.getElement().setAttribute(
+					attribute, valueYes); break;
+			case WrapperCellStyle.NO: textProperties.getElement().setAttribute(
+					attribute, valueNo); break;
+			default: break;
+		}
 	}
 
 	/** {@inheritDoc} */

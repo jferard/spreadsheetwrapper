@@ -57,13 +57,57 @@ public class OdsOdfdomStyleHelper {
 				.getProperty(OdfTableCellProperties.BackgroundColor);
 		final String fontWeight = odfElement
 				.getProperty(OdfTextProperties.FontWeight);
+		final String fontSize = odfElement
+				.getProperty(OdfTextProperties.FontSize);
+		final String fontStyle = odfElement
+				.getProperty(OdfTextProperties.FontStyle);
 
 		final WrapperFont wrapperFont = new WrapperFont();
-		if ("bold".equals(fontWeight))
+		if (fontWeight == null)
+			wrapperFont.setBold(WrapperCellStyle.DEFAULT);
+		else if ("bold".equals(fontWeight))
 			wrapperFont.setBold();
+		else if ("normal".equals(fontWeight))
+			wrapperFont.setBold(WrapperCellStyle.NO);
 
+		if (fontStyle == null)
+			wrapperFont.setItalic(WrapperCellStyle.DEFAULT);
+		else if ("italic".equals(fontStyle))
+			wrapperFont.setItalic();
+		else if ("normal".equals(fontStyle))
+			wrapperFont.setItalic(WrapperCellStyle.NO);
+
+		if (fontSize == null)
+			wrapperFont.setSize(WrapperCellStyle.DEFAULT);
+		else
+			wrapperFont.setSize(OdsOdfdomStyleHelper.sizeToPoints(fontSize)); // 10pt, 10cm, units
+		
 		return new WrapperCellStyle(
 				WrapperColor.stringToColor(backgroundColor), wrapperFont);
+	}
+
+	private static int sizeToPoints(String fontSize) {
+		final double ret;
+		final int length = fontSize.length();
+		if (length > 2) {
+			String value = fontSize.substring(0, length-2);
+			String unit = fontSize.substring(length-2);
+			double tempValue = Double.valueOf(value);
+			if ("in".equals(unit))
+				ret = tempValue*72.0;
+			else if ("cm".equals(unit))
+				ret = tempValue/2.54 * 72.0;
+			else if ("mm".equals(unit))
+				ret = tempValue/2.54 * 72.0;
+			else if ("px".equals(unit))
+				ret = tempValue;
+			else if ("pc".equals(unit))
+				ret = tempValue/6.0 *72.0;
+			else
+				ret = tempValue;
+		} else
+			ret = Double.valueOf(fontSize);
+		return (int) ret;
 	}
 
 	/**

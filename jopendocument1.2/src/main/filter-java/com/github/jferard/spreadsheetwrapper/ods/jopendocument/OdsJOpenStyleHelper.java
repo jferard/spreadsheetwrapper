@@ -77,7 +77,7 @@ class OdsJOpenStyleHelper {
 			final Element textProps = new Element(
 					OdsConstants.TEXT_PROPERTIES_NAME,
 					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT, "bold",
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, "bold",
 					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
@@ -109,7 +109,7 @@ class OdsJOpenStyleHelper {
 			final Element textProps = new Element(
 					OdsConstants.TEXT_PROPERTIES_NAME,
 					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT, "bold",
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, "bold",
 					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
@@ -136,13 +136,13 @@ class OdsJOpenStyleHelper {
 					backgroundColor, OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
-		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT)) {
+		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT_ATTR_NAME)) {
 			final String fontWeight = propertiesMap
-					.get(OdsConstants.FONT_WEIGHT);
+					.get(OdsConstants.FONT_WEIGHT_ATTR_NAME);
 			final Element textProps = new Element(
 					OdsConstants.TEXT_PROPERTIES_NAME,
 					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT, fontWeight,
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, fontWeight,
 					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}
@@ -173,13 +173,13 @@ class OdsJOpenStyleHelper {
 					backgroundColorAsHex, OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
-		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT)) {
+		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT_ATTR_NAME)) {
 			final String fontWeight = propertiesMap
-					.get(OdsConstants.FONT_WEIGHT);
+					.get(OdsConstants.FONT_WEIGHT_ATTR_NAME);
 			final Element textProps = new Element(
 					OdsConstants.TEXT_PROPERTIES_NAME,
 					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT, fontWeight,
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, fontWeight,
 					OdsJOpenStyleHelper.FO_NS);
 			style.addContent(textProps);
 		}

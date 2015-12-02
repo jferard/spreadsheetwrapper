@@ -156,10 +156,7 @@ SpreadsheetWriter {
 	@Override
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
-		if (r < 0 || c < 0)
-			throw new IllegalArgumentException();
-
-		return true;
+		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */

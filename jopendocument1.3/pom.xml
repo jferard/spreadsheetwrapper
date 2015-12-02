@@ -17,9 +17,9 @@
 		<jopendocument.version>1_3</jopendocument.version>
 		<jopendocument.style>Style</jopendocument.style>
 		<javaSourceFilterDirectory>
-			${project.basedir}/../jopendocument1.2/src/main/filter-java
+			${project.basedir}/../jopendocument1.2/src/main/filter-java/com/github/jferard/spreadsheetwrapper/ods/jopendocument
 		</javaSourceFilterDirectory>
-		<javaDestFilterDirectory>${project.basedir}/target/generated-sources/java</javaDestFilterDirectory>
+		<javaDestFilterDirectory>${project.basedir}/target/generated-sources/java/com/github/jferard/spreadsheetwrapper/ods/jopendocument1_3</javaDestFilterDirectory>
 	</properties>
 
  <parent>
