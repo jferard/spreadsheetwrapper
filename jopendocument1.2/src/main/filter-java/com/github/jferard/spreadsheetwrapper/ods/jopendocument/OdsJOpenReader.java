@@ -20,19 +20,14 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.v
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.jdom.Element;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.spreadsheet.CellStyle;
-import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
@@ -47,11 +42,12 @@ SpreadsheetReader {
 
 	/** the style helper */
 	final OdsJOpenStyleHelper styleHelper;
-	
+
 	/**
 	 * @param sheet
 	 *            the *internal* sheet
-	 * @param styleHelper the style helper
+	 * @param styleHelper
+	 * 				the style helper
 	 */
 	OdsJOpenReader(final OdsJOpenStyleHelper styleHelper, final Sheet sheet) {
 		super();
@@ -178,7 +174,6 @@ SpreadsheetReader {
 		final CellStyle cellStyle = cell.getStyle();
 		return this.styleHelper.toWrapperCellStyle(cellStyle);
 	}
-
 
 	/** {@inheritDoc} */
 	@Override

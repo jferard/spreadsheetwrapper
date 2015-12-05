@@ -46,8 +46,8 @@ SpreadsheetWriter {
 
 	/** the style helper */
 	final OdsJOpenStyleHelper styleHelper;
-	
-	
+
+
 	/**
 	 * @param sheet
 	 *            the *internal* sheet
@@ -149,7 +149,7 @@ SpreadsheetWriter {
 		assert cellStyle != null;
 		return this.styleHelper.setCellStyle(cellStyle, wrapperStyle);
 	}
-		
+
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {

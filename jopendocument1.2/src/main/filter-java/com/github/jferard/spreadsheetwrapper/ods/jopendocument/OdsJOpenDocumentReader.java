@@ -42,13 +42,15 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/** the style helper */
 		final OdsJOpenStyleHelper styleHelper;
-		
+
 		/**
-		 * @param styleHelper the style helper
+		 * @param styleHelper
+		 * 				the style helper
 		 * @param sfSpreadSheet
 		 *            *internal* value
 		 */
-		OdsJOpenDocumentReaderTrait(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet) {
+		OdsJOpenDocumentReaderTrait(final OdsJOpenStyleHelper styleHelper,
+				final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 			this.styleHelper = styleHelper;
 		}
@@ -67,16 +69,19 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	private final Stateful<SpreadSheet> sfSpreadSheet;
 
 	/**
-	 * @param styleHelper the style helper
+	 * @param styleHelper
+	 * 				the style helper
 	 * @param sfSpreadSheet
 	 *            *internal* value
 	 * @throws SpreadsheetException
 	 *             if can't open reader
 	 */
-	OdsJOpenDocumentReader(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet)
-			throws SpreadsheetException {
+	OdsJOpenDocumentReader(final OdsJOpenStyleHelper styleHelper,
+			final OdsJOpenStatefulDocument sfSpreadSheet)
+					throws SpreadsheetException {
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentTrait = new OdsJOpenDocumentReaderTrait(styleHelper, sfSpreadSheet);
+		this.documentTrait = new OdsJOpenDocumentReaderTrait(styleHelper,
+				sfSpreadSheet);
 	}
 
 	/** {@inheritDoc} */

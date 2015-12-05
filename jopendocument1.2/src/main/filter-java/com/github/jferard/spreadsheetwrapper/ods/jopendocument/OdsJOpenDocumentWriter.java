@@ -52,12 +52,15 @@ implements SpreadsheetDocumentWriter {
 	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		/** the style helper */
 		final OdsJOpenStyleHelper styleHelper;
-		
+
 		/**
-		 * @param styleHelper the style helper
-		 * @param sfSpreadSheet the *internal* spreadsheet, stateful version
+		 * @param styleHelper
+		 * 			the style helper
+		 * @param sfSpreadSheet
+		 * 			the *internal* spreadsheet, stateful version
 		 */
-		OdsJOpenDocumentWriterTrait(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet) {
+		OdsJOpenDocumentWriterTrait(final OdsJOpenStyleHelper styleHelper,
+				final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 			this.styleHelper = styleHelper;
 		}

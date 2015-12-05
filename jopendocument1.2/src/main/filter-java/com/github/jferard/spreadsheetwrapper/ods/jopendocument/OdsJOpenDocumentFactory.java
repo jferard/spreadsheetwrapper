@@ -74,8 +74,8 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<SpreadSheet> sfDocument) throws SpreadsheetException {
-		return new OdsJOpenDocumentReader(this.styleHelper, new OdsJOpenStatefulDocument(
-				sfDocument));
+		return new OdsJOpenDocumentReader(this.styleHelper,
+				new OdsJOpenStatefulDocument(sfDocument));
 	}
 
 	/**

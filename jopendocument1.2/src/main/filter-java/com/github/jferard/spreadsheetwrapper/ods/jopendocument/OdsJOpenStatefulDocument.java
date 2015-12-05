@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.v
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.jopendocument.dom.ODPackage;
 import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;

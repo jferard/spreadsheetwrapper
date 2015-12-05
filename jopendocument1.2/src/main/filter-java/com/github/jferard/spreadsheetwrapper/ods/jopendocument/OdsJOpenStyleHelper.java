@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.spreadsheet.CellStyle;
 import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
 import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
@@ -116,7 +115,7 @@ class OdsJOpenStyleHelper {
 			this.setBold(textProps, cellFont.getBold());
 			this.setItalic(textProps, cellFont.getItalic());
 			this.setSize(textProps, cellFont.getSize());
-			WrapperColor color = cellFont.getColor();
+			final WrapperColor color = cellFont.getColor();
 			if (color != null)
 				this.setColor(textProps, color);
 			style.addContent(textProps);
@@ -124,59 +123,52 @@ class OdsJOpenStyleHelper {
 		return style;
 	}
 
-	private void setBold(final Element textProps, int key) {
-		final String value;
-		if (key == WrapperCellStyle.YES)
-			value = "bold";
-		else if (key == WrapperCellStyle.YES)
-			value = "normal";
-		else 
-			value = null;
-		
-		if (value != null) { 
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value,
-				OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value,
-				OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value,
-				OdsJOpenStyleHelper.STYLE_NS);
-		}
+	/**
+	 * @param cellStyle the internal cell style
+	 * @return the wrapper cell style
+	 */
+	public WrapperCellStyle toWrapperCellStyle(final /*@Nullable*/ CellStyle cellStyle) {
+		if (cellStyle == null)
+			return WrapperCellStyle.EMPTY;
+
+		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+				.getTableCellProperties();
+		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
+		final WrapperColor backgroundColor = WrapperColor
+				.stringToColor(bColorAsHex);
+
+		final WrapperFont wrapperFont = new WrapperFont();
+		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
+		final Element odfElement = textProperties.getElement();
+
+		final String fontWeight = odfElement.getAttributeValue(
+				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
+		if ("bold".equals(fontWeight))
+			wrapperFont.setBold();
+		else if ("normal".equals(fontWeight))
+			wrapperFont.setBold(WrapperCellStyle.NO);
+
+		final String fontStyle = odfElement.getAttributeValue(
+				OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
+		if ("italic".equals(fontStyle))
+			wrapperFont.setItalic();
+		else if ("normal".equals(fontStyle))
+			wrapperFont.setItalic(WrapperCellStyle.NO);
+
+		final String fontSize = odfElement.getAttributeValue(
+				OdsConstants.FONT_SIZE, OdsJOpenStyleHelper.FO_NS);
+		if (fontSize != null)
+			wrapperFont.setSize(OdsConstants.sizeToPoints(fontSize));
+
+		final String fColorAsHex = odfElement.getAttributeValue(
+				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
+		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
+		if (fontColor != null)
+			wrapperFont.setColor(fontColor);
+
+		return new WrapperCellStyle(backgroundColor, wrapperFont);
 	}
 
-	private void setItalic(final Element textProps, int key) {
-		final String value;
-		if (key == WrapperCellStyle.YES)
-			value = "italic";
-		else if (key == WrapperCellStyle.YES)
-			value = "normal";
-		else 
-			value = null;
-		
-		if (value != null) { 
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
-				OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
-				OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
-				OdsJOpenStyleHelper.STYLE_NS);
-		}
-	}
-	
-	private void setSize(final Element textProps, int size) {
-		if (size != WrapperCellStyle.DEFAULT) {
-			textProps.setAttribute(OdsConstants.FONT_SIZE, Integer.toString(size)+"pt",
-				OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-	
-	private void setColor(final Element textProps, WrapperColor color) {
-		if (color != null) {
-			textProps.setAttribute(OdsConstants.COLOR_ATTR_NAME, color.toHex(),
-				OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-	
-	
 	/**
 	 * @param styleName
 	 *            the name of the style
@@ -221,6 +213,58 @@ class OdsJOpenStyleHelper {
 		return style;
 	}
 
+	private void setBold(final Element textProps, final int key) {
+		final String value;
+		if (key == WrapperCellStyle.YES)
+			value = "bold";
+		else if (key == WrapperCellStyle.YES)
+			value = "normal";
+		else
+			value = null;
+
+		if (value != null) {
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value,
+					OdsJOpenStyleHelper.FO_NS);
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+			textProps.setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+		}
+	}
+
+	private void setColor(final Element textProps, final WrapperColor color) {
+		if (color != null) {
+			textProps.setAttribute(OdsConstants.COLOR_ATTR_NAME, color.toHex(),
+					OdsJOpenStyleHelper.FO_NS);
+		}
+	}
+
+	private void setItalic(final Element textProps, final int key) {
+		final String value;
+		if (key == WrapperCellStyle.YES)
+			value = "italic";
+		else if (key == WrapperCellStyle.YES)
+			value = "normal";
+		else
+			value = null;
+
+		if (value != null) {
+			textProps.setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
+					OdsJOpenStyleHelper.FO_NS);
+			textProps.setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+			textProps.setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+		}
+	}
+
+	private void setSize(final Element textProps, final int size) {
+		if (size != WrapperCellStyle.DEFAULT) {
+			textProps.setAttribute(OdsConstants.FONT_SIZE, Integer.toString(size)+"pt",
+					OdsJOpenStyleHelper.FO_NS);
+		}
+	}
+
 	private Element setStyle(final Element style,
 			final Map<String, String> propertiesMap) {
 		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
@@ -246,58 +290,13 @@ class OdsJOpenStyleHelper {
 		}
 		return style;
 	}
-	
-	/**
-	 * @param cellStyle the internal cell style
-	 * @return the wrapper cell style
-	 */
-	public WrapperCellStyle toWrapperCellStyle(final /*@Nullable*/ CellStyle cellStyle) {	
-		if (cellStyle == null)
-			return WrapperCellStyle.EMPTY;
 
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
-				.getTableCellProperties();
-		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
-		final WrapperColor backgroundColor = WrapperColor
-				.stringToColor(bColorAsHex);
 
-		final WrapperFont wrapperFont = new WrapperFont();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
-		final Element odfElement = textProperties.getElement();
-
-		final String fontWeight = odfElement.getAttributeValue(
-				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if ("bold".equals(fontWeight))
-			wrapperFont.setBold();
-		else if ("normal".equals(fontWeight))
-			wrapperFont.setBold(WrapperCellStyle.NO);
-		
-		final String fontStyle = odfElement.getAttributeValue(
-				OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if ("italic".equals(fontStyle))
-			wrapperFont.setItalic();
-		else if ("normal".equals(fontStyle))
-			wrapperFont.setItalic(WrapperCellStyle.NO);
-
-		final String fontSize = odfElement.getAttributeValue(
-				OdsConstants.FONT_SIZE, OdsJOpenStyleHelper.FO_NS);
-		if (fontSize != null)
-			wrapperFont.setSize(OdsConstants.sizeToPoints(fontSize));
-				
-		final String fColorAsHex = odfElement.getAttributeValue(
-				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
-		if (fontColor != null)
-			wrapperFont.setColor(fontColor);
-		
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
-	}
-	
 	/**
 	 * @param cellStyle the internal cell style, to update
-	 * @param wrapperStyle the wrapper cell 
+	 * @param wrapperStyle the wrapper cell
 	 */
-	public boolean setCellStyle(CellStyle cellStyle, final WrapperCellStyle wrapperStyle) {
+	public boolean setCellStyle(final CellStyle cellStyle, final WrapperCellStyle wrapperStyle) {
 		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
 		if (backgroundColor != null) {
 			final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
@@ -316,52 +315,52 @@ class OdsJOpenStyleHelper {
 		}
 		return true;
 	}
-//	
-//	/**
-//	 * <style:text-properties fo:font-size="14pt" fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-//	 * <style:text-properties fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-//	 */
-//	private void setBold(final ${jopendocument.style}TextProperties textProperties, int boldKey) {
-//		final String value;
-//		switch (boldKey) {
-//			case WrapperCellStyle.YES: value = "bold"; break;
-//			case WrapperCellStyle.NO: value = "normal"; break;
-//			default: value = null; break;
-//		}
-//		
-//		if (value != null) {
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.FO_NS);
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.STYLE_NS);
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.STYLE_NS);
-//		}
-//	}	
-//
-//	private void setItalic(final ${jopendocument.style}TextProperties textProperties, int italicKey) {
-//		final String value;
-//		switch (italicKey) {
-//			case WrapperCellStyle.YES: value = "italic"; break;
-//			case WrapperCellStyle.NO: value = "normal"; break;
-//			default: value = null; break;
-//		}
-//		
-//		if (value != null) {
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.FO_NS);
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.STYLE_NS);
-//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value, 
-//					OdsJOpenStyleHelper.STYLE_NS);
-//		}
-//	}	
-//	
-//	private void setSize(final ${jopendocument.style}TextProperties textProperties, int size) {
-//		if (size != WrapperCellStyle.DEFAULT) {
-//			textProperties.getElement().setAttribute(
-//					OdsConstants.FONT_SIZE, Integer.toString(size)+"pt", OdsJOpenStyleHelper.FO_NS);
-//		}
-//	}
-	
+	//
+	//	/**
+	//	 * <style:text-properties fo:font-size="14pt" fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
+	//	 * <style:text-properties fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+	//	 */
+	//	private void setBold(final ${jopendocument.style}TextProperties textProperties, int boldKey) {
+	//		final String value;
+	//		switch (boldKey) {
+	//			case WrapperCellStyle.YES: value = "bold"; break;
+	//			case WrapperCellStyle.NO: value = "normal"; break;
+	//			default: value = null; break;
+	//		}
+	//
+	//		if (value != null) {
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.FO_NS);
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//		}
+	//	}
+	//
+	//	private void setItalic(final ${jopendocument.style}TextProperties textProperties, int italicKey) {
+	//		final String value;
+	//		switch (italicKey) {
+	//			case WrapperCellStyle.YES: value = "italic"; break;
+	//			case WrapperCellStyle.NO: value = "normal"; break;
+	//			default: value = null; break;
+	//		}
+	//
+	//		if (value != null) {
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.FO_NS);
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//		}
+	//	}
+	//
+	//	private void setSize(final ${jopendocument.style}TextProperties textProperties, int size) {
+	//		if (size != WrapperCellStyle.DEFAULT) {
+	//			textProperties.getElement().setAttribute(
+	//					OdsConstants.FONT_SIZE, Integer.toString(size)+"pt", OdsJOpenStyleHelper.FO_NS);
+	//		}
+	//	}
+
 }
