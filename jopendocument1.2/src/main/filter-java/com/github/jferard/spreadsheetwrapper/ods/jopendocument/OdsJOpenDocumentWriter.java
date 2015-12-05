@@ -50,15 +50,23 @@ implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
 	private final class OdsJOpenDocumentWriterTrait extends
 	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
-		OdsJOpenDocumentWriterTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
+		/** the style helper */
+		final OdsJOpenStyleHelper styleHelper;
+		
+		/**
+		 * @param styleHelper the style helper
+		 * @param sfSpreadSheet the *internal* spreadsheet, stateful version
+		 */
+		OdsJOpenDocumentWriterTrait(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
+			this.styleHelper = styleHelper;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsJOpenDocumentWriterTrait this, */final Sheet sheeet) {
-			return new OdsJOpenWriter(sheeet);
+				/*>>> @UnknownInitialization OdsJOpenDocumentWriterTrait this, */final Sheet sheet) {
+			return new OdsJOpenWriter(this.styleHelper, sheet);
 		}
 	}
 
@@ -112,10 +120,10 @@ implements SpreadsheetDocumentWriter {
 					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
-		this.reader = new OdsJOpenDocumentReader(sfSpreadSheet);
+		this.reader = new OdsJOpenDocumentReader(styleHelper, sfSpreadSheet);
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentTrait = new OdsJOpenDocumentWriterTrait(sfSpreadSheet);
+		this.documentTrait = new OdsJOpenDocumentWriterTrait(styleHelper, sfSpreadSheet);
 	}
 
 	/** {@inheritDoc} */
@@ -208,9 +216,6 @@ implements SpreadsheetDocumentWriter {
 	}
 
 	/** {@inheritDoc} */
-	/* (non-Javadoc)
-	 * @see com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter#setStyle(java.lang.String, com.github.jferard.spreadsheetwrapper.WrapperCellStyle)
-	 */
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {

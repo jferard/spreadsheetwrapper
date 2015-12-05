@@ -45,12 +45,17 @@ SpreadsheetReader {
 	/** the *internal* table */
 	private final Sheet sheet;
 
+	/** the style helper */
+	final OdsJOpenStyleHelper styleHelper;
+	
 	/**
 	 * @param sheet
 	 *            the *internal* sheet
+	 * @param styleHelper the style helper
 	 */
-	OdsJOpenReader(final Sheet sheet) {
+	OdsJOpenReader(final OdsJOpenStyleHelper styleHelper, final Sheet sheet) {
 		super();
+		this.styleHelper = styleHelper;
 		this.sheet = sheet;
 	}
 
@@ -171,30 +176,9 @@ SpreadsheetReader {
 			return null;
 
 		final CellStyle cellStyle = cell.getStyle();
-		if (cellStyle == null)
-			return WrapperCellStyle.EMPTY;
-
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
-				.getTableCellProperties();
-		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
-		final WrapperColor backgroundColor = WrapperColor
-				.stringToColor(bColorAsHex);
-
-		final WrapperFont wrapperFont = new WrapperFont();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
-		final Element odfElement = textProperties.getElement();
-		final String fColorAsHex = odfElement.getAttributeValue(
-				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
-		if (fontColor != null)
-			wrapperFont.setColor(fontColor);
-		final String fontWeight = odfElement.getAttributeValue(
-				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if (OdsConstants.BOLD_ATTR_NAME.equals(fontWeight))
-			wrapperFont.setBold();
-
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
+		return this.styleHelper.toWrapperCellStyle(cellStyle);
 	}
+
 
 	/** {@inheritDoc} */
 	@Override

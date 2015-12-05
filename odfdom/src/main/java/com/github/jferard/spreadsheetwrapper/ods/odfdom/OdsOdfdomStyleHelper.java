@@ -29,6 +29,7 @@ import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /**
  * A little style utility for odftoolkit files
@@ -61,6 +62,8 @@ public class OdsOdfdomStyleHelper {
 				.getProperty(OdfTextProperties.FontSize);
 		final String fontStyle = odfElement
 				.getProperty(OdfTextProperties.FontStyle);
+		final String fontColor = odfElement
+				.getProperty(OdfTextProperties.Color);
 
 		final WrapperFont wrapperFont = new WrapperFont();
 		if (fontWeight == null)
@@ -77,37 +80,14 @@ public class OdsOdfdomStyleHelper {
 		else if ("normal".equals(fontStyle))
 			wrapperFont.setItalic(WrapperCellStyle.NO);
 
-		if (fontSize == null)
-			wrapperFont.setSize(WrapperCellStyle.DEFAULT);
-		else
-			wrapperFont.setSize(OdsOdfdomStyleHelper.sizeToPoints(fontSize)); // 10pt, 10cm, units
+		if (fontSize != null)
+			wrapperFont.setSize(OdsConstants.sizeToPoints(fontSize)); // 10pt, 10cm, units
+		
+		if (fontColor != null)
+			wrapperFont.setColor(WrapperColor.stringToColor(fontColor));
 		
 		return new WrapperCellStyle(
 				WrapperColor.stringToColor(backgroundColor), wrapperFont);
-	}
-
-	private static int sizeToPoints(String fontSize) {
-		final double ret;
-		final int length = fontSize.length();
-		if (length > 2) {
-			String value = fontSize.substring(0, length-2);
-			String unit = fontSize.substring(length-2);
-			double tempValue = Double.valueOf(value);
-			if ("in".equals(unit))
-				ret = tempValue*72.0;
-			else if ("cm".equals(unit))
-				ret = tempValue/2.54 * 72.0;
-			else if ("mm".equals(unit))
-				ret = tempValue/2.54 * 72.0;
-			else if ("px".equals(unit))
-				ret = tempValue;
-			else if ("pc".equals(unit))
-				ret = tempValue/6.0 *72.0;
-			else
-				ret = tempValue;
-		} else
-			ret = Double.valueOf(fontSize);
-		return (int) ret;
 	}
 
 	/**
@@ -124,9 +104,39 @@ public class OdsOdfdomStyleHelper {
 		// 24/11/15
 		// 19:24
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null
-				&& wrapperFont.getBold() == WrapperCellStyle.YES)
-			properties.put(OdfTextProperties.FontWeight, "bold");
+		if (wrapperFont != null) {
+				final int bold = wrapperFont.getBold();
+				final int size = wrapperFont.getSize();
+				final int italic = wrapperFont.getItalic();
+				final WrapperColor fontColor = wrapperFont.getColor();
+				if (bold == WrapperCellStyle.YES) {
+					properties.put(OdfTextProperties.FontWeight, "bold");
+					properties.put(OdfTextProperties.FontWeightAsian, "bold");
+					properties.put(OdfTextProperties.FontWeightComplex, "bold");
+				} else if (bold == WrapperCellStyle.NO) {
+					properties.put(OdfTextProperties.FontWeight, "normal");
+					properties.put(OdfTextProperties.FontWeightAsian, "normal");
+					properties.put(OdfTextProperties.FontWeightComplex, "normal");
+				}
+				
+				if (italic == WrapperCellStyle.YES) {
+					properties.put(OdfTextProperties.FontStyle, "italic");
+					properties.put(OdfTextProperties.FontStyleAsian, "italic");
+					properties.put(OdfTextProperties.FontStyleComplex, "italic");
+				} else if (italic == WrapperCellStyle.NO) {
+					properties.put(OdfTextProperties.FontStyle, "normal");
+					properties.put(OdfTextProperties.FontStyleAsian, "normal");
+					properties.put(OdfTextProperties.FontStyleComplex, "normal");
+				}
+				
+				if (size != WrapperCellStyle.DEFAULT) {
+					properties.put(OdfTextProperties.FontSize, Integer.toString(size)+"pt");
+				}
+				
+				if (fontColor != null) {
+					properties.put(OdfTextProperties.Color, fontColor.toHex());
+				}
+		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {

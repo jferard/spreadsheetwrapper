@@ -40,19 +40,24 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsJOpenDocumentReaderTrait extends
 	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
+		/** the style helper */
+		final OdsJOpenStyleHelper styleHelper;
+		
 		/**
+		 * @param styleHelper the style helper
 		 * @param sfSpreadSheet
 		 *            *internal* value
 		 */
-		OdsJOpenDocumentReaderTrait(final OdsJOpenStatefulDocument sfSpreadSheet) {
+		OdsJOpenDocumentReaderTrait(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
+			this.styleHelper = styleHelper;
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsJOpenDocumentReaderTrait this,*/final Sheet sheet) {
-			return new OdsJOpenReader(sheet);
+			return new OdsJOpenReader(this.styleHelper, sheet);
 		}
 	}
 
@@ -62,15 +67,16 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	private final Stateful<SpreadSheet> sfSpreadSheet;
 
 	/**
+	 * @param styleHelper the style helper
 	 * @param sfSpreadSheet
 	 *            *internal* value
 	 * @throws SpreadsheetException
 	 *             if can't open reader
 	 */
-	OdsJOpenDocumentReader(final OdsJOpenStatefulDocument sfSpreadSheet)
+	OdsJOpenDocumentReader(final OdsJOpenStyleHelper styleHelper, final OdsJOpenStatefulDocument sfSpreadSheet)
 			throws SpreadsheetException {
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentTrait = new OdsJOpenDocumentReaderTrait(sfSpreadSheet);
+		this.documentTrait = new OdsJOpenDocumentReaderTrait(styleHelper, sfSpreadSheet);
 	}
 
 	/** {@inheritDoc} */

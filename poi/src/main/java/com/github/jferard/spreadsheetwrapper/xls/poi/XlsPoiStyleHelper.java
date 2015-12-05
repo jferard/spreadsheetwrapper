@@ -169,6 +169,7 @@ class XlsPoiStyleHelper {
 			final int bold = wrapperFont.getBold();
 			final int italic = wrapperFont.getItalic();
 			final int size = wrapperFont.getSize();
+			final WrapperColor fontColor = wrapperFont.getColor();
 
 			if (bold == WrapperCellStyle.YES)
 				font.setBoldweight(Font.BOLDWEIGHT_BOLD);
@@ -182,6 +183,12 @@ class XlsPoiStyleHelper {
 			
 			if (size != WrapperCellStyle.DEFAULT)
 				font.setFontHeightInPoints((short) size);
+			
+			if (fontColor != null) {
+				final HSSFColor hssfColor = this.toHSSFColor(fontColor);
+				final short index = hssfColor.getIndex();
+				font.setColor(index);
+			}
 				
 			cellStyle.setFont(font);
 		}
@@ -226,19 +233,32 @@ class XlsPoiStyleHelper {
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font poiFont = workbook.getFontAt(fontIndex);
 		WrapperCellStyle wrapperCellStyle;
-		WrapperFont wrapperFont;
+		WrapperFont wrapperFont = new WrapperFont();
 		if (poiFont.getBoldweight() == Font.BOLDWEIGHT_BOLD)
-			wrapperFont = new WrapperFont().setBold();
-		else
-			wrapperFont = new WrapperFont();
+			wrapperFont.setBold();
+		
+		if (poiFont.getItalic())
+			wrapperFont.setItalic();
+		
+		final short size = poiFont.getFontHeightInPoints();
+		if (size != 10)
+			wrapperFont.setSize(size);
+		
+		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
+		short fontColorIndex = poiFont.getColor();
+		final HSSFColor poiFontColor = indexHash.get(Integer.valueOf(fontColorIndex));
+		if (this.colorByHssfColor.containsKey(poiFontColor)) {
+			WrapperColor fontColor = this.colorByHssfColor.get(poiFontColor);
+			if (fontColor != null)
+				wrapperFont.setColor(fontColor);
+		}
 
 		WrapperColor wrapperColor = null;
-		final short index = cellStyle.getFillForegroundColor();
-		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
-		final HSSFColor poiColor = indexHash.get(Integer.valueOf(index));
+		final short backgroundColorIndex = cellStyle.getFillForegroundColor();
+		final HSSFColor poiBackgroundColor = indexHash.get(Integer.valueOf(backgroundColorIndex));
 		if (cellStyle.getFillPattern() == CellStyle.SOLID_FOREGROUND
-				&& this.colorByHssfColor.containsKey(poiColor))
-			wrapperColor = this.colorByHssfColor.get(poiColor);
+				&& this.colorByHssfColor.containsKey(poiBackgroundColor))
+			wrapperColor = this.colorByHssfColor.get(poiBackgroundColor);
 		if (WrapperColor.DEFAULT_BACKGROUND.equals(wrapperColor))
 			wrapperColor = null;
 

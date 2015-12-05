@@ -24,11 +24,9 @@ import org.jdom.Namespace;
 import org.jopendocument.dom.ODValueType;
 import org.jopendocument.dom.OOUtils;
 import org.jopendocument.dom.spreadsheet.CellStyle;
-import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
 import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
-import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
@@ -46,12 +44,18 @@ SpreadsheetWriter {
 	/** the *internal* sheet wrapped */
 	private final Sheet sheet;
 
+	/** the style helper */
+	final OdsJOpenStyleHelper styleHelper;
+	
+	
 	/**
 	 * @param sheet
 	 *            the *internal* sheet
+	 * @param styleHelper the style helper
 	 */
-	OdsJOpenWriter(final Sheet sheet) {
-		super(new OdsJOpenReader(sheet));
+	OdsJOpenWriter(final OdsJOpenStyleHelper styleHelper, final Sheet sheet) {
+		super(new OdsJOpenReader(styleHelper, sheet));
+		this.styleHelper = styleHelper;
 		this.sheet = sheet;
 
 	}
@@ -138,55 +142,14 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		final CellStyle cellStyle = cell.getStyle();
-		final WrapperColor backgroundColor = wrapperStyle.getBackgroundColor();
-		if (backgroundColor != null) {
-			final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
-					.getTableCellProperties();
-			tableCellProperties.setBackgroundColor(backgroundColor.toHex());
-		}
-		final WrapperFont font = wrapperStyle.getCellFont();
-		if (font != null) {
-			final ${jopendocument.style}TextProperties textProperties = cellStyle
-					.getTextProperties();
-			final WrapperColor color = font.getColor();
-			if (color != null)
-				textProperties.setColor(OOUtils.decodeRGB(color.toHex()));
-			this.setBold(textProperties, font.getBold());
-			this.setItalic(textProperties, font.getItalic());
-//			this.setAttribute(textProperties, OdsConstants.FONT_SIZE, font.getItalic(), font, "normal");
-		}
-		return true;
-	}
-	
-	/**
-	 * <style:text-properties fo:font-size="14pt" fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-	 * <style:text-properties fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-	 */
-	private void setBold(final ${jopendocument.style}TextProperties textProperties, int boldKey) {
-		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS, boldKey, "bold", "normal");
-		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, boldKey, "bold", "normal");
-		this.setAttribute(textProperties, OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, boldKey, "bold", "normal");
-	}	
+		CellStyle cellStyle = cell.getStyle();
+		if (cellStyle == null)
+			cellStyle = cell.getPrivateStyle();
 
-	private void setItalic(final ${jopendocument.style}TextProperties textProperties, int italicKey) {
-		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS, italicKey, "italic", "normal");
-		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, italicKey, "italic", "normal");
-		this.setAttribute(textProperties, OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, OdsJOpenStyleHelper.STYLE_NS, italicKey, "italic", "normal");
-	}	
-	
-	
-	private void setAttribute(final ${jopendocument.style}TextProperties textProperties, 
-				String attribute, Namespace namespace, int key, String valueYes, String valueNo) {
-		switch (key) {
-			case WrapperCellStyle.YES: textProperties.getElement().setAttribute(
-					attribute, valueYes); break;
-			case WrapperCellStyle.NO: textProperties.getElement().setAttribute(
-					attribute, valueNo); break;
-			default: break;
-		}
+		assert cellStyle != null;
+		return this.styleHelper.setCellStyle(cellStyle, wrapperStyle);
 	}
-
+		
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {

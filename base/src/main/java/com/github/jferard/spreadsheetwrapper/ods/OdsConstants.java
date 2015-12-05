@@ -68,4 +68,28 @@ public final class OdsConstants {
 
 	private OdsConstants() {
 	}
+
+	public static int sizeToPoints(String fontSize) {
+		final double ret;
+		final int length = fontSize.length();
+		if (length > 2) {
+			String value = fontSize.substring(0, length-2);
+			String unit = fontSize.substring(length-2);
+			double tempValue = Double.valueOf(value);
+			if ("in".equals(unit))
+				ret = tempValue*72.0;
+			else if ("cm".equals(unit))
+				ret = tempValue/2.54 * 72.0;
+			else if ("mm".equals(unit))
+				ret = tempValue/2.54 * 72.0;
+			else if ("px".equals(unit))
+				ret = tempValue;
+			else if ("pc".equals(unit))
+				ret = tempValue/6.0 *72.0;
+			else
+				ret = tempValue;
+		} else
+			ret = Double.valueOf(fontSize);
+		return (int) ret;
+	}
 }

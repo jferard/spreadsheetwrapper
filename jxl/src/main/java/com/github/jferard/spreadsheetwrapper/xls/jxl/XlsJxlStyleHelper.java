@@ -124,13 +124,25 @@ public class XlsJxlStyleHelper {
 		try {
 			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 			if (wrapperFont != null) {
-					if (wrapperFont.getBold() == WrapperCellStyle.YES)
-						cellFont.setBoldStyle(WritableFont.BOLD);
-					if (wrapperFont.getItalic() == WrapperCellStyle.YES)
-						cellFont.setItalic(true);
-					final WrapperColor fontColor = wrapperFont.getColor();
-					if (fontColor != null)
-						cellFont.setColour(this.toJxlColor(fontColor));
+				final int bold = wrapperFont.getBold();
+				if (bold == WrapperCellStyle.YES)
+					cellFont.setBoldStyle(WritableFont.BOLD);
+				else if (bold == WrapperCellStyle.NO)
+					cellFont.setBoldStyle(WritableFont.NO_BOLD);
+
+				final int italic = wrapperFont.getItalic();
+				if (italic == WrapperCellStyle.YES)
+					cellFont.setItalic(true);
+				else if (italic == WrapperCellStyle.NO)
+					cellFont.setItalic(false);
+				
+				final int size = wrapperFont.getSize();
+				if (size != WrapperCellStyle.DEFAULT)
+					cellFont.setPointSize(size);
+
+				final WrapperColor fontColor = wrapperFont.getColor();
+				if (fontColor != null)
+					cellFont.setColour(this.toJxlColor(fontColor));
 			}
 
 			final WrapperColor backgroundColor = wrapperCellStyle
@@ -141,7 +153,7 @@ public class XlsJxlStyleHelper {
 					cellFormat.setBackground(jxlColor);
 			}
 		} catch (final WriteException e) { // NOPMD by Julien on 24/11/15 19:48
-			// do nothing
+			e.printStackTrace();
 		}
 		return cellFormat;
 	}
@@ -171,15 +183,27 @@ public class XlsJxlStyleHelper {
 
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
-		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
-			final WrapperColor wrapperFontColor = this
-					.toWrapperColor(fontColor);
-			if (wrapperFontColor != null)
-				wrapperFont.setColor(wrapperFontColor);
+
+		if (font != null) {
+			final int boldWeight = font.getBoldWeight();
+			if (boldWeight == BoldStyle.BOLD.getValue())
+				wrapperFont.setBold();
+
+			if (font.isItalic())
+				wrapperFont.setItalic();
+
+			int pointSize = font.getPointSize();
+			if (pointSize != WritableFont.DEFAULT_POINT_SIZE)
+				wrapperFont.setSize(pointSize);
+
+			final Colour fontColor = font.getColour();
+			if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+				final WrapperColor wrapperFontColor = this
+						.toWrapperColor(fontColor);
+				if (wrapperFontColor != null)
+					wrapperFont.setColor(wrapperFontColor);
+			}
 		}
-		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-			wrapperFont.setBold();
 
 		return new WrapperCellStyle(backgroundColor, wrapperFont);
 	}
