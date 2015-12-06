@@ -91,7 +91,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	public final void testCreate2StylesFromObjectsAndSetStylesWithGap() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
+				WrapperColor.AQUA, WrapperCellStyle.DEFAULT, wrapperFont);
 		this.documentWriter
 				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
 						wrapperCellStyle);
@@ -128,7 +128,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		// simpleodf
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
+				WrapperColor.AQUA, WrapperCellStyle.DEFAULT, wrapperFont);
 		this.documentWriter
 				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
 						wrapperCellStyle);
@@ -153,7 +153,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	public final void testCreateStyleFromObjectsAndSetStyle() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(
-				WrapperColor.AQUA, wrapperFont);
+				WrapperColor.AQUA, WrapperCellStyle.DEFAULT, wrapperFont);
 		this.documentWriter
 				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
 						wrapperCellStyle);
@@ -179,21 +179,20 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setItalic()
 				.setSize(20).setColor(WrapperColor.ORANGE);
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle(null,
-				wrapperFont);
+				WrapperCellStyle.DEFAULT, wrapperFont);
 		this.documentWriter
 				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
 						wrapperCellStyle);
 		try {
 			this.sheetWriter.setCellContent(0, 0, "From name",
 					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
-			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
-					0);
+			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0, 0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
 			Assume.assumeNoException(e);
 		}
-			
+
 		try {
 			this.sheetWriter.setCellContent(1, 0, "From Style");
 			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);

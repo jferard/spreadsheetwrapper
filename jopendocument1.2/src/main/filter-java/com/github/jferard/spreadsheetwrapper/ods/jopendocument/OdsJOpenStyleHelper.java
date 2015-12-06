@@ -166,7 +166,7 @@ class OdsJOpenStyleHelper {
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
 
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
+		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, wrapperFont);
 	}
 
 	/**
@@ -258,9 +258,9 @@ class OdsJOpenStyleHelper {
 		}
 	}
 
-	private void setSize(final Element textProps, final int size) {
+	private void setSize(final Element textProps, final double size) {
 		if (size != WrapperCellStyle.DEFAULT) {
-			textProps.setAttribute(OdsConstants.FONT_SIZE, Integer.toString(size)+"pt",
+			textProps.setAttribute(OdsConstants.FONT_SIZE, Double.toString(size)+"pt",
 					OdsJOpenStyleHelper.FO_NS);
 		}
 	}

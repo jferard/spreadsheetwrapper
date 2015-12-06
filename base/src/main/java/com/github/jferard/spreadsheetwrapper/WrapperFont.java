@@ -20,19 +20,30 @@ package com.github.jferard.spreadsheetwrapper;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
- * the class WrapperFont wraps some font attributes : bold/italic, size and
- * color
+ * the class WrapperFont wraps some font attributes : bold/italic, size, color
+ * and family
  *
  */
 public class WrapperFont {
+	/** ARIAL font */
+	public static final String ARIAL_NAME = "Arial";
+	/** TIMES font */
+	public static final String TIMES_NAME = "Times New Roman";
+	/** COURIER font */
+	public static final String COURIER_NAME = "Courier New";
+	/** TAHOMA font */
+	public static final String TAHOMA_NAME = "Tahoma";
+
 	/** YES if the font is bold */
 	private int bold;
 	/** YES if the font is italic */
 	private int italic;
 	/** size of the font, -1 if no size specified */
-	private int size;
+	private double size;
 	/** color of the font */
 	private/*@Nullable*/WrapperColor wrapperColor;
+	/** family of the font : one of */
+	private/*@Nullable*/String family;
 
 	/**
 	 * All fields to default
@@ -42,6 +53,7 @@ public class WrapperFont {
 		this.italic = WrapperCellStyle.DEFAULT;
 		this.size = WrapperCellStyle.DEFAULT;
 		this.wrapperColor = null;
+		this.family = null;
 	}
 
 	/**
@@ -51,7 +63,7 @@ public class WrapperFont {
 	 *            one of YES, NO, DEFAULT
 	 */
 	public WrapperFont(final int bold, final int italic) {
-		this(bold, italic, WrapperCellStyle.DEFAULT, null);
+		this(bold, italic, WrapperCellStyle.DEFAULT, null, null);
 	}
 
 	/**
@@ -64,13 +76,15 @@ public class WrapperFont {
 	 * @param wrapperColor
 	 *            color of the font
 	 */
-	public WrapperFont(final int bold, final int italic, final int size,
-			final/*@Nullable*/WrapperColor wrapperColor) {
+	public WrapperFont(final int bold, final int italic, final double size,
+			final/*@Nullable*/WrapperColor wrapperColor,
+			final/*@Nullable*/String family) {
 		super();
 		this.bold = bold;
 		this.italic = italic;
 		this.size = size;
 		this.wrapperColor = wrapperColor;
+		this.family = family;
 	}
 
 	/** {@inheritDoc} */
@@ -83,8 +97,9 @@ public class WrapperFont {
 
 		final WrapperFont other = (WrapperFont) obj;
 		return this.bold == other.bold && this.italic == other.italic
-				&& this.size == other.size
-				&& this.wrapperColor == other.wrapperColor;
+				&& Util.almostEqual(this.size, other.size)
+				&& this.wrapperColor == other.wrapperColor
+				&& Util.equal(this.family, other.family);
 	}
 
 	/**
@@ -102,6 +117,13 @@ public class WrapperFont {
 	}
 
 	/**
+	 * @return the family of the font
+	 */
+	public/*@Nullable*/String getFamily() {
+		return this.family;
+	}
+
+	/**
 	 * @return true if the font is italic
 	 */
 	public int getItalic() {
@@ -111,7 +133,7 @@ public class WrapperFont {
 	/**
 	 * @return the size of the font
 	 */
-	public int getSize() {
+	public double getSize() {
 		return this.size;
 	}
 
@@ -120,8 +142,8 @@ public class WrapperFont {
 	public int hashCode() {
 		final int prime = 31;
 		return prime
-				* (prime * (prime * (prime + this.bold) + this.italic) + this.size)
-				+ Util.hash(this.wrapperColor);
+				* (prime * (prime * (prime + this.bold) + this.italic) + (int) this.size)
+				+ Util.hash(this.wrapperColor) + Util.hash(this.family);
 	}
 
 	/**
@@ -157,6 +179,18 @@ public class WrapperFont {
 	}
 
 	/**
+	 * sets font family
+	 *
+	 * @param family
+	 *            the family name
+	 * @return this (fluent)
+	 */
+	public WrapperFont setFamily(final String family) {
+		this.family = family;
+		return this;
+	}
+
+	/**
 	 * sets font to italic
 	 *
 	 * @return this (fluent)
@@ -181,7 +215,7 @@ public class WrapperFont {
 	 *            size of the font
 	 * @return this (fluent)
 	 */
-	public WrapperFont setSize(final int size) {
+	public WrapperFont setSize(final double size) {
 		this.size = size;
 		return this;
 	}
@@ -192,6 +226,7 @@ public class WrapperFont {
 		return new StringBuilder("WrapperFont [bold=").append(this.bold)
 				.append(", italic=").append(this.italic).append(", size=")
 				.append(this.size).append(", wrapperColor=")
-				.append(this.wrapperColor).append("]").toString();
+				.append(this.wrapperColor).append(", family=")
+				.append(this.family).append("]").toString();
 	}
 }

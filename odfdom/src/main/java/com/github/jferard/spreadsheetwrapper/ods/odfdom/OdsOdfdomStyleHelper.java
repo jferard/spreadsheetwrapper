@@ -26,6 +26,7 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
+import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -87,7 +88,7 @@ public class OdsOdfdomStyleHelper {
 			wrapperFont.setColor(WrapperColor.stringToColor(fontColor));
 		
 		return new WrapperCellStyle(
-				WrapperColor.stringToColor(backgroundColor), wrapperFont);
+				WrapperColor.stringToColor(backgroundColor), WrapperCellStyle.DEFAULT, wrapperFont);
 	}
 
 	/**
@@ -106,7 +107,7 @@ public class OdsOdfdomStyleHelper {
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null) {
 				final int bold = wrapperFont.getBold();
-				final int size = wrapperFont.getSize();
+				final double size = wrapperFont.getSize();
 				final int italic = wrapperFont.getItalic();
 				final WrapperColor fontColor = wrapperFont.getColor();
 				if (bold == WrapperCellStyle.YES) {
@@ -129,8 +130,8 @@ public class OdsOdfdomStyleHelper {
 					properties.put(OdfTextProperties.FontStyleComplex, "normal");
 				}
 				
-				if (size != WrapperCellStyle.DEFAULT) {
-					properties.put(OdfTextProperties.FontSize, Integer.toString(size)+"pt");
+				if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT)) {
+					properties.put(OdfTextProperties.FontSize, Double.toString(size)+"pt");
 				}
 				
 				if (fontColor != null) {
@@ -187,6 +188,6 @@ public class OdsOdfdomStyleHelper {
 			wrapperColor = this.colorByHex.get(backgroundColor);
 		else
 			wrapperColor = null;
-		return new WrapperCellStyle(wrapperColor, wrapperFont);
+		return new WrapperCellStyle(wrapperColor, WrapperCellStyle.DEFAULT, wrapperFont);
 	}
 }

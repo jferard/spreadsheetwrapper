@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
+import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -168,7 +169,7 @@ class XlsPoiStyleHelper {
 		
 			final int bold = wrapperFont.getBold();
 			final int italic = wrapperFont.getItalic();
-			final int size = wrapperFont.getSize();
+			final double sizeInPoints = wrapperFont.getSize();
 			final WrapperColor fontColor = wrapperFont.getColor();
 
 			if (bold == WrapperCellStyle.YES)
@@ -181,8 +182,10 @@ class XlsPoiStyleHelper {
 			else if (italic == WrapperCellStyle.NO)
 				font.setItalic(false);
 			
-			if (size != WrapperCellStyle.DEFAULT)
-				font.setFontHeightInPoints((short) size);
+			if (!Util.almostEqual(sizeInPoints, WrapperCellStyle.DEFAULT)) {
+				double sizeInTwentiethOfPoint = sizeInPoints*20.0;
+				font.setFontHeight((short) (sizeInTwentiethOfPoint));
+			}
 			
 			if (fontColor != null) {
 				final HSSFColor hssfColor = this.toHSSFColor(fontColor);
@@ -240,9 +243,10 @@ class XlsPoiStyleHelper {
 		if (poiFont.getItalic())
 			wrapperFont.setItalic();
 		
-		final short size = poiFont.getFontHeightInPoints();
-		if (size != 10)
-			wrapperFont.setSize(size);
+		final short sizeInTwentiethOfPoint = poiFont.getFontHeight();
+		final double sizeInPoints = sizeInTwentiethOfPoint /20.0; 
+		if (!Util.almostEqual(sizeInPoints, 10.0))
+			wrapperFont.setSize(sizeInPoints);
 		
 		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
 		short fontColorIndex = poiFont.getColor();
@@ -262,7 +266,7 @@ class XlsPoiStyleHelper {
 		if (WrapperColor.DEFAULT_BACKGROUND.equals(wrapperColor))
 			wrapperColor = null;
 
-		wrapperCellStyle = new WrapperCellStyle(wrapperColor, wrapperFont);
+		wrapperCellStyle = new WrapperCellStyle(wrapperColor, WrapperCellStyle.DEFAULT, wrapperFont);
 		return wrapperCellStyle;
 	}
 }

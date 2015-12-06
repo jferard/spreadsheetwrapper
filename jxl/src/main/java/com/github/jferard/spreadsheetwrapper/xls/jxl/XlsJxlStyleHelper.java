@@ -29,6 +29,7 @@ import jxl.write.WritableFont;
 import jxl.write.WriteException;
 
 import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
+import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -136,9 +137,9 @@ public class XlsJxlStyleHelper {
 				else if (italic == WrapperCellStyle.NO)
 					cellFont.setItalic(false);
 				
-				final int size = wrapperFont.getSize();
-				if (size != WrapperCellStyle.DEFAULT)
-					cellFont.setPointSize(size);
+				final double size = wrapperFont.getSize();
+				if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT))
+					cellFont.setPointSize((int) size);
 
 				final WrapperColor fontColor = wrapperFont.getColor();
 				if (fontColor != null)
@@ -205,7 +206,7 @@ public class XlsJxlStyleHelper {
 			}
 		}
 
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
+		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, wrapperFont);
 	}
 
 	/**
@@ -232,7 +233,7 @@ public class XlsJxlStyleHelper {
 		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
 			wrapperFont.setBold();
 
-		return new WrapperCellStyle(backgroundColor, wrapperFont);
+		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, wrapperFont);
 	}
 
 	/**

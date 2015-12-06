@@ -33,6 +33,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
+import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
@@ -192,7 +193,7 @@ public class OdsSimpleodsDocumentWriter extends
 			final WrapperColor fontColor = wrapperFont.getColor();
 			final int bold = wrapperFont.getBold();
 			final int italic = wrapperFont.getItalic();
-			final int size = wrapperFont.getSize();
+			final double size = wrapperFont.getSize();
 			
 			if (fontColor != null)
 				newStyle.setFontColor(fontColor.toHex());
@@ -206,8 +207,8 @@ public class OdsSimpleodsDocumentWriter extends
 				else
 					newStyle.setFontWeightNormal();
 			}
-			if (size != WrapperCellStyle.DEFAULT)
-				newStyle.setFontSize(size);
+			if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT))
+				newStyle.setFontSize((int) size);
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();

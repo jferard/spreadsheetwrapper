@@ -69,13 +69,13 @@ public final class OdsConstants {
 	private OdsConstants() {
 	}
 
-	public static int sizeToPoints(String fontSize) {
+	public static double sizeToPoints(String fontSize) {
 		final double ret;
 		final int length = fontSize.length();
 		if (length > 2) {
 			String value = fontSize.substring(0, length-2);
 			String unit = fontSize.substring(length-2);
-			double tempValue = Double.valueOf(value);
+			double tempValue = Float.valueOf(value);
 			if ("in".equals(unit))
 				ret = tempValue*72.0;
 			else if ("cm".equals(unit))
@@ -90,6 +90,6 @@ public final class OdsConstants {
 				ret = tempValue;
 		} else
 			ret = Double.valueOf(fontSize);
-		return (int) ret;
+		return ret;
 	}
 }

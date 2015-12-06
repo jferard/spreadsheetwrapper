@@ -113,7 +113,7 @@ public class StyleUtility {
 			styleStringBuilder.append(OdsConstants.BACKGROUND_COLOR)
 					.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
-		final int size;
+		final double size;
 		final WrapperColor color;
 		if (font == null) {
 			size = WrapperCellStyle.DEFAULT;
@@ -159,12 +159,12 @@ public class StyleUtility {
 			else if (key.equals(OdsConstants.FONT_STYLE_ATTR_NAME))
 				StyleUtility.setFontItalic(font, value);
 			else if (key.equals(OdsConstants.FONT_SIZE))
-				font.setSize(Integer.valueOf(value));
+				font.setSize(Double.valueOf(value));
 			else if (key.equals(OdsConstants.FONT_COLOR))
 				font.setColor(WrapperColor.stringToColor(value));
 		}
 
-		return new WrapperCellStyle(backgroundColor, font);
+		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, font);
 	}
 
 }
