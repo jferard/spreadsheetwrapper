@@ -66,6 +66,15 @@ public final class OdsConstants {
 	/** time type name */
 	public static final String TIME_TYPE = "time";
 
+	/** the font family */
+	public static final String FAMILY_ATTR_NAME = "font-family";
+	/** the font family, asian */
+	public static final String FAMILY_ASIAN_ATTR_NAME = "font-family-asian";
+	/** the font family, complex */
+	public static final String FAMILY_COMPLEX_ATTR_NAME = "font-family-complex";
+	/** the border */
+	public static final String BORDER_ATTR_NAME = "border";
+
 	private OdsConstants() {
 	}
 
