@@ -17,13 +17,18 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jxl.format.BoldStyle;
+import jxl.format.Border;
+import jxl.format.BorderLineStyle;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
 import jxl.format.Font;
+import jxl.format.RGB;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WriteException;
@@ -120,11 +125,23 @@ public class XlsJxlStyleHelper {
 	 */
 	public WritableCellFormat toCellFormat(
 			final WrapperCellStyle wrapperCellStyle) {
-		final WritableFont cellFont = new WritableFont(WritableFont.ARIAL);
-		final WritableCellFormat cellFormat = new WritableCellFormat(cellFont);
+		final WritableCellFormat cellFormat = new WritableCellFormat();
 		try {
+			final WritableFont cellFont;
 			final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 			if (wrapperFont != null) {
+				String family = wrapperFont.getFamily();
+				if (family == null)
+					cellFont = new WritableFont(WritableFont.ARIAL);
+				else if (WrapperFont.COURIER_NAME.equals(family))
+					cellFont = new WritableFont(WritableFont.COURIER);
+				else if (WrapperFont.TAHOMA_NAME.equals(family))
+					cellFont = new WritableFont(WritableFont.TAHOMA);
+				else if (WrapperFont.TIMES_NAME.equals(family))
+					cellFont = new WritableFont(WritableFont.TIMES);
+				else
+					cellFont = new WritableFont(WritableFont.ARIAL);
+
 				final int bold = wrapperFont.getBold();
 				if (bold == WrapperCellStyle.YES)
 					cellFont.setBoldStyle(WritableFont.BOLD);
@@ -136,7 +153,7 @@ public class XlsJxlStyleHelper {
 					cellFont.setItalic(true);
 				else if (italic == WrapperCellStyle.NO)
 					cellFont.setItalic(false);
-				
+
 				final double size = wrapperFont.getSize();
 				if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT))
 					cellFont.setPointSize((int) size);
@@ -144,6 +161,8 @@ public class XlsJxlStyleHelper {
 				final WrapperColor fontColor = wrapperFont.getColor();
 				if (fontColor != null)
 					cellFont.setColour(this.toJxlColor(fontColor));
+
+				cellFormat.setFont(cellFont);
 			}
 
 			final WrapperColor backgroundColor = wrapperCellStyle
@@ -153,8 +172,26 @@ public class XlsJxlStyleHelper {
 				if (jxlColor != null)
 					cellFormat.setBackground(jxlColor);
 			}
-		} catch (final WriteException e) { // NOPMD by Julien on 24/11/15 19:48
-			e.printStackTrace();
+
+			double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
+			if (borderLineWidth != WrapperCellStyle.DEFAULT) {
+				if (Util.almostEqual(borderLineWidth,
+						WrapperCellStyle.THIN_LINE))
+					cellFormat.setBorder(Border.ALL, BorderLineStyle.THIN,
+							Colour.BLACK);
+				else if (Util.almostEqual(borderLineWidth,
+						WrapperCellStyle.MEDIUM_LINE))
+					cellFormat.setBorder(Border.ALL, BorderLineStyle.MEDIUM,
+							Colour.BLACK);
+				else if (Util.almostEqual(borderLineWidth,
+						WrapperCellStyle.THICK_LINE))
+					cellFormat.setBorder(Border.ALL, BorderLineStyle.THICK,
+							Colour.BLACK);
+				else
+					throw new UnsupportedOperationException();
+			}
+		} catch (final WriteException e) {
+			throw new IllegalStateException(e);
 		}
 		return cellFormat;
 	}
@@ -176,11 +213,18 @@ public class XlsJxlStyleHelper {
 	public WrapperCellStyle toWrapperCellStyle(final CellFormat cellFormat) {
 		if (cellFormat == null)
 			return WrapperCellStyle.EMPTY;
+		WrapperCellStyle wrapperCellStyle = new WrapperCellStyle();
 
 		WrapperColor backgroundColor = this.toWrapperColor(cellFormat
 				.getBackgroundColour());
 		if (WrapperColor.DEFAULT_BACKGROUND.equals(backgroundColor))
 			backgroundColor = null;
+		if (backgroundColor != null)
+			wrapperCellStyle.setBackgroundColor(backgroundColor);
+
+		double borderLineWidth = this.getBorderLineSize(cellFormat);
+		if (borderLineWidth != WrapperCellStyle.DEFAULT)
+			wrapperCellStyle.setBorderLineWidth(borderLineWidth);
 
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();
@@ -204,36 +248,81 @@ public class XlsJxlStyleHelper {
 				if (wrapperFontColor != null)
 					wrapperFont.setColor(wrapperFontColor);
 			}
+			
+			String name = font.getName();
+			if (!"Arial".equals(name))
+				wrapperFont.setFamily(name);
 		}
 
-		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, wrapperFont);
+		return wrapperCellStyle.setCellFont(wrapperFont);
 	}
 
-	/**
-	 * @param cellFormat
-	 *            the internal cell style
-	 * @return the wrapper cell style
-	 */
-	public WrapperCellStyle toWrapperCellStyle(
-			final WritableCellFormat cellFormat) {
-		if (cellFormat == null)
-			return WrapperCellStyle.EMPTY;
+	// /**
+	// * @param cellFormat
+	// * the internal cell style
+	// * @return the wrapper cell style
+	// */
+	// public WrapperCellStyle toWrapperCellStyle(
+	// final WritableCellFormat cellFormat) {
+	// if (cellFormat == null)
+	// return WrapperCellStyle.EMPTY;
+	//
+	// WrapperCellStyle cellStyle = new WrapperCellStyle();
+	//
+	// final WrapperColor backgroundColor = this.toWrapperColor(cellFormat
+	// .getBackgroundColour());
+	//
+	// final WrapperFont wrapperFont = new WrapperFont();
+	// final Font font = cellFormat.getFont();
+	// final Colour fontColor = font.getColour();
+	// if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
+	// final WrapperColor wrapperFontColor = this
+	// .toWrapperColor(fontColor);
+	// if (wrapperFontColor != null)
+	// wrapperFont.setColor(wrapperFontColor);
+	// }
+	// if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
+	// wrapperFont.setBold();
+	//
+	// return cellStyle;
+	// }
 
-		final WrapperColor backgroundColor = this.toWrapperColor(cellFormat
-				.getBackgroundColour());
-		final WrapperFont wrapperFont = new WrapperFont();
-		final Font font = cellFormat.getFont();
-		final Colour fontColor = font.getColour();
-		if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
-			final WrapperColor wrapperFontColor = this
-					.toWrapperColor(fontColor);
-			if (wrapperFontColor != null)
-				wrapperFont.setColor(wrapperFontColor);
+	private double getBorderLineSize(CellFormat cellFormat) {
+		BorderLineStyle borderStyle = cellFormat.getBorderLine(Border.LEFT);
+		final List<Border> list = Arrays.asList(Border.RIGHT, Border.TOP,
+				Border.BOTTOM);
+		for (Border border : list) {
+			if (!borderStyle.equals(cellFormat.getBorderLine(border))) {
+				return WrapperCellStyle.DEFAULT;
+			}
 		}
-		if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-			wrapperFont.setBold();
+		Colour borderColor = cellFormat.getBorderColour(Border.LEFT);
+		if (!(colorEquals(borderColor, Colour.BLACK) || colorEquals(
+				borderColor, Colour.PALETTE_BLACK)))
+			return WrapperCellStyle.DEFAULT;
 
-		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, wrapperFont);
+		for (Border border : list) {
+			if (!colorEquals(borderColor, cellFormat.getBorderColour(border))) {
+				return WrapperCellStyle.DEFAULT;
+			}
+		}
+
+		if (BorderLineStyle.THIN.equals(borderStyle))
+			return WrapperCellStyle.THIN_LINE;
+		else if (BorderLineStyle.MEDIUM.equals(borderStyle))
+			return WrapperCellStyle.MEDIUM_LINE;
+		else if (BorderLineStyle.THICK.equals(borderStyle))
+			return WrapperCellStyle.THICK_LINE;
+		else
+			return WrapperCellStyle.DEFAULT;
+	}
+
+	private static boolean colorEquals(Colour color1, Colour color2) {
+		RGB rgb1 = color1.getDefaultRGB();
+		RGB rgb2 = color2.getDefaultRGB();
+		return rgb1.getRed() == rgb2.getRed()
+				&& rgb1.getGreen() == rgb2.getGreen()
+				&& rgb1.getBlue() == rgb2.getBlue();
 	}
 
 	/**

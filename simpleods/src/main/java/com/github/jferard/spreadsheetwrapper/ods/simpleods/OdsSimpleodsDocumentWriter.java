@@ -23,9 +23,11 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.simpleods.BorderStyle;
 import org.simpleods.OdsFile;
 import org.simpleods.Table;
 import org.simpleods.TableStyle;
+import org.simpleods.TextStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Output;
@@ -190,30 +192,39 @@ public class OdsSimpleodsDocumentWriter extends
 				styleName, this.file);
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null) {
+			TextStyle textStyle = newStyle.getTextStyle();
 			final WrapperColor fontColor = wrapperFont.getColor();
 			final int bold = wrapperFont.getBold();
 			final int italic = wrapperFont.getItalic();
 			final double size = wrapperFont.getSize();
+			final String family = wrapperFont.getFamily();
 			
 			if (fontColor != null)
-				newStyle.setFontColor(fontColor.toHex());
+				textStyle.setFontColor(fontColor.toHex());
 			if (bold == WrapperCellStyle.YES) {
-				newStyle.setFontWeightBold();
+				textStyle.setFontWeightBold();
 				if (italic == WrapperCellStyle.YES)
-					newStyle.setFontWeightItalic();
+					textStyle.setFontWeightItalic();
 			} else {
 				if (italic == WrapperCellStyle.YES)
-					newStyle.setFontWeightItalic();
+					textStyle.setFontWeightItalic();
 				else
-					newStyle.setFontWeightNormal();
+					textStyle.setFontWeightNormal();
 			}
 			if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT))
-				newStyle.setFontSize((int) size);
+				textStyle.setFontSize((int) size);
+			if (family != null)
+				textStyle.setFontName(family);
+			
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
+		final double borderLineWidth = wrapperCellStyle
+				.getBorderLineWidth();
 		if (backgroundColor != null)
 			newStyle.setBackgroundColor(backgroundColor.toHex());
+		if (borderLineWidth != WrapperCellStyle.DEFAULT)
+			newStyle.addBorderStyle(Double.valueOf(borderLineWidth)+"pt", "#000000", BorderStyle.BORDER_SOLID, BorderStyle.POSITION_ALL);
 		return true;
 	}
 }

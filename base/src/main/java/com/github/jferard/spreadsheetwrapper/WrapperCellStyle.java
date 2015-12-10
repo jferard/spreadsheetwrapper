@@ -34,7 +34,16 @@ public class WrapperCellStyle {
 	public static final int NO = 0; // NOPMD by Julien on 20/11/15 21:04
 	/** attribute : set */
 	public static final int YES = 1;
+	
+	/** width of the line : thin */
+	public static final double THIN_LINE = 1.0;
 
+	/** width of the line : medium */
+	public static final double MEDIUM_LINE = 2.0;
+
+	/** width of the line : thick */
+	public static final double THICK_LINE = 4.0;
+	
 	/** the backgroundColor of the cell */
 	private/*@Nullable*/WrapperColor backgoundColor;
 

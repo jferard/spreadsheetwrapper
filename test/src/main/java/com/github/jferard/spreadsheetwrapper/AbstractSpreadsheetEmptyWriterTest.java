@@ -212,7 +212,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setItalic()
 				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setBorderLineWidth(0.5).setCellFont(wrapperFont);
+				.setBorderLineWidth(WrapperCellStyle.THIN_LINE).setCellFont(wrapperFont);
 		this.documentWriter
 				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
 						wrapperCellStyle);

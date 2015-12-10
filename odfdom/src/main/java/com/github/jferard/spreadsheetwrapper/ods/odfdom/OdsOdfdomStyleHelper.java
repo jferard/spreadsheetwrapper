@@ -125,8 +125,11 @@ public class OdsOdfdomStyleHelper {
 
 			if (fontFamily != null) {
 				properties.put(OdfTextProperties.FontFamily, fontFamily);
+				properties.put(OdfTextProperties.FontName, fontFamily);
 				properties.put(OdfTextProperties.FontFamilyAsian, fontFamily);
+				properties.put(OdfTextProperties.FontNameAsian, fontFamily);
 				properties.put(OdfTextProperties.FontFamilyComplex, fontFamily);
+				properties.put(OdfTextProperties.FontNameComplex, fontFamily);
 			}
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
