@@ -67,39 +67,25 @@ class OdsJOpenStyleHelper {
 			final WrapperCellStyle wrapperCellStyle) {
 		final Element style = this.getBaseStyle(styleName);
 		this.setStyle(style, wrapperCellStyle);
-		//		final WrapperColor backgroundColor = wrapperCellStyle
-		//				.getBackgroundColor();
-		//		final double border = wrapperCellStyle.getBorderLineWidth();
-		//		final Element tableCellProps = new Element(
-		//				OdsConstants.TABLE_CELL_PROPERTIES_NAME,
-		//				OdsJOpenStyleHelper.STYLE_NS);
-		//		this.setBackgroundColor(tableCellProps, backgroundColor);
-		//		this.setBorder(tableCellProps, border);
-		//		style.addContent(tableCellProps);
-		//		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
-		//		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
-		//			final Element textProps = new Element(
-		//					OdsConstants.TEXT_PROPERTIES_NAME,
-		//					OdsJOpenStyleHelper.STYLE_NS);
-		//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, "bold",
-		//					OdsJOpenStyleHelper.FO_NS);
-		//			style.addContent(textProps);
-		//		}
 		return style;
 	}
 
 	/**
-	 * @param cellStyle the internal cell style, to update
-	 * @param wrapperStyle the wrapper cell
+	 * @param cellStyle
+	 * 	          the internal cell style, to update
+	 * @param wrapperStyle
+	 *            the wrapper cell
 	 */
-	public boolean setCellStyle(final CellStyle cellStyle, final WrapperCellStyle wrapperCellStyle) {
+	public boolean setCellStyle(final CellStyle cellStyle,
+			final WrapperCellStyle wrapperCellStyle) {
 		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
-		final Element tableCellPropertiesElement = tableCellProperties.getElement();
-		final ${jopendocument.styletextproperties.cls} textProperties = cellStyle
-				.getTextProperties();
+		final Element tableCellPropertiesElement = tableCellProperties
+				.getElement();
+		final ${jopendocument.styletextproperties.cls} textProperties = cellStyle.getTextProperties();
 		final Element textPropertiesElement = textProperties.getElement();
-		this.setStyle(tableCellPropertiesElement, textPropertiesElement, wrapperCellStyle);
+		this.setStyle(tableCellPropertiesElement, textPropertiesElement,
+				wrapperCellStyle);
 		return true;
 	}
 
@@ -117,8 +103,7 @@ class OdsJOpenStyleHelper {
 				OdsConstants.TABLE_CELL_PROPERTIES_NAME,
 				OdsJOpenStyleHelper.STYLE_NS);
 		final Element textProps = new Element(
-				OdsConstants.TEXT_PROPERTIES_NAME,
-				OdsJOpenStyleHelper.STYLE_NS);
+				OdsConstants.TEXT_PROPERTIES_NAME, OdsJOpenStyleHelper.STYLE_NS);
 		this.setStyle(tableCellProps, textProps, wrapperCellStyle);
 		if (!tableCellProps.getAttributes().isEmpty())
 			style.addContent(tableCellProps);
@@ -128,10 +113,12 @@ class OdsJOpenStyleHelper {
 	}
 
 	/**
-	 * @param cellStyle the internal cell style
+	 * @param cellStyle
+	 *            the internal cell style
 	 * @return the wrapper cell style
 	 */
-	public WrapperCellStyle toWrapperCellStyle(final /*@Nullable*/ CellStyle cellStyle) {
+	public WrapperCellStyle toWrapperCellStyle(
+			final /*@Nullable*/ CellStyle cellStyle) {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;
 
@@ -139,7 +126,9 @@ class OdsJOpenStyleHelper {
 		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
-		final String border = tableCellProperties.getElement().getAttributeValue(OdsConstants.BORDER_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
+		final String border = tableCellProperties.getElement()
+				.getAttributeValue(OdsConstants.BORDER_ATTR_NAME,
+						OdsJOpenStyleHelper.FO_NS);
 
 		if (bColorAsHex != null) {
 			final WrapperColor backgroundColor = WrapperColor
@@ -240,14 +229,13 @@ class OdsJOpenStyleHelper {
 			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
 					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
 		}
-		// TODO Auto-generated method stub
-
 	}
 
 	private void setBorder(final Element tableCellProps, final double border) {
 		if (!Util.almostEqual(border, WrapperCellStyle.DEFAULT)) {
 			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
-					Double.toString(border)+"pt solid #000000", OdsJOpenStyleHelper.FO_NS);
+					Double.toString(border) + "pt solid #000000",
+					OdsJOpenStyleHelper.FO_NS);
 		}
 	}
 
@@ -287,53 +275,6 @@ class OdsJOpenStyleHelper {
 					OdsJOpenStyleHelper.STYLE_NS);
 		}
 	}
-	//
-	//	/**
-	//	 * <style:text-properties fo:font-size="14pt" fo:font-style="italic" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" fo:font-weight="bold" style:font-size-asian="14pt" style:font-style-asian="italic" style:font-weight-asian="bold" style:font-size-complex="14pt" style:font-style-complex="italic" style:font-weight-complex="bold"/>
-	//	 * <style:text-properties fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-	//	 */
-	//	private void setBold(final ${jopendocument.style}TextProperties textProperties, int boldKey) {
-	//		final String value;
-	//		switch (boldKey) {
-	//			case WrapperCellStyle.YES: value = "bold"; break;
-	//			case WrapperCellStyle.NO: value = "normal"; break;
-	//			default: value = null; break;
-	//		}
-	//
-	//		if (value != null) {
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.FO_NS);
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//		}
-	//	}
-	//
-	//	private void setItalic(final ${jopendocument.style}TextProperties textProperties, int italicKey) {
-	//		final String value;
-	//		switch (italicKey) {
-	//			case WrapperCellStyle.YES: value = "italic"; break;
-	//			case WrapperCellStyle.NO: value = "normal"; break;
-	//			default: value = null; break;
-	//		}
-	//
-	//		if (value != null) {
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.FO_NS);
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//			textProperties.getElement().setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//		}
-	//	}
-	//
-	//	private void setSize(final ${jopendocument.style}TextProperties textProperties, int size) {
-	//		if (size != WrapperCellStyle.DEFAULT) {
-	//			textProperties.getElement().setAttribute(
-	//					OdsConstants.FONT_SIZE, Integer.toString(size)+"pt", OdsJOpenStyleHelper.FO_NS);
-	//		}
-	//	}
 
 	private void setFontItalic(final Element textProps, final int key) {
 		final String value;
@@ -354,33 +295,6 @@ class OdsJOpenStyleHelper {
 		}
 	}
 
-	//	private Element setStyle(final Element style,
-	//			final Map<String, String> propertiesMap) {
-	//		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
-	//		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR)) {
-	//			final String backgroundColorAsHex = propertiesMap
-	//					.get(OdsConstants.BACKGROUND_COLOR);
-	//			final Element tableCellProps = new Element(
-	//					OdsConstants.TABLE_CELL_PROPERTIES_NAME,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
-	//					backgroundColorAsHex, OdsJOpenStyleHelper.FO_NS);
-	//			style.addContent(tableCellProps);
-	//		}
-	//		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT_ATTR_NAME)) {
-	//			final String fontWeight = propertiesMap
-	//					.get(OdsConstants.FONT_WEIGHT_ATTR_NAME);
-	//			final Element textProps = new Element(
-	//					OdsConstants.TEXT_PROPERTIES_NAME,
-	//					OdsJOpenStyleHelper.STYLE_NS);
-	//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, fontWeight,
-	//					OdsJOpenStyleHelper.FO_NS);
-	//			style.addContent(textProps);
-	//		}
-	//		return style;
-	//	}
-
-
 	private void setFontSize(final Element textProps, final double size) {
 		if (size != WrapperCellStyle.DEFAULT) {
 			textProps.setAttribute(OdsConstants.FONT_SIZE, Double.toString(size)+"pt",
@@ -388,7 +302,8 @@ class OdsJOpenStyleHelper {
 		}
 	}
 
-	private void setStyle(final Element tableCellProps, final Element textProps, final WrapperCellStyle wrapperCellStyle) {
+	private void setStyle(final Element tableCellProps,
+			final Element textProps, final WrapperCellStyle wrapperCellStyle) {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		final double border = wrapperCellStyle.getBorderLineWidth();
@@ -404,5 +319,4 @@ class OdsJOpenStyleHelper {
 			this.setFontFamily(textProps, cellFont.getFamily());
 		}
 	}
-
 }
