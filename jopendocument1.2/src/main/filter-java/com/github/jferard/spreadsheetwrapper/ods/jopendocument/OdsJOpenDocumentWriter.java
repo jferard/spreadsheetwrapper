@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
+package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.io.IOException;
 import java.io.OutputStream;

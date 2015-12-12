@@ -16,7 +16,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
 
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
+package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -97,7 +97,7 @@ SpreadsheetDocumentFactory {
 			throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
-			return OdsJopenDocument${jopendocument.version}Util.getSpreadSheet(odPackage);
+			return ${jopendocument.util.cls}.getSpreadSheet(odPackage);
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -108,7 +108,7 @@ SpreadsheetDocumentFactory {
 	protected SpreadSheet newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
-		return OdsJopenDocument${jopendocument.version}Util.newSpreadsheetDocument();
+		return ${jopendocument.util.cls}.newSpreadsheetDocument();
 	}
 
 }

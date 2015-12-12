@@ -14,6 +14,10 @@
 		<skip.integration.tests>true</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
 		
+		<jopendocument.pkg>jopendocument1_3</jopendocument.pkg>
+		<jopendocument.util.cls>OdsJopenDocument1_3Util</jopendocument.util.cls>
+		<jopendocument.styletablecellproperties.cls>StyleTableCellProperties</jopendocument.styletablecellproperties.cls>
+		<jopendocument.styletextproperties.cls>StyleTextProperties</jopendocument.styletextproperties.cls>
 		<jopendocument.version>1_3</jopendocument.version>
 		<jopendocument.style>Style</jopendocument.style>
 		<javaSourceFilterDirectory>

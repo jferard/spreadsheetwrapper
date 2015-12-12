@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
+package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -75,7 +75,7 @@ SpreadsheetReader {
 		final MutableCell<SpreadSheet> cell = this.getCell(rowIndex, colIndex);
 		if (cell == null)
 			return null;
-		final String formula = OdsJopenDocument${jopendocument.version}Util.getFormula(cell);
+		final String formula = ${jopendocument.util.cls}.getFormula(cell);
 		if (formula != null && formula.charAt(0) == '=')
 			return formula.substring(1);
 
@@ -142,7 +142,7 @@ SpreadsheetReader {
 		if (cell == null)
 			return null;
 
-		final String formula = OdsJopenDocument${jopendocument.version}Util.getFormula(cell);
+		final String formula = ${jopendocument.util.cls}.getFormula(cell);
 		if (formula == null || formula.charAt(0) != '=')
 			throw new IllegalArgumentException();
 

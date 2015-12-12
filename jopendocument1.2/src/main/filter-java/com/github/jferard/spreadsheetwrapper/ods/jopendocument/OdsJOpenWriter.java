@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
+package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.util.Date;
 import java.util.List;
@@ -97,7 +97,7 @@ SpreadsheetWriter {
 	@Override
 	public Boolean setBoolean(final int r, final int c, final Boolean value) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		OdsJopenDocument${jopendocument.version}Util.setValue(cell, ODValueType.BOOLEAN, value);
+		${jopendocument.util.cls}.setValue(cell, ODValueType.BOOLEAN, value);
 		return value;
 	}
 

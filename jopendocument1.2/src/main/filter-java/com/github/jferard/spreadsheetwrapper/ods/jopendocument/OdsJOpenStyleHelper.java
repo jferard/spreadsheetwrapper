@@ -15,15 +15,15 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper.ods.jopendocument${jopendocument.version};
+package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.util.Map;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.jopendocument.dom.spreadsheet.CellStyle;
-import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.style}TableCellProperties;
-import org.jopendocument.dom.text.TextStyle.${jopendocument.style}TextProperties;
+import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.styletablecellproperties.cls};
+import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.cls};
 
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
@@ -93,10 +93,10 @@ class OdsJOpenStyleHelper {
 	 * @param wrapperStyle the wrapper cell
 	 */
 	public boolean setCellStyle(final CellStyle cellStyle, final WrapperCellStyle wrapperCellStyle) {
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final Element tableCellPropertiesElement = tableCellProperties.getElement();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle
+		final ${jopendocument.styletextproperties.cls} textProperties = cellStyle
 				.getTextProperties();
 		final Element textPropertiesElement = textProperties.getElement();
 		this.setStyle(tableCellPropertiesElement, textPropertiesElement, wrapperCellStyle);
@@ -136,7 +136,7 @@ class OdsJOpenStyleHelper {
 			return WrapperCellStyle.EMPTY;
 
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle();
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final String border = tableCellProperties.getElement().getAttributeValue(OdsConstants.BORDER_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
@@ -153,7 +153,7 @@ class OdsJOpenStyleHelper {
 		}
 
 		final WrapperFont wrapperFont = new WrapperFont();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
+		final ${jopendocument.styletextproperties.cls} textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 
 		final String fontWeight = odfElement.getAttributeValue(

@@ -14,6 +14,11 @@
 		<skip.integration.tests>true</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
 
+
+		<jopendocument.pkg>jopendocument1_2</jopendocument.pkg>
+		<jopendocument.util.cls>OdsJopenDocument1_2Util</jopendocument.util.cls>
+		<jopendocument.styletablecellproperties.cls>SyleTableCellProperties</jopendocument.styletablecellproperties.cls>
+		<jopendocument.styletextproperties.cls>SyleTextProperties</jopendocument.styletextproperties.cls>
 		<jopendocument.version>1_2</jopendocument.version>
 		<jopendocument.style>Syle</jopendocument.style>
 		<javaSourceFilterDirectory>
