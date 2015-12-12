@@ -39,6 +39,10 @@ import com.github.jferard.spreadsheetwrapper.Stateful;
 public abstract class AbstractDocumentFactory<R> extends
 AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 
+	/**
+	 * A simple constructor
+	 * @param extension ods of xls
+	 */
 	protected AbstractDocumentFactory(final String extension) {
 		super(extension);
 	}

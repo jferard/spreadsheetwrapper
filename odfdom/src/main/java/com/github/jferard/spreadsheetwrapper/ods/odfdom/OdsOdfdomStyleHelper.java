@@ -37,6 +37,14 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
  *
  */
 public class OdsOdfdomStyleHelper {
+	private static void setProperties(
+			final Map<OdfStyleProperty, String> properties,
+			final String attributeValue,
+			final OdfStyleProperty... propertyArray) {
+		for (final OdfStyleProperty property : propertyArray)
+			properties.put(property, attributeValue);
+	}
+
 	/** hex (#000000) -> color */
 	private final Map<String, WrapperColor> colorByHex;
 
@@ -95,23 +103,31 @@ public class OdsOdfdomStyleHelper {
 			final WrapperColor fontColor = wrapperFont.getColor();
 			final String fontFamily = wrapperFont.getFamily();
 			if (bold == WrapperCellStyle.YES) {
-				properties.put(OdfTextProperties.FontWeight, "bold");
-				properties.put(OdfTextProperties.FontWeightAsian, "bold");
-				properties.put(OdfTextProperties.FontWeightComplex, "bold");
+				OdsOdfdomStyleHelper.setProperties(properties,
+						OdsConstants.BOLD_ATTR_VALUE,
+						OdfTextProperties.FontWeight,
+						OdfTextProperties.FontWeightAsian,
+						OdfTextProperties.FontWeightComplex);
 			} else if (bold == WrapperCellStyle.NO) {
-				properties.put(OdfTextProperties.FontWeight, "normal");
-				properties.put(OdfTextProperties.FontWeightAsian, "normal");
-				properties.put(OdfTextProperties.FontWeightComplex, "normal");
+				OdsOdfdomStyleHelper.setProperties(properties,
+						OdsConstants.NORMAL_ATTR_VALUE,
+						OdfTextProperties.FontWeight,
+						OdfTextProperties.FontWeightAsian,
+						OdfTextProperties.FontWeightComplex);
 			}
 
 			if (italic == WrapperCellStyle.YES) {
-				properties.put(OdfTextProperties.FontStyle, "italic");
-				properties.put(OdfTextProperties.FontStyleAsian, "italic");
-				properties.put(OdfTextProperties.FontStyleComplex, "italic");
+				OdsOdfdomStyleHelper.setProperties(properties,
+						OdsConstants.ITALIC_ATTR_VALUE,
+						OdfTextProperties.FontStyle,
+						OdfTextProperties.FontStyleAsian,
+						OdfTextProperties.FontStyleComplex);
 			} else if (italic == WrapperCellStyle.NO) {
-				properties.put(OdfTextProperties.FontStyle, "normal");
-				properties.put(OdfTextProperties.FontStyleAsian, "normal");
-				properties.put(OdfTextProperties.FontStyleComplex, "normal");
+				OdsOdfdomStyleHelper.setProperties(properties,
+						OdsConstants.NORMAL_ATTR_VALUE,
+						OdfTextProperties.FontStyle,
+						OdfTextProperties.FontStyleAsian,
+						OdfTextProperties.FontStyleComplex);
 			}
 
 			if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT)) {
@@ -124,12 +140,13 @@ public class OdsOdfdomStyleHelper {
 			}
 
 			if (fontFamily != null) {
-				properties.put(OdfTextProperties.FontFamily, fontFamily);
-				properties.put(OdfTextProperties.FontName, fontFamily);
-				properties.put(OdfTextProperties.FontFamilyAsian, fontFamily);
-				properties.put(OdfTextProperties.FontNameAsian, fontFamily);
-				properties.put(OdfTextProperties.FontFamilyComplex, fontFamily);
-				properties.put(OdfTextProperties.FontNameComplex, fontFamily);
+				OdsOdfdomStyleHelper.setProperties(properties, fontFamily,
+						OdfTextProperties.FontFamily,
+						OdfTextProperties.FontName,
+						OdfTextProperties.FontFamilyAsian,
+						OdfTextProperties.FontNameAsian,
+						OdfTextProperties.FontFamilyComplex,
+						OdfTextProperties.FontNameComplex);
 			}
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
@@ -175,7 +192,7 @@ public class OdsOdfdomStyleHelper {
 		if (fontWeight != null) {
 			if (fontWeight.equals("bold"))
 				wrapperFont.setBold();
-			else if (fontWeight.equals("normal"))
+			else if (fontWeight.equals(OdsConstants.NORMAL_ATTR_VALUE))
 				wrapperFont.setBold(WrapperCellStyle.NO);
 		}
 		if (fontSize != null)
@@ -185,9 +202,9 @@ public class OdsOdfdomStyleHelper {
 		if (fontFamily != null)
 			wrapperFont.setFamily(fontFamily);
 		if (fontStyle != null) {
-			if (fontStyle.equals("italic"))
+			if (fontStyle.equals(OdsConstants.ITALIC_ATTR_VALUE))
 				wrapperFont.setItalic();
-			else if (fontStyle.equals("normal"))
+			else if (fontStyle.equals(OdsConstants.NORMAL_ATTR_VALUE))
 				wrapperFont.setItalic(WrapperCellStyle.NO);
 		}
 

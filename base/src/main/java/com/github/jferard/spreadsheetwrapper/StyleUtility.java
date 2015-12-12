@@ -110,7 +110,7 @@ public class StyleUtility {
 		final StringBuilder styleStringBuilder = new StringBuilder(20);
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
-			styleStringBuilder.append(OdsConstants.BACKGROUND_COLOR)
+			styleStringBuilder.append(OdsConstants.BACKGROUND_COLOR_ATTR_NAME)
 			.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
 		final double size;
@@ -125,10 +125,10 @@ public class StyleUtility {
 			StyleUtility.appendFontItalic(styleStringBuilder, font.getItalic());
 		}
 		if (size != WrapperCellStyle.DEFAULT)
-			styleStringBuilder.append(OdsConstants.FONT_SIZE).append(':')
+			styleStringBuilder.append(OdsConstants.FONT_SIZE_ATTR_NAME).append(':')
 			.append(size).append(';');
 		if (color != null)
-			styleStringBuilder.append(OdsConstants.FONT_COLOR).append(':')
+			styleStringBuilder.append(OdsConstants.FONT_COLOR_ATTR_NAME).append(':')
 			.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
@@ -152,15 +152,15 @@ public class StyleUtility {
 
 			final String key = entry[0];
 			final String value = entry[1];
-			if (key.equals(OdsConstants.BACKGROUND_COLOR))
+			if (key.equals(OdsConstants.BACKGROUND_COLOR_ATTR_NAME))
 				backgroundColor = WrapperColor.stringToColor(value);
 			else if (key.equals(OdsConstants.FONT_WEIGHT_ATTR_NAME))
 				StyleUtility.setFontBold(font, value);
 			else if (key.equals(OdsConstants.FONT_STYLE_ATTR_NAME))
 				StyleUtility.setFontItalic(font, value);
-			else if (key.equals(OdsConstants.FONT_SIZE))
+			else if (key.equals(OdsConstants.FONT_SIZE_ATTR_NAME))
 				font.setSize(Double.valueOf(value));
-			else if (key.equals(OdsConstants.FONT_COLOR))
+			else if (key.equals(OdsConstants.FONT_COLOR_ATTR_NAME))
 				font.setColor(WrapperColor.stringToColor(value));
 		}
 

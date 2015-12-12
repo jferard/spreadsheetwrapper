@@ -41,7 +41,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	private final class OdsJOpenDocumentReaderTrait extends
 	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
 		/** the style helper */
-		final OdsJOpenStyleHelper styleHelper;
+		private final OdsJOpenStyleHelper styleHelper;
 
 		/**
 		 * @param styleHelper

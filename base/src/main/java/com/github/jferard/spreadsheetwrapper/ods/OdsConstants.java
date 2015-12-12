@@ -5,24 +5,33 @@ package com.github.jferard.spreadsheetwrapper.ods;
  */
 public final class OdsConstants {
 	/** for xml */
-	/** color of the cell in hex */
-	public static final String BACKGROUND_COLOR = "background-color";
 
 	/** name of the bold attribute in fo */
-	public static final String BOLD_ATTR_NAME = "bold";
-
+	public static final String BOLD_ATTR_VALUE = "bold";
+	/** name of the italic attribute in fo */
+	public static final String ITALIC_ATTR_VALUE = "italic";
+	/** name of the normal attribute in fo */
+	public static final String NORMAL_ATTR_VALUE = "normal";
+	
 	/** boolean type name */
 	public static final String BOOLEAN_TYPE = "boolean";
-	/** the border */
-	public static final String BORDER_ATTR_NAME = "border";
-	/** name of the color attribute in fo */
-	public static final String COLOR_ATTR_NAME = "color";
 	/** currency type name */
 	public static final Object CURRENCY_TYPE = "currency";
 	/** date type name */
 	public static final String DATE_TYPE = "date";
+	/** float type name */
+	public static final String FLOAT_TYPE = "float";
+	
 	/** standard extension for files */
 	public static final String EXTENSION = "ods";
+	
+	/** color of the cell in hex */
+	public static final String BACKGROUND_COLOR_ATTR_NAME = "background-color";
+	
+	/** the border */
+	public static final String BORDER_ATTR_NAME = "border";
+	/** name of the color attribute in fo */
+	public static final String COLOR_ATTR_NAME = "color";
 	/** the font family, asian */
 	public static final String FAMILY_ASIAN_ATTR_NAME = "font-family-asian";
 
@@ -31,16 +40,14 @@ public final class OdsConstants {
 	/** the font family, complex */
 	public static final String FAMILY_COMPLEX_ATTR_NAME = "font-family-complex";
 
-	/** float type name */
-	public static final String FLOAT_TYPE = "float";
 	/** namespaces XML */
 	/** fo = ? */
 	public static final String FO_NS_NAME = "fo";
 	/** color of the font in hex */
-	public static final String FONT_COLOR = "font-color";
+	public static final String FONT_COLOR_ATTR_NAME = "font-color";
 
 	/** size of the font */
-	public static final String FONT_SIZE = "font-size";
+	public static final String FONT_SIZE_ATTR_NAME = "font-size";
 	/** style of the font, asian version */
 	public static final String FONT_STYLE_ASIAN_ATTR_NAME = "font-style-asian";
 	/** style of the font */
@@ -75,6 +82,10 @@ public final class OdsConstants {
 	/** time type name */
 	public static final String TIME_TYPE = "time";
 
+	/**
+	 * @param fontSize a string e.g. "10pt" or "5px"
+	 * @return the font size in points, as a double
+	 */
 	public static double sizeToPoints(final String fontSize) {
 		final double ret;
 		final int length = fontSize.length();

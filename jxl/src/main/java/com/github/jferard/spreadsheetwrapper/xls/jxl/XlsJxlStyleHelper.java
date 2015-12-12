@@ -38,6 +38,7 @@ import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
+import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -290,7 +291,7 @@ public class XlsJxlStyleHelper {
 			}
 
 			final String name = font.getName();
-			if (!"Arial".equals(name))
+			if (!XlsConstants.DEFAULT_FONT_NAME.equals(name))
 				wrapperFont.setFamily(name);
 		}
 

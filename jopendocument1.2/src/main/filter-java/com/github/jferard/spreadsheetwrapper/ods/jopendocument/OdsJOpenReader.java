@@ -41,7 +41,7 @@ SpreadsheetReader {
 	private final Sheet sheet;
 
 	/** the style helper */
-	final OdsJOpenStyleHelper styleHelper;
+	private final OdsJOpenStyleHelper styleHelper;
 
 	/**
 	 * @param sheet

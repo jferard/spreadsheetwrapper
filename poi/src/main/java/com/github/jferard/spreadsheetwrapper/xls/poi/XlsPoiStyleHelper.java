@@ -33,6 +33,7 @@ import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.WrapperFont;
+import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -255,7 +256,7 @@ class XlsPoiStyleHelper {
 		}
 
 		final String fontName = poiFont.getFontName();
-		if (!WrapperFont.ARIAL_NAME.equals(fontName))
+		if (!XlsConstants.DEFAULT_FONT_NAME.equals(fontName))
 			wrapperFont.setFamily(fontName);
 
 		wrapperCellStyle.setCellFont(wrapperFont);

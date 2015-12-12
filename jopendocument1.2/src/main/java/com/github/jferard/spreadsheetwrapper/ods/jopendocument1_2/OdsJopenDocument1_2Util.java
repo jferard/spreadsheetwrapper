@@ -18,17 +18,39 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
-public class OdsJopenDocument1_2Util {
+/**
+ * Utility class for 1.2 version.
+ * @author Julien
+ *
+ */
+final class OdsJopenDocument1_2Util {
+	private OdsJopenDocument1_2Util() {} 
+	
+	/**
+	 * @param cell
+	 *           the cell
+	 * @return the formula
+	 */
 	public static String getFormula(final MutableCell<SpreadSheet> cell) {
 		final Element element = cell.getElement();
 		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
 				element.getNamespace());
 	}
 
+	/**
+	 * @param odPackage
+	 *           the zip file representation
+	 * @return
+	 *           a new spreadsheet
+	 */
 	public static SpreadSheet getSpreadSheet(final ODPackage odPackage) {
 		return SpreadSheet.create(odPackage);
 	}
 
+	/**
+	 * @param spreadSheet the *internal* document.xml
+	 * @return the styles as *internal* document.xml
+	 */
 	public static ODXMLDocument getStyles(final SpreadSheet spreadSheet) {
 		final ODXMLDocument res;
 		final ODPackage odPackage = spreadSheet.getPackage();
@@ -39,6 +61,10 @@ public class OdsJopenDocument1_2Util {
 		return res;
 	}
 
+	/**
+	 * @return a new *internal* document.xml
+	 * @throws SpreadsheetException
+	 */
 	public static SpreadSheet newSpreadsheetDocument()
 			throws SpreadsheetException {
 		try {
@@ -54,6 +80,11 @@ public class OdsJopenDocument1_2Util {
 		}
 	}
 
+	/**
+	 * @param cell the internal cell
+	 * @param type the internal type
+	 * @param value the value to set
+	 */
 	public static void setValue(final MutableCell<SpreadSheet> cell,
 			final ODValueType type, final Object value) {
 		final Element odfElement = cell.getElement();
@@ -70,6 +101,12 @@ public class OdsJopenDocument1_2Util {
 		odfElement.setContent(element);
 	}
 
+	/**
+	 * @param nsPrefix
+	 * @param name name of the document
+	 * @param zipEntry ???
+	 * @return the *internal* odf document
+	 */
 	private static Document createDocument(final String nsPrefix,
 			final String name, final String zipEntry) {
 		final XMLVersion version = XMLVersion.OD;

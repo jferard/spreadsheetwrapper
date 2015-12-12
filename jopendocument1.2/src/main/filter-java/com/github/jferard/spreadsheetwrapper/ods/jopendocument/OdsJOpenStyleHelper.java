@@ -147,20 +147,20 @@ class OdsJOpenStyleHelper {
 
 		final String fontWeight = odfElement.getAttributeValue(
 				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if ("bold".equals(fontWeight))
+		if (OdsConstants.BOLD_ATTR_VALUE.equals(fontWeight))
 			wrapperFont.setBold();
-		else if ("normal".equals(fontWeight))
+		else if (OdsConstants.NORMAL_ATTR_VALUE.equals(fontWeight))
 			wrapperFont.setBold(WrapperCellStyle.NO);
 
 		final String fontStyle = odfElement.getAttributeValue(
 				OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if ("italic".equals(fontStyle))
+		if (OdsConstants.ITALIC_ATTR_VALUE.equals(fontStyle))
 			wrapperFont.setItalic();
-		else if ("normal".equals(fontStyle))
+		else if (OdsConstants.NORMAL_ATTR_VALUE.equals(fontStyle))
 			wrapperFont.setItalic(WrapperCellStyle.NO);
 
 		final String fontSize = odfElement.getAttributeValue(
-				OdsConstants.FONT_SIZE, OdsJOpenStyleHelper.FO_NS);
+				OdsConstants.FONT_SIZE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
 		if (fontSize != null)
 			wrapperFont.setSize(OdsConstants.sizeToPoints(fontSize));
 
@@ -189,13 +189,13 @@ class OdsJOpenStyleHelper {
 	private Element createStyle(final String styleName,
 			final Map<String, String> propertiesMap) {
 		final Element style = this.getBaseStyle(styleName);
-		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR)) {
+		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR_ATTR_NAME)) {
 			final String backgroundColor = propertiesMap
-					.get(OdsConstants.BACKGROUND_COLOR);
+					.get(OdsConstants.BACKGROUND_COLOR_ATTR_NAME);
 			final Element tableCellProps = new Element(
 					OdsConstants.TABLE_CELL_PROPERTIES_NAME,
 					OdsJOpenStyleHelper.STYLE_NS);
-			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
+			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR_ATTR_NAME,
 					backgroundColor, OdsJOpenStyleHelper.FO_NS);
 			style.addContent(tableCellProps);
 		}
@@ -226,7 +226,7 @@ class OdsJOpenStyleHelper {
 	private void setBackgroundColor(final Element tableCellProps,
 			final WrapperColor backgroundColor) {
 		if (backgroundColor != null) {
-			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
+			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR_ATTR_NAME,
 					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
 		}
 	}
@@ -242,9 +242,9 @@ class OdsJOpenStyleHelper {
 	private void setFontBold(final Element textProps, final int key) {
 		final String value;
 		if (key == WrapperCellStyle.YES)
-			value = "bold";
+			value = OdsConstants.BOLD_ATTR_VALUE;
 		else if (key == WrapperCellStyle.YES)
-			value = "normal";
+			value = OdsConstants.NORMAL_ATTR_VALUE;
 		else
 			value = null;
 
@@ -279,9 +279,9 @@ class OdsJOpenStyleHelper {
 	private void setFontItalic(final Element textProps, final int key) {
 		final String value;
 		if (key == WrapperCellStyle.YES)
-			value = "italic";
+			value = OdsConstants.ITALIC_ATTR_VALUE;
 		else if (key == WrapperCellStyle.YES)
-			value = "normal";
+			value = OdsConstants.NORMAL_ATTR_VALUE;
 		else
 			value = null;
 
@@ -297,7 +297,7 @@ class OdsJOpenStyleHelper {
 
 	private void setFontSize(final Element textProps, final double size) {
 		if (size != WrapperCellStyle.DEFAULT) {
-			textProps.setAttribute(OdsConstants.FONT_SIZE, Double.toString(size)+"pt",
+			textProps.setAttribute(OdsConstants.FONT_SIZE_ATTR_NAME, Double.toString(size)+"pt",
 					OdsJOpenStyleHelper.FO_NS);
 		}
 	}

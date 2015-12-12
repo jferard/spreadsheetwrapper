@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 
 public final class SpreadsheetTestHelper {
+	/** the temp dir for writing files saved after each test */
 	private static final String TEMP_DIR = System.getProperty("java.io.tmpdir");
 
 	/**

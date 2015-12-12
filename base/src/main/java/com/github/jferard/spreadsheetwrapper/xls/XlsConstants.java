@@ -20,6 +20,9 @@ public final class XlsConstants {
 	 * The maximum number of rows excel allows in a worksheet
 	 */
 	public static final int MAX_ROWS_PER_SHEET = 65536;
+	
+	/** default font name */
+	public static final String DEFAULT_FONT_NAME = "Arial"; 
 
 	private XlsConstants() {
 	}

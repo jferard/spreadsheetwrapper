@@ -21,6 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterLevel2Test
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenWriterTest extends AbstractSpreadsheetWriterLevel2Test {
+	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

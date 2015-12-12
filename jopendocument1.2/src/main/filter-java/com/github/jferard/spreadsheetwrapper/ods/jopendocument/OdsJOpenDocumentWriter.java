@@ -51,7 +51,7 @@ implements SpreadsheetDocumentWriter {
 	private final class OdsJOpenDocumentWriterTrait extends
 	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
 		/** the style helper */
-		final OdsJOpenStyleHelper styleHelper;
+		private final OdsJOpenStyleHelper styleHelper;
 
 		/**
 		 * @param styleHelper

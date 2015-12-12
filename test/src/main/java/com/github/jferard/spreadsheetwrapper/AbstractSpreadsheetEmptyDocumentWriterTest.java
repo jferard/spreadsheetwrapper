@@ -56,7 +56,6 @@ AbstractSpreadsheetEmptyDocumentReaderTest {
 			this.documentWriter = this.factory.create(outputFile);
 			this.documentReader = this.documentWriter;
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
 			Assert.fail();
 		}
 	}
@@ -69,7 +68,6 @@ AbstractSpreadsheetEmptyDocumentReaderTest {
 			this.documentWriter.save();
 			this.documentWriter.close();
 		} catch (final SpreadsheetException e) {
-			e.printStackTrace();
 			Assert.fail();
 		}
 	}
