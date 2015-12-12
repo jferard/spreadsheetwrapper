@@ -53,11 +53,11 @@ public class StyleUtility {
 		switch (bold) {
 		case WrapperCellStyle.YES:
 			styleStringBuilder.append(OdsConstants.FONT_WEIGHT_ATTR_NAME)
-			.append(":bold;");
+					.append(":bold;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(OdsConstants.FONT_WEIGHT_ATTR_NAME).append(
-					":normal;");
+			styleStringBuilder.append(OdsConstants.FONT_WEIGHT_ATTR_NAME)
+					.append(":normal;");
 			break;
 		default:
 			break;
@@ -69,12 +69,12 @@ public class StyleUtility {
 			final StringBuilder styleStringBuilder, final int italic) {
 		switch (italic) {
 		case WrapperCellStyle.YES:
-			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME).append(
-					":italic;");
+			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME)
+					.append(":italic;");
 			break;
 		case WrapperCellStyle.NO:
-			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME).append(
-					":normal;");
+			styleStringBuilder.append(OdsConstants.FONT_STYLE_ATTR_NAME)
+					.append(":normal;");
 			break;
 		default:
 			break;
@@ -111,7 +111,7 @@ public class StyleUtility {
 		final WrapperColor backgroundColor = cellStyle.getBackgroundColor();
 		if (backgroundColor != null)
 			styleStringBuilder.append(OdsConstants.BACKGROUND_COLOR)
-					.append(':').append(backgroundColor.name()).append(';');
+			.append(':').append(backgroundColor.name()).append(';');
 		final WrapperFont font = cellStyle.getCellFont();
 		final double size;
 		final WrapperColor color;
@@ -126,10 +126,10 @@ public class StyleUtility {
 		}
 		if (size != WrapperCellStyle.DEFAULT)
 			styleStringBuilder.append(OdsConstants.FONT_SIZE).append(':')
-					.append(size).append(';');
+			.append(size).append(';');
 		if (color != null)
 			styleStringBuilder.append(OdsConstants.FONT_COLOR).append(':')
-					.append(color.name()).append(';');
+			.append(color.name()).append(';');
 
 		return styleStringBuilder.toString();
 	}
@@ -164,7 +164,8 @@ public class StyleUtility {
 				font.setColor(WrapperColor.stringToColor(value));
 		}
 
-		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT, font);
+		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT,
+				font);
 	}
 
 }

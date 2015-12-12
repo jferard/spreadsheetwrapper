@@ -47,10 +47,10 @@ import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
 	private final class OdsSimpleodsDocumentWriterTrait extends
-			AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
 
 		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
 			super(file);
@@ -192,13 +192,13 @@ public class OdsSimpleodsDocumentWriter extends
 				styleName, this.file);
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null) {
-			TextStyle textStyle = newStyle.getTextStyle();
+			final TextStyle textStyle = newStyle.getTextStyle();
 			final WrapperColor fontColor = wrapperFont.getColor();
 			final int bold = wrapperFont.getBold();
 			final int italic = wrapperFont.getItalic();
 			final double size = wrapperFont.getSize();
 			final String family = wrapperFont.getFamily();
-			
+
 			if (fontColor != null)
 				textStyle.setFontColor(fontColor.toHex());
 			if (bold == WrapperCellStyle.YES) {
@@ -215,16 +215,17 @@ public class OdsSimpleodsDocumentWriter extends
 				textStyle.setFontSize((int) size);
 			if (family != null)
 				textStyle.setFontName(family);
-			
+
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		final double borderLineWidth = wrapperCellStyle
-				.getBorderLineWidth();
+		final double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
 		if (backgroundColor != null)
 			newStyle.setBackgroundColor(backgroundColor.toHex());
 		if (borderLineWidth != WrapperCellStyle.DEFAULT)
-			newStyle.addBorderStyle(Double.valueOf(borderLineWidth)+"pt", "#000000", BorderStyle.BORDER_SOLID, BorderStyle.POSITION_ALL);
+			newStyle.addBorderStyle(Double.valueOf(borderLineWidth) + "pt",
+					"#000000", BorderStyle.BORDER_SOLID,
+					BorderStyle.POSITION_ALL);
 		return true;
 	}
 }

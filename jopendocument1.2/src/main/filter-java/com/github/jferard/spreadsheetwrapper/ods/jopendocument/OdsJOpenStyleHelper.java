@@ -67,42 +67,40 @@ class OdsJOpenStyleHelper {
 			final WrapperCellStyle wrapperCellStyle) {
 		final Element style = this.getBaseStyle(styleName);
 		this.setStyle(style, wrapperCellStyle);
-//		final WrapperColor backgroundColor = wrapperCellStyle
-//				.getBackgroundColor();
-//		final double border = wrapperCellStyle.getBorderLineWidth();
-//		final Element tableCellProps = new Element(
-//				OdsConstants.TABLE_CELL_PROPERTIES_NAME,
-//				OdsJOpenStyleHelper.STYLE_NS);
-//		this.setBackgroundColor(tableCellProps, backgroundColor);
-//		this.setBorder(tableCellProps, border);
-//		style.addContent(tableCellProps);
-//		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
-//		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
-//			final Element textProps = new Element(
-//					OdsConstants.TEXT_PROPERTIES_NAME,
-//					OdsJOpenStyleHelper.STYLE_NS);
-//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, "bold",
-//					OdsJOpenStyleHelper.FO_NS);
-//			style.addContent(textProps);
-//		}
+		//		final WrapperColor backgroundColor = wrapperCellStyle
+		//				.getBackgroundColor();
+		//		final double border = wrapperCellStyle.getBorderLineWidth();
+		//		final Element tableCellProps = new Element(
+		//				OdsConstants.TABLE_CELL_PROPERTIES_NAME,
+		//				OdsJOpenStyleHelper.STYLE_NS);
+		//		this.setBackgroundColor(tableCellProps, backgroundColor);
+		//		this.setBorder(tableCellProps, border);
+		//		style.addContent(tableCellProps);
+		//		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
+		//		if (cellFont != null && cellFont.getBold() == WrapperCellStyle.YES) {
+		//			final Element textProps = new Element(
+		//					OdsConstants.TEXT_PROPERTIES_NAME,
+		//					OdsJOpenStyleHelper.STYLE_NS);
+		//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, "bold",
+		//					OdsJOpenStyleHelper.FO_NS);
+		//			style.addContent(textProps);
+		//		}
 		return style;
 	}
 
-	private void setBorder(Element tableCellProps, double border) {
-		if (!Util.almostEqual(border, WrapperCellStyle.DEFAULT)) {
-			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
-					Double.toString(border)+"pt solid #000000", OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-
-	private void setBackgroundColor(Element tableCellProps,
-			WrapperColor backgroundColor) {
-		if (backgroundColor != null) {
-			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
-					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
-		}
-		// TODO Auto-generated method stub
-		
+	/**
+	 * @param cellStyle the internal cell style, to update
+	 * @param wrapperStyle the wrapper cell
+	 */
+	public boolean setCellStyle(final CellStyle cellStyle, final WrapperCellStyle wrapperCellStyle) {
+		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
+				.getTableCellProperties();
+		final Element tableCellPropertiesElement = tableCellProperties.getElement();
+		final ${jopendocument.style}TextProperties textProperties = cellStyle
+				.getTextProperties();
+		final Element textPropertiesElement = textProperties.getElement();
+		this.setStyle(tableCellPropertiesElement, textPropertiesElement, wrapperCellStyle);
+		return true;
 	}
 
 	/**
@@ -128,23 +126,6 @@ class OdsJOpenStyleHelper {
 			style.addContent(textProps);
 		return style;
 	}
-		
-	private void setStyle(final Element tableCellProps, final Element textProps, final WrapperCellStyle wrapperCellStyle) {
-		final WrapperColor backgroundColor = wrapperCellStyle
-				.getBackgroundColor();
-		final double border = wrapperCellStyle.getBorderLineWidth();
-		this.setBackgroundColor(tableCellProps, backgroundColor);
-		this.setBorder(tableCellProps, border);
-		
-		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
-		if (cellFont != null) {
-			this.setFontBold(textProps, cellFont.getBold());
-			this.setFontItalic(textProps, cellFont.getItalic());
-			this.setFontSize(textProps, cellFont.getSize());
-			this.setFontColor(textProps, cellFont.getColor());
-			this.setFontFamily(textProps, cellFont.getFamily());
-		}
-	}
 
 	/**
 	 * @param cellStyle the internal cell style
@@ -159,18 +140,18 @@ class OdsJOpenStyleHelper {
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
 		final String border = tableCellProperties.getElement().getAttributeValue(OdsConstants.BORDER_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		
+
 		if (bColorAsHex != null) {
 			final WrapperColor backgroundColor = WrapperColor
 					.stringToColor(bColorAsHex);
 			wrapperCellStyle.setBackgroundColor(backgroundColor);
 		}
 		if (border != null) {
-			String[] split = border.split("\\s+");
+			final String[] split = border.split("\\s+");
 			wrapperCellStyle
-					.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
+			.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
 		}
-			
+
 		final WrapperFont wrapperFont = new WrapperFont();
 		final ${jopendocument.style}TextProperties textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
@@ -199,12 +180,12 @@ class OdsJOpenStyleHelper {
 		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
 		if (fontColor != null)
 			wrapperFont.setColor(fontColor);
-		
+
 		final String fontFamily =  odfElement.getAttributeValue(
 				OdsConstants.FAMILY_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
 		if (fontFamily != null)
 			wrapperFont.setFamily(fontFamily);
-		
+
 		wrapperCellStyle.setCellFont(wrapperFont);
 		return wrapperCellStyle;
 	}
@@ -253,6 +234,23 @@ class OdsJOpenStyleHelper {
 		return style;
 	}
 
+	private void setBackgroundColor(final Element tableCellProps,
+			final WrapperColor backgroundColor) {
+		if (backgroundColor != null) {
+			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
+					backgroundColor.toHex(), OdsJOpenStyleHelper.FO_NS);
+		}
+		// TODO Auto-generated method stub
+
+	}
+
+	private void setBorder(final Element tableCellProps, final double border) {
+		if (!Util.almostEqual(border, WrapperCellStyle.DEFAULT)) {
+			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
+					Double.toString(border)+"pt solid #000000", OdsJOpenStyleHelper.FO_NS);
+		}
+	}
+
 	private void setFontBold(final Element textProps, final int key) {
 		final String value;
 		if (key == WrapperCellStyle.YES)
@@ -279,75 +277,7 @@ class OdsJOpenStyleHelper {
 		}
 	}
 
-	private void setFontItalic(final Element textProps, final int key) {
-		final String value;
-		if (key == WrapperCellStyle.YES)
-			value = "italic";
-		else if (key == WrapperCellStyle.YES)
-			value = "normal";
-		else
-			value = null;
-
-		if (value != null) {
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
-					OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-		}
-	}
-
-	private void setFontSize(final Element textProps, final double size) {
-		if (size != WrapperCellStyle.DEFAULT) {
-			textProps.setAttribute(OdsConstants.FONT_SIZE, Double.toString(size)+"pt",
-					OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-
-//	private Element setStyle(final Element style,
-//			final Map<String, String> propertiesMap) {
-//		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
-//		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR)) {
-//			final String backgroundColorAsHex = propertiesMap
-//					.get(OdsConstants.BACKGROUND_COLOR);
-//			final Element tableCellProps = new Element(
-//					OdsConstants.TABLE_CELL_PROPERTIES_NAME,
-//					OdsJOpenStyleHelper.STYLE_NS);
-//			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
-//					backgroundColorAsHex, OdsJOpenStyleHelper.FO_NS);
-//			style.addContent(tableCellProps);
-//		}
-//		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT_ATTR_NAME)) {
-//			final String fontWeight = propertiesMap
-//					.get(OdsConstants.FONT_WEIGHT_ATTR_NAME);
-//			final Element textProps = new Element(
-//					OdsConstants.TEXT_PROPERTIES_NAME,
-//					OdsJOpenStyleHelper.STYLE_NS);
-//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, fontWeight,
-//					OdsJOpenStyleHelper.FO_NS);
-//			style.addContent(textProps);
-//		}
-//		return style;
-//	}
-
-
-	/**
-	 * @param cellStyle the internal cell style, to update
-	 * @param wrapperStyle the wrapper cell
-	 */
-	public boolean setCellStyle(final CellStyle cellStyle, final WrapperCellStyle wrapperCellStyle) {
-		final ${jopendocument.style}TableCellProperties tableCellProperties = cellStyle
-				.getTableCellProperties();
-		final Element tableCellPropertiesElement = tableCellProperties.getElement();
-		final ${jopendocument.style}TextProperties textProperties = cellStyle
-				.getTextProperties();
-		final Element textPropertiesElement = textProperties.getElement();
-		this.setStyle(tableCellPropertiesElement, textPropertiesElement, wrapperCellStyle);
-		return true;
-	}
-
-	private void setFontFamily(Element textProps, String family) {
+	private void setFontFamily(final Element textProps, final String family) {
 		if (family != null) {
 			textProps.setAttribute(OdsConstants.FAMILY_ATTR_NAME, family,
 					OdsJOpenStyleHelper.FO_NS);
@@ -404,5 +334,75 @@ class OdsJOpenStyleHelper {
 	//					OdsConstants.FONT_SIZE, Integer.toString(size)+"pt", OdsJOpenStyleHelper.FO_NS);
 	//		}
 	//	}
+
+	private void setFontItalic(final Element textProps, final int key) {
+		final String value;
+		if (key == WrapperCellStyle.YES)
+			value = "italic";
+		else if (key == WrapperCellStyle.YES)
+			value = "normal";
+		else
+			value = null;
+
+		if (value != null) {
+			textProps.setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
+					OdsJOpenStyleHelper.FO_NS);
+			textProps.setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+			textProps.setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
+					OdsJOpenStyleHelper.STYLE_NS);
+		}
+	}
+
+	//	private Element setStyle(final Element style,
+	//			final Map<String, String> propertiesMap) {
+	//		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
+	//		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR)) {
+	//			final String backgroundColorAsHex = propertiesMap
+	//					.get(OdsConstants.BACKGROUND_COLOR);
+	//			final Element tableCellProps = new Element(
+	//					OdsConstants.TABLE_CELL_PROPERTIES_NAME,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//			tableCellProps.setAttribute(OdsConstants.BACKGROUND_COLOR,
+	//					backgroundColorAsHex, OdsJOpenStyleHelper.FO_NS);
+	//			style.addContent(tableCellProps);
+	//		}
+	//		if (propertiesMap.containsKey(OdsConstants.FONT_WEIGHT_ATTR_NAME)) {
+	//			final String fontWeight = propertiesMap
+	//					.get(OdsConstants.FONT_WEIGHT_ATTR_NAME);
+	//			final Element textProps = new Element(
+	//					OdsConstants.TEXT_PROPERTIES_NAME,
+	//					OdsJOpenStyleHelper.STYLE_NS);
+	//			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, fontWeight,
+	//					OdsJOpenStyleHelper.FO_NS);
+	//			style.addContent(textProps);
+	//		}
+	//		return style;
+	//	}
+
+
+	private void setFontSize(final Element textProps, final double size) {
+		if (size != WrapperCellStyle.DEFAULT) {
+			textProps.setAttribute(OdsConstants.FONT_SIZE, Double.toString(size)+"pt",
+					OdsJOpenStyleHelper.FO_NS);
+		}
+	}
+
+	private void setStyle(final Element tableCellProps, final Element textProps, final WrapperCellStyle wrapperCellStyle) {
+		final WrapperColor backgroundColor = wrapperCellStyle
+				.getBackgroundColor();
+		final double border = wrapperCellStyle.getBorderLineWidth();
+		this.setBackgroundColor(tableCellProps, backgroundColor);
+		this.setBorder(tableCellProps, border);
+
+		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
+		if (cellFont != null) {
+			this.setFontBold(textProps, cellFont.getBold());
+			this.setFontItalic(textProps, cellFont.getItalic());
+			this.setFontSize(textProps, cellFont.getSize());
+			this.setFontColor(textProps, cellFont.getColor());
+			this.setFontFamily(textProps, cellFont.getFamily());
+		}
+	}
 
 }

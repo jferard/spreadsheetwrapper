@@ -27,23 +27,23 @@ package com.github.jferard.spreadsheetwrapper;
 public class WrapperFont {
 	/** ARIAL font */
 	public static final String ARIAL_NAME = "Arial";
-	/** TIMES font */
-	public static final String TIMES_NAME = "Times New Roman";
 	/** COURIER font */
 	public static final String COURIER_NAME = "Courier New";
 	/** TAHOMA font */
 	public static final String TAHOMA_NAME = "Tahoma";
+	/** TIMES font */
+	public static final String TIMES_NAME = "Times New Roman";
 
 	/** YES if the font is bold */
 	private int bold;
+	/** family of the font : one of */
+	private/*@Nullable*/String family;
 	/** YES if the font is italic */
 	private int italic;
 	/** size of the font, -1 if no size specified */
 	private double size;
 	/** color of the font */
 	private/*@Nullable*/WrapperColor wrapperColor;
-	/** family of the font : one of */
-	private/*@Nullable*/String family;
 
 	/**
 	 * All fields to default

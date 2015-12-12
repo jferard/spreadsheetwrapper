@@ -211,8 +211,8 @@ public abstract class AbstractSpreadsheetWriterCursorTest {
 			}
 			Assert.assertEquals(
 					AbstractSpreadsheetWriterCursorTest.LAST_ROW
-					.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
-							.size() - 1), this.sheetWriterCursor
+							.get(AbstractSpreadsheetWriterCursorTest.LAST_ROW
+									.size() - 1), this.sheetWriterCursor
 							.getCellContent());
 		} catch (final IllegalArgumentException e) {
 			this.logger.log(Level.WARNING, "", e);

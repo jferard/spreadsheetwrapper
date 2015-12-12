@@ -31,8 +31,8 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsSimpleodsEmptyWriterTest extends // NOPMD by Julien on 27/11/15
-		// 20:25
-		AbstractSpreadsheetEmptyWriterTest {
+// 20:25
+AbstractSpreadsheetEmptyWriterTest {
 	/** logger, static initialization */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 

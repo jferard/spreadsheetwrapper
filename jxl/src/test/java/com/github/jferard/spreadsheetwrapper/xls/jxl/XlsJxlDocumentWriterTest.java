@@ -37,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlDocumentWriterTest extends
-AbstractSpreadsheetDocumentWriterTest {
+		AbstractSpreadsheetDocumentWriterTest {
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 

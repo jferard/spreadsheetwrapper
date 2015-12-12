@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetDocumentWriterTe
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsPoiDocumentWriterTest extends
-AbstractSpreadsheetDocumentWriterTest {
+		AbstractSpreadsheetDocumentWriterTest {
 	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {

@@ -38,7 +38,7 @@ import org.junit.rules.TestName;
  *
  */
 public abstract class AbstractSpreadsheetDocumentWriterTest extends
-		AbstractSpreadsheetDocumentReaderTest {
+AbstractSpreadsheetDocumentReaderTest {
 	/** name of the test */
 	@Rule
 	public TestName name = new TestName();
@@ -95,7 +95,7 @@ public abstract class AbstractSpreadsheetDocumentWriterTest extends
 	/** add a sheet "ok" at index 0 */
 	@Test
 	public void testAddSheetAtIndex0() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		try {
 			this.documentWriter.addSheet(0, "ok");
 			Assert.assertTrue(true);
@@ -107,7 +107,7 @@ public abstract class AbstractSpreadsheetDocumentWriterTest extends
 	/** add a sheet "ok" at index 10 : not ok because there is no other sheet */
 	@Test(expected = IndexOutOfBoundsException.class)
 	public final void testAddSheetAtIndex10() throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
+	CantInsertElementInSpreadsheetException {
 		this.documentWriter.addSheet(10, "ok");
 	}
 

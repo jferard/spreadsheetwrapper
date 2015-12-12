@@ -21,7 +21,7 @@ import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterCursorTest
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class OdsJOpenWriterCursorTest extends
-AbstractSpreadsheetWriterCursorTest {
+		AbstractSpreadsheetWriterCursorTest {
 	@Override
 	protected TestProperties getProperties() {
 		return OdsJOpenTestProperties.getProperties();

@@ -34,8 +34,8 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
 public class XlsJxlEmptyDocumentWriterTest extends // NOPMD by Julien on
-		// 27/11/15 20:38
-		AbstractSpreadsheetEmptyDocumentWriterTest {
+// 27/11/15 20:38
+AbstractSpreadsheetEmptyDocumentWriterTest {
 	/** the logger */
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 

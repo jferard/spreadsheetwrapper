@@ -134,7 +134,7 @@ public class OdsOdfdomStyleHelper {
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
+		final double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
 		if (backgroundColor != null) {
 			properties.put(OdfTableCellProperties.BackgroundColor,
 					backgroundColor.toHex());
@@ -167,9 +167,10 @@ public class OdsOdfdomStyleHelper {
 				fontFamily, backgroundColor, border);
 	}
 
-	private WrapperCellStyle getCellStyle(String fontWeight, String fontStyle,
-			String fontSize, String fontColor, String fontFamily,
-			String backgroundColor, String border) {
+	private WrapperCellStyle getCellStyle(final String fontWeight,
+			final String fontStyle, final String fontSize,
+			final String fontColor, final String fontFamily,
+			final String backgroundColor, final String border) {
 		final WrapperFont wrapperFont = new WrapperFont();
 		if (fontWeight != null) {
 			if (fontWeight.equals("bold"))
@@ -190,15 +191,15 @@ public class OdsOdfdomStyleHelper {
 				wrapperFont.setItalic(WrapperCellStyle.NO);
 		}
 
-		WrapperCellStyle wrapperStyle = new WrapperCellStyle()
-				.setCellFont(wrapperFont);
+		final WrapperCellStyle wrapperStyle = new WrapperCellStyle()
+		.setCellFont(wrapperFont);
 		if (this.colorByHex.containsKey(backgroundColor))
 			wrapperStyle.setBackgroundColor(this.colorByHex
 					.get(backgroundColor));
 		if (border != null) {
-			String[] split = border.split("\\s+");
+			final String[] split = border.split("\\s+");
 			wrapperStyle
-					.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
+			.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
 		}
 
 		return wrapperStyle;

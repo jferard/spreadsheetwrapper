@@ -7,6 +7,16 @@ package com.github.jferard.spreadsheetwrapper;
  */
 public final class Util {
 	/**
+	 * @param aDouble
+	 * @param otherDouble
+	 * @return true if aDouble and otherDouble are equal to 0.001
+	 */
+	public static boolean almostEqual(final double aDouble,
+			final double otherDouble) {
+		return Math.abs(aDouble - otherDouble) < 0.001;
+	}
+
+	/**
 	 * @param object
 	 * @param otherObject
 	 * @return true if object and otherObject are equal
@@ -16,17 +26,6 @@ public final class Util {
 		return object == null ? otherObject == null : object
 				.equals(otherObject);
 	}
-	
-	/**
-	 * @param aDouble
-	 * @param otherDouble
-	 * @return true if aDouble and otherDouble are equal to 0.001
-	 */
-	public static boolean almostEqual(final double aDouble,
-			final double otherDouble) {
-		return Math.abs(aDouble - otherDouble) < 0.001;
-	}
-	
 
 	/**
 	 * @param object

@@ -28,22 +28,22 @@ public class WrapperCellStyle {
 	public static final int DEFAULT = -1;
 
 	/** empty style */
-	public static final WrapperCellStyle EMPTY = new WrapperCellStyle(null, -1.0,
-			new WrapperFont());
-	/** attribute : do not set */
-	public static final int NO = 0; // NOPMD by Julien on 20/11/15 21:04
-	/** attribute : set */
-	public static final int YES = 1;
-	
-	/** width of the line : thin */
-	public static final double THIN_LINE = 1.0;
-
+	public static final WrapperCellStyle EMPTY = new WrapperCellStyle(null,
+			-1.0, new WrapperFont());
 	/** width of the line : medium */
 	public static final double MEDIUM_LINE = 2.0;
+	/** attribute : do not set */
+	public static final int NO = 0; // NOPMD by Julien on 20/11/15 21:04
 
 	/** width of the line : thick */
 	public static final double THICK_LINE = 4.0;
-	
+
+	/** width of the line : thin */
+	public static final double THIN_LINE = 1.0;
+
+	/** attribute : set */
+	public static final int YES = 1;
+
 	/** the backgroundColor of the cell */
 	private/*@Nullable*/WrapperColor backgoundColor;
 
@@ -52,7 +52,7 @@ public class WrapperCellStyle {
 
 	/** the text font */
 	private/*@Nullable*/WrapperFont cellFont;
-	
+
 	/**
 	 * @param backgroundColor
 	 *            the background color of the cell
@@ -65,7 +65,6 @@ public class WrapperCellStyle {
 		this.borderLineWidth = WrapperCellStyle.DEFAULT;
 		this.cellFont = null;
 	}
-	
 
 	/**
 	 * @param backgroundColor
@@ -76,7 +75,8 @@ public class WrapperCellStyle {
 	 */
 	@Deprecated
 	public WrapperCellStyle(final/*@Nullable*/WrapperColor backgroundColor,
-			final double borderLineWidth, final/*@Nullable*/WrapperFont cellFont) {
+			final double borderLineWidth,
+			final/*@Nullable*/WrapperFont cellFont) {
 		super();
 		this.backgoundColor = backgroundColor;
 		this.borderLineWidth = borderLineWidth;
@@ -103,7 +103,7 @@ public class WrapperCellStyle {
 	public/*@Nullable*/WrapperColor getBackgroundColor() {
 		return this.backgoundColor;
 	}
-	
+
 	/**
 	 * @return the background color of the cell
 	 */
@@ -135,7 +135,7 @@ public class WrapperCellStyle {
 		this.backgoundColor = wrapperColor;
 		return this;
 	}
-	
+
 	/**
 	 * @param borderLineWidth
 	 *            the width of the line (border)
@@ -160,8 +160,8 @@ public class WrapperCellStyle {
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-				.append(this.backgoundColor).append(", borderLineWidth=")
-				.append(this.borderLineWidth).append(", cellFont=")
-				.append(this.cellFont).append("]").toString();
+		.append(this.backgoundColor).append(", borderLineWidth=")
+		.append(this.borderLineWidth).append(", cellFont=")
+		.append(this.cellFont).append("]").toString();
 	}
 }

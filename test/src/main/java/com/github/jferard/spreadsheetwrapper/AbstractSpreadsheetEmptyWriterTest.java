@@ -91,10 +91,10 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	public final void testCreate2StylesFromObjectsAndSetStylesWithGap() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
+		.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(2, 2, "Tail");
@@ -128,10 +128,10 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		// simpleodf
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
+		.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail");
@@ -153,10 +153,10 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	public final void testCreateStyleFromObjectsAndSetStyle() {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
+		.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail", "");
@@ -175,18 +175,20 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	 * must create a A1 blue bold head cell and a A2 simple tail cell
 	 */
 	@Test
-	public final void testCreateStyleFromObjectsAndSetStyleItalics() {
+	public final void testCreateStyleFromObjectsAndSetStyleFontFamily() {
 		final WrapperFont wrapperFont = new WrapperFont().setItalic()
-				.setSize(20).setColor(WrapperColor.ORANGE);
+				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setCellFont(wrapperFont);
+		.setBorderLineWidth(WrapperCellStyle.THIN_LINE).setCellFont(
+						wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		try {
 			this.sheetWriter.setCellContent(0, 0, "From name",
 					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
-			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
+					0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -196,7 +198,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		try {
 			this.sheetWriter.setCellContent(1, 0, "From Style");
 			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);
-			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1, 0);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1,
+					0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -208,18 +211,19 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	 * must create a A1 blue bold head cell and a A2 simple tail cell
 	 */
 	@Test
-	public final void testCreateStyleFromObjectsAndSetStyleFontFamily() {
+	public final void testCreateStyleFromObjectsAndSetStyleItalics() {
 		final WrapperFont wrapperFont = new WrapperFont().setItalic()
-				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
+				.setSize(20).setColor(WrapperColor.ORANGE);
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setBorderLineWidth(WrapperCellStyle.THIN_LINE).setCellFont(wrapperFont);
+		.setCellFont(wrapperFont);
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		try {
 			this.sheetWriter.setCellContent(0, 0, "From name",
 					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
-			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0, 0);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
+					0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -229,7 +233,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		try {
 			this.sheetWriter.setCellContent(1, 0, "From Style");
 			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);
-			WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1, 0);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1,
+					0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -246,8 +251,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = utility
 				.toWrapperCellStyle("background-color:#999999;font-weight:bold");
 		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 
@@ -305,7 +310,7 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 						dateNotTruncated.getTime(),
 						dateTruncatedtoSecond.getTime(),
 						dateTruncatedToDay.getTime()),
-				dateSet.equals(dateNotTruncated)
+						dateSet.equals(dateNotTruncated)
 						|| dateSet.equals(dateTruncatedtoSecond)
 						|| dateSet.equals(dateTruncatedToDay));
 		Assert.assertEquals(dateSet, this.sheetWriter.getDate(2, 2));
