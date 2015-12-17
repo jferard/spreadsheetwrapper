@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spreadsheetwrapper-jopendocument1.3</artifactId>
 	<packaging>jar</packaging>
-	<name>spreadsheetwrapper</name>
+	<name>spreadsheetwrapper-jopendocument1.3</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

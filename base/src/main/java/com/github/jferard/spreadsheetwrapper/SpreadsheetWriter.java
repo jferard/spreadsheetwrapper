@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper;
 import java.util.Date;
 import java.util.List;
 
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**

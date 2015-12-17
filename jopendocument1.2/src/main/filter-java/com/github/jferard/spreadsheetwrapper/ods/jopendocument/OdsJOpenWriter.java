@@ -29,11 +29,11 @@ import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 

@@ -33,11 +33,11 @@ import jxl.write.WritableCellFormat;
 import jxl.write.WritableFont;
 import jxl.write.WriteException;
 
-import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.Util;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
+import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/

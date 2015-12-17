@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>spreadsheetwrapper-jxl</artifactId>
 	<packaging>jar</packaging>
-	<name>spreadsheetwrapper</name>
+	<name>spreadsheetwrapper-jxl</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

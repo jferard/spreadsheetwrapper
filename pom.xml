@@ -27,6 +27,7 @@
 		<module>jopendocument1.3</module>
 		<module>jxl</module>
 		<module>poi</module>
+		<module>examples</module>
 		<module>uber</module>
 	</modules>
 

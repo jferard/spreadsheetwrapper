@@ -21,8 +21,8 @@ import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.CellStyle;
 
-import com.github.jferard.spreadsheetwrapper.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
+import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 
 public final class XlsPoiTestProperties {
 	/**

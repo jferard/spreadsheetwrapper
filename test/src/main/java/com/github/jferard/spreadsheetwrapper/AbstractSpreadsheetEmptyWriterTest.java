@@ -30,6 +30,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestName;
 
+import com.github.jferard.spreadsheetwrapper.style.StyleUtility;
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /**

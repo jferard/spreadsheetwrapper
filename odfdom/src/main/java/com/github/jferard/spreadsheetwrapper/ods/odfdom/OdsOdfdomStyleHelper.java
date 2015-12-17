@@ -27,10 +27,10 @@ import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.Util;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 /**
  * A little style utility for odftoolkit files

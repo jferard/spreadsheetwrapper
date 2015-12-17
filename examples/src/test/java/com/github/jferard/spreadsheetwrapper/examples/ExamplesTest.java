@@ -15,34 +15,19 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard;
+package com.github.jferard.spreadsheetwrapper.examples;
 
-import java.util.logging.Logger;
+import org.junit.Test;
 
-import com.github.jferard.spreadsheetwrapper.DocumentFactoryManager;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
-public final class Examples {
-	/**
-	 * First example. Needs odfdom in path.
-	 *
-	 * @throws SpreadsheetException
-	 */
-	public static void createSimpleDocument() throws SpreadsheetException {
-		final DocumentFactoryManager manager = new DocumentFactoryManager(
-				Logger.getAnonymousLogger());
-		final SpreadsheetDocumentFactory factory = manager
-				.getFactory("ods.odfdom.OdsOdfdomDocumentFactory");
-		final SpreadsheetDocumentWriter documentWriter = factory.create();
-		final SpreadsheetWriter newSheet = documentWriter
-				.addSheet("first_sheet");
-		newSheet.setText(0, 0, "First text");
-		documentWriter.saveAs(factory.createNewFile("test"));
-	}
-
-	private Examples() {
+/**
+ * Unit test for Examples.
+ */
+public class ExamplesTest {
+	@Test
+	public void test() throws SpreadsheetException {
+		Examples.createSimpleDocument();
+		Examples.wrapperExample();
 	}
 }

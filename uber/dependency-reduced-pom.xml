@@ -7,7 +7,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>spreadsheetwrapper</artifactId>
-  <name>spreadsheetwrapper</name>
+  <name>spreadsheetwrapper-uber</name>
   <url>http://maven.apache.org</url>
   <build>
     <plugins>

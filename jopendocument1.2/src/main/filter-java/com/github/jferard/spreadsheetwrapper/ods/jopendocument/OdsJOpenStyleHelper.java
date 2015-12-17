@@ -26,10 +26,10 @@ import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.styletablecel
 import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.cls};
 
 import com.github.jferard.spreadsheetwrapper.Util;
-import com.github.jferard.spreadsheetwrapper.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.WrapperFont;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
+import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 class OdsJOpenStyleHelper {
 	/** the name space fo (fonts ?) */

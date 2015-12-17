@@ -19,6 +19,8 @@ package com.github.jferard.spreadsheetwrapper;
 
 import java.util.Date;
 
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+
 public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	/**
 	 * Set a value at the current position

@@ -20,6 +20,8 @@ package com.github.jferard.spreadsheetwrapper;
 import java.io.File;
 import java.io.OutputStream;
 
+import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+
 /**
  * The SpreadsheetDocumentWriter class provides some basic methods for writing
  * in a spreadsheet file (xls or ods format)
