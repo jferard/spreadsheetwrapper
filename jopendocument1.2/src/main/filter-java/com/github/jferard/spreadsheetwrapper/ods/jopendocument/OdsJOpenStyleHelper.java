@@ -127,20 +127,26 @@ class OdsJOpenStyleHelper {
 		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
-		final String borderAttrValue = tableCellProperties.getElement()
-				.getAttributeValue(OdsConstants.BORDER_ATTR_NAME,
-						OdsJOpenStyleHelper.FO_NS);
-
 		if (bColorAsHex != null) {
 			final WrapperColor backgroundColor = WrapperColor
 					.stringToColor(bColorAsHex);
 			wrapperCellStyle.setBackgroundColor(backgroundColor);
 		}
 		
-		if (borderAttrValue != null) {
-			final Borders borders = new Borders();
+		final Element cellPropertiesElment = tableCellProperties.getElement();  
+		final String borderAttrValue = cellPropertiesElment
+				.getAttributeValue(OdsConstants.BORDER_ATTR_NAME,
+						OdsJOpenStyleHelper.FO_NS);
+		final Borders borders = new Borders();
+		if (borderAttrValue == null) {
+			// border top
+			// border bottom
+			// ... 
+		} else {
 			final String[] split = borderAttrValue.split("\\s+");
 			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
+			// borders.setLineType(OdsConstants.sizeToPoints(split[1]));
+			// borders.setLineColor(OdsConstants.sizeToPoints(split[2]));
 			wrapperCellStyle.setBorders(borders);
 		}
 

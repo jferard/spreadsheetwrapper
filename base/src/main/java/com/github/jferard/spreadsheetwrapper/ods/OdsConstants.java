@@ -47,6 +47,19 @@ public final class OdsConstants {
 	
 	/** the border */
 	public static final String BORDER_ATTR_NAME = "border";
+	
+	/** the top border */
+	public static final String BORDER_TOP_ATTR_NAME = "border-top";
+	
+	/** the bottom border */
+	public static final String BORDER_BOTTOM_ATTR_NAME = "border-bottom";
+	
+	/** the left border */
+	public static final String BORDER_LEFT_ATTR_NAME = "border-left";
+	
+	/** the right border */
+	public static final String BORDER_RIGHT_ATTR_NAME = "border-right";
+	
 	/** name of the color attribute in fo */
 	public static final String COLOR_ATTR_NAME = "color";
 	/** the font family, asian */

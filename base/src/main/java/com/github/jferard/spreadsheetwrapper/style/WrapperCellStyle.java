@@ -46,6 +46,9 @@ public class WrapperCellStyle {
 	/** attribute : set */
 	public static final int YES = 1;
 
+	/** no line found */
+	public static final double NO_LINE = -1.0;
+
 	/** the backgroundColor of the cell */
 	private/*@Nullable*/WrapperColor backgoundColor;
 
