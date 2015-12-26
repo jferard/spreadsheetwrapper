@@ -38,7 +38,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** a value for delegation */
 	private final class OdsSimpleodsDocumentReaderTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> {
+	AbstractOdsSimpleodsDocumentDelegate<SpreadsheetReader> {
 		/**
 		 * @param file
 		 *            *internal* workbook
@@ -56,7 +56,7 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	}
 
 	/** the value for delegation */
-	private final AbstractOdsSimpleodsDocumentTrait<SpreadsheetReader> documentTrait;
+	private final AbstractOdsSimpleodsDocumentDelegate<SpreadsheetReader> documentTrait;
 	/** *internal* workbook */
 	private final OdsFile file;
 

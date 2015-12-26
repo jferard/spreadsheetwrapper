@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentDelegate;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 
 /*>>>
@@ -37,8 +37,8 @@ import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 
-abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+abstract class AbstractOdsSimpleodfDocumentDelegate<T> extends
+		AbstractSpreadsheetDocumentDelegate<T> {
 	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");
@@ -62,19 +62,19 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	private final OdsSimpleodfStatefulDocument sfDocument;
 
 	/** the style helper */
-	protected OdsOdfdomStyleHelper traitStyleHelper;
+	protected OdsOdfdomStyleHelper delegateStyleHelper;
 
 	/**
 	 * @param sfDocument
 	 *            the stateful (ie inited/not inited) document
-	 * @param traitStyleHelper
+	 * @param delegateStyleHelper
 	 */
-	public AbstractOdsSimpleodfDocumentTrait(
+	public AbstractOdsSimpleodfDocumentDelegate(
 			final OdsSimpleodfStatefulDocument sfDocument,
 			final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.sfDocument = sfDocument;
-		this.traitStyleHelper = styleHelper;
+		this.delegateStyleHelper = styleHelper;
 		final List<Table> tables = this.getTableList();
 		final ListIterator<Table> tablesIterator = tables.listIterator();
 		while (tablesIterator.hasNext()) {
@@ -112,7 +112,7 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	 * @return a list of internal tables
 	 */
 	/*>>> @RequiresNonNull("sfDocument")*/
-	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this*/) {
+	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentDelegate<T> this*/) {
 		final List<Table> tables;
 		if (this.sfDocument.isNew())
 			tables = Collections.emptyList();
@@ -143,7 +143,7 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 				throw new CantInsertElementInSpreadsheetException();
 		}
 		final TableTableElement tableElement = table.getOdfElement();
-		AbstractOdsSimpleodfDocumentTrait.cleanEmptyTable(tableElement);
+		AbstractOdsSimpleodfDocumentDelegate.cleanEmptyTable(tableElement);
 
 		this.sfDocument.setInitialized();
 		final T spreadsheet = this.createNew(table);
@@ -156,9 +156,9 @@ abstract class AbstractOdsSimpleodfDocumentTrait<T> extends
 	 *            internal table
 	 * @return reader or writer sheet
 	 */
-	/*@RequiresNonNull("traitStyleHelper")*/
+	/*@RequiresNonNull("delegateStyleHelper")*/
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentTrait<T> this, */final Table table);
+			/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentDelegate<T> this, */final Table table);
 
 	/** {@inheritDoc} */
 	@Override

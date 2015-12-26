@@ -49,23 +49,23 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 public class OdsSimpleodsDocumentWriter extends
 AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** class for delegation */
-	private final class OdsSimpleodsDocumentWriterTrait extends
-	AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> {
+	private final class OdsSimpleodsDocumentWriterDelegate extends
+	AbstractOdsSimpleodsDocumentDelegate<SpreadsheetWriter> {
 
-		OdsSimpleodsDocumentWriterTrait(final OdsFile file) {
+		OdsSimpleodsDocumentWriterDelegate(final OdsFile file) {
 			super(file);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsSimpleodsDocumentWriterTrait this, */final Table table) {
+				/*>>> @UnknownInitialization OdsSimpleodsDocumentWriterDelegate this, */final Table table) {
 			return new OdsSimpleodsWriter(table);
 		}
 	}
 
 	/** for delegation */
-	private final AbstractOdsSimpleodsDocumentTrait<SpreadsheetWriter> documentTrait;
+	private final AbstractOdsSimpleodsDocumentDelegate<SpreadsheetWriter> documentDelegate;
 
 	/** *internal* workbook */
 	private final OdsFile file;
@@ -90,7 +90,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		this.reader = new OdsSimpleodsDocumentReader(file);
 		this.logger = logger;
 		this.file = file;
-		this.documentTrait = new OdsSimpleodsDocumentWriterTrait(file);
+		this.documentDelegate = new OdsSimpleodsDocumentWriterDelegate(file);
 	}
 
 	/**
@@ -103,7 +103,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentDelegate.addSheet(index, sheetName);
 	}
 
 	/**
@@ -114,7 +114,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(sheetName);
+		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -163,13 +163,13 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** {@inheritDoc} */

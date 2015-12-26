@@ -23,7 +23,7 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentDelegate;
 
 /*>>>
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,29 +32,29 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 import org.checkerframework.checker.nullness.qual.PolyNull;
  */
 
-public abstract class AbstractXlsPoiDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+public abstract class AbstractXlsPoiDocumentDelegate<T> extends
+		AbstractSpreadsheetDocumentDelegate<T> {
 	/** *internal* workbook */
 	final private Workbook workbook;
 	/** cell style for date cells, since Excel hasn't any cell date type */
 	protected/*@Nullable*/CellStyle dateCellStyle;
 
 	/** the style helper */
-	protected XlsPoiStyleHelper traitStyleHelper;
+	protected XlsPoiStyleHelper delegateStyleHelper;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
-	 * @param traitStyleHelper
+	 * @param delegateStyleHelper
 	 * @param dateCellStyle
 	 *            cell syle for dates, since Excel hasn't a real date type
 	 */
-	public AbstractXlsPoiDocumentTrait(final Workbook workbook,
+	public AbstractXlsPoiDocumentDelegate(final Workbook workbook,
 			final XlsPoiStyleHelper styleHelper,
 			final/*@Nullable*/CellStyle dateCellStyle) {
 		super();
 		this.workbook = workbook;
-		this.traitStyleHelper = styleHelper;
+		this.delegateStyleHelper = styleHelper;
 		this.dateCellStyle = dateCellStyle;
 		final int sheetCount = this.getSheetCount();
 		for (int i = 0; i < sheetCount; i++) {
@@ -106,9 +106,9 @@ public abstract class AbstractXlsPoiDocumentTrait<T> extends
 	 *            the *internal* sheet
 	 * @return reader/writer on that sheet
 	 */
-	/*@RequiresNonNull("traitStyleHelper")*/
+	/*@RequiresNonNull("delegateStyleHelper")*/
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractXlsPoiDocumentTrait<T> this, */final Sheet sheet);
+			/*>>> @UnknownInitialization AbstractXlsPoiDocumentDelegate<T> this, */final Sheet sheet);
 
 	/** {@inheritDoc} */
 	@Override
@@ -126,7 +126,7 @@ public abstract class AbstractXlsPoiDocumentTrait<T> extends
 
 	/** {@inheritDoc} */
 	@Override
-	protected final int getSheetCount(/*>>> @UnknownInitialization AbstractXlsPoiDocumentTrait<T> this*/) {
+	protected final int getSheetCount(/*>>> @UnknownInitialization AbstractXlsPoiDocumentDelegate<T> this*/) {
 		if (this.workbook == null)
 			throw new IllegalStateException();
 		return this.workbook.getNumberOfSheets();

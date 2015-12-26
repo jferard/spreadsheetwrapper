@@ -41,25 +41,25 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** for delegation */
-	private static final class XlsPoiDocumentReaderTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetReader> {
+	private static final class XlsPoiDocumentReaderDelegate extends
+			AbstractXlsPoiDocumentDelegate<SpreadsheetReader> {
 
-		XlsPoiDocumentReaderTrait(final Workbook workbook,
+		XlsPoiDocumentReaderDelegate(final Workbook workbook,
 				final XlsPoiStyleHelper styleHelper) {
 			super(workbook, styleHelper, null);
 		}
 
 		/** {inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("delegateStyleHelper")*/
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization XlsPoiDocumentReaderTrait this, */final Sheet sheet) {
-			return new XlsPoiReader(sheet, this.traitStyleHelper);
+				/*>>> @UnknownInitialization XlsPoiDocumentReaderDelegate this, */final Sheet sheet) {
+			return new XlsPoiReader(sheet, this.delegateStyleHelper);
 		}
 	}
 
 	/** for delegation */
-	private final AbstractXlsPoiDocumentTrait<SpreadsheetReader> documentTrait;
+	private final AbstractXlsPoiDocumentDelegate<SpreadsheetReader> documentDelegate;
 
 	/** for delegation */
 	private final XlsPoiStyleHelper styleHelper;
@@ -75,7 +75,7 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 			final XlsPoiStyleHelper styleHelper) {
 		this.workbook = workbook;
 		this.styleHelper = styleHelper;
-		this.documentTrait = new XlsPoiDocumentReaderTrait(workbook,
+		this.documentDelegate = new XlsPoiDocumentReaderDelegate(workbook,
 				styleHelper);
 	}
 
@@ -128,12 +128,12 @@ public class XlsPoiDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 }

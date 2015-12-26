@@ -44,25 +44,25 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
-	private final class OdsOdfdomDocumentReaderTrait extends
-			AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> {
+	private final class OdsOdfdomDocumentReaderDelegate extends
+			AbstractOdsOdfdomDocumentDelegate<SpreadsheetReader> {
 
 		/**
 		 * @param cellStyleAccessor
 		 * @param value
 		 *            *internal* value
 		 */
-		OdsOdfdomDocumentReaderTrait(final OdfSpreadsheetDocument document,
+		OdsOdfdomDocumentReaderDelegate(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
 			super(document, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("DelegateStyleHelper")*/
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization OdsOdfdomDocumentReaderTrait this,*/final OdfTable table) {
-			return new OdsOdfdomReader(table, this.traitStyleHelper);
+				/*>>> @UnknownInitialization OdsOdfdomDocumentReaderDelegate this,*/final OdfTable table) {
+			return new OdsOdfdomReader(table, this.delegateStyleHelper);
 		}
 	}
 
@@ -71,7 +71,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** the document styles */
 	private final OdfOfficeStyles documentStyles;
 	/** for delegation only */
-	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetReader> documentTrait;
+	private final AbstractOdsOdfdomDocumentDelegate<SpreadsheetReader> documentDelegate;
 	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
 
@@ -93,7 +93,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 		}
 		this.document.setLocale(Locale.FRANCE);
 		this.documentStyles = this.document.getDocumentStyles();
-		this.documentTrait = new OdsOdfdomDocumentReaderTrait(this.document,
+		this.documentDelegate = new OdsOdfdomDocumentReaderDelegate(this.document,
 				this.styleHelper);
 	}
 
@@ -144,12 +144,12 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 }

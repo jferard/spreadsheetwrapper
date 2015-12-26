@@ -28,32 +28,32 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentDelegate;
 
 /*>>>
 import org.checkerframework.checker.initialization.qual.UnknownInitialization;
 import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 
-abstract class AbstractOdsOdfdomDocumentTrait<T> extends
-		AbstractSpreadsheetDocumentTrait<T> {
+abstract class AbstractOdsOdfdomDocumentDelegate<T> extends
+		AbstractSpreadsheetDocumentDelegate<T> {
 	/** the *internal* value (workbook) */
 	private final OdfSpreadsheetDocument document;
 
 	/** StyleHelper instance in the trait */
-	protected OdsOdfdomStyleHelper traitStyleHelper;
+	protected OdsOdfdomStyleHelper delegateStyleHelper;
 
 	/**
-	 * @param traitStyleHelper
+	 * @param delegateStyleHelper
 	 * @param value
 	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsOdfdomDocumentTrait(
+	public AbstractOdsOdfdomDocumentDelegate(
 			final OdfSpreadsheetDocument document,
 			final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.document = document;
-		this.traitStyleHelper = styleHelper;
+		this.delegateStyleHelper = styleHelper;
 		final List<OdfTable> tables = this.document.getTableList();
 		final ListIterator<OdfTable> tablesIterator = tables.listIterator();
 		while (tablesIterator.hasNext()) {
@@ -151,9 +151,9 @@ abstract class AbstractOdsOdfdomDocumentTrait<T> extends
 	 * @param table
 	 * @return
 	 */
-	/*@RequiresNonNull("traitStyleHelper")*/
+	/*@RequiresNonNull("delegateStyleHelper")*/
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractOdsOdfdomDocumentTrait<T> this, */final OdfTable table);
+			/*>>> @UnknownInitialization AbstractOdsOdfdomDocumentDelegate<T> this, */final OdfTable table);
 
 	/** {@inheritDoc} */
 	@Override

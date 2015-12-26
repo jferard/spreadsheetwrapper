@@ -64,7 +64,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 	 * Creates a reader from an *internal* table
 	 *
 	 * @param table
-	 * @param traitStyleHelper
+	 * @param delegateStyleHelper
 	 */
 	OdsSimpleodfReader(final Table table, final OdsOdfdomStyleHelper styleHelper) {
 		super();

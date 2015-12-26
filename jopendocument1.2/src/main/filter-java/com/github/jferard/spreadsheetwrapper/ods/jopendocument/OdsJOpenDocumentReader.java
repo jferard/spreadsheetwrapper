@@ -38,8 +38,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  */
 class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
-	private final class OdsJOpenDocumentReaderTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetReader> {
+	private final class OdsJOpenDocumentReaderDelegate extends
+	AbstractOdsJOpenDocumentDelegate<SpreadsheetReader> {
 		/** the style helper */
 		private final OdsJOpenStyleHelper styleHelper;
 
@@ -49,7 +49,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		 * @param sfSpreadSheet
 		 *            *internal* value
 		 */
-		OdsJOpenDocumentReaderTrait(final OdsJOpenStyleHelper styleHelper,
+		OdsJOpenDocumentReaderDelegate(final OdsJOpenStyleHelper styleHelper,
 				final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 			this.styleHelper = styleHelper;
@@ -58,13 +58,13 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization OdsJOpenDocumentReaderTrait this,*/final Sheet sheet) {
+				/*>>> @UnknownInitialization OdsJOpenDocumentReaderDelegate this,*/final Sheet sheet) {
 			return new OdsJOpenReader(this.styleHelper, sheet);
 		}
 	}
 
 	/** for delegation only */
-	private final AbstractOdsJOpenDocumentTrait<SpreadsheetReader> documentTrait;
+	private final AbstractOdsJOpenDocumentDelegate<SpreadsheetReader> documentDelegate;
 	/** the *internal* value */
 	private final Stateful<SpreadSheet> sfSpreadSheet;
 
@@ -80,7 +80,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 			final OdsJOpenStatefulDocument sfSpreadSheet)
 					throws SpreadsheetException {
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentTrait = new OdsJOpenDocumentReaderTrait(styleHelper,
+		this.documentDelegate = new OdsJOpenDocumentReaderDelegate(styleHelper,
 				sfSpreadSheet);
 	}
 
@@ -112,7 +112,7 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** */
 	@Override
 	public int getSheetCount() {
-		return this.documentTrait.getSheetCount();
+		return this.documentDelegate.getSheetCount();
 	}
 
 	/** */
@@ -130,12 +130,12 @@ class OdsJOpenDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 }

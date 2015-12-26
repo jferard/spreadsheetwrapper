@@ -50,25 +50,25 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 public class OdsSimpleodfDocumentWriter extends
 AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
-	private final class OdsSimpleodfDocumentWriterTrait extends
-	AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> {
+	private final class OdsSimpleodfDocumentWriterDelegate extends
+	AbstractOdsSimpleodfDocumentDelegate<SpreadsheetWriter> {
 
 		/**
-		 * @param traitStyleHelper
+		 * @param delegateStyleHelper
 		 * @param value
 		 *            *internal* workbook
 		 */
-		OdsSimpleodfDocumentWriterTrait(final OdsOdfdomStyleHelper styleHelper,
+		OdsSimpleodfDocumentWriterDelegate(final OdsOdfdomStyleHelper styleHelper,
 				final OdsSimpleodfStatefulDocument sfDocument) {
 			super(sfDocument, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("delegateStyleHelper")*/
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterTrait this, */final Table table) {
-			return new OdsSimpleodfWriter(table, this.traitStyleHelper);
+				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterDelegate this, */final Table table) {
+			return new OdsSimpleodfWriter(table, this.delegateStyleHelper);
 		}
 	}
 
@@ -76,7 +76,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	private final OdfOfficeStyles documentStyles;
 
 	/** for delegation */
-	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetWriter> documentTrait;
+	private final AbstractOdsSimpleodfDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** logger */
 	private final Logger logger;
 
@@ -109,7 +109,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		this.logger = logger;
 		this.sfDocument = sfDocument;
 		this.documentStyles = this.sfDocument.getStyles();
-		this.documentTrait = new OdsSimpleodfDocumentWriterTrait(styleHelper,
+		this.documentDelegate = new OdsSimpleodfDocumentWriterDelegate(styleHelper,
 				sfDocument);
 	}
 
@@ -123,7 +123,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentDelegate.addSheet(index, sheetName);
 	}
 
 	/**
@@ -134,7 +134,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(sheetName);
+		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -183,13 +183,13 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** {@inheritDoc} */

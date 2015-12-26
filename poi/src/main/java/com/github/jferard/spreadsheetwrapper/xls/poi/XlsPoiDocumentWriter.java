@@ -52,19 +52,19 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/**
 	 * A helper, for delegation
 	 */
-	private final class XlsPoiDocumentWriterTrait extends
-			AbstractXlsPoiDocumentTrait<SpreadsheetWriter> {
+	private final class XlsPoiDocumentWriterDelegate extends
+			AbstractXlsPoiDocumentDelegate<SpreadsheetWriter> {
 
 		/**
 		 * @param workbook
 		 *            *internal* workbook
-		 * @param traitStyleHelper
+		 * @param delegateStyleHelper
 		 * @param dateCellStyle
 		 *            the style for all date cells
 		 * @param cellStyleAccessor
 		 * @param cellStyleByName
 		 */
-		XlsPoiDocumentWriterTrait(final Workbook workbook,
+		XlsPoiDocumentWriterDelegate(final Workbook workbook,
 				final XlsPoiStyleHelper styleHelper,
 				final CellStyle dateCellStyle) {
 			super(workbook, styleHelper, dateCellStyle);
@@ -72,16 +72,16 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 		/** {@inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("delegateStyleHelper")*/
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization XlsPoiDocumentWriterTrait this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.traitStyleHelper,
+				/*>>> @UnknownInitialization XlsPoiDocumentWriterDelegate this, */final Sheet sheet) {
+			return new XlsPoiWriter(sheet, this.delegateStyleHelper,
 					this.dateCellStyle);
 		}
 	}
 
 	/** for delegation */
-	private final AbstractXlsPoiDocumentTrait<SpreadsheetWriter> documentTrait;
+	private final AbstractXlsPoiDocumentDelegate<SpreadsheetWriter> documentDelegate;
 
 	/** simple logger */
 	private final Logger logger;
@@ -112,7 +112,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final CellStyle dateCellStyle = this.workbook.createCellStyle();
 		dateCellStyle.setDataFormat(createHelper.createDataFormat().getFormat(
 				"yyyy-mm-dd"));
-		this.documentTrait = new XlsPoiDocumentWriterTrait(workbook,
+		this.documentDelegate = new XlsPoiDocumentWriterDelegate(workbook,
 				styleHelper, dateCellStyle);
 	}
 
@@ -121,14 +121,14 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentDelegate.addSheet(index, sheetName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(sheetName);
+		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -177,13 +177,13 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** */

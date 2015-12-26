@@ -48,8 +48,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
 	/** delegation sfSpreadSheet with definition of createNew */
-	private final class OdsJOpenDocumentWriterTrait extends
-	AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> {
+	private final class OdsJOpenDocumentWriterDelegate extends
+	AbstractOdsJOpenDocumentDelegate<SpreadsheetWriter> {
 		/** the style helper */
 		private final OdsJOpenStyleHelper styleHelper;
 
@@ -59,7 +59,7 @@ implements SpreadsheetDocumentWriter {
 		 * @param sfSpreadSheet
 		 * 			the *internal* spreadsheet, stateful version
 		 */
-		OdsJOpenDocumentWriterTrait(final OdsJOpenStyleHelper styleHelper,
+		OdsJOpenDocumentWriterDelegate(final OdsJOpenStyleHelper styleHelper,
 				final OdsJOpenStatefulDocument sfSpreadSheet) {
 			super(sfSpreadSheet);
 			this.styleHelper = styleHelper;
@@ -68,7 +68,7 @@ implements SpreadsheetDocumentWriter {
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsJOpenDocumentWriterTrait this, */final Sheet sheet) {
+				/*>>> @UnknownInitialization OdsJOpenDocumentWriterDelegate this, */final Sheet sheet) {
 			return new OdsJOpenWriter(this.styleHelper, sheet);
 		}
 	}
@@ -92,7 +92,7 @@ implements SpreadsheetDocumentWriter {
 	}
 
 	/** delegation sfSpreadSheet */
-	private final AbstractOdsJOpenDocumentTrait<SpreadsheetWriter> documentTrait;
+	private final AbstractOdsJOpenDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** the logger */
 	private final Logger logger;
 	/** delegation reader */
@@ -126,7 +126,7 @@ implements SpreadsheetDocumentWriter {
 		this.reader = new OdsJOpenDocumentReader(styleHelper, sfSpreadSheet);
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentTrait = new OdsJOpenDocumentWriterTrait(styleHelper, sfSpreadSheet);
+		this.documentDelegate = new OdsJOpenDocumentWriterDelegate(styleHelper, sfSpreadSheet);
 	}
 
 	/** {@inheritDoc} */
@@ -134,14 +134,14 @@ implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentDelegate.addSheet(index, sheetName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(sheetName);
+		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -190,13 +190,13 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** */

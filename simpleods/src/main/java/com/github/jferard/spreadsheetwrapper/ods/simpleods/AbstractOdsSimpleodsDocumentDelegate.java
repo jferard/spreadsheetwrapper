@@ -24,7 +24,7 @@ import org.simpleods.SimpleOdsException;
 import org.simpleods.Table;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentDelegate;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
@@ -32,8 +32,8 @@ import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTra
  * @param <T>
  *            reader/writer
  */
-public abstract class AbstractOdsSimpleodsDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+public abstract class AbstractOdsSimpleodsDocumentDelegate<T> extends
+AbstractSpreadsheetDocumentDelegate<T> {
 	/** the *internal* ods file */
 	private final OdsFile file;
 
@@ -43,7 +43,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * @param file
 	 *            the *internal* ods file
 	 */
-	public AbstractOdsSimpleodsDocumentTrait(final OdsFile file) {
+	public AbstractOdsSimpleodsDocumentDelegate(final OdsFile file) {
 		super();
 		this.file = file;
 		final int count = this.getSheetCount();
@@ -95,7 +95,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	}
 
 	private Table getTable(
-			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentTrait<T> this, */final int index) {
+			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentDelegate<T> this, */final int index) {
 		if (this.file == null)
 			throw new IllegalStateException();
 
@@ -133,7 +133,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * @return the reader/writer
 	 */
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentTrait<T> this, */final Table table);
+			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentDelegate<T> this, */final Table table);
 
 	/** {@inheritDoc} */
 	@Override
@@ -151,7 +151,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 
 	/** {@inheritDoc} */
 	@Override
-	protected final int getSheetCount(/*>>> @UnknownInitialization(AbstractOdsSimpleodsDocumentTrait.class) AbstractOdsSimpleodsDocumentTrait<T> this*/) {
+	protected final int getSheetCount(/*>>> @UnknownInitialization(AbstractOdsSimpleodsDocumentDelegate.class) AbstractOdsSimpleodsDocumentDelegate<T> this*/) {
 		if (this.file == null)
 			throw new IllegalStateException();
 		return this.file.lastTableNumber();

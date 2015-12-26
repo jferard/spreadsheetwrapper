@@ -62,7 +62,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	/**
 	 * @param table
 	 *            the *internal* table
-	 * @param traitStyleHelper
+	 * @param delegateStyleHelper
 	 */
 	OdsSimpleodfWriter(final Table table, final OdsOdfdomStyleHelper styleHelper) {
 		super(new OdsSimpleodfReader(table, styleHelper));

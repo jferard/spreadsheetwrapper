@@ -52,20 +52,20 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
 	/** delegation value with definition of createNew */
-	private final class OdsOdfdomDocumentWriterTrait extends
-	AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> {
+	private final class OdsOdfdomDocumentWriterDelegate extends
+	AbstractOdsOdfdomDocumentDelegate<SpreadsheetWriter> {
 
-		OdsOdfdomDocumentWriterTrait(final OdfSpreadsheetDocument document,
+		OdsOdfdomDocumentWriterDelegate(final OdfSpreadsheetDocument document,
 				final OdsOdfdomStyleHelper styleHelper) {
 			super(document, styleHelper);
 		}
 
 		/** {@inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("DelegateStyleHelper")*/
 		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterTrait this, */final OdfTable table) {
-			return new OdsOdfdomWriter(table, this.traitStyleHelper);
+				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterDelegate this, */final OdfTable table) {
+			return new OdsOdfdomWriter(table, this.delegateStyleHelper);
 		}
 	}
 
@@ -75,7 +75,7 @@ implements SpreadsheetDocumentWriter {
 	/** the document styles */
 	private final OdfOfficeStyles documentStyles;
 	/** delegation value */
-	private final AbstractOdsOdfdomDocumentTrait<SpreadsheetWriter> documentTrait;
+	private final AbstractOdsOdfdomDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** the logger */
 	private final Logger logger;
 
@@ -105,7 +105,7 @@ implements SpreadsheetDocumentWriter {
 		this.logger = logger;
 		this.document = document;
 		this.documentStyles = this.document.getDocumentStyles();
-		this.documentTrait = new OdsOdfdomDocumentWriterTrait(document,
+		this.documentDelegate = new OdsOdfdomDocumentWriterDelegate(document,
 				styleHelper);
 	}
 
@@ -114,14 +114,14 @@ implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(index, sheetName);
+		return this.documentDelegate.addSheet(index, sheetName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		return this.documentTrait.addSheet(sheetName);
+		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -170,13 +170,13 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** */

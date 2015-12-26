@@ -44,10 +44,10 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
-	private final class OdsSimpleodfDocumentReaderTrait extends
-	AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> {
+	private final class OdsSimpleodfDocumentReaderDelegate extends
+	AbstractOdsSimpleodfDocumentDelegate<SpreadsheetReader> {
 
-		OdsSimpleodfDocumentReaderTrait(
+		OdsSimpleodfDocumentReaderDelegate(
 				final OdsSimpleodfStatefulDocument sfDocument,
 				final OdsOdfdomStyleHelper styleHelper) {
 			super(sfDocument, styleHelper);
@@ -55,17 +55,17 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 
 		/** {@inheritDoc} */
 		@Override
-		/*@RequiresNonNull("traitStyleHelper")*/
+		/*@RequiresNonNull("delegateStyleHelper")*/
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization OdsSimpleodfDocumentReaderTrait this, */final Table table) {
-			return new OdsSimpleodfReader(table, this.traitStyleHelper);
+				/*>>> @UnknownInitialization OdsSimpleodfDocumentReaderDelegate this, */final Table table) {
+			return new OdsSimpleodfReader(table, this.delegateStyleHelper);
 		}
 	}
 
 	/** internal styles */
 	private final OdfOfficeStyles documentStyles;
 	/** for delegation */
-	private final AbstractOdsSimpleodfDocumentTrait<SpreadsheetReader> documentTrait;
+	private final AbstractOdsSimpleodfDocumentDelegate<SpreadsheetReader> documentDelegate;
 	/** *internal* workbook */
 	private final OdsSimpleodfStatefulDocument sfDocument;
 	/** the style helper */
@@ -89,7 +89,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 		// }
 		this.sfDocument.rawSetLocale(Locale.US);
 		this.documentStyles = this.sfDocument.getStyles();
-		this.documentTrait = new OdsSimpleodfDocumentReaderTrait(sfDocument,
+		this.documentDelegate = new OdsSimpleodfDocumentReaderDelegate(sfDocument,
 				styleHelper);
 	}
 
@@ -123,14 +123,14 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public int getSheetCount() {
-		final List<Table> tables = this.documentTrait.getTableList();
+		final List<Table> tables = this.documentDelegate.getTableList();
 		return tables.size();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List<String> getSheetNames() {
-		final List<Table> tables = this.documentTrait.getTableList();
+		final List<Table> tables = this.documentDelegate.getTableList();
 		final List<String> sheetNames = new ArrayList<String>(tables.size());
 		for (final Table table : tables)
 			sheetNames.add(table.getTableName());
@@ -140,12 +140,12 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 }

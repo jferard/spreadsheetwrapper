@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 import com.github.jferard.spreadsheetwrapper.Accessor;
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 
-public abstract class AbstractSpreadsheetDocumentTrait<T> {
+public abstract class AbstractSpreadsheetDocumentDelegate<T> {
 
 	/**
 	 * An accessor on readers/writers, by name and index.
@@ -32,7 +32,7 @@ public abstract class AbstractSpreadsheetDocumentTrait<T> {
 	/**
 	 * Creates an abstract spreadsheet value
 	 */
-	protected AbstractSpreadsheetDocumentTrait() {
+	protected AbstractSpreadsheetDocumentDelegate() {
 		this.accessor = new Accessor<T>();
 	}
 

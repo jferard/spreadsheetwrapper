@@ -21,12 +21,12 @@ import java.util.NoSuchElementException;
 
 import org.jopendocument.dom.spreadsheet.Sheet;
 
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentTrait;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentDelegate;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
-abstract class AbstractOdsJOpenDocumentTrait<T> extends
-AbstractSpreadsheetDocumentTrait<T> {
+abstract class AbstractOdsJOpenDocumentDelegate<T> extends
+AbstractSpreadsheetDocumentDelegate<T> {
 	private static int getSheetCount(
 			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		int count;
@@ -44,11 +44,11 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * @param spreadSheet
 	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsJOpenDocumentTrait(
+	public AbstractOdsJOpenDocumentDelegate(
 			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		super();
 		this.sfSpreadSheet = sfSpreadSheet;
-		final int sheetCount = AbstractOdsJOpenDocumentTrait
+		final int sheetCount = AbstractOdsJOpenDocumentDelegate
 				.getSheetCount(sfSpreadSheet);
 		for (int s = 0; s < sheetCount; s++) {
 			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
@@ -111,7 +111,7 @@ AbstractSpreadsheetDocumentTrait<T> {
 	 * @return the reader/writer
 	 */
 	protected abstract T createNew(
-			/*>>> @UnknownInitialization AbstractOdsJOpenDocumentTrait<T> this, */final Sheet sheet);
+			/*>>> @UnknownInitialization AbstractOdsJOpenDocumentDelegate<T> this, */final Sheet sheet);
 
 	/** {@inheritDoc} */
 	@Override
@@ -137,6 +137,6 @@ AbstractSpreadsheetDocumentTrait<T> {
 	/** {@inheritDoc} */
 	@Override
 	protected final int getSheetCount() {
-		return AbstractOdsJOpenDocumentTrait.getSheetCount(this.sfSpreadSheet);
+		return AbstractOdsJOpenDocumentDelegate.getSheetCount(this.sfSpreadSheet);
 	}
 }
