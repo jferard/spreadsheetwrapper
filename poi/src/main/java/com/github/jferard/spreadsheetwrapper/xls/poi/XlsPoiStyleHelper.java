@@ -29,6 +29,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.Util;
+import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
@@ -179,7 +180,6 @@ class XlsPoiStyleHelper {
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		final double borderWidth = wrapperCellStyle.getBorderLineWidth();
 
 		if (backgroundColor != null) {
 			final HSSFColor hssfColor = this.toHSSFColor(backgroundColor);
@@ -189,16 +189,21 @@ class XlsPoiStyleHelper {
 			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		}
 
-		if (borderWidth != WrapperCellStyle.DEFAULT) {
-			if (Util.almostEqual(borderWidth, WrapperCellStyle.THIN_LINE))
-				this.setAllborders(cellStyle, CellStyle.BORDER_THIN);
-			else if (Util
-					.almostEqual(borderWidth, WrapperCellStyle.MEDIUM_LINE))
-				this.setAllborders(cellStyle, CellStyle.BORDER_MEDIUM);
-			else if (Util.almostEqual(borderWidth, WrapperCellStyle.THICK_LINE))
-				this.setAllborders(cellStyle, CellStyle.BORDER_THICK);
-			else
-				throw new UnsupportedOperationException();
+		
+		final /*@Nullable*/ Borders borders = wrapperCellStyle.getBorders();
+		if (borders != null) {
+			final double borderWidth = borders.getLineWidth();
+			if (borderWidth != WrapperCellStyle.DEFAULT) {
+				if (Util.almostEqual(borderWidth, WrapperCellStyle.THIN_LINE))
+					this.setAllborders(cellStyle, CellStyle.BORDER_THIN);
+				else if (Util
+						.almostEqual(borderWidth, WrapperCellStyle.MEDIUM_LINE))
+					this.setAllborders(cellStyle, CellStyle.BORDER_MEDIUM);
+				else if (Util.almostEqual(borderWidth, WrapperCellStyle.THICK_LINE))
+					this.setAllborders(cellStyle, CellStyle.BORDER_THICK);
+				else
+					throw new UnsupportedOperationException();
+			}
 		}
 		return cellStyle;
 	}
@@ -273,10 +278,12 @@ class XlsPoiStyleHelper {
 
 		wrapperCellStyle.setBackgroundColor(wrapperColor);
 
+		Borders borders = new Borders();
 		final double borderWidth = this.getBorderLineSize(cellStyle);
 		if (borderWidth != WrapperCellStyle.DEFAULT)
-			wrapperCellStyle.setBorderLineWidth(borderWidth);
-
+			borders.setLineWidth(borderWidth);
+		
+		wrapperCellStyle.setBorders(borders);
 		return wrapperCellStyle;
 	}
 

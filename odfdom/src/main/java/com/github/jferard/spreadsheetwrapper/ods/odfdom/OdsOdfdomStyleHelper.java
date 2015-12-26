@@ -28,6 +28,7 @@ import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
@@ -78,7 +79,7 @@ public class OdsOdfdomStyleHelper {
 		final String border = odfElement
 				.getProperty(OdfTableCellProperties.Border);
 
-		return this.getCellStyle(fontWeight, fontStyle, fontSize, fontColor,
+		return this.buildCellStyle(fontWeight, fontStyle, fontSize, fontColor,
 				fontFamily, backgroundColor, border);
 	}
 
@@ -151,14 +152,17 @@ public class OdsOdfdomStyleHelper {
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		final double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
 		if (backgroundColor != null) {
 			properties.put(OdfTableCellProperties.BackgroundColor,
 					backgroundColor.toHex());
 		}
-		if (borderLineWidth != WrapperCellStyle.DEFAULT) {
-			properties.put(OdfTableCellProperties.Border,
-					Double.toString(borderLineWidth) + "pt solid #000000");
+		final Borders borders = wrapperCellStyle.getBorders();
+		if (borders != null) {
+			final double borderLineWidth = borders.getLineWidth();
+			if (borderLineWidth != WrapperCellStyle.DEFAULT) {
+				properties.put(OdfTableCellProperties.Border,
+						Double.toString(borderLineWidth) + "pt solid #000000");
+			}
 		}
 		return properties;
 	}
@@ -178,16 +182,16 @@ public class OdsOdfdomStyleHelper {
 				.getProperty(OdfTextProperties.FontFamily);
 		final String backgroundColor = style
 				.getProperty(OdfTableCellProperties.BackgroundColor);
-		final String border = style.getProperty(OdfTableCellProperties.Border);
+		final String borderAttrValue = style.getProperty(OdfTableCellProperties.Border);
 
-		return this.getCellStyle(fontWeight, fontStyle, fontSize, fontColor,
-				fontFamily, backgroundColor, border);
+		return this.buildCellStyle(fontWeight, fontStyle, fontSize, fontColor,
+				fontFamily, backgroundColor, borderAttrValue);
 	}
 
-	private WrapperCellStyle getCellStyle(final String fontWeight,
+	private WrapperCellStyle buildCellStyle(final String fontWeight,
 			final String fontStyle, final String fontSize,
 			final String fontColor, final String fontFamily,
-			final String backgroundColor, final String border) {
+			final String backgroundColor, final String borderAttrValue) {
 		final WrapperFont wrapperFont = new WrapperFont();
 		if (fontWeight != null) {
 			if (fontWeight.equals("bold"))
@@ -213,11 +217,13 @@ public class OdsOdfdomStyleHelper {
 		if (this.colorByHex.containsKey(backgroundColor))
 			wrapperStyle.setBackgroundColor(this.colorByHex
 					.get(backgroundColor));
-		if (border != null) {
-			final String[] split = border.split("\\s+");
-			wrapperStyle
-			.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
+		
+		final Borders borders = new Borders();
+		if (borderAttrValue != null) {
+			final String[] split = borderAttrValue.split("\\s+");
+			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
 		}
+		wrapperStyle.setBorders(borders);
 
 		return wrapperStyle;
 	}

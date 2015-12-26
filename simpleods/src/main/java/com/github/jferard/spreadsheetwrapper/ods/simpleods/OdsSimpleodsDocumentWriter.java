@@ -38,6 +38,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
+import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
@@ -219,13 +220,16 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		final double borderLineWidth = wrapperCellStyle.getBorderLineWidth();
+		final Borders borders = wrapperCellStyle.getBorders();
 		if (backgroundColor != null)
 			newStyle.setBackgroundColor(backgroundColor.toHex());
-		if (borderLineWidth != WrapperCellStyle.DEFAULT)
-			newStyle.addBorderStyle(Double.valueOf(borderLineWidth) + "pt",
-					"#000000", BorderStyle.BORDER_SOLID,
-					BorderStyle.POSITION_ALL);
+		if (borders != null) {
+			final double borderLineWidth = borders.getLineWidth();
+			if (borderLineWidth != WrapperCellStyle.DEFAULT)
+				newStyle.addBorderStyle(Double.valueOf(borderLineWidth) + "pt",
+						"#000000", BorderStyle.BORDER_SOLID,
+						BorderStyle.POSITION_ALL);
+		}
 		return true;
 	}
 }

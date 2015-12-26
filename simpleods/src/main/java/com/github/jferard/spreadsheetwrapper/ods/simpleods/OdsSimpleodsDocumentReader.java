@@ -37,26 +37,26 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  */
 public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** a value for delegation */
-	private final class OdsSimpleodsDocumentReaderTrait extends
+	private final class OdsSimpleodsDocumentReaderDelegate extends
 	AbstractOdsSimpleodsDocumentDelegate<SpreadsheetReader> {
 		/**
 		 * @param file
 		 *            *internal* workbook
 		 */
-		OdsSimpleodsDocumentReaderTrait(final OdsFile file) {
+		OdsSimpleodsDocumentReaderDelegate(final OdsFile file) {
 			super(file);
 		}
 
 		/** {@inheritDoc} */
 		@Override
 		protected SpreadsheetReader createNew(
-				/*>>> @UnknownInitialization OdsSimpleodsDocumentReaderTrait this, */final Table table) {
+				/*>>> @UnknownInitialization OdsSimpleodsDocumentReaderDelegate this, */final Table table) {
 			return new OdsSimpleodsReader(table);
 		}
 	}
 
 	/** the value for delegation */
-	private final AbstractOdsSimpleodsDocumentDelegate<SpreadsheetReader> documentTrait;
+	private final AbstractOdsSimpleodsDocumentDelegate<SpreadsheetReader> documentDelegate;
 	/** *internal* workbook */
 	private final OdsFile file;
 
@@ -66,7 +66,7 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	 */
 	OdsSimpleodsDocumentReader(final OdsFile file) {
 		this.file = file;
-		this.documentTrait = new OdsSimpleodsDocumentReaderTrait(file);
+		this.documentDelegate = new OdsSimpleodsDocumentReaderDelegate(file);
 	}
 
 	/** {@inheritDoc} */
@@ -117,12 +117,12 @@ public class OdsSimpleodsDocumentReader implements SpreadsheetDocumentReader {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final int index) {
-		return this.documentTrait.getSpreadsheet(index);
+		return this.documentDelegate.getSpreadsheet(index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(final String sheetName) {
-		return this.documentTrait.getSpreadsheet(sheetName);
+		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 }

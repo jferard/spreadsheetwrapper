@@ -34,6 +34,7 @@ import jxl.write.WritableFont;
 import jxl.write.WriteException;
 
 import com.github.jferard.spreadsheetwrapper.Util;
+import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
@@ -183,28 +184,34 @@ public class XlsJxlStyleHelper {
 					cellFormat.setBackground(jxlColor);
 			}
 
-			final double borderLineWidth = wrapperCellStyle
-					.getBorderLineWidth();
-			if (borderLineWidth != WrapperCellStyle.DEFAULT) {
-				if (Util.almostEqual(borderLineWidth,
-						WrapperCellStyle.THIN_LINE))
-					cellFormat.setBorder(Border.ALL, BorderLineStyle.THIN,
-							Colour.BLACK);
-				else if (Util.almostEqual(borderLineWidth,
-						WrapperCellStyle.MEDIUM_LINE))
-					cellFormat.setBorder(Border.ALL, BorderLineStyle.MEDIUM,
-							Colour.BLACK);
-				else if (Util.almostEqual(borderLineWidth,
-						WrapperCellStyle.THICK_LINE))
-					cellFormat.setBorder(Border.ALL, BorderLineStyle.THICK,
-							Colour.BLACK);
-				else
-					throw new UnsupportedOperationException();
-			}
+			final /*@Nullable*/ Borders borders = wrapperCellStyle.getBorders();
+			if (borders != null)
+				this.setBorders(cellFormat, borders);
 		} catch (final WriteException e) {
 			throw new IllegalStateException(e);
 		}
 		return cellFormat;
+	}
+
+	private void setBorders(final WritableCellFormat cellFormat,
+			final Borders borders) throws WriteException {
+		final double borderLineWidth = borders.getLineWidth();
+		if (borderLineWidth != WrapperCellStyle.DEFAULT) {
+			if (Util.almostEqual(borderLineWidth,
+					WrapperCellStyle.THIN_LINE))
+				cellFormat.setBorder(Border.ALL, BorderLineStyle.THIN,
+						Colour.BLACK);
+			else if (Util.almostEqual(borderLineWidth,
+					WrapperCellStyle.MEDIUM_LINE))
+				cellFormat.setBorder(Border.ALL, BorderLineStyle.MEDIUM,
+						Colour.BLACK);
+			else if (Util.almostEqual(borderLineWidth,
+					WrapperCellStyle.THICK_LINE))
+				cellFormat.setBorder(Border.ALL, BorderLineStyle.THICK,
+						Colour.BLACK);
+			else
+				throw new UnsupportedOperationException();
+		}
 	}
 
 	/**
@@ -215,36 +222,6 @@ public class XlsJxlStyleHelper {
 	public/*@Nullable*/Colour toJxlColor(final WrapperColor wrapperColor) {
 		return this.jxlColorByWrapperColor.get(wrapperColor);
 	}
-
-	// /**
-	// * @param cellFormat
-	// * the internal cell style
-	// * @return the wrapper cell style
-	// */
-	// public WrapperCellStyle toWrapperCellStyle(
-	// final WritableCellFormat cellFormat) {
-	// if (cellFormat == null)
-	// return WrapperCellStyle.EMPTY;
-	//
-	// WrapperCellStyle cellStyle = new WrapperCellStyle();
-	//
-	// final WrapperColor backgroundColor = this.toWrapperColor(cellFormat
-	// .getBackgroundColour());
-	//
-	// final WrapperFont wrapperFont = new WrapperFont();
-	// final Font font = cellFormat.getFont();
-	// final Colour fontColor = font.getColour();
-	// if (fontColor != Colour.BLACK && fontColor != Colour.AUTOMATIC) {
-	// final WrapperColor wrapperFontColor = this
-	// .toWrapperColor(fontColor);
-	// if (wrapperFontColor != null)
-	// wrapperFont.setColor(wrapperFontColor);
-	// }
-	// if (font.getBoldWeight() == BoldStyle.BOLD.getValue())
-	// wrapperFont.setBold();
-	//
-	// return cellStyle;
-	// }
 
 	/**
 	 * @param cellFormat
@@ -263,9 +240,10 @@ public class XlsJxlStyleHelper {
 		if (backgroundColor != null)
 			wrapperCellStyle.setBackgroundColor(backgroundColor);
 
+		final Borders borders = new Borders();
 		final double borderLineWidth = this.getBorderLineSize(cellFormat);
 		if (borderLineWidth != WrapperCellStyle.DEFAULT)
-			wrapperCellStyle.setBorderLineWidth(borderLineWidth);
+			borders.setLineWidth(borderLineWidth);
 
 		final WrapperFont wrapperFont = new WrapperFont();
 		final Font font = cellFormat.getFont();

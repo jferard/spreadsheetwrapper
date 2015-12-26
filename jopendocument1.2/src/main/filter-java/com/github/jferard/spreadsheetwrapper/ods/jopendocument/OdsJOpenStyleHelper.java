@@ -27,6 +27,7 @@ import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.
 
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
@@ -126,7 +127,7 @@ class OdsJOpenStyleHelper {
 		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
 		final String bColorAsHex = tableCellProperties.getRawBackgroundColor();
-		final String border = tableCellProperties.getElement()
+		final String borderAttrValue = tableCellProperties.getElement()
 				.getAttributeValue(OdsConstants.BORDER_ATTR_NAME,
 						OdsJOpenStyleHelper.FO_NS);
 
@@ -135,10 +136,12 @@ class OdsJOpenStyleHelper {
 					.stringToColor(bColorAsHex);
 			wrapperCellStyle.setBackgroundColor(backgroundColor);
 		}
-		if (border != null) {
-			final String[] split = border.split("\\s+");
-			wrapperCellStyle
-			.setBorderLineWidth(OdsConstants.sizeToPoints(split[0]));
+		
+		if (borderAttrValue != null) {
+			final Borders borders = new Borders();
+			final String[] split = borderAttrValue.split("\\s+");
+			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
+			wrapperCellStyle.setBorders(borders);
 		}
 
 		final WrapperFont wrapperFont = new WrapperFont();
@@ -231,10 +234,11 @@ class OdsJOpenStyleHelper {
 		}
 	}
 
-	private void setBorder(final Element tableCellProps, final double border) {
-		if (!Util.almostEqual(border, WrapperCellStyle.DEFAULT)) {
+	private void setBorders(final Element tableCellProps, final Borders borders) {
+		final double lineWidth = borders.getLineWidth();
+		if (!Util.almostEqual(lineWidth, WrapperCellStyle.DEFAULT)) {
 			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
-					Double.toString(border) + "pt solid #000000",
+					Double.toString(lineWidth) + "pt solid #000000",
 					OdsJOpenStyleHelper.FO_NS);
 		}
 	}
@@ -306,11 +310,13 @@ class OdsJOpenStyleHelper {
 			final Element textProps, final WrapperCellStyle wrapperCellStyle) {
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
-		final double border = wrapperCellStyle.getBorderLineWidth();
 		this.setBackgroundColor(tableCellProps, backgroundColor);
-		this.setBorder(tableCellProps, border);
 
-		final WrapperFont cellFont = wrapperCellStyle.getCellFont();
+		final /*@Nullable*/ Borders borders = wrapperCellStyle.getBorders();
+		if (borders != null)
+			this.setBorders(tableCellProps, borders);
+
+		final /*@Nullable*/ WrapperFont cellFont = wrapperCellStyle.getCellFont();
 		if (cellFont != null) {
 			this.setFontBold(textProps, cellFont.getBold());
 			this.setFontItalic(textProps, cellFont.getItalic());
