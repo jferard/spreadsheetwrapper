@@ -142,12 +142,8 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		CellStyle cellStyle = cell.getStyle();
-		if (cellStyle == null)
-			cellStyle = cell.getPrivateStyle();
-
-		assert cellStyle != null;
-		return this.styleHelper.setCellStyle(cellStyle, wrapperStyle);
+		this.styleHelper.setWrapperCellStyle(cell, wrapperStyle);
+		return true;
 	}
 
 	/** {@inheritDoc} */

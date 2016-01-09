@@ -218,6 +218,43 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	 * must create a A1 blue bold head cell and a A2 simple tail cell
 	 */
 	@Test
+	public final void testCreateStyleWithBorders() {
+		final WrapperFont wrapperFont = new WrapperFont().setItalic()
+				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
+		final Borders borders = new Borders().setLineWidth(WrapperCellStyle.MEDIUM_LINE).setLineColor(WrapperColor.BLUE);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
+				.setCellFont(wrapperFont).setBorders(borders);
+
+		this.documentWriter
+				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+						wrapperCellStyle);
+		try {
+			this.sheetWriter.setCellContent(0, 0, "From name",
+					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
+					0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+
+		try {
+			this.sheetWriter.setCellContent(1, 0, "From Style");
+			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1,
+					0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/**
+	 * must create a A1 blue bold head cell and a A2 simple tail cell
+	 */
+	@Test
 	public final void testCreateStyleFromObjectsAndSetStyleItalics() {
 		final WrapperFont wrapperFont = new WrapperFont().setItalic()
 				.setSize(20).setColor(WrapperColor.ORANGE);

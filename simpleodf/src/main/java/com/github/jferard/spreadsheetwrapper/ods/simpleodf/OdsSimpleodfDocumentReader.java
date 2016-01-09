@@ -104,7 +104,7 @@ public class OdsSimpleodfDocumentReader implements SpreadsheetDocumentReader {
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
 				OdfStyleFamily.TableCell);
-		return this.styleHelper.toCellStyle(existingStyle);
+		return this.styleHelper.toWrapperCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */

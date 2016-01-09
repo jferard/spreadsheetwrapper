@@ -170,9 +170,8 @@ SpreadsheetReader {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
 		if (cell == null)
 			return null;
-
-		final CellStyle cellStyle = cell.getStyle();
-		return this.styleHelper.toWrapperCellStyle(cellStyle);
+		
+		return this.styleHelper.getWrapperCellStyle(cell);
 	}
 
 	/** {@inheritDoc} */

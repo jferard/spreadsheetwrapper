@@ -164,8 +164,7 @@ public class StyleUtility {
 				font.setColor(WrapperColor.stringToColor(value));
 		}
 
-		return new WrapperCellStyle(backgroundColor, WrapperCellStyle.DEFAULT,
-				font);
+		return new WrapperCellStyle().setBackgroundColor(backgroundColor).setCellFont(font);
 	}
 
 }

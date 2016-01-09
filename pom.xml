@@ -171,10 +171,15 @@
 
 	<distributionManagement>
 		<repository>
-			<id>internal.repo</id>
+			<id>repo</id>
 			<name>Temporary Staging Repository</name>
-			<url>file://${project.build.directory}/mvn-repo</url>
+			<url>file://${project.build.directory}/mvn-repo/release</url>
 		</repository>
+		<snapshotRepository>
+			<id>snapshot.repo</id>
+			<name>Temporary Staging Repository</name>
+			<url>file://${project.build.directory}/mvn-repo/snapshot</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 </project>

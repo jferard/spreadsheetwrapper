@@ -20,12 +20,15 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.odftoolkit.odfdom.dom.element.style.StyleStyleElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.style.OdfStylePropertySet;
 import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
 import org.odftoolkit.odfdom.dom.style.props.OdfTextProperties;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
+import com.github.jferard.spreadsheetwrapper.StyleHelper;
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.style.Borders;
@@ -37,7 +40,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
  * A little style utility for odftoolkit files
  *
  */
-public class OdsOdfdomStyleHelper {
+public class OdsOdfdomStyleHelper implements
+		StyleHelper<OdfStylePropertySet, TableTableCellElementBase> {
 	private static void setProperties(
 			final Map<OdfStyleProperty, String> properties,
 			final String attributeValue,
@@ -62,25 +66,19 @@ public class OdsOdfdomStyleHelper {
 	}
 
 	/** @return the cell style from the element */
-	public WrapperCellStyle getCellStyle(
+	@Override
+	public WrapperCellStyle getWrapperCellStyle(
 			final TableTableCellElementBase odfElement) {
-		final String fontWeight = odfElement
-				.getProperty(OdfTextProperties.FontWeight);
-		final String fontSize = odfElement
-				.getProperty(OdfTextProperties.FontSize);
-		final String fontStyle = odfElement
-				.getProperty(OdfTextProperties.FontStyle);
-		final String fontFamily = odfElement
-				.getProperty(OdfTextProperties.FontFamily);
-		final String fontColor = odfElement
-				.getProperty(OdfTextProperties.Color);
-		final String backgroundColor = odfElement
-				.getProperty(OdfTableCellProperties.BackgroundColor);
-		final String border = odfElement
-				.getProperty(OdfTableCellProperties.Border);
+		StyleStyleElement style = odfElement.getAutomaticStyle();
 
-		return this.buildCellStyle(fontWeight, fontStyle, fontSize, fontColor,
-				fontFamily, backgroundColor, border);
+		if (style == null) {
+			style = odfElement.reuseDocumentStyle(odfElement.getStyleName());
+		}
+
+		if (style != null) {
+			return this.toWrapperCellStyle(style);
+		} else
+			return WrapperCellStyle.EMPTY;
 	}
 
 	/**
@@ -88,68 +86,14 @@ public class OdsOdfdomStyleHelper {
 	 *            the new style format
 	 * @return the properties extracted from the style string
 	 */
-	public Map<OdfStyleProperty, String> getProperties(
+	private static Map<OdfStyleProperty, String> toProperties(
 			final WrapperCellStyle wrapperCellStyle) {
-		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>(); // NOPMD
-		// by
-		// Julien
-		// on
-		// 24/11/15
-		// 19:24
+		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null) {
-			final int bold = wrapperFont.getBold();
-			final double size = wrapperFont.getSize();
-			final int italic = wrapperFont.getItalic();
-			final WrapperColor fontColor = wrapperFont.getColor();
-			final String fontFamily = wrapperFont.getFamily();
-			if (bold == WrapperCellStyle.YES) {
-				OdsOdfdomStyleHelper.setProperties(properties,
-						OdsConstants.BOLD_ATTR_VALUE,
-						OdfTextProperties.FontWeight,
-						OdfTextProperties.FontWeightAsian,
-						OdfTextProperties.FontWeightComplex);
-			} else if (bold == WrapperCellStyle.NO) {
-				OdsOdfdomStyleHelper.setProperties(properties,
-						OdsConstants.NORMAL_ATTR_VALUE,
-						OdfTextProperties.FontWeight,
-						OdfTextProperties.FontWeightAsian,
-						OdfTextProperties.FontWeightComplex);
-			}
+		if (wrapperFont != null)
+			properties.putAll(OdsOdfdomStyleHelper
+					.getFontProperties(wrapperFont));
 
-			if (italic == WrapperCellStyle.YES) {
-				OdsOdfdomStyleHelper.setProperties(properties,
-						OdsConstants.ITALIC_ATTR_VALUE,
-						OdfTextProperties.FontStyle,
-						OdfTextProperties.FontStyleAsian,
-						OdfTextProperties.FontStyleComplex);
-			} else if (italic == WrapperCellStyle.NO) {
-				OdsOdfdomStyleHelper.setProperties(properties,
-						OdsConstants.NORMAL_ATTR_VALUE,
-						OdfTextProperties.FontStyle,
-						OdfTextProperties.FontStyleAsian,
-						OdfTextProperties.FontStyleComplex);
-			}
-
-			if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT)) {
-				properties.put(OdfTextProperties.FontSize,
-						Double.toString(size) + "pt");
-			}
-
-			if (fontColor != null) {
-				properties.put(OdfTextProperties.Color, fontColor.toHex());
-			}
-
-			if (fontFamily != null) {
-				OdsOdfdomStyleHelper.setProperties(properties, fontFamily,
-						OdfTextProperties.FontFamily,
-						OdfTextProperties.FontName,
-						OdfTextProperties.FontFamilyAsian,
-						OdfTextProperties.FontNameAsian,
-						OdfTextProperties.FontFamilyComplex,
-						OdfTextProperties.FontNameComplex);
-			}
-		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 		if (backgroundColor != null) {
@@ -157,14 +101,85 @@ public class OdsOdfdomStyleHelper {
 					backgroundColor.toHex());
 		}
 		final Borders borders = wrapperCellStyle.getBorders();
-		if (borders != null) {
-			final double borderLineWidth = borders.getLineWidth();
-			if (borderLineWidth != WrapperCellStyle.DEFAULT) {
-				properties.put(OdfTableCellProperties.Border,
-						Double.toString(borderLineWidth) + "pt solid #000000");
-			}
-		}
+		if (borders != null)
+			properties.putAll(OdsOdfdomStyleHelper
+					.getBordersProperties(borders));
+
 		return properties;
+	}
+
+	private static Map<OdfStyleProperty, String> getBordersProperties(
+			final Borders borders) {
+		final Map<OdfStyleProperty, String> bordersProperties = new HashMap<OdfStyleProperty, String>(); // NOPMD
+		StringBuilder builder = new StringBuilder();
+		final double borderLineWidth = borders.getLineWidth();
+		if (borderLineWidth != WrapperCellStyle.DEFAULT) {
+			builder.append(borderLineWidth).append("pt");
+			builder.append(" solid ");
+			final WrapperColor borderLineColor = borders.getLineColor();
+			if (borderLineColor == null)
+				builder.append("#000000");
+			else
+				builder.append(borderLineColor.toHex());
+			bordersProperties.put(OdfTableCellProperties.Border,
+					builder.toString());
+		}
+		return bordersProperties;
+	}
+
+	private final static Map<OdfStyleProperty, String> getFontProperties(
+			final WrapperFont wrapperFont) {
+		final Map<OdfStyleProperty, String> fontProperties = new HashMap<OdfStyleProperty, String>(); // NOPMD
+		final int bold = wrapperFont.getBold();
+		final double size = wrapperFont.getSize();
+		final int italic = wrapperFont.getItalic();
+		final WrapperColor fontColor = wrapperFont.getColor();
+		final String fontFamily = wrapperFont.getFamily();
+		if (bold == WrapperCellStyle.YES) {
+			OdsOdfdomStyleHelper.setProperties(fontProperties,
+					OdsConstants.BOLD_ATTR_VALUE, OdfTextProperties.FontWeight,
+					OdfTextProperties.FontWeightAsian,
+					OdfTextProperties.FontWeightComplex);
+		} else if (bold == WrapperCellStyle.NO) {
+			OdsOdfdomStyleHelper.setProperties(fontProperties,
+					OdsConstants.NORMAL_ATTR_VALUE,
+					OdfTextProperties.FontWeight,
+					OdfTextProperties.FontWeightAsian,
+					OdfTextProperties.FontWeightComplex);
+		}
+
+		if (italic == WrapperCellStyle.YES) {
+			OdsOdfdomStyleHelper.setProperties(fontProperties,
+					OdsConstants.ITALIC_ATTR_VALUE,
+					OdfTextProperties.FontStyle,
+					OdfTextProperties.FontStyleAsian,
+					OdfTextProperties.FontStyleComplex);
+		} else if (italic == WrapperCellStyle.NO) {
+			OdsOdfdomStyleHelper.setProperties(fontProperties,
+					OdsConstants.NORMAL_ATTR_VALUE,
+					OdfTextProperties.FontStyle,
+					OdfTextProperties.FontStyleAsian,
+					OdfTextProperties.FontStyleComplex);
+		}
+
+		if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT)) {
+			fontProperties.put(OdfTextProperties.FontSize,
+					Double.toString(size) + "pt");
+		}
+
+		if (fontColor != null) {
+			fontProperties.put(OdfTextProperties.Color, fontColor.toHex());
+		}
+
+		if (fontFamily != null) {
+			OdsOdfdomStyleHelper.setProperties(fontProperties, fontFamily,
+					OdfTextProperties.FontFamily, OdfTextProperties.FontName,
+					OdfTextProperties.FontFamilyAsian,
+					OdfTextProperties.FontNameAsian,
+					OdfTextProperties.FontFamilyComplex,
+					OdfTextProperties.FontNameComplex);
+		}
+		return fontProperties;
 	}
 
 	/**
@@ -172,27 +187,58 @@ public class OdsOdfdomStyleHelper {
 	 *            *internal* cell style
 	 * @return the new cell style format
 	 */
-	public WrapperCellStyle toCellStyle(final OdfStyle style) {
-		final String fontWeight = style
-				.getProperty(OdfTextProperties.FontWeight);
-		final String fontStyle = style.getProperty(OdfTextProperties.FontStyle);
-		final String fontSize = style.getProperty(OdfTextProperties.FontSize);
-		final String fontColor = style.getProperty(OdfTextProperties.Color);
-		final String fontFamily = style
-				.getProperty(OdfTextProperties.FontFamily);
-		final String backgroundColor = style
-				.getProperty(OdfTableCellProperties.BackgroundColor);
-		final String borderAttrValue = style.getProperty(OdfTableCellProperties.Border);
-
-		return this.buildCellStyle(fontWeight, fontStyle, fontSize, fontColor,
-				fontFamily, backgroundColor, borderAttrValue);
+	@Override
+	public WrapperCellStyle toWrapperCellStyle(final OdfStylePropertySet style) {
+		return this.toWrapperCellStyle(style.getProperties(style
+				.getStrictProperties()));
 	}
 
-	private WrapperCellStyle buildCellStyle(final String fontWeight,
-			final String fontStyle, final String fontSize,
-			final String fontColor, final String fontFamily,
-			final String backgroundColor, final String borderAttrValue) {
+	private WrapperCellStyle toWrapperCellStyle(
+			Map<OdfStyleProperty, String> propertyByAttrName) {
+		WrapperFont wrapperFont = this.toWrapperCellFont(propertyByAttrName);
+		final WrapperCellStyle wrapperStyle = new WrapperCellStyle()
+				.setCellFont(wrapperFont);
+
+		final String backgroundColor = propertyByAttrName
+				.get(OdfTableCellProperties.BackgroundColor);
+		if (this.colorByHex.containsKey(backgroundColor))
+			wrapperStyle.setBackgroundColor(this.colorByHex
+					.get(backgroundColor));
+
+		Borders borders = OdsOdfdomStyleHelper.toCellBorders(propertyByAttrName);
+		wrapperStyle.setBorders(borders);
+
+		return wrapperStyle;
+	}
+
+	private static Borders toCellBorders(
+			final Map<OdfStyleProperty, String> propertyByAttrName) {
+		final Borders borders = new Borders();
+		final String borderAttrValue = propertyByAttrName
+				.get(OdfTableCellProperties.Border);
+		if (borderAttrValue != null) {
+			final String[] split = borderAttrValue.split("\\s+");
+			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
+			// borders.setLineType(split[1]);
+			if (!WrapperColor.BLACK.toHex().equals(split[2]))
+				borders.setLineColor(WrapperColor.stringToColor(split[2]));
+		}
+		return borders;
+	}
+
+	private WrapperFont toWrapperCellFont(
+			final Map<OdfStyleProperty, String> propertyByAttrName) {
 		final WrapperFont wrapperFont = new WrapperFont();
+		final String fontWeight = propertyByAttrName
+				.get(OdfTextProperties.FontWeight);
+		final String fontStyle = propertyByAttrName
+				.get(OdfTextProperties.FontStyle);
+		final String fontSize = propertyByAttrName
+				.get(OdfTextProperties.FontSize);
+		final String fontColor = propertyByAttrName
+				.get(OdfTextProperties.Color);
+		final String fontFamily = propertyByAttrName
+				.get(OdfTextProperties.FontFamily);
 		if (fontWeight != null) {
 			if (fontWeight.equals("bold"))
 				wrapperFont.setBold();
@@ -211,20 +257,19 @@ public class OdsOdfdomStyleHelper {
 			else if (fontStyle.equals(OdsConstants.NORMAL_ATTR_VALUE))
 				wrapperFont.setItalic(WrapperCellStyle.NO);
 		}
+		return wrapperFont;
+	}
 
-		final WrapperCellStyle wrapperStyle = new WrapperCellStyle()
-		.setCellFont(wrapperFont);
-		if (this.colorByHex.containsKey(backgroundColor))
-			wrapperStyle.setBackgroundColor(this.colorByHex
-					.get(backgroundColor));
-		
-		final Borders borders = new Borders();
-		if (borderAttrValue != null) {
-			final String[] split = borderAttrValue.split("\\s+");
-			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
-		}
-		wrapperStyle.setBorders(borders);
+	@Override
+	public void setWrapperCellStyle(TableTableCellElementBase element,
+			WrapperCellStyle wrapperCellStyle) {
+		Map<OdfStyleProperty, String> properties = OdsOdfdomStyleHelper.toProperties(wrapperCellStyle);
+		element.setProperties(properties);
+	}
 
-		return wrapperStyle;
+	public void setWrapperCellStyle(OdfStyle style,
+			WrapperCellStyle wrapperCellStyle) {
+		Map<OdfStyleProperty, String> properties = OdsOdfdomStyleHelper.toProperties(wrapperCellStyle);
+		style.setProperties(properties);
 	}
 }

@@ -73,24 +73,6 @@ implements SpreadsheetDocumentWriter {
 		}
 	}
 
-	/**
-	 * XPath could do better...
-	 *
-	 * @param name
-	 *            the name to find in attributes
-	 * @param elements
-	 *            the elements to look at
-	 * @return the matching element, or null
-	 */
-	private static/*@Nullable*/Element findElementWithName(final String name,
-			final List<Element> elements) {
-		for (final Element element : elements) {
-			if (name.equals(element.getAttributeValue("name")))
-				return element;
-		}
-		return null;
-	}
-
 	/** delegation sfSpreadSheet */
 	private final AbstractOdsJOpenDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** the logger */
@@ -223,18 +205,7 @@ implements SpreadsheetDocumentWriter {
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
 		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
-		final Element namedStyles = stylesDoc.getChild("styles", true);
-		@SuppressWarnings("unchecked")
-		final List<Element> styles = namedStyles.getChildren("style");
-		Element newStyle = OdsJOpenDocumentWriter.findElementWithName(
-				styleName, styles);
-		if (newStyle == null) {
-			newStyle = this.styleHelper.createBaseStyle(styleName);
-			namedStyles.addContent(newStyle);
-		} else
-			newStyle.removeContent();
-
-		this.styleHelper.setStyle(newStyle, wrapperCellStyle);
+		this.styleHelper.addStyle(stylesDoc, styleName, wrapperCellStyle);
 		return true;
 	}
 }

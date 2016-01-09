@@ -198,7 +198,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 			return null;
 
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		return this.styleHelper.getCellStyle(odfElement);
+		return this.styleHelper.getWrapperCellStyle(odfElement);
 	}
 
 	/** {@inheritDoc} */

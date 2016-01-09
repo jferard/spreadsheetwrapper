@@ -22,11 +22,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
-import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.odftoolkit.simple.table.Cell;
 import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
@@ -175,9 +173,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 			return false;
 
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		final Map<OdfStyleProperty, String> properties = this.styleHelper
-				.getProperties(wrapperCellStyle);
-		odfElement.setProperties(properties);
+		this.styleHelper.setWrapperCellStyle(odfElement, wrapperCellStyle);
 		return true;
 	}
 

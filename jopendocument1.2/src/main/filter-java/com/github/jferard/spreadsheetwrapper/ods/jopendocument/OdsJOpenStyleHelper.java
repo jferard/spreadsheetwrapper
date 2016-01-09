@@ -17,14 +17,19 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
+import java.util.List;
 import java.util.Map;
 
 import org.jdom.Element;
 import org.jdom.Namespace;
+import org.jopendocument.dom.ODXMLDocument;
+import org.jopendocument.dom.StyledNode;
 import org.jopendocument.dom.spreadsheet.CellStyle;
 import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.styletablecellproperties.cls};
+import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.cls};
 
+import com.github.jferard.spreadsheetwrapper.StyleHelper;
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.style.Borders;
@@ -32,7 +37,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
-class OdsJOpenStyleHelper {
+class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle, SpreadSheet>> {
 	/** the name space fo (fonts ?) */
 	public static final Namespace FO_NS = Namespace.getNamespace(
 			OdsConstants.FO_NS_NAME,
@@ -47,11 +52,29 @@ class OdsJOpenStyleHelper {
 			"urn:oasis:names:tc:opendocument:xmlns:style:1.0");
 
 	/**
+	 * XPath could do better...
+	 *
+	 * @param name
+	 *            the name to find in attributes
+	 * @param elements
+	 *            the elements to look at
+	 * @return the matching element, or null
+	 */
+	private static/*@Nullable*/Element findElementWithName(final String name,
+			final List<Element> elements) {
+		for (final Element element : elements) {
+			if (name.equals(element.getAttributeValue("name")))
+				return element;
+		}
+		return null;
+	}
+
+	/**
 	 * @param styleName
 	 *            name of the style
 	 * @return the base Element, which has to be
 	 */
-	public Element createBaseStyle(final String styleName) {
+	private Element createEmptyStyleElement(final String styleName) {
 		final Element style = new Element("style", OdsJOpenStyleHelper.STYLE_NS);
 		style.setAttribute("name", styleName, OdsJOpenStyleHelper.STYLE_NS);
 		return style;
@@ -64,20 +87,37 @@ class OdsJOpenStyleHelper {
 	 *            the new style format
 	 * @return the DOM element
 	 */
-	public Element createStyleElement(final String styleName,
+	private Element createStyleElement(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final Element style = this.getBaseStyle(styleName);
-		this.setStyle(style, wrapperCellStyle);
+		final Element style = this.createBaseStyleElement(styleName);
+		this.fillStyle(style, wrapperCellStyle);
 		return style;
 	}
 
+	public void addStyle(ODXMLDocument stylesDoc, String styleName, 
+			WrapperCellStyle wrapperCellStyle) {
+		final Element namedStyles = stylesDoc.getChild("styles", true);
+		@SuppressWarnings("unchecked")
+		final List<Element> styles = namedStyles.getChildren("style");
+		Element newStyle = OdsJOpenStyleHelper.findElementWithName(
+				styleName, styles);
+		if (newStyle == null) {
+			newStyle = this.createEmptyStyleElement(styleName);
+			namedStyles.addContent(newStyle);
+		} else
+			newStyle.removeContent();
+
+		this.fillStyle(newStyle, wrapperCellStyle);
+	}
+	
+	
 	/**
 	 * @param cellStyle
 	 * 	          the internal cell style, to update
 	 * @param wrapperStyle
 	 *            the wrapper cell
 	 */
-	public boolean setCellStyle(final CellStyle cellStyle,
+	private void setCellStyle(final CellStyle cellStyle,
 			final WrapperCellStyle wrapperCellStyle) {
 		final ${jopendocument.styletablecellproperties.cls} tableCellProperties = cellStyle
 				.getTableCellProperties();
@@ -87,7 +127,6 @@ class OdsJOpenStyleHelper {
 		final Element textPropertiesElement = textProperties.getElement();
 		this.setStyle(tableCellPropertiesElement, textPropertiesElement,
 				wrapperCellStyle);
-		return true;
 	}
 
 	/**
@@ -97,7 +136,7 @@ class OdsJOpenStyleHelper {
 	 *            the style to set
 	 * @return the style Node itself
 	 */
-	public Element setStyle(final Element style,
+	private Element fillStyle(final Element style,
 			final WrapperCellStyle wrapperCellStyle) {
 		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
 		final Element tableCellProps = new Element(
@@ -118,6 +157,7 @@ class OdsJOpenStyleHelper {
 	 *            the internal cell style
 	 * @return the wrapper cell style
 	 */
+	@Override
 	public WrapperCellStyle toWrapperCellStyle(
 			final /*@Nullable*/ CellStyle cellStyle) {
 		if (cellStyle == null)
@@ -146,7 +186,8 @@ class OdsJOpenStyleHelper {
 			final String[] split = borderAttrValue.split("\\s+");
 			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
 			// borders.setLineType(OdsConstants.sizeToPoints(split[1]));
-			// borders.setLineColor(OdsConstants.sizeToPoints(split[2]));
+			if (!WrapperColor.BLACK.toHex().equals(split[2]))
+				borders.setLineColor(WrapperColor.stringToColor(split[2]));
 			wrapperCellStyle.setBorders(borders);
 		}
 
@@ -197,7 +238,7 @@ class OdsJOpenStyleHelper {
 	 */
 	private Element createStyle(final String styleName,
 			final Map<String, String> propertiesMap) {
-		final Element style = this.getBaseStyle(styleName);
+		final Element style = this.createBaseStyleElement(styleName);
 		if (propertiesMap.containsKey(OdsConstants.BACKGROUND_COLOR_ATTR_NAME)) {
 			final String backgroundColor = propertiesMap
 					.get(OdsConstants.BACKGROUND_COLOR_ATTR_NAME);
@@ -226,8 +267,8 @@ class OdsJOpenStyleHelper {
 	 *            the name of the style
 	 * @return the base of the DOM element for a style
 	 */
-	private Element getBaseStyle(final String styleName) {
-		final Element style = this.createBaseStyle(styleName);
+	private Element createBaseStyleElement(final String styleName) {
+		final Element style = this.createEmptyStyleElement(styleName);
 		style.setAttribute("family", "table-cell", OdsJOpenStyleHelper.STYLE_NS);
 		return style;
 	}
@@ -243,8 +284,12 @@ class OdsJOpenStyleHelper {
 	private void setBorders(final Element tableCellProps, final Borders borders) {
 		final double lineWidth = borders.getLineWidth();
 		if (!Util.almostEqual(lineWidth, WrapperCellStyle.DEFAULT)) {
+			WrapperColor color = borders.getLineColor();
+			if (color == null)
+				color = WrapperColor.BLACK;
+			
 			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
-					Double.toString(lineWidth) + "pt solid #000000",
+					Double.toString(lineWidth) + "pt solid "+color.toHex(),
 					OdsJOpenStyleHelper.FO_NS);
 		}
 	}
@@ -330,5 +375,26 @@ class OdsJOpenStyleHelper {
 			this.setFontColor(textProps, cellFont.getColor());
 			this.setFontFamily(textProps, cellFont.getFamily());
 		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getWrapperCellStyle(StyledNode<CellStyle, SpreadSheet> node) {
+		if (node == null)
+			return null;
+		
+		CellStyle style = node.getStyle();
+		return style == null ? WrapperCellStyle.EMPTY : this.toWrapperCellStyle(style);
+	}
+
+	@Override
+	public void setWrapperCellStyle(StyledNode<CellStyle, SpreadSheet> element,
+			WrapperCellStyle wrapperCellStyle) {
+		CellStyle cellStyle = element.getStyle();
+		if (cellStyle == null)
+			cellStyle = element.getPrivateStyle();
+
+		if (cellStyle != null)
+		this.setCellStyle(cellStyle, wrapperCellStyle);
 	}
 }

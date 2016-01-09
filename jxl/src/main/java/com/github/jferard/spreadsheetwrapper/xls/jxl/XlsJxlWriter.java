@@ -172,7 +172,7 @@ SpreadsheetWriter {
 		if (cell == null)
 			return false;
 
-		cell.setCellFormat(this.styleHelper.toCellFormat(wrapperCellStyle));
+		this.styleHelper.setWrapperCellStyle(cell, wrapperCellStyle);
 		return true;
 	}
 

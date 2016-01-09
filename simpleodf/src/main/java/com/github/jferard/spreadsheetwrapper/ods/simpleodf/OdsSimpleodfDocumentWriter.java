@@ -216,7 +216,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			final WrapperCellStyle wrapperCellStyle) {
 		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
 				OdfStyleFamily.TableCell);
-		newStyle.setProperties(this.styleHelper.getProperties(wrapperCellStyle));
+		this.styleHelper.setWrapperCellStyle(newStyle, wrapperCellStyle);
 		return true;
 	}
 }

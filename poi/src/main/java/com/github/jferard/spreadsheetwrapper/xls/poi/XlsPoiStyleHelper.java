@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.poi.hssf.util.HSSFColor;
@@ -50,6 +49,8 @@ class XlsPoiStyleHelper {
 	/** wrapper -> internal */
 	private final Map<WrapperColor, HSSFColor> hssfColorByColor;
 
+	// private HSSFColor hssfColor;
+
 	/**
 	 * @param cellStyleAccessor
 	 */
@@ -77,10 +78,9 @@ class XlsPoiStyleHelper {
 				this.hssfColorByColor.put(wrapperColor, hssfColor);
 				this.colorByHssfColor.put(hssfColor, wrapperColor);
 			} catch (final IllegalArgumentException e) {
-				logger.log(
-						Level.WARNING,
-						"Missing colors in WrapperColor class. Those colors won't be available for POI wrapper.",
-						e);
+				logger.warning(String
+						.format("Missing color '%s' in WrapperColor class. Those colors won't be available for POI wrapper.",
+								colorName));
 			}
 		}
 	}
@@ -142,42 +142,9 @@ class XlsPoiStyleHelper {
 	public CellStyle toCellStyle(final Workbook workbook,
 			final WrapperCellStyle wrapperCellStyle) {
 		final CellStyle cellStyle = workbook.createCellStyle();
-		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null) {
-			final Font font = workbook.createFont();
+		final Font font = this.toCellFont(workbook, wrapperCellStyle);
+		cellStyle.setFont(font);
 
-			final int bold = wrapperFont.getBold();
-			final int italic = wrapperFont.getItalic();
-			final double sizeInPoints = wrapperFont.getSize();
-			final WrapperColor fontColor = wrapperFont.getColor();
-			final String fontFamily = wrapperFont.getFamily();
-
-			if (bold == WrapperCellStyle.YES)
-				font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-			else if (bold == WrapperCellStyle.NO)
-				font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
-
-			if (italic == WrapperCellStyle.YES)
-				font.setItalic(true);
-			else if (italic == WrapperCellStyle.NO)
-				font.setItalic(false);
-
-			if (!Util.almostEqual(sizeInPoints, WrapperCellStyle.DEFAULT)) {
-				final double sizeInTwentiethOfPoint = sizeInPoints * 20.0;
-				font.setFontHeight((short) sizeInTwentiethOfPoint);
-			}
-
-			if (fontColor != null) {
-				final HSSFColor hssfColor = this.toHSSFColor(fontColor);
-				final short index = hssfColor.getIndex();
-				font.setColor(index);
-			}
-
-			if (fontFamily != null)
-				font.setFontName(fontFamily);
-
-			cellStyle.setFont(font);
-		}
 		final WrapperColor backgroundColor = wrapperCellStyle
 				.getBackgroundColor();
 
@@ -189,23 +156,78 @@ class XlsPoiStyleHelper {
 			cellStyle.setFillPattern(CellStyle.SOLID_FOREGROUND);
 		}
 
-		
-		final /*@Nullable*/ Borders borders = wrapperCellStyle.getBorders();
-		if (borders != null) {
-			final double borderWidth = borders.getLineWidth();
-			if (borderWidth != WrapperCellStyle.DEFAULT) {
-				if (Util.almostEqual(borderWidth, WrapperCellStyle.THIN_LINE))
-					this.setAllborders(cellStyle, CellStyle.BORDER_THIN);
-				else if (Util
-						.almostEqual(borderWidth, WrapperCellStyle.MEDIUM_LINE))
-					this.setAllborders(cellStyle, CellStyle.BORDER_MEDIUM);
-				else if (Util.almostEqual(borderWidth, WrapperCellStyle.THICK_LINE))
-					this.setAllborders(cellStyle, CellStyle.BORDER_THICK);
-				else
-					throw new UnsupportedOperationException();
-			}
-		}
+		this.setCellBorders(wrapperCellStyle, cellStyle);
 		return cellStyle;
+	}
+
+	private void setCellBorders(final WrapperCellStyle wrapperCellStyle,
+			final CellStyle cellStyle) {
+		final/*@Nullable*/Borders borders = wrapperCellStyle.getBorders();
+		if (borders == null)
+			return;
+
+		final double borderWidth = borders.getLineWidth();
+		if (borderWidth != WrapperCellStyle.DEFAULT) {
+			short lineWidth;
+			if (Util.almostEqual(borderWidth, WrapperCellStyle.THIN_LINE))
+				lineWidth = CellStyle.BORDER_THIN;
+			else if (Util
+					.almostEqual(borderWidth, WrapperCellStyle.MEDIUM_LINE))
+				lineWidth = CellStyle.BORDER_MEDIUM;
+			else if (Util.almostEqual(borderWidth, WrapperCellStyle.THICK_LINE))
+				lineWidth = CellStyle.BORDER_THICK;
+			else
+				throw new UnsupportedOperationException();
+
+			this.setAllBordersWidth(cellStyle, lineWidth);
+		}
+
+		final WrapperColor color = borders.getLineColor();
+		if (color != null) {
+			HSSFColor hssfColor = this.toHSSFColor(color);
+			this.setAllBordersColor(cellStyle, hssfColor.getIndex());
+		}
+	}
+
+	private Font toCellFont(final Workbook workbook,
+			final WrapperCellStyle wrapperCellStyle) {
+		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
+		if (wrapperFont == null)
+			return null;
+
+		final Font font = workbook.createFont();
+
+		final int bold = wrapperFont.getBold();
+		final int italic = wrapperFont.getItalic();
+		final double sizeInPoints = wrapperFont.getSize();
+		final WrapperColor fontColor = wrapperFont.getColor();
+		final String fontFamily = wrapperFont.getFamily();
+
+		if (bold == WrapperCellStyle.YES)
+			font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		else if (bold == WrapperCellStyle.NO)
+			font.setBoldweight(Font.BOLDWEIGHT_NORMAL);
+
+		if (italic == WrapperCellStyle.YES)
+			font.setItalic(true);
+		else if (italic == WrapperCellStyle.NO)
+			font.setItalic(false);
+
+		if (!Util.almostEqual(sizeInPoints, WrapperCellStyle.DEFAULT)) {
+			final double sizeInTwentiethOfPoint = sizeInPoints * 20.0;
+			font.setFontHeight((short) sizeInTwentiethOfPoint);
+		}
+
+		if (fontColor != null) {
+			final HSSFColor hssfColor = this.toHSSFColor(fontColor);
+			final short index = hssfColor.getIndex();
+			font.setColor(index);
+		}
+
+		if (fontFamily != null)
+			font.setFontName(fontFamily);
+
+		return font;
 	}
 
 	/**
@@ -234,9 +256,55 @@ class XlsPoiStyleHelper {
 		if (cellStyle == null)
 			return WrapperCellStyle.EMPTY;
 
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle();
+		WrapperFont wrapperFont = this.toWrapperFont(workbook, cellStyle);
+		if (wrapperFont != null)
+			wrapperCellStyle.setCellFont(wrapperFont);
+
+		WrapperColor wrapperColor = this.toWrapperColor(cellStyle);
+		if (wrapperColor != null)
+			wrapperCellStyle.setBackgroundColor(wrapperColor);
+
+		Borders borders = this.toBorders(cellStyle);
+		if (borders != null)
+			wrapperCellStyle.setBorders(borders);
+
+		return wrapperCellStyle;
+	}
+
+	private Borders toBorders(CellStyle cellStyle) {
+		Borders borders = new Borders();
+		final double borderWidth = this.getBorderLineSize(cellStyle);
+		if (borderWidth != WrapperCellStyle.DEFAULT)
+			borders.setLineWidth(borderWidth);
+
+		final WrapperColor color = this.getBorderLineColor(cellStyle);
+		if (color != null)
+			borders.setLineColor(color);
+		return borders;
+
+	}
+
+	private WrapperColor toWrapperColor(CellStyle cellStyle) {
+		WrapperColor wrapperColor = null;
+		final short backgroundColorIndex = cellStyle.getFillForegroundColor();
+		final HSSFColor poiBackgroundColor = this.getHSSFColor(backgroundColorIndex);
+		if (cellStyle.getFillPattern() == CellStyle.SOLID_FOREGROUND
+				&& this.colorByHssfColor.containsKey(poiBackgroundColor))
+			wrapperColor = this.colorByHssfColor.get(poiBackgroundColor);
+
+		if (WrapperColor.DEFAULT_BACKGROUND.equals(wrapperColor))
+			wrapperColor = null;
+
+		return wrapperColor;
+	}
+
+	private WrapperFont toWrapperFont(Workbook workbook, CellStyle cellStyle) {
 		final short fontIndex = cellStyle.getFontIndex();
 		final Font poiFont = workbook.getFontAt(fontIndex);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle();
+		if (poiFont == null)
+			return null;
+
 		final WrapperFont wrapperFont = new WrapperFont();
 		if (poiFont.getBoldweight() == Font.BOLDWEIGHT_BOLD)
 			wrapperFont.setBold();
@@ -249,10 +317,8 @@ class XlsPoiStyleHelper {
 		if (!Util.almostEqual(sizeInPoints, 10.0))
 			wrapperFont.setSize(sizeInPoints);
 
-		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
 		final short fontColorIndex = poiFont.getColor();
-		final HSSFColor poiFontColor = indexHash.get(Integer
-				.valueOf(fontColorIndex));
+		final HSSFColor poiFontColor = this.getHSSFColor(fontColorIndex);
 		if (this.colorByHssfColor.containsKey(poiFontColor)) {
 			final WrapperColor fontColor = this.colorByHssfColor
 					.get(poiFontColor);
@@ -264,27 +330,14 @@ class XlsPoiStyleHelper {
 		if (!XlsConstants.DEFAULT_FONT_NAME.equals(fontName))
 			wrapperFont.setFamily(fontName);
 
-		wrapperCellStyle.setCellFont(wrapperFont);
+		return wrapperFont;
+	}
 
-		WrapperColor wrapperColor = null;
-		final short backgroundColorIndex = cellStyle.getFillForegroundColor();
-		final HSSFColor poiBackgroundColor = indexHash.get(Integer
-				.valueOf(backgroundColorIndex));
-		if (cellStyle.getFillPattern() == CellStyle.SOLID_FOREGROUND
-				&& this.colorByHssfColor.containsKey(poiBackgroundColor))
-			wrapperColor = this.colorByHssfColor.get(poiBackgroundColor);
-		if (WrapperColor.DEFAULT_BACKGROUND.equals(wrapperColor))
-			wrapperColor = null;
-
-		wrapperCellStyle.setBackgroundColor(wrapperColor);
-
-		Borders borders = new Borders();
-		final double borderWidth = this.getBorderLineSize(cellStyle);
-		if (borderWidth != WrapperCellStyle.DEFAULT)
-			borders.setLineWidth(borderWidth);
-		
-		wrapperCellStyle.setBorders(borders);
-		return wrapperCellStyle;
+	private HSSFColor getHSSFColor(final short fontColorIndex) {
+		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
+		final HSSFColor poiFontColor = indexHash.get(Integer
+				.valueOf(fontColorIndex));
+		return poiFontColor;
 	}
 
 	private double getBorderLineSize(final CellStyle cellStyle) {
@@ -299,34 +352,57 @@ class XlsPoiStyleHelper {
 				return WrapperCellStyle.DEFAULT;
 		}
 
+		final double lineWidth;
+		if (borderBottom == CellStyle.BORDER_THIN)
+			lineWidth = WrapperCellStyle.THIN_LINE;
+		else if (borderBottom == CellStyle.BORDER_MEDIUM)
+			lineWidth = WrapperCellStyle.MEDIUM_LINE;
+		else if (borderBottom == CellStyle.BORDER_THICK)
+			lineWidth = WrapperCellStyle.THICK_LINE;
+		else
+			lineWidth = WrapperCellStyle.DEFAULT;
+
+		return lineWidth;
+	}
+
+	private WrapperColor getBorderLineColor(final CellStyle cellStyle) {
 		final short borderBottomColor = cellStyle.getBottomBorderColor();
 		final short borderTopColor = cellStyle.getTopBorderColor();
 		final short borderLeftColor = cellStyle.getLeftBorderColor();
 		final short borderRightColor = cellStyle.getRightBorderColor();
 
+		System.out.println(String.format("%d, %d, %d, %d", borderBottomColor,
+				borderTopColor, borderLeftColor, borderRightColor));
 		for (final short borderColor : Arrays.asList(borderTopColor,
 				borderLeftColor, borderRightColor)) {
 			if (borderColor != borderBottomColor)
-				return WrapperCellStyle.DEFAULT;
+				return null;
 		}
 
-		// TODO : check if black
+		HSSFColor hssfColor = this.getHSSFColor(borderBottomColor);
+		if (hssfColor == null)
+			return null;
+		
+		System.out.println(String.format("%s (%s) -> %s", hssfColor, hssfColor.getClass().getName(), this.colorByHssfColor.get(hssfColor)));
+		if (hssfColor.getHexString().equals("0:0:0"))
+			return null;
 
-		if (Util.almostEqual(CellStyle.BORDER_THIN, borderBottom))
-			return WrapperCellStyle.THIN_LINE;
-		else if (Util.almostEqual(CellStyle.BORDER_MEDIUM, borderBottom))
-			return WrapperCellStyle.MEDIUM_LINE;
-		else if (Util.almostEqual(CellStyle.BORDER_THICK, borderBottom))
-			return WrapperCellStyle.THICK_LINE;
-		else
-			return WrapperCellStyle.DEFAULT;
+		return this.colorByHssfColor.get(hssfColor);
 	}
 
-	private void setAllborders(final CellStyle cellStyle, final short border) {
+	private void setAllBordersWidth(final CellStyle cellStyle,
+			final short border) {
 		cellStyle.setBorderBottom(border);
 		cellStyle.setBorderTop(border);
 		cellStyle.setBorderLeft(border);
 		cellStyle.setBorderRight(border);
+	}
+
+	private void setAllBordersColor(final CellStyle cellStyle, final short color) {
+		cellStyle.setBottomBorderColor(color);
+		cellStyle.setTopBorderColor(color);
+		cellStyle.setLeftBorderColor(color);
+		cellStyle.setRightBorderColor(color);
 	}
 
 }

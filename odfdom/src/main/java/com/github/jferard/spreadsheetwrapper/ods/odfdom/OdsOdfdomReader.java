@@ -246,7 +246,7 @@ SpreadsheetReader {
 			return null;
 
 		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
-		return this.styleHelper.getCellStyle(odfElement);
+		return this.styleHelper.getWrapperCellStyle(odfElement);
 	}
 
 	/** {@inheritDoc} */

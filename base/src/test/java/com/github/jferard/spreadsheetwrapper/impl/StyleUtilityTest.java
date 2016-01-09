@@ -35,10 +35,9 @@ public class StyleUtilityTest {
 	@Test
 	public final void test() {
 		final StyleUtility utility = new StyleUtility();
-		final WrapperCellStyle cellStyle = new WrapperCellStyle(
-				WrapperColor.GREY_25_PERCENT, WrapperCellStyle.DEFAULT,
-				new WrapperFont(WrapperCellStyle.YES, WrapperCellStyle.YES,
-						15.0, WrapperColor.DARK_BLUE, null));
+		final WrapperCellStyle cellStyle = new WrapperCellStyle().setBackgroundColor(
+				WrapperColor.GREY_25_PERCENT).setCellFont(
+				new WrapperFont().setBold().setItalic().setSize(15.0).setColor(WrapperColor.DARK_BLUE));
 		final String styleString0 = "background-color:GREY_25_PERCENT;font-weight:bold;font-style:italic;font-size:15.0;font-color:DARK_BLUE;";
 		final String styleString1 = utility.toStyleString(cellStyle);
 		Assert.assertEquals(styleString0, styleString1);

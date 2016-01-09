@@ -30,8 +30,8 @@ public class WrapperCellStyle {
 	public static final int DEFAULT = -1;
 
 	/** empty style */
-	public static final WrapperCellStyle EMPTY = new WrapperCellStyle(null,
-			-1.0, new WrapperFont());
+	public static final WrapperCellStyle EMPTY = new WrapperCellStyle();
+	
 	/** width of the line : medium */
 	public static final double MEDIUM_LINE = 2.0;
 	/** attribute : do not set */
@@ -52,9 +52,6 @@ public class WrapperCellStyle {
 	/** the backgroundColor of the cell */
 	private/*@Nullable*/WrapperColor backgoundColor;
 
-	/** the border size of the cell */
-	private double borderLineWidth;
-
 	/** the text font */
 	private/*@Nullable*/WrapperFont cellFont;
 
@@ -69,25 +66,8 @@ public class WrapperCellStyle {
 	public WrapperCellStyle() {
 		super();
 		this.backgoundColor = null;
-		this.borderLineWidth = WrapperCellStyle.DEFAULT;
-		this.cellFont = null;
-	}
-
-	/**
-	 * @param backgroundColor
-	 *            the background color of the cell
-	 * @param cellFont
-	 *            the font
-	 * @deprecated use fluent syntax
-	 */
-	@Deprecated
-	public WrapperCellStyle(final/*@Nullable*/WrapperColor backgroundColor,
-			final double borderLineWidth,
-			final/*@Nullable*/WrapperFont cellFont) {
-		super();
-		this.backgoundColor = backgroundColor;
-		this.borderLineWidth = borderLineWidth;
-		this.cellFont = cellFont;
+		this.borders = new Borders();
+		this.cellFont = new WrapperFont();
 	}
 
 	/** {@inheritDoc} */
@@ -100,7 +80,7 @@ public class WrapperCellStyle {
 
 		final WrapperCellStyle other = (WrapperCellStyle) obj;
 		return this.backgoundColor == other.backgoundColor
-				&& Util.almostEqual(this.borderLineWidth, other.borderLineWidth)
+				&& Util.equal(this.borders, other.borders)
 				&& Util.equal(this.cellFont, other.cellFont);
 	}
 
@@ -167,8 +147,8 @@ public class WrapperCellStyle {
 	@Override
 	public String toString() {
 		return new StringBuilder("WrapperCellStyle [backgoundColor=")
-		.append(this.backgoundColor).append(", borderLineWidth=")
-		.append(this.borderLineWidth).append(", cellFont=")
+		.append(this.backgoundColor).append(", borders=")
+		.append(this.borders).append(", cellFont=")
 		.append(this.cellFont).append("]").toString();
 	}
 }

@@ -22,14 +22,12 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
 import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
-import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -41,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+		SpreadsheetWriter {
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -155,9 +153,7 @@ SpreadsheetWriter {
 			return false;
 
 		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
-		final Map<OdfStyleProperty, String> properties = this.styleHelper
-				.getProperties(wrapperCellStyle);
-		odfElement.setProperties(properties);
+		this.styleHelper.setWrapperCellStyle(odfElement, wrapperCellStyle);
 		return true;
 	}
 

@@ -5,28 +5,46 @@ import java.util.Arrays;
 import com.github.jferard.spreadsheetwrapper.Util;
 
 public class Borders {
-	private Border borderTop; 
-	private Border borderBottom; 
-	private Border borderLeft; 
-	private Border borderRight; 
-	
+	private Border borderTop;
+	private Border borderBottom;
+	private Border borderLeft;
+	private Border borderRight;
+
 	public Borders setLineWidth(double borderLineWidth) {
-		this.borderTop = (this.borderTop == null ? new Border() : this.borderTop).setLineWidth(borderLineWidth);
-		this.borderBottom = (this.borderBottom == null ? new Border() : this.borderBottom).setLineWidth(borderLineWidth);
-		(this.borderLeft == null ? new Border() : this.borderRight).setLineWidth(borderLineWidth);
-		(this.borderRight == null ? new Border() : this.borderRight).setLineWidth(borderLineWidth);
+		this.borderTop = (this.borderTop == null ? new Border()
+				: this.borderTop).setLineWidth(borderLineWidth);
+		this.borderBottom = (this.borderBottom == null ? new Border()
+				: this.borderBottom).setLineWidth(borderLineWidth);
+		this.borderLeft = (this.borderLeft == null ? new Border()
+				: this.borderLeft).setLineWidth(borderLineWidth);
+		this.borderRight = (this.borderRight == null ? new Border()
+				: this.borderRight).setLineWidth(borderLineWidth);
 		return this;
 	}
 
 	public double getLineWidth() {
-		double lineWidth = this.borderTop == null ? WrapperCellStyle.NO_LINE : this.borderTop.getLineWidth();
-		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft, this.borderRight)) {
-				if (border == null || !Util.almostEqual(lineWidth, border.getLineWidth()))
-					return WrapperCellStyle.NO_LINE;
+		double lineWidth = this.borderTop == null ? WrapperCellStyle.NO_LINE
+				: this.borderTop.getLineWidth();
+		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft,
+				this.borderRight)) {
+			if (!(border == null || Util.almostEqual(lineWidth,
+					border.getLineWidth())))
+				return WrapperCellStyle.NO_LINE;
 		}
 		return lineWidth;
 	}
-	
+
+	public WrapperColor getLineColor() {
+		WrapperColor color = this.borderTop == null ? null : this.borderTop
+				.getLineColor();
+		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft,
+				this.borderRight)) {
+			if (!(border == null || Util.equal(color, border.getLineColor())))
+				return null;
+		}
+		return color;
+	}
+
 	public Border getBorderTop() {
 		return this.borderTop;
 	}
@@ -63,14 +81,51 @@ public class Borders {
 		return this;
 	}
 
-	public void setLineType(final String type) {
-		// TODO Auto-generated method stub
-		
+	public Borders setLineType(final Object lineType) {
+		this.borderTop = (this.borderTop == null ? new Border()
+				: this.borderTop).setLineType(lineType);
+		this.borderBottom = (this.borderBottom == null ? new Border()
+				: this.borderBottom).setLineType(lineType);
+		this.borderLeft = (this.borderLeft == null ? new Border() : this.borderLeft)
+				.setLineType(lineType);
+		this.borderRight = (this.borderRight == null ? new Border() : this.borderRight)
+				.setLineType(lineType);
+		return this;
 	}
 
-	public void setLineColor(final String colorAsHex) {
-		// TODO Auto-generated method stub
-		
+	public Borders setLineColor(final WrapperColor color) {
+		this.borderTop = (this.borderTop == null ? new Border()
+				: this.borderTop).setLineColor(color);
+		this.borderBottom = (this.borderBottom == null ? new Border()
+				: this.borderBottom).setLineColor(color);
+		this.borderLeft = (this.borderLeft == null ? new Border() : this.borderLeft)
+				.setLineColor(color);
+		this.borderRight = (this.borderRight == null ? new Border() : this.borderRight)
+				.setLineColor(color);
+		return this;
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(final/*@Nullable*/Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Borders))
+			return false;
+
+		final Borders other = (Borders) obj;
+		return Util.equal(this.borderBottom, other.borderBottom)
+				&& Util.equal(this.borderLeft, other.borderLeft)
+				&& Util.equal(this.borderRight, other.borderRight)
+				&& Util.equal(this.borderTop, other.borderTop);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String toString() {
+		return new StringBuilder("Borders[top=").append(this.borderTop)
+				.append(", bottom=").append(this.borderBottom)
+				.append(", left=").append(this.borderLeft).append(", right=")
+				.append(this.borderRight).append("]").toString();
+	}
 }
