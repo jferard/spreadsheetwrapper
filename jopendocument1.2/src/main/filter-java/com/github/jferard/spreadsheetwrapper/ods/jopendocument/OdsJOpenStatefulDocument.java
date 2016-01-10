@@ -30,12 +30,12 @@ import com.github.jferard.spreadsheetwrapper.Stateful;
  * Stateful means that there is a marker if the document is unitialized.
  *
  */
-public class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
+class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	/**
 	 * @param sfDocument
 	 *            the wrapped document
 	 */
-	public OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
+	OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
 		super(sfDocument.getObject(), sfDocument.isNew());
 	}
 

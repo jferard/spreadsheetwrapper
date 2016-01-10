@@ -35,7 +35,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /**
  */
-public class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
+class XlsJxlDocumentReader implements SpreadsheetDocumentReader {
 	/** accessor by name or index for the readers */
 	private final Accessor<SpreadsheetReader> accessor;
 	/** helper for style */

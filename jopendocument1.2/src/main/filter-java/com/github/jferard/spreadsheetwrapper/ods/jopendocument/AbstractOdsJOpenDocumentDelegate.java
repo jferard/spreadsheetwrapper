@@ -44,7 +44,7 @@ AbstractSpreadsheetDocumentDelegate<T> {
 	 * @param spreadSheet
 	 *            the *internal* value (workbook)
 	 */
-	public AbstractOdsJOpenDocumentDelegate(
+	AbstractOdsJOpenDocumentDelegate(
 			final OdsJOpenStatefulDocument sfSpreadSheet) {
 		super();
 		this.sfSpreadSheet = sfSpreadSheet;

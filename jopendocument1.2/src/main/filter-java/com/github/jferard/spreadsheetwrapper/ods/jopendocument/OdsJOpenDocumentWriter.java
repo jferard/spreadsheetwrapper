@@ -99,7 +99,7 @@ implements SpreadsheetDocumentWriter {
 	 * @throws SpreadsheetException
 	 *             if can't open sfSpreadSheet writer
 	 */
-	public OdsJOpenDocumentWriter(final Logger logger,
+	OdsJOpenDocumentWriter(final Logger logger,
 			final OdsJOpenStyleHelper styleHelper,
 			final OdsJOpenStatefulDocument sfSpreadSheet, final Output output)
 					throws SpreadsheetException {

@@ -42,7 +42,7 @@ import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
-implements SpreadsheetDocumentFactory {
+		implements SpreadsheetDocumentFactory {
 	/**
 	 * Called by the manager
 	 *
@@ -50,8 +50,11 @@ implements SpreadsheetDocumentFactory {
 	 * @return a factory
 	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
+		final XlsJxlStyleColorHelper colorHelper = new XlsJxlStyleColorHelper();
 		return new XlsJxlDocumentFactory(logger, new XlsJxlStyleHelper(
-				new CellStyleAccessor<WritableCellFormat>()));
+				new CellStyleAccessor<WritableCellFormat>(), colorHelper,
+				new XlsJxlStyleFontHelper(colorHelper),
+				new XlsJxlStyleBorderHelper(colorHelper)));
 	}
 
 	/** simple logger */
@@ -64,7 +67,7 @@ implements SpreadsheetDocumentFactory {
 	 * @param logger
 	 *            simple logger
 	 */
-	public XlsJxlDocumentFactory(final Logger logger,
+	XlsJxlDocumentFactory(final Logger logger,
 			final XlsJxlStyleHelper styleHelper) {
 		super(XlsConstants.EXTENSION1);
 		this.logger = logger;
@@ -81,7 +84,7 @@ implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			return this.create();
 
@@ -149,7 +152,7 @@ implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentWriter openForWrite(
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		if (outputStream == null)
 			throw new SpreadsheetException("Specify an output stream");
 

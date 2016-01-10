@@ -30,7 +30,6 @@ import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.cls};
 
 import com.github.jferard.spreadsheetwrapper.StyleHelper;
-import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
@@ -174,58 +173,16 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 		}
 		
 		final Element cellPropertiesElment = tableCellProperties.getElement();  
-		final String borderAttrValue = cellPropertiesElment
-				.getAttributeValue(OdsConstants.BORDER_ATTR_NAME,
-						OdsJOpenStyleHelper.FO_NS);
-		final Borders borders = new Borders();
-		if (borderAttrValue == null) {
-			// border top
-			// border bottom
-			// ... 
-		} else {
-			final String[] split = borderAttrValue.split("\\s+");
-			borders.setLineWidth(OdsConstants.sizeToPoints(split[0]));
-			// borders.setLineType(OdsConstants.sizeToPoints(split[1]));
-			if (!WrapperColor.BLACK.toHex().equals(split[2]))
-				borders.setLineColor(WrapperColor.stringToColor(split[2]));
+		final Borders borders = OdsJOpenStyleBorderHelper.toBorders(cellPropertiesElment);
+		if (borders != null)
 			wrapperCellStyle.setBorders(borders);
-		}
 
-		final WrapperFont wrapperFont = new WrapperFont();
 		final ${jopendocument.styletextproperties.cls} textProperties = cellStyle.getTextProperties();
 		final Element odfElement = textProperties.getElement();
 
-		final String fontWeight = odfElement.getAttributeValue(
-				OdsConstants.FONT_WEIGHT_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if (OdsConstants.BOLD_ATTR_VALUE.equals(fontWeight))
-			wrapperFont.setBold();
-		else if (OdsConstants.NORMAL_ATTR_VALUE.equals(fontWeight))
-			wrapperFont.setBold(WrapperCellStyle.NO);
-
-		final String fontStyle = odfElement.getAttributeValue(
-				OdsConstants.FONT_STYLE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if (OdsConstants.ITALIC_ATTR_VALUE.equals(fontStyle))
-			wrapperFont.setItalic();
-		else if (OdsConstants.NORMAL_ATTR_VALUE.equals(fontStyle))
-			wrapperFont.setItalic(WrapperCellStyle.NO);
-
-		final String fontSize = odfElement.getAttributeValue(
-				OdsConstants.FONT_SIZE_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if (fontSize != null)
-			wrapperFont.setSize(OdsConstants.sizeToPoints(fontSize));
-
-		final String fColorAsHex = odfElement.getAttributeValue(
-				OdsConstants.COLOR_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		final WrapperColor fontColor = WrapperColor.stringToColor(fColorAsHex);
-		if (fontColor != null)
-			wrapperFont.setColor(fontColor);
-
-		final String fontFamily =  odfElement.getAttributeValue(
-				OdsConstants.FAMILY_ATTR_NAME, OdsJOpenStyleHelper.FO_NS);
-		if (fontFamily != null)
-			wrapperFont.setFamily(fontFamily);
-
-		wrapperCellStyle.setCellFont(wrapperFont);
+		final WrapperFont wrapperFont = OdsJOpenStyleFontHelper.toWrapperFont(odfElement);
+		if (wrapperFont != null)
+			wrapperCellStyle.setCellFont(wrapperFont);
 		return wrapperCellStyle;
 	}
 
@@ -281,82 +238,6 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 		}
 	}
 
-	private void setBorders(final Element tableCellProps, final Borders borders) {
-		final double lineWidth = borders.getLineWidth();
-		if (!Util.almostEqual(lineWidth, WrapperCellStyle.DEFAULT)) {
-			WrapperColor color = borders.getLineColor();
-			if (color == null)
-				color = WrapperColor.BLACK;
-			
-			tableCellProps.setAttribute(OdsConstants.BORDER_ATTR_NAME,
-					Double.toString(lineWidth) + "pt solid "+color.toHex(),
-					OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-
-	private void setFontBold(final Element textProps, final int key) {
-		final String value;
-		if (key == WrapperCellStyle.YES)
-			value = OdsConstants.BOLD_ATTR_VALUE;
-		else if (key == WrapperCellStyle.YES)
-			value = OdsConstants.NORMAL_ATTR_VALUE;
-		else
-			value = null;
-
-		if (value != null) {
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ATTR_NAME, value,
-					OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_ASIAN_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_WEIGHT_COMPLEX_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-		}
-	}
-
-	private void setFontColor(final Element textProps, final WrapperColor color) {
-		if (color != null) {
-			textProps.setAttribute(OdsConstants.COLOR_ATTR_NAME, color.toHex(),
-					OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-
-	private void setFontFamily(final Element textProps, final String family) {
-		if (family != null) {
-			textProps.setAttribute(OdsConstants.FAMILY_ATTR_NAME, family,
-					OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FAMILY_ASIAN_ATTR_NAME, family,
-					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FAMILY_COMPLEX_ATTR_NAME, family,
-					OdsJOpenStyleHelper.STYLE_NS);
-		}
-	}
-
-	private void setFontItalic(final Element textProps, final int key) {
-		final String value;
-		if (key == WrapperCellStyle.YES)
-			value = OdsConstants.ITALIC_ATTR_VALUE;
-		else if (key == WrapperCellStyle.YES)
-			value = OdsConstants.NORMAL_ATTR_VALUE;
-		else
-			value = null;
-
-		if (value != null) {
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ATTR_NAME, value,
-					OdsJOpenStyleHelper.FO_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_ASIAN_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-			textProps.setAttribute(OdsConstants.FONT_STYLE_COMPLEX_ATTR_NAME, value,
-					OdsJOpenStyleHelper.STYLE_NS);
-		}
-	}
-
-	private void setFontSize(final Element textProps, final double size) {
-		if (size != WrapperCellStyle.DEFAULT) {
-			textProps.setAttribute(OdsConstants.FONT_SIZE_ATTR_NAME, Double.toString(size)+"pt",
-					OdsJOpenStyleHelper.FO_NS);
-		}
-	}
-
 	private void setStyle(final Element tableCellProps,
 			final Element textProps, final WrapperCellStyle wrapperCellStyle) {
 		final WrapperColor backgroundColor = wrapperCellStyle
@@ -365,15 +246,11 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 
 		final /*@Nullable*/ Borders borders = wrapperCellStyle.getBorders();
 		if (borders != null)
-			this.setBorders(tableCellProps, borders);
+			OdsJOpenStyleBorderHelper.setBorders(tableCellProps, borders);
 
 		final /*@Nullable*/ WrapperFont cellFont = wrapperCellStyle.getCellFont();
 		if (cellFont != null) {
-			this.setFontBold(textProps, cellFont.getBold());
-			this.setFontItalic(textProps, cellFont.getItalic());
-			this.setFontSize(textProps, cellFont.getSize());
-			this.setFontColor(textProps, cellFont.getColor());
-			this.setFontFamily(textProps, cellFont.getFamily());
+			OdsJOpenStyleFontHelper.setFont(textProps, cellFont);
 		}
 	}
 

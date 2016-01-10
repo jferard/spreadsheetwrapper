@@ -62,7 +62,7 @@ SpreadsheetWriter {
 	 * @param sheet
 	 *            *internal* sheet
 	 */
-	public XlsJxlWriter(final WritableSheet sheet,
+	XlsJxlWriter(final WritableSheet sheet,
 			final XlsJxlStyleHelper styleHelper) {
 		super(new XlsJxlReader(sheet, styleHelper));
 		this.sheet = sheet;

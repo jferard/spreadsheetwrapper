@@ -42,7 +42,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /**
  */
-public class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
+class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;

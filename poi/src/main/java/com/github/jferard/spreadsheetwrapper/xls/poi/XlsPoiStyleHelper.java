@@ -371,8 +371,6 @@ class XlsPoiStyleHelper {
 		final short borderLeftColor = cellStyle.getLeftBorderColor();
 		final short borderRightColor = cellStyle.getRightBorderColor();
 
-		System.out.println(String.format("%d, %d, %d, %d", borderBottomColor,
-				borderTopColor, borderLeftColor, borderRightColor));
 		for (final short borderColor : Arrays.asList(borderTopColor,
 				borderLeftColor, borderRightColor)) {
 			if (borderColor != borderBottomColor)
@@ -383,7 +381,6 @@ class XlsPoiStyleHelper {
 		if (hssfColor == null)
 			return null;
 		
-		System.out.println(String.format("%s (%s) -> %s", hssfColor, hssfColor.getClass().getName(), this.colorByHssfColor.get(hssfColor)));
 		if (hssfColor.getHexString().equals("0:0:0"))
 			return null;
 

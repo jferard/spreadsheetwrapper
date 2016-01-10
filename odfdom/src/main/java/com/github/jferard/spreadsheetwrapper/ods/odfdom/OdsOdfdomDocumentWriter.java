@@ -95,7 +95,7 @@ implements SpreadsheetDocumentWriter {
 	 * @throws SpreadsheetException
 	 *             if can't open value writer
 	 */
-	public OdsOdfdomDocumentWriter(final Logger logger,
+	OdsOdfdomDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
 			final OdfSpreadsheetDocument document, final Output output)
 			throws SpreadsheetException {
