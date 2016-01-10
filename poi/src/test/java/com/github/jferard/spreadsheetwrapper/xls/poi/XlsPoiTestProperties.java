@@ -19,18 +19,14 @@ package com.github.jferard.spreadsheetwrapper.xls.poi;
 
 import java.util.logging.Logger;
 
-import org.apache.poi.ss.usermodel.CellStyle;
-
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 
 public final class XlsPoiTestProperties {
 	/**
 	 * create the properties
 	 */
 	private static TestProperties properties = new TestProperties(
-			new XlsPoiDocumentFactory(Logger.getGlobal(),
-					new XlsPoiStyleHelper(new CellStyleAccessor<CellStyle>())));
+			XlsPoiDocumentFactory.create(Logger.getGlobal()));
 
 	/**
 	 * @return the properties for test classes
