@@ -21,14 +21,20 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Output;
@@ -51,36 +57,17 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
-	/** delegation value with definition of createNew */
-	private final class OdsOdfdomDocumentWriterDelegate extends
-	AbstractOdsOdfdomDocumentDelegate<SpreadsheetWriter> {
-
-		OdsOdfdomDocumentWriterDelegate(final OdfSpreadsheetDocument document,
-				final OdsOdfdomStyleHelper styleHelper) {
-			super(document, styleHelper);
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		/*@RequiresNonNull("DelegateStyleHelper")*/
-		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsOdfdomDocumentWriterDelegate this, */final OdfTable table) {
-			return new OdsOdfdomWriter(table, this.delegateStyleHelper);
-		}
-	}
-
 	/** the *internal* workbook */
 	private final OdfSpreadsheetDocument document;
 
 	/** the document styles */
 	private final OdfOfficeStyles documentStyles;
-	/** delegation value */
-	private final AbstractOdsOdfdomDocumentDelegate<SpreadsheetWriter> documentDelegate;
+
 	/** the logger */
 	private final Logger logger;
 
 	/** delegation reader */
-	private final OdsOdfdomDocumentReader reader;
+	private final OdsOdfdomDocumentInternalReader reader;
 
 	/** helper object for style */
 	private final OdsOdfdomStyleHelper styleHelper;
@@ -101,27 +88,10 @@ implements SpreadsheetDocumentWriter {
 			throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
-		this.reader = new OdsOdfdomDocumentReader(document, styleHelper);
+		this.reader = new OdsOdfdomDocumentInternalReader(document, styleHelper);
 		this.logger = logger;
 		this.document = document;
 		this.documentStyles = this.document.getDocumentStyles();
-		this.documentDelegate = new OdsOdfdomDocumentWriterDelegate(document,
-				styleHelper);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(index, sheetName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -170,16 +140,23 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentDelegate.getSpreadsheet(index);
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByIndex(index))
+			spreadsheet = this.accessor.getByIndex(index);
+		else {
+			final List<OdfTable> tables = this.document.getTableList();
+			if (index < 0 || index >= tables.size())
+				throw new IndexOutOfBoundsException(String.format(
+						"No sheet at position %d", index));
+
+			final OdfTable table = this.document.getTableList().get(index);
+			spreadsheet = this.createNew(table);
+			this.accessor.put(table.getTableName(), index, spreadsheet);
+		}
+		return spreadsheet;
 	}
 
 	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentDelegate.getSpreadsheet(sheetName);
-	}
-
-	/** */
 	@Override
 	public void save() throws SpreadsheetException {
 		OutputStream outputStream = null;
@@ -206,4 +183,94 @@ implements SpreadsheetDocumentWriter {
 		this.styleHelper.setWrapperCellStyle(newStyle, wrapperCellStyle);
 		return true;
 	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName) {
+		if (index != this.getSheetCount())
+			throw new UnsupportedOperationException(String.format(
+					"Should insert sheet at index %d only",
+					this.getSheetCount()));
+
+		OdfTable table = this.document.getTableByName(sheetName);
+		if (table != null)
+			throw new IllegalArgumentException(String.format("Sheet %s exists",
+					sheetName));
+
+		table = OdfTable.newTable(this.document);
+		final TableTableElement tableElement = table.getOdfElement();
+		this.cleanEmptyTable(tableElement);
+		tableElement.setTableNameAttribute(sheetName);
+		final SpreadsheetWriter spreadsheet = this.createNew(table);
+		// the table is added at the end
+		this.accessor.put(sheetName, index, spreadsheet);
+		return spreadsheet;
+	}
+
+	/**
+	 * Create a new reader/writer
+	 *
+	 * @param table
+	 *            *internal* table
+	 * @return the reader/writer
+	 */
+	/**
+	 * @param table
+	 * @return
+	 */
+	/*@RequiresNonNull("delegateStyleHelper")*/
+	protected SpreadsheetWriter createNew(final OdfTable table) {
+		return new OdsOdfdomWriter(table, this.styleHelper);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
+		final SpreadsheetWriter spreadsheet;
+		final List<OdfTable> tableList = this.document.getTableList();
+		final ListIterator<OdfTable> tablesIterator = tableList.listIterator();
+		OdfTable table;
+		while (tablesIterator.hasNext()) {
+			final int index = tablesIterator.nextIndex();
+			table = tablesIterator.next();
+			if (table.getTableName().equals(sheetName)) {
+				spreadsheet = this.createNew(table);
+				this.accessor.put(sheetName, index, spreadsheet);
+				return spreadsheet;
+			}
+		}
+		throw new NoSuchElementException(String.format(
+				"No %s sheet in workbook", sheetName));
+	}
+	
+	/**
+	 * Cleans the table : remove everything that odftoolkit adds, but let
+	 * <table:table>
+	 * <table:table-column number-columns-repeated="1" />
+	 * </table:table>
+	 *
+	 * @param tableElement
+	 *            the odf element
+	 */
+	private void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		while (colsList.getLength() > 1) {
+			final Node item = colsList.item(1);
+			tableElement.removeChild(item);
+		}
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 0) {
+			final Node item = rowList.item(0);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		assert rowListAfter.getLength() == 0;
+	}
+	
 }

@@ -32,14 +32,14 @@ import jxl.format.CellFormat;
 import jxl.write.Formula;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  */
-class XlsJxlReader extends AbstractSpreadsheetReader implements
+class XlsJxlReader extends AbstractSpreadsheetInternalReader implements
 		SpreadsheetReader {
 	private static Date getDate(final Cell cell) {
 		if (cell instanceof DateCell)

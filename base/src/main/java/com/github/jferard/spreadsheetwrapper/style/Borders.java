@@ -4,13 +4,32 @@ import java.util.Arrays;
 
 import com.github.jferard.spreadsheetwrapper.Util;
 
+/**
+ * The Borders class represents the borders of a cell
+ */
 public class Borders {
+	/**
+	 * the top border
+	 */
 	private Border borderTop;
+	/**
+	 * the bottom border
+	 */
 	private Border borderBottom;
+	/**
+	 * the left border
+	 */
 	private Border borderLeft;
+	/**
+	 * the right border
+	 */
 	private Border borderRight;
 
-	public Borders setLineWidth(double borderLineWidth) {
+	/**
+	 * @param borderLineWidth the width to set
+	 * @return the Borders objets (fluent style)
+	 */
+	public Borders setLineWidth(final double borderLineWidth) {
 		this.borderTop = (this.borderTop == null ? new Border()
 				: this.borderTop).setLineWidth(borderLineWidth);
 		this.borderBottom = (this.borderBottom == null ? new Border()
@@ -25,7 +44,7 @@ public class Borders {
 	public double getLineWidth() {
 		double lineWidth = this.borderTop == null ? WrapperCellStyle.NO_LINE
 				: this.borderTop.getLineWidth();
-		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft,
+		for (final Border border : Arrays.asList(this.borderBottom, this.borderLeft,
 				this.borderRight)) {
 			if (!(border == null || Util.almostEqual(lineWidth,
 					border.getLineWidth())))
@@ -49,7 +68,7 @@ public class Borders {
 		return this.borderTop;
 	}
 
-	public Borders setBorderTop(Border borderTop) {
+	public Borders setBorderTop(final Border borderTop) {
 		this.borderTop = borderTop;
 		return this;
 	}
@@ -67,7 +86,7 @@ public class Borders {
 		return this.borderLeft;
 	}
 
-	public Borders setBorderLeft(Border borderLeft) {
+	public Borders setBorderLeft(final Border borderLeft) {
 		this.borderLeft = borderLeft;
 		return this;
 	}
@@ -76,7 +95,7 @@ public class Borders {
 		return this.borderRight;
 	}
 
-	public Borders setBorderRight(Border borderRight) {
+	public Borders setBorderRight(final Border borderRight) {
 		this.borderRight = borderRight;
 		return this;
 	}

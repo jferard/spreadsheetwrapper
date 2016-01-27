@@ -26,14 +26,14 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  */
-class XlsPoiReader extends AbstractSpreadsheetReader implements
+class XlsPoiReader extends AbstractSpreadsheetInternalReader implements
 SpreadsheetReader {
 	/** current row index, -1 if none */
 	private int curR;

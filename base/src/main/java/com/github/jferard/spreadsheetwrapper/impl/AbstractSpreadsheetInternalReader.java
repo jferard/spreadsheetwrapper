@@ -31,7 +31,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
-public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
+public abstract class AbstractSpreadsheetInternalReader implements SpreadsheetReader {
 
 	/**
 	 * @param dateString
@@ -51,7 +51,7 @@ public abstract class AbstractSpreadsheetReader implements SpreadsheetReader {
 			String message = e.getMessage();
 			if (message == null)
 				message = "???";
-			Logger.getLogger(AbstractSpreadsheetReader.class.getName()).log(
+			Logger.getLogger(AbstractSpreadsheetInternalReader.class.getName()).log(
 					Level.SEVERE, message, e);
 			simpleDate = null;
 		}

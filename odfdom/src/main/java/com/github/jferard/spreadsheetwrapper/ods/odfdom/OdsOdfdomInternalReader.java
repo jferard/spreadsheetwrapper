@@ -28,7 +28,7 @@ import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
@@ -36,7 +36,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /**
  */
-class OdsOdfdomReader extends AbstractSpreadsheetReader implements
+class OdsOdfdomInternalReader extends AbstractSpreadsheetInternalReader implements
 SpreadsheetReader {
 	/** format for dates */
 	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
@@ -48,14 +48,14 @@ SpreadsheetReader {
 		if (dateStr == null) {
 			return null;
 		}
-		final Date date = AbstractSpreadsheetReader.parseString(dateStr,
-				OdsOdfdomReader.DATE_FORMAT);
+		final Date date = AbstractSpreadsheetInternalReader.parseString(dateStr,
+				OdsOdfdomInternalReader.DATE_FORMAT);
 		return date;
 	}
 
 	private static int getRowCellCount(final OdfTableRow row) {
 		final TableTableRowElement rowElement = row.getOdfElement();
-		return OdsOdfdomReader.getRowElementCellCount(rowElement);
+		return OdsOdfdomInternalReader.getRowElementCellCount(rowElement);
 	}
 
 	private static int getRowElementCellCount(
@@ -96,7 +96,7 @@ SpreadsheetReader {
 	 * @param table
 	 *            the *internal* table
 	 */
-	OdsOdfdomReader(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
+	OdsOdfdomInternalReader(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.table = table;
 		this.styleHelper = styleHelper;
@@ -139,7 +139,7 @@ SpreadsheetReader {
 			result = cell.getBooleanValue();
 		else if (type.equals(OdsConstants.DATE_TYPE)
 				|| type.equals(OdsConstants.TIME_TYPE))
-			result = OdsOdfdomReader.getDate(cell);
+			result = OdsOdfdomInternalReader.getDate(cell);
 		else if (type.equals(OdsConstants.FLOAT_TYPE)
 				|| type.equals(OdsConstants.CURRENCY_TYPE)
 				|| type.equals(OdsConstants.PERCENTAGE_TYPE)) {
@@ -163,7 +163,7 @@ SpreadsheetReader {
 			throw new IllegalArgumentException();
 
 		final OdfTableRow row = this.table.getRowByIndex(r);
-		return OdsOdfdomReader.getRowCellCount(row);
+		return OdsOdfdomInternalReader.getRowCellCount(row);
 	}
 
 	/** {@inheritDoc} */
@@ -176,7 +176,7 @@ SpreadsheetReader {
 		if (!"date".equals(cell.getValueType())
 				&& !"time".equals(cell.getValueType()))
 			throw new IllegalArgumentException();
-		final Date date = OdsOdfdomReader.getDate(cell);
+		final Date date = OdsOdfdomInternalReader.getDate(cell);
 		if (date == null)
 			throw new IllegalArgumentException();
 		return date;
@@ -230,7 +230,7 @@ SpreadsheetReader {
 					.getTableNumberRowsRepeatedAttribute();
 			pendingRowCount += repeat;
 			// not the end ?
-			if (OdsOdfdomReader.getRowElementCellCount(rowElement) != 0) {
+			if (OdsOdfdomInternalReader.getRowElementCellCount(rowElement) != 0) {
 				calculatedRowCount += pendingRowCount;
 				pendingRowCount = 0;
 			}

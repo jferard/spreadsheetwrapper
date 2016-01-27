@@ -25,7 +25,7 @@ import org.odftoolkit.simple.table.Row;
 import org.odftoolkit.simple.table.Table;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
@@ -34,7 +34,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  * the sheet reader for SimpleODS.
  */
-class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
+class OdsSimpleodfReader extends AbstractSpreadsheetInternalReader implements
 		SpreadsheetReader {
 	private static/*@Nullable*/Date getDate(final Cell cell) {
 		cell.getDateValue(); // HACK : throws IllegalArgumentException
@@ -43,7 +43,7 @@ class OdsSimpleodfReader extends AbstractSpreadsheetReader implements
 		if (dateStr == null) {
 			return null;
 		}
-		final Date date = AbstractSpreadsheetReader.parseString(dateStr,
+		final Date date = AbstractSpreadsheetInternalReader.parseString(dateStr,
 				"yyyy-MM-dd'T'HH:mm:ss");
 		return date;
 	}

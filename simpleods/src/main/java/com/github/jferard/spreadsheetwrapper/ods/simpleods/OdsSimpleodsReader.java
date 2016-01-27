@@ -29,14 +29,14 @@ import org.simpleods.TableCell;
 import org.simpleods.TableRow;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  */
-class OdsSimpleodsReader extends AbstractSpreadsheetReader implements
+class OdsSimpleodsReader extends AbstractSpreadsheetInternalReader implements
 SpreadsheetReader {
 	/** index of current row, -1 if none */
 	private int curR;

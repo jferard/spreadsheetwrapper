@@ -42,7 +42,7 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 
 /**
  */
-class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
+class OdsOdfdomDocumentInternalReader implements SpreadsheetDocumentReader {
 	/** delegation value with definition of createNew */
 	private final class OdsOdfdomDocumentReaderDelegate extends
 			AbstractOdsOdfdomDocumentDelegate<SpreadsheetReader> {
@@ -62,7 +62,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 		/*@RequiresNonNull("DelegateStyleHelper")*/
 		protected SpreadsheetReader createNew(
 				/*>>> @UnknownInitialization OdsOdfdomDocumentReaderDelegate this,*/final OdfTable table) {
-			return new OdsOdfdomReader(table, this.delegateStyleHelper);
+			return new OdsOdfdomInternalReader(table, this.delegateStyleHelper);
 		}
 	}
 
@@ -82,7 +82,7 @@ class OdsOdfdomDocumentReader implements SpreadsheetDocumentReader {
 	 * @throws SpreadsheetException
 	 *             if can't open reader
 	 */
-	OdsOdfdomDocumentReader(final OdfSpreadsheetDocument document,
+	OdsOdfdomDocumentInternalReader(final OdfSpreadsheetDocument document,
 			final OdsOdfdomStyleHelper styleHelper) throws SpreadsheetException {
 		this.styleHelper = styleHelper;
 		this.document = document;

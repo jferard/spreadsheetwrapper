@@ -28,18 +28,64 @@ import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.doc.table.OdfTableRow;
 import org.odftoolkit.odfdom.dom.OdfDocumentNamespace;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableRowElement;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
  */
-class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWriter {
+	/** format for dates */
+	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
+
+	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
+		cell.getDateValue(); // HACK : throws IllegalArgumentException
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		final String dateStr = odfElement.getOfficeDateValueAttribute();
+		if (dateStr == null) {
+			return null;
+		}
+		final Date date = AbstractSpreadsheetInternalReader.parseString(
+				dateStr, DATE_FORMAT);
+		return date;
+	}
+
+	private static int getRowCellCount(final OdfTableRow row) {
+		final TableTableRowElement rowElement = row.getOdfElement();
+		return getRowElementCellCount(rowElement);
+	}
+
+	private static int getRowElementCellCount(
+			final TableTableRowElement rowElement) {
+		int cellCount = 0;
+		int pendingCellCount = 0;
+
+		final NodeList cellList = rowElement
+				.getElementsByTagName("table:table-cell");
+		final int length = cellList.getLength();
+		for (int c = 0; c < length; c++) {
+			final TableTableCellElementBase cellElement = (TableTableCellElementBase) cellList
+					.item(c);
+			final Integer repeat = cellElement
+					.getTableNumberColumnsRepeatedAttribute();
+			pendingCellCount += repeat;
+			if (cellElement.getFirstChild() != null) {
+				cellCount += pendingCellCount;
+				pendingCellCount = 0;
+			}
+		}
+		return cellCount;
+	}
+
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -57,11 +103,178 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 	 *            the *internal* sheet
 	 */
 	OdsOdfdomWriter(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
-		super(new OdsOdfdomReader(table, styleHelper));
+		super();
 		this.table = table;
 		this.styleHelper = styleHelper;
 		this.curR = -1;
 		this.curRow = null;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (!OdsConstants.BOOLEAN_TYPE.equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		return cell.getBooleanValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Object getCellContent(final int rowIndex,
+			final int colIndex) {
+		final OdfTableCell cell = this.getOdfCell(rowIndex, colIndex);
+		if (cell == null)
+			return null;
+		final String formula = cell.getFormula();
+		if (formula != null && formula.charAt(0) == '=')
+			return formula.substring(1);
+
+		final String type = cell.getValueType();
+		Object result;
+
+		// from the doc
+		// The type can be "boolean", "currency", "date", "float", "percentage",
+		// "string" or "time".
+		if (type == null)
+			result = null;
+		else if (type.equals(OdsConstants.BOOLEAN_TYPE))
+			result = cell.getBooleanValue();
+		else if (type.equals(OdsConstants.DATE_TYPE)
+				|| type.equals(OdsConstants.TIME_TYPE))
+			result = getDate(cell);
+		else if (type.equals(OdsConstants.FLOAT_TYPE)
+				|| type.equals(OdsConstants.CURRENCY_TYPE)
+				|| type.equals(OdsConstants.PERCENTAGE_TYPE)) {
+			final double value = cell.getDoubleValue();
+			if (value == Math.rint(value))
+				result = Integer.valueOf((int) value);
+			else
+				result = Double.valueOf(value);
+		} else if (type.equals(OdsConstants.STRING_TYPE))
+			result = cell.getStringValue();
+		else
+			throw new IllegalArgumentException(String.format(
+					"Unknown type of cell %s", type));
+		return result;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getCellCount(final int r) {
+		if (r < 0 || r >= this.getRowCount())
+			throw new IllegalArgumentException();
+
+		final OdfTableRow row = this.table.getRowByIndex(r);
+		return getRowCellCount(row);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Date getDate(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (!"date".equals(cell.getValueType())
+				&& !"time".equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		final Date date = getDate(cell);
+		if (date == null)
+			throw new IllegalArgumentException();
+		return date;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (!OdsConstants.FLOAT_TYPE.equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		return cell.getDoubleValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getFormula(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String formula = cell.getFormula();
+		if (formula == null || formula.charAt(0) != '=')
+			throw new IllegalArgumentException();
+
+		return formula.substring(1);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.table.getTableName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getRowCount() {
+		int calculatedRowCount = 0;
+		int pendingRowCount = 0;
+
+		final TableTableElement tte = this.table.getOdfElement();
+		final NodeList rowList = tte.getElementsByTagName("table:table-row");
+		final int length = rowList.getLength();
+		for (int r = 0; r < length; r++) {
+			final TableTableRowElement rowElement = (TableTableRowElement) rowList
+					.item(r);
+			final Integer repeat = rowElement
+					.getTableNumberRowsRepeatedAttribute();
+			pendingRowCount += repeat;
+			// not the end ?
+			if (getRowElementCellCount(rowElement) != 0) {
+				calculatedRowCount += pendingRowCount;
+				pendingRowCount = 0;
+			}
+		}
+		return calculatedRowCount;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final OdfTableCell odfCell = this.getOdfCell(r, c);
+		if (odfCell == null)
+			return null;
+
+		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
+		return this.styleHelper.getWrapperCellStyle(odfElement);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
+		final OdfTableCell odfCell = this.getOdfCell(r, c);
+		if (odfCell == null)
+			return null;
+
+		return odfCell.getStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getText(final int r, final int c) {
+		final OdfTableCell cell = this.getOdfCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (!OdsConstants.STRING_TYPE.equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		return cell.getStringValue();
 	}
 
 	/** {@inheritDoc} */
@@ -171,6 +384,27 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.setStringValue(text);
 		return text;
+	}
+
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	private/*@Nullable*/OdfTableCell getOdfCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.table.getRowByIndex(r);
+			this.curR = r;
+		}
+		return this.curRow.getCellByIndex(c);
 	}
 
 	/**

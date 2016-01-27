@@ -17,16 +17,19 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.impl;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.DataWrapper;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
-import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -34,108 +37,15 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  * An abstract writer that handles style methods.
  */
 public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
-	/** the reader for delegation */
-	protected final SpreadsheetReader reader;
-
 	/**
-	 * @param reader
-	 *            the reader
 	 */
-	public AbstractSpreadsheetWriter(final SpreadsheetReader reader) {
-		this.reader = reader;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
-		return this.reader.getBoolean(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/Object getCellContent(final int r, final int c) {
-		return this.reader.getCellContent(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getCellCount(final int r) {
-		if (r < 0 || r >= this.getRowCount())
-			throw new IllegalArgumentException();
-
-		return this.reader.getCellCount(r);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> getColContents(final int c) {
-		return this.reader.getColContents(c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/Date getDate(final int r, final int c) {
-		return this.reader.getDate(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/Double getDouble(final int r, final int c) {
-		return this.reader.getDouble(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/String getFormula(final int r, final int c) {
-		return this.reader.getFormula(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/Integer getInteger(final int r, final int c) {
-		return this.reader.getInteger(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getName() {
-		return this.reader.getName();
+	public AbstractSpreadsheetWriter() {
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriterCursor getNewCursor() {
 		return new SpreadsheetWriterCursorImpl(this);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> getRowContents(final int r) {
-		return this.reader.getRowContents(r);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getRowCount() {
-		return this.reader.getRowCount();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
-		return this.reader.getStyle(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		return this.reader.getStyleName(r, c);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/String getText(final int r, final int c) {
-		return this.reader.getText(r, c);
 	}
 
 	/** {@inheritDoc} */
@@ -262,4 +172,60 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 		return dataWrapper.writeDataTo(this, r, c);
 	}
 
+	/**
+	 * @param dateString
+	 *            the date as a String (e.g "2015-01-01")
+	 * @param format
+	 *            the format
+	 * @return the date, null if can't parse
+	 */
+	public static/*@Nullable*/Date parseString(final String dateString,
+			final String format) {
+		final SimpleDateFormat simpleFormat = new SimpleDateFormat(format,
+				Locale.US);
+		Date simpleDate;
+		try {
+			simpleDate = simpleFormat.parse(dateString);
+		} catch (final ParseException e) {
+			String message = e.getMessage();
+			if (message == null)
+				message = "???";
+			Logger.getLogger(AbstractSpreadsheetInternalReader.class.getName()).log(
+					Level.SEVERE, message, e);
+			simpleDate = null;
+		}
+		return simpleDate;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final List</*@Nullable*/Object> getColContents(final int colIndex) {
+		final int rowCount = this.getRowCount();
+		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
+				rowCount);
+		for (int r = 0; r < rowCount; r++) {
+			cellContents.add(this.getCellContent(r, colIndex));
+		}
+		return cellContents;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final/*@Nullable*/Integer getInteger(final int r, final int c) {
+		final Double value = this.getDouble(r, c);
+		if (value == null)
+			return null;
+		return value.intValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final List</*@Nullable*/Object> getRowContents(final int rowIndex) {
+		final int colCount = this.getCellCount(rowIndex);
+		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
+				colCount);
+		for (int c = 0; c < colCount; c++)
+			cellContents.add(this.getCellContent(rowIndex, c));
+		return cellContents;
+	}	
 }

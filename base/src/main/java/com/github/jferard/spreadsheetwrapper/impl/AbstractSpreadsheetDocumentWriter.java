@@ -19,12 +19,16 @@ package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.github.jferard.spreadsheetwrapper.Accessor;
+import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
@@ -51,6 +55,7 @@ SpreadsheetDocumentWriter {
 		super();
 		this.logger = logger;
 		this.output = output;
+		this.accessor = new Accessor<SpreadsheetWriter>();
 	}
 
 	/** {@inheritDoc} */
@@ -81,4 +86,85 @@ SpreadsheetDocumentWriter {
 			throw e;
 		}
 	}
+	
+	/**
+	 * An accessor on readers/writers, by name and index.
+	 */
+	protected final Accessor<SpreadsheetWriter> accessor;
+
+	/**
+	 * Adds a sheet to the value
+	 *
+	 * @param index
+	 *            (0..n) the sheet is inserted before this index
+	 * @param sheetName
+	 *            the namee of the sheet
+	 * @throws IndexOutOfBoundsException
+	 *             if index < 0 or index > sheetCount
+	 * @return the reader/writer
+	 * @throws CantInsertElementInSpreadsheetException
+	 */
+	public SpreadsheetWriter addSheet(final int index, final String sheetName)
+			throws IndexOutOfBoundsException,
+			CantInsertElementInSpreadsheetException {
+		final int size = this.getSheetCount();
+		if (index < 0 || index > size) // index == size is ok
+			throw new IndexOutOfBoundsException();
+
+		return this.addSheetWithCheckedIndex(index, sheetName);
+	}
+
+	/**
+	 * Adds a sheet at the end of the workbook
+	 *
+	 * @param sheetName
+	 *            the name of the sheet
+	 * @return the reader/writer
+	 * @throws CantInsertElementInSpreadsheetException
+	 */
+	public SpreadsheetWriter addSheet(final String sheetName)
+			throws CantInsertElementInSpreadsheetException {
+		return this.addSheetWithCheckedIndex(this.getSheetCount(), sheetName);
+	}
+
+	/**
+	 * @param sheetName
+	 *            the name of the sheet to find
+	 * @throws NoSuchElementException
+	 *             if the workbook does not contains any sheet of this name
+	 * @return the reader/writer
+	 */
+	public SpreadsheetWriter getSpreadsheet(final String sheetName)
+			throws NoSuchElementException {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByName(sheetName))
+			spreadsheet = this.accessor.getByName(sheetName);
+		else
+			spreadsheet = this
+			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+
+		return spreadsheet;
+	}
+
+	/**
+	 * @param index
+	 *            the index of the new sheet (0..sheetCount)
+	 * @param sheetName
+	 *            the name of the sheet
+	 * @return the reader/writer on thee sheet, table, ... inserted
+	 * @throws CantInsertElementInSpreadsheetException
+	 *             if cant inseert the spreadsheet in the workbook
+	 */
+	protected abstract SpreadsheetWriter addSheetWithCheckedIndex(int index, String sheetName)
+			throws CantInsertElementInSpreadsheetException;
+
+	/**
+	 * @param sheetName
+	 *            the sheet, table, ... name
+	 * @throws NoSuchElementException
+	 *             if the workbook does not contains any sheet of this name
+	 * @return the reader/writer
+	 */
+	protected abstract SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(String sheetName)
+			throws NoSuchElementException;
 }
