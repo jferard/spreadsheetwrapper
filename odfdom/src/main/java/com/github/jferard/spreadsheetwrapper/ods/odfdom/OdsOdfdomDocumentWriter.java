@@ -20,6 +20,7 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -36,7 +37,6 @@ import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
@@ -66,9 +66,6 @@ implements SpreadsheetDocumentWriter {
 	/** the logger */
 	private final Logger logger;
 
-	/** delegation reader */
-	private final OdsOdfdomDocumentInternalReader reader;
-
 	/** helper object for style */
 	private final OdsOdfdomStyleHelper styleHelper;
 
@@ -88,7 +85,6 @@ implements SpreadsheetDocumentWriter {
 			throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
-		this.reader = new OdsOdfdomDocumentInternalReader(document, styleHelper);
 		this.logger = logger;
 		this.document = document;
 		this.documentStyles = this.document.getDocumentStyles();
@@ -103,13 +99,15 @@ implements SpreadsheetDocumentWriter {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-		this.reader.close();
+		this.document.close();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
-		return this.reader.getCellStyle(styleName);
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return this.styleHelper.toWrapperCellStyle(existingStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -128,13 +126,18 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public int getSheetCount() {
-		return this.reader.getSheetCount();
+		final List<OdfTable> tables = this.document.getTableList();
+		return tables.size();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List<String> getSheetNames() {
-		return this.reader.getSheetNames();
+		final List<OdfTable> tables = this.document.getTableList();
+		final List<String> tableNames = new ArrayList<String>(tables.size());
+		for (final OdfTable table : tables)
+			tableNames.add(table.getTableName());
+		return tableNames;
 	}
 
 	/** {@inheritDoc} */
@@ -199,7 +202,7 @@ implements SpreadsheetDocumentWriter {
 
 		table = OdfTable.newTable(this.document);
 		final TableTableElement tableElement = table.getOdfElement();
-		this.cleanEmptyTable(tableElement);
+		cleanEmptyTable(tableElement);
 		tableElement.setTableNameAttribute(sheetName);
 		final SpreadsheetWriter spreadsheet = this.createNew(table);
 		// the table is added at the end
@@ -252,7 +255,7 @@ implements SpreadsheetDocumentWriter {
 	 * @param tableElement
 	 *            the odf element
 	 */
-	private void cleanEmptyTable(final TableTableElement tableElement) {
+	private static void cleanEmptyTable(final TableTableElement tableElement) {
 		final NodeList colsList = tableElement
 				.getElementsByTagName("table:table-column");
 		final TableTableColumnElement column = (TableTableColumnElement) colsList

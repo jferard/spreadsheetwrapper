@@ -107,7 +107,7 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testNonExistingRowCellCountK11() {
 		this.sheetWriter.setText(10, 10, "10:10");
-		Assert.assertEquals(0, this.sheetWriter.getCellCount(11));
+		this.sheetWriter.getCellCount(11);
 	}
 
 	/**

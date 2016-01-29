@@ -19,14 +19,22 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
+import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.table.Table;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Output;
@@ -49,39 +57,17 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class OdsSimpleodfDocumentWriter extends
 AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
-	/** delegation value with definition of createNew */
-	private final class OdsSimpleodfDocumentWriterDelegate extends
-	AbstractOdsSimpleodfDocumentDelegate<SpreadsheetWriter> {
-
-		/**
-		 * @param delegateStyleHelper
-		 * @param value
-		 *            *internal* workbook
-		 */
-		OdsSimpleodfDocumentWriterDelegate(final OdsOdfdomStyleHelper styleHelper,
-				final OdsSimpleodfStatefulDocument sfDocument) {
-			super(sfDocument, styleHelper);
-		}
-
-		/** {@inheritDoc} */
-		@Override
 		/*@RequiresNonNull("delegateStyleHelper")*/
 		protected SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterDelegate this, */final Table table) {
-			return new OdsSimpleodfWriter(table, this.delegateStyleHelper);
+			return new OdsSimpleodfWriter(table, this.styleHelper);
 		}
-	}
 
 	/** internal styles */
 	private final OdfOfficeStyles documentStyles;
 
-	/** for delegation */
-	private final AbstractOdsSimpleodfDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** logger */
 	private final Logger logger;
-
-	/** reader for delegation */
-	private final OdsSimpleodfDocumentReader reader;
 
 	/** *internal* workbook */
 	private final OdsSimpleodfStatefulDocument sfDocument;
@@ -105,36 +91,9 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
-		this.reader = new OdsSimpleodfDocumentReader(styleHelper, sfDocument);
 		this.logger = logger;
 		this.sfDocument = sfDocument;
 		this.documentStyles = this.sfDocument.getStyles();
-		this.documentDelegate = new OdsSimpleodfDocumentWriterDelegate(styleHelper,
-				sfDocument);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws CantInsertElementInSpreadsheetException
-	 * @throws IndexOutOfBoundsException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(index, sheetName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws CantInsertElementInSpreadsheetException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -146,13 +105,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public WrapperCellStyle getCellStyle(final String styleName) {
-		return this.reader.getCellStyle(styleName);
+		this.sfDocument.close();
 	}
 
 	/** {@inheritDoc} */
@@ -166,30 +119,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
 			throws SpreadsheetException {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getSheetCount() {
-		return this.reader.getSheetCount();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getSheetNames() {
-		return this.reader.getSheetNames();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentDelegate.getSpreadsheet(index);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -219,4 +148,135 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		this.styleHelper.setWrapperCellStyle(newStyle, wrapperCellStyle);
 		return true;
 	}
+	
+	
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return this.styleHelper.toWrapperCellStyle(existingStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<String> getSheetNames() {
+		final List<Table> tables = this.getTableList();
+		final List<String> sheetNames = new ArrayList<String>(tables.size());
+		for (final Table table : tables)
+			sheetNames.add(table.getTableName());
+		return sheetNames;
+	}
+
+	private static void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		assert colsList.getLength() == 1;
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 1) {
+			final Node item = rowList.item(1);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		final int lengthAfter = rowListAfter.getLength();
+		assert lengthAfter == 1;
+	}
+
+	/**
+	 * @param index
+	 *            index of the spreadsheet in the document
+	 * @return the spreadsheet reader or writer
+	 */
+	@Override
+	public SpreadsheetWriter getSpreadsheet(final int index) {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByIndex(index))
+			spreadsheet = this.accessor.getByIndex(index);
+		else {
+			final List<Table> tables = this.getTableList();
+			if (index < 0 || index >= tables.size())
+				throw new IndexOutOfBoundsException(String.format(
+						"No sheet at position %d", index));
+
+			final Table table = tables.get(index);
+			spreadsheet = this.createNew(table);
+			this.accessor.put(table.getTableName(), index, spreadsheet);
+		}
+		return spreadsheet;
+	}
+
+	/**
+	 * @return a list of internal tables
+	 */
+	/*>>> @RequiresNonNull("sfDocument")*/
+	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentDelegate<T> this*/) {
+		final List<Table> tables;
+		if (this.sfDocument.isNew())
+			tables = Collections.emptyList();
+		else
+			tables = this.sfDocument.getRawTableList();
+		return tables;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName)
+			throws CantInsertElementInSpreadsheetException {
+		Table table = this.sfDocument.getRawSheet(sheetName);
+		if (table != null)
+			throw new IllegalArgumentException(String.format("Sheet %s exists",
+					sheetName));
+
+		if (this.sfDocument.isNew()
+				&& this.sfDocument.getRawTableList().size() >= 1) {
+			table = this.sfDocument.getRawSheet(0);
+			table.setTableName(sheetName);
+		} else {
+			if (index == this.getSheetCount())
+				table = this.sfDocument.rawNewTable();
+			else
+				table = this.sfDocument.rawInsertSheet(index);
+			if (table == null)
+				throw new CantInsertElementInSpreadsheetException();
+		}
+		final TableTableElement tableElement = table.getOdfElement();
+		cleanEmptyTable(tableElement);
+
+		this.sfDocument.setInitialized();
+		final SpreadsheetWriter spreadsheet = this.createNew(table);
+		this.accessor.put(sheetName, index, spreadsheet);
+		return spreadsheet;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
+		final SpreadsheetWriter spreadsheet;
+		final List<Table> tables = this.getTableList();
+		final ListIterator<Table> tablesIterator = tables.listIterator();
+		Table table;
+		while (tablesIterator.hasNext()) {
+			final int index = tablesIterator.nextIndex();
+			table = tablesIterator.next();
+			if (table.getTableName().equals(sheetName)) {
+				spreadsheet = this.createNew(table);
+				this.accessor.put(sheetName, index, spreadsheet);
+				return spreadsheet;
+			}
+		}
+		throw new NoSuchElementException(String.format(
+				"No %s sheet in workbook", sheetName));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getSheetCount() {
+		return this.getTableList().size();
+	}
+	
 }

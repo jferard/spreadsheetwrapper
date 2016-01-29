@@ -31,7 +31,9 @@ import org.odftoolkit.simple.table.Table;
 import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
@@ -63,16 +65,8 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	 * @param delegateStyleHelper
 	 */
 	OdsSimpleodfWriter(final Table table, final OdsOdfdomStyleHelper styleHelper) {
-		super(new OdsSimpleodfReader(table, styleHelper));
 		this.styleHelper = styleHelper;
 		this.table = table;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(final int r, final int c) {
-		final Cell cell = this.getOrCreateSimpleCell(r, c);
-		return cell.getCellStyleName();
 	}
 
 	/** {@inheritDoc} */
@@ -235,4 +229,188 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 		cell.getStyleHandler().getStyleElementForWrite();
 		return cell;
 	}
+	
+	private static/*@Nullable*/Date getDate(final Cell cell) {
+		cell.getDateValue(); // HACK : throws IllegalArgumentException
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		final String dateStr = odfElement.getOfficeDateValueAttribute();
+		if (dateStr == null) {
+			return null;
+		}
+		final Date date = AbstractSpreadsheetInternalReader.parseString(dateStr,
+				"yyyy-MM-dd'T'HH:mm:ss");
+		return date;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+		if (!OdsConstants.BOOLEAN_TYPE.equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		return cell.getBooleanValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Object getCellContent(final int rowIndex,
+			final int colIndex) {
+		final Cell cell = this.getSimpleCell(rowIndex, colIndex);
+		if (cell == null)
+			return null;
+		final String formula = cell.getFormula();
+		if (formula != null && formula.charAt(0) == '=')
+			return formula.substring(1);
+
+		final String type = cell.getValueType();
+		Object result;
+
+		// from the doc
+		// The type can be "boolean", "currency", "date", "float", "percentage",
+		// "string" or "time".
+		if (type == null)
+			result = null;
+		else if (type.equals("boolean"))
+			result = cell.getBooleanValue();
+		else if (type.equals("date") || type.equals("time"))
+			result = OdsSimpleodfWriter.getDate(cell);
+		else if (type.equals("float") || type.equals("currency")
+				|| type.equals("percentage")) {
+			final double value = cell.getDoubleValue();
+			if (value == Math.rint(value))
+				result = Integer.valueOf((int) value);
+			else
+				result = Double.valueOf(value);
+		} else if (type.equals("string"))
+			result = cell.getStringValue();
+		else
+			throw new IllegalArgumentException(String.format(
+					"Unknown type of cell %s", type));
+		return result;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getCellCount(final int r) {
+		if (r < 0 || r >= this.table.getRowCount())
+			throw new IllegalArgumentException();
+
+		final Row row = this.table.getRowByIndex(r);
+		// return row.getCellCount();
+
+		for (int i = this.table.getColumnCount() - 1; i >= 0; i--) {
+			final Cell cell = row.getCellByIndex(i);
+			if (cell.getOdfElement().getChildNodes().getLength() != 0)
+				return i + 1;
+		}
+		return 0;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Date getDate(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+		final Date date = OdsSimpleodfWriter.getDate(cell);
+		if (date == null)
+			throw new IllegalArgumentException();
+		return date;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+		return cell.getDoubleValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getFormula(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+		final String formula = cell.getFormula();
+		if (formula == null || formula.charAt(0) != '=')
+			throw new IllegalArgumentException();
+
+		return formula.substring(1);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.table.getTableName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getRowCount() {
+		int rowCount = this.table.getRowCount();
+		if (rowCount == 1 && this.getCellCount(0) == 0)
+			rowCount = 0;
+
+		return rowCount;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		return this.styleHelper.getWrapperCellStyle(odfElement);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+
+		return cell.getStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getText(final int r, final int c) {
+		final Cell cell = this.getSimpleCell(r, c);
+		if (cell == null)
+			return null;
+		if (!OdsConstants.STRING_TYPE.equals(cell.getValueType()))
+			throw new IllegalArgumentException();
+		return cell.getStringValue();
+	}
+
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	protected/*@Nullable*/Cell getSimpleCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.table.getRowByIndex(r);
+			this.curR = r;
+		}
+		final Cell cell = this.curRow.getCellByIndex(c);
+		cell.getStyleHandler().getStyleElementForWrite();
+		return cell;
+	}	
 }

@@ -126,4 +126,20 @@ public class SpreadsheetReaderImpl implements
 	public String getText(int r, int c) {
 		return this.spreadsheetWriter.getText(r, c);
 	}
+
+	@Override
+	public int hashCode() {
+		return this.spreadsheetWriter.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof SpreadsheetReaderImpl))
+			return false;
+
+		SpreadsheetReaderImpl other = (SpreadsheetReaderImpl) obj;
+		return this.spreadsheetWriter.equals(other.spreadsheetWriter);
+	}
 }

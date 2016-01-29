@@ -35,6 +35,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
@@ -80,8 +81,8 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	@Override
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<Workbook> sfWorkbook) throws SpreadsheetException {
-		return new XlsPoiDocumentReader(sfWorkbook.getObject(),
-				this.styleHelper);
+		return new SpreadsheetDocumentReaderImpl(this.createWriter(sfWorkbook,
+				new Output()));
 	}
 
 	/** {@inheritDoc} */
