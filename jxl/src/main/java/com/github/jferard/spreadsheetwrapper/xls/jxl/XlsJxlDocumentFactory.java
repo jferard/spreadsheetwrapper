@@ -18,18 +18,13 @@
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import jxl.Workbook;
 import jxl.WorkbookSettings;
-import jxl.read.biff.BiffException;
 import jxl.write.WritableCellFormat;
-import jxl.write.WritableWorkbook;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
@@ -61,7 +56,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 	private final Logger logger;
 
 	/** helper for style */
-	private final XlsJxlStyleHelper stylehelper;
+	private final XlsJxlStyleHelper styleHelper;
 
 	/**
 	 * @param logger
@@ -71,7 +66,7 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			final XlsJxlStyleHelper styleHelper) {
 		super(XlsConstants.EXTENSION1);
 		this.logger = logger;
-		this.stylehelper = styleHelper;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
@@ -88,63 +83,27 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 		if (outputStream == null)
 			return this.create();
 
-		try {
-			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
-					outputStream, this.getWriteSettings());
-
-			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
-					writableWorkbook);
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
+		final JxlWorkbook jxlWorkbook = new JxlWritableWorkbook(outputStream);
+		return new XlsJxlDocumentWriter(this.logger, this.styleHelper,
+				jxlWorkbook);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
-		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream,
-					this.getReadSettings());
-			return new XlsJxlDocumentReader(workbook, this.stylehelper);
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		} catch (final BiffException e) {
-			throw new SpreadsheetException(e);
-		}
+		JxlWorkbook jxlWorkbook = new JxlReadableWorkbook(inputStream);   
+		return new XlsJxlDocumentWriter(this.logger, this.styleHelper, jxlWorkbook);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetDocumentWriter openForWrite(final File inputFile,
 			final File outputFile) throws SpreadsheetException {
-		if (outputFile == null)
-			throw new SpreadsheetException("Specify an output file");
-
-		try {
-			final Workbook workbook = Workbook.getWorkbook(inputFile,
-					this.getReadSettings());
-			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
-					outputFile, workbook, this.getWriteSettings());
-			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
-					writableWorkbook);
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		} catch (final BiffException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetDocumentWriter openForWrite(final InputStream inputStream) {
-		throw new UnsupportedOperationException();
+		final JxlWorkbook jxlWorkbook = new JxlWritableWorkbook(inputFile,
+				outputFile);
+		return new XlsJxlDocumentWriter(this.logger, this.styleHelper,
+				jxlWorkbook);
 	}
 
 	/** {@inheritDoc} */
@@ -153,35 +112,23 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 			final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
 			throws SpreadsheetException {
-		if (outputStream == null)
-			throw new SpreadsheetException("Specify an output stream");
-
-		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream,
-					this.getReadSettings());
-			final WritableWorkbook writableWorkbook = Workbook.createWorkbook(
-					outputStream, workbook, this.getWriteSettings());
-			return new XlsJxlDocumentWriter(this.logger, this.stylehelper,
-					writableWorkbook);
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		} catch (final BiffException e) {
-			throw new SpreadsheetException(e);
-		}
+		final JxlWorkbook jxlWorkbook = new JxlWritableWorkbook(inputStream,
+				outputStream);
+		return new XlsJxlDocumentWriter(this.logger, this.styleHelper,
+				jxlWorkbook);
 	}
 
-	private WorkbookSettings getReadSettings() {
+	private static WorkbookSettings getWriteSettings() {
+		final WorkbookSettings settings = getReadSettings();
+		settings.setWriteAccess("spreadsheetwrapper");
+		return settings;
+	}
+
+	private static WorkbookSettings getReadSettings() {
 		final WorkbookSettings settings = new WorkbookSettings();
 		settings.setLocale(Locale.US);
 		settings.setEncoding("windows-1252");
 		return settings;
 	}
 
-	private WorkbookSettings getWriteSettings() {
-		final WorkbookSettings settings = this.getReadSettings();
-		settings.setWriteAccess("spreadsheetwrapper");
-		return settings;
-	}
 }

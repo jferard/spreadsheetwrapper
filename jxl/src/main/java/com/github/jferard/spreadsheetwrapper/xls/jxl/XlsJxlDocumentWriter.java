@@ -25,9 +25,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
+import jxl.Sheet;
 import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 
 import com.github.jferard.spreadsheetwrapper.Accessor;
@@ -50,22 +50,22 @@ implements SpreadsheetDocumentWriter {
 	/** helper for style */
 	private final XlsJxlStyleHelper styleHelper;
 
-	/** *internal* workbook */
-	private final WritableWorkbook writableWorkbook;
+	/** union for *internal* workbook */
+	private final JxlWorkbook jxlWorkbook;
 
 	/**
 	 * @param workbook
 	 *            *internal* workbook
 	 */
 	XlsJxlDocumentWriter(final Logger logger,
-			final XlsJxlStyleHelper styleHelper, final WritableWorkbook workbook) {
+			final XlsJxlStyleHelper styleHelper, final JxlWorkbook writableWorkbook) {
 		super(logger, new Output());
 		this.styleHelper = styleHelper;
-		this.writableWorkbook = workbook;
+		this.jxlWorkbook = writableWorkbook;
 		this.accessor = new Accessor<SpreadsheetWriter>();
-		final WritableSheet[] sheets = this.writableWorkbook.getSheets();
+		final Sheet[] sheets = this.jxlWorkbook.getSheets();
 		for (int n = 0; n < sheets.length; n++) {
-			final WritableSheet sheet = sheets[n];
+			final Sheet sheet = sheets[n];
 			final String name = sheet.getName();
 			final SpreadsheetWriter reader = new XlsJxlWriter(sheet, // NOPMD by
 					// Julien
@@ -74,25 +74,21 @@ implements SpreadsheetDocumentWriter {
 					// 16:09
 					styleHelper);
 			this.accessor.put(name, n, reader);
-		}
+  		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter addSheet(final int index, final String sheetName) {
-		if (index < 0 || index > this.writableWorkbook.getNumberOfSheets())
+		if (index < 0 || index > this.jxlWorkbook.getNumberOfSheets())
 			throw new IndexOutOfBoundsException();
-		if (this.writableWorkbook.getSheet(sheetName) != null)
-			throw new IllegalArgumentException();
-		final WritableSheet createSheet = this.writableWorkbook.createSheet(
-				sheetName, index);
-		return new XlsJxlWriter(createSheet, this.styleHelper);
+		return this.addSheetWithCheckedIndex(index, sheetName);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public SpreadsheetWriter addSheet(final String sheetName) {
-		return this.addSheet(this.writableWorkbook.getNumberOfSheets(),
+		return this.addSheet(this.jxlWorkbook.getNumberOfSheets(),
 				sheetName);
 	}
 
@@ -102,7 +98,7 @@ implements SpreadsheetDocumentWriter {
 	@Override
 	public void close() throws SpreadsheetException {
 		try {
-			this.writableWorkbook.close();
+			this.jxlWorkbook.close();
 		} catch (final WriteException e) {
 			throw new SpreadsheetException(e);
 		} catch (final IOException e) {
@@ -136,13 +132,13 @@ implements SpreadsheetDocumentWriter {
 	/** */
 	@Override
 	public int getSheetCount() {
-		return this.writableWorkbook.getNumberOfSheets();
+		return this.jxlWorkbook.getNumberOfSheets();
 	}
 
 	/** */
 	@Override
 	public List<String> getSheetNames() {
-		return new ArrayList<String>(Arrays.asList(this.writableWorkbook
+		return new ArrayList<String>(Arrays.asList(this.jxlWorkbook
 				.getSheetNames()));
 	}
 
@@ -153,12 +149,12 @@ implements SpreadsheetDocumentWriter {
 		if (this.accessor.hasByIndex(index))
 			spreadsheet = this.accessor.getByIndex(index);
 		else {
-			final WritableSheet[] sheets = this.writableWorkbook.getSheets();
+			final Sheet[] sheets = this.jxlWorkbook.getSheets();
 			if (index < 0 || index >= sheets.length)
 				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
-			final WritableSheet sheet = sheets[index];
+			final Sheet sheet = sheets[index];
 			spreadsheet = new XlsJxlWriter(sheet, this.styleHelper);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
@@ -181,7 +177,7 @@ implements SpreadsheetDocumentWriter {
 	@Override
 	public void save() throws SpreadsheetException {
 		try {
-			this.writableWorkbook.write();
+			this.jxlWorkbook.write();
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -207,9 +203,9 @@ implements SpreadsheetDocumentWriter {
 			final String sheetName) {
 		final SpreadsheetWriter spreadsheet;
 
-		final WritableSheet[] sheets = this.writableWorkbook.getSheets();
+		final Sheet[] sheets = this.jxlWorkbook.getSheets();
 		for (int n = 0; n < sheets.length; n++) {
-			final WritableSheet sheet = sheets[n];
+			final Sheet sheet = sheets[n];
 
 			if (sheet.getName().equals(sheetName)) {
 				spreadsheet = new XlsJxlWriter(sheet, this.styleHelper); // NOPMD
@@ -223,6 +219,44 @@ implements SpreadsheetDocumentWriter {
 			}
 		}
 		throw new NoSuchElementException(String.format(
-				"No %s sheet in writableWorkbook", sheetName));
+				"No %s sheet in jxlWorkbook", sheetName));
 	}
+
+	@Override
+	protected SpreadsheetWriter addSheetWithCheckedIndex(int index,
+			String sheetName) {
+		if (this.jxlWorkbook.getSheet(sheetName) != null)
+			throw new IllegalArgumentException();
+		final WritableSheet createSheet = this.jxlWorkbook.createSheet(
+				sheetName, index);
+		return new XlsJxlWriter(createSheet, this.styleHelper);
+	}
+
+	@Override
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(
+			String sheetName) throws NoSuchElementException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+//	private SpreadsheetReader findSpreadsheet(final String sheetName) {
+//		final SpreadsheetReader spreadsheet;
+//
+//		final Sheet[] sheets = this.workbook.getSheets();
+//		for (int n = 0; n < sheets.length; n++) {
+//			final Sheet sheet = sheets[n];
+//
+//			if (sheet.getName().equals(sheetName)) {
+//				spreadsheet = new XlsJxlReader(sheet, this.styleHelper); // NOPMD
+//				// by
+//				// Julien
+//				// on
+//				// 03/09/15 21:57
+//				this.accessor.put(sheetName, n, spreadsheet);
+//				return spreadsheet;
+//			}
+//		}
+//		throw new NoSuchElementException(String.format(
+//				"No %s sheet in workbook", sheetName));
+//	}
 }

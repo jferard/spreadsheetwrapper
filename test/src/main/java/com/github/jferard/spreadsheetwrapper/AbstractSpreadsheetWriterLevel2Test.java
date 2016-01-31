@@ -115,6 +115,7 @@ public abstract class AbstractSpreadsheetWriterLevel2Test extends
 		final int r = 5;
 		final int c = 6;
 		try {
+			Assert.assertEquals(62.8107097306, this.sheetWriter.getCellContent(r, c));
 			this.sheetWriter.setBoolean(r, c, true);
 			Assert.assertEquals(true, this.sheetWriter.getCellContent(r, c));
 		} catch (final IllegalArgumentException e) {

@@ -19,12 +19,15 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleods;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.simpleods.BorderStyle;
 import org.simpleods.OdsFile;
+import org.simpleods.SimpleOdsException;
 import org.simpleods.Table;
 import org.simpleods.TableStyle;
 import org.simpleods.TextStyle;
@@ -48,34 +51,17 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 /**
  */
 public class OdsSimpleodsDocumentWriter extends
-AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
-	/** class for delegation */
-	private final class OdsSimpleodsDocumentWriterDelegate extends
-	AbstractOdsSimpleodsDocumentDelegate<SpreadsheetWriter> {
-
-		OdsSimpleodsDocumentWriterDelegate(final OdsFile file) {
-			super(file);
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsSimpleodsDocumentWriterDelegate this, */final Table table) {
-			return new OdsSimpleodsWriter(table);
-		}
+		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
+	
+	private SpreadsheetWriter createNew(final Table table) {
+		return new OdsSimpleodsWriter(table);
 	}
-
-	/** for delegation */
-	private final AbstractOdsSimpleodsDocumentDelegate<SpreadsheetWriter> documentDelegate;
 
 	/** *internal* workbook */
 	private final OdsFile file;
 
 	/** logger */
 	private final Logger logger;
-
-	/** for delegation */
-	private final OdsSimpleodsDocumentReader reader;
 
 	/**
 	 * @param logger
@@ -88,34 +74,8 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public OdsSimpleodsDocumentWriter(final Logger logger, final OdsFile file,
 			final Output output) {
 		super(logger, output);
-		this.reader = new OdsSimpleodsDocumentReader(file);
 		this.logger = logger;
 		this.file = file;
-		this.documentDelegate = new OdsSimpleodsDocumentWriterDelegate(file);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws CantInsertElementInSpreadsheetException
-	 * @throws IndexOutOfBoundsException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(index, sheetName);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @throws CantInsertElementInSpreadsheetException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -127,13 +87,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public WrapperCellStyle getCellStyle(final String styleName) {
-		return this.reader.getCellStyle(styleName);
 	}
 
 	/** {@inheritDoc} */
@@ -147,30 +100,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
 			throws SpreadsheetException {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getSheetCount() {
-		return this.reader.getSheetCount();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getSheetNames() {
-		return this.reader.getSheetNames();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentDelegate.getSpreadsheet(index);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -231,5 +160,106 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 						BorderStyle.POSITION_ALL);
 		}
 		return true;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** */
+	@Override
+	public int getSheetCount() {
+		return this.file.lastTableNumber();
+	}
+
+	/** */
+	@Override
+	public List<String> getSheetNames() {
+		final int count = this.getSheetCount();
+		final List<String> sheetNames = new ArrayList<String>(count);
+		try {
+			for (int i = 0; i < count; i++)
+				sheetNames.add(this.file.getTableName(i));
+		} catch (final SimpleOdsException e) {
+			throw new AssertionError(e);
+		}
+		return sheetNames;
+	}
+
+	/**
+	 * @param index
+	 *            index of the sheet
+	 * @return the reader/writer
+	 */
+	public SpreadsheetWriter getSpreadsheet(final int index) {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByIndex(index))
+			spreadsheet = this.accessor.getByIndex(index);
+		else {
+			final int count = this.getSheetCount();
+			if (index < 0 || index >= count)
+				throw new NoSuchElementException(String.format(
+						"No sheet at position %d", index));
+
+			try {
+				final String name = this.file.getTableName(index);
+				final Table table = this.getTable(index);
+				spreadsheet = this.createNew(table);
+				this.accessor.put(name, index, spreadsheet);
+			} catch (final SimpleOdsException e) {
+				throw new AssertionError(String.format(
+						"Can't reach sheet at position %d", index), e);
+			}
+		}
+		return spreadsheet;
+	}
+
+	private Table getTable(
+			/*>>> @UnknownInitialization AbstractOdsSimpleodsDocumentDelegate<T> this, */final int index) {
+		if (this.file == null)
+			throw new IllegalStateException();
+
+		return (Table) this.file.getContent().getTableQueue().get(index);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName)
+			throws CantInsertElementInSpreadsheetException {
+		if (index != this.getSheetCount())
+			throw new UnsupportedOperationException();
+
+		final int indexForSheetName = this.file.getTableNumber(sheetName);
+		if (indexForSheetName != -1)
+			throw new IllegalArgumentException(String.format("Sheet %s exists",
+					sheetName));
+
+		// at the end
+		final SpreadsheetWriter spreadsheet;
+		try {
+			this.file.addTable(sheetName);
+			final Table table = this.getTable(index);
+			spreadsheet = this.createNew(table);
+			this.accessor.put(sheetName, index, spreadsheet);
+		} catch (final SimpleOdsException e) {
+			throw new CantInsertElementInSpreadsheetException(e);
+		}
+		return spreadsheet;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
+		final int index = this.file.getTableNumber(sheetName);
+		if (index == -1)
+			throw new NoSuchElementException(String.format(
+					"No %s sheet in workbook", sheetName));
+
+		final Table table = this.getTable(index);
+		final SpreadsheetWriter spreadsheet = this.createNew(table);
+		this.accessor.put(sheetName, index, spreadsheet);
+		return spreadsheet;
 	}
 }

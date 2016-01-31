@@ -23,7 +23,15 @@ import java.io.PrintStream;
 import java.util.Date;
 import java.util.List;
 
+import jxl.BooleanCell;
 import jxl.Cell;
+import jxl.CellType;
+import jxl.DateCell;
+import jxl.FormulaCell;
+import jxl.LabelCell;
+import jxl.NumberCell;
+import jxl.Sheet;
+import jxl.biff.formula.FormulaException;
 import jxl.format.CellFormat;
 import jxl.write.DateTime;
 import jxl.write.Formula;
@@ -46,6 +54,13 @@ import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
 
+	private static Date getDate(final Cell cell) {
+		if (cell instanceof DateCell)
+			return ((DateCell) cell).getDate();
+
+		throw new IllegalArgumentException();
+	}
+
 	/** current row index, -1 if none */
 	private int curR;
 
@@ -53,7 +68,7 @@ SpreadsheetWriter {
 	private Cell /*@Nullable*/[] curRow;
 
 	/** *internal* sheet */
-	private final WritableSheet sheet;
+	private final Sheet sheet;
 
 	/** helper for style */
 	private final XlsJxlStyleHelper styleHelper;
@@ -62,9 +77,8 @@ SpreadsheetWriter {
 	 * @param sheet
 	 *            *internal* sheet
 	 */
-	XlsJxlWriter(final WritableSheet sheet,
+	XlsJxlWriter(final Sheet sheet,
 			final XlsJxlStyleHelper styleHelper) {
-		super(new XlsJxlReader(sheet, styleHelper));
 		this.sheet = sheet;
 		this.styleHelper = styleHelper;
 		this.curR = -1;
@@ -73,35 +87,186 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public/*@Nullable*/String getStyleName(final int r, final int c) {
-		return this.reader.getStyleName(r, c);
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (cell instanceof BooleanCell)
+			return ((BooleanCell) cell).getValue();
+
+		throw new IllegalArgumentException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Object getCellContent(final int r, final int c) { // NOPMD
+		// by
+		// Julien
+		// on
+		// 22/11/15
+		// 06:30
+		final/*@Nullable*/Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (cell instanceof FormulaCell) // read
+			try {
+				return ((FormulaCell) cell).getFormula();
+			} catch (final FormulaException e) {
+				throw new IllegalArgumentException(e);
+			}
+		else if (cell instanceof Formula) // write
+			return ((Formula) cell).getContents();
+
+		final CellType type = cell.getType();
+		Object result;
+
+		if (type == CellType.BOOLEAN)
+			result = this.getBoolean(r, c);
+		else if (type == CellType.DATE)
+			result = this.getDate(r, c);
+		else if (type == CellType.EMPTY)
+			result = null;
+		else if (type == CellType.ERROR)
+			result = null;
+		else if (type == CellType.LABEL)
+			result = this.getText(r, c);
+		else if (type == CellType.NUMBER) {
+			final double value = ((NumberCell) cell).getValue();
+			if (value == Math.rint(value))
+				result = Integer.valueOf((int) value);
+			else
+				result = Double.valueOf(value);
+		} else
+			throw new IllegalArgumentException(String.format(
+					"There is not support for this type of cell %s", type));
+		return result;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getCellCount(final int r) {
+		if (r >= this.sheet.getRows())
+			throw new IllegalArgumentException(); 
+		
+		return this.sheet.getRow(r).length;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Date getDate(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		return XlsJxlWriter.getDate(cell);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (cell instanceof NumberCell)
+			return ((NumberCell) cell).getValue();
+
+		throw new IllegalArgumentException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getFormula(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		String formula;
+		if (cell instanceof FormulaCell) // read
+			try {
+				formula = ((FormulaCell) cell).getFormula(); // NOPMD by Julien
+				// on 22/11/15
+				// 06:28
+			} catch (final FormulaException e) {
+				throw new IllegalArgumentException(e);
+			}
+		else if (cell instanceof Formula) // write
+			formula = ((Formula) cell).getContents();
+		else
+			throw new IllegalArgumentException(cell.toString());
+
+		return formula;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.sheet.getName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getRowCount() {
+		return this.sheet.getRows();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		final CellFormat cellFormat = cell.getCellFormat();
+		return this.styleHelper.toWrapperCellStyle(cellFormat);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getStyleName(final int r, final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getText(final int r, final int c) {
+		final Cell cell = this.getJxlCell(r, c);
+		if (cell == null)
+			return null;
+
+		if (!(cell instanceof LabelCell))
+			throw new IllegalArgumentException(cell.toString());
+
+		return ((LabelCell) cell).getString();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void insertCol(final int c) {
-		this.sheet.insertColumn(c);
+		((WritableSheet) this.sheet).insertColumn(c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void insertRow(final int r) {
-		this.sheet.insertRow(r);
+		((WritableSheet) this.sheet).insertRow(r);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
 		final List</*@Nullable*/Object> ret = this.getColContents(c);
-		this.sheet.removeColumn(c);
+		((WritableSheet) this.sheet).removeColumn(c);
 		return ret;
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
 		final List</*@Nullable*/Object> ret = this.getRowContents(r);
-		this.sheet.removeRow(r);
+		((WritableSheet) this.sheet).removeRow(r);
 		return ret;
 	}
 
@@ -203,7 +368,9 @@ SpreadsheetWriter {
 			final CellFormat oldFormat = oldCell.getCellFormat();
 			if (oldFormat != null)
 				cell.setCellFormat(oldFormat);
-			this.sheet.addCell(cell);
+			((WritableSheet) this.sheet).addCell(cell);
+			this.curR = -1; 
+			this.curRow = null; 
 		} catch (final RowsExceededException e) {
 			throw new IllegalArgumentException(e);
 		} catch (final WriteException e) {
@@ -234,13 +401,42 @@ SpreadsheetWriter {
 	}
 
 	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	private/*@Nullable*/Cell getJxlCell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+
+		Cell cell;
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.sheet.getRow(r);
+			this.curR = r;
+		}
+		if (c < this.curRow.length)
+			cell = this.curRow[c];
+		else {
+			cell = this.sheet.getCell(c, r);
+			this.curRow = this.sheet.getRow(r);
+		}
+		return cell;
+	}
+
+	/**
 	 * @param r
 	 *            row index
 	 * @param c
 	 *            column index
 	 * @return the *internal* cell
 	 */
-	protected WritableCell getOrCreateJxlCell(final int r, final int c) {
+	private WritableCell getOrCreateJxlCell(final int r, final int c) {
 		if (r < 0 || c < 0)
 			throw new IllegalArgumentException();
 		if (r >= XlsConstants.MAX_ROWS_PER_SHEET
@@ -255,9 +451,10 @@ SpreadsheetWriter {
 		if (c < this.curRow.length)
 			cell = (WritableCell) this.curRow[c];
 		else {
-			cell = this.sheet.getWritableCell(c, r);
+			cell = ((WritableSheet) this.sheet).getWritableCell(c, r);
 			this.curRow = this.sheet.getRow(r);
 		}
 		return cell;
 	}
+	
 }
