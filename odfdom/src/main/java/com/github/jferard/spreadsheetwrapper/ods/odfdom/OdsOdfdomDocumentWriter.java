@@ -44,6 +44,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>>

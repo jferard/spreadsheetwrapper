@@ -190,7 +190,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 			String message = e.getMessage();
 			if (message == null)
 				message = "???";
-			Logger.getLogger(AbstractSpreadsheetInternalReader.class.getName()).log(
+			Logger.getLogger(AbstractSpreadsheetWriter.class.getName()).log(
 					Level.SEVERE, message, e);
 			simpleDate = null;
 		}

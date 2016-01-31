@@ -20,7 +20,9 @@ package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +34,12 @@ import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetExcep
 import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
@@ -47,38 +52,14 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
-	/** delegation sfSpreadSheet with definition of createNew */
-	private final class OdsJOpenDocumentWriterDelegate extends
-	AbstractOdsJOpenDocumentDelegate<SpreadsheetWriter> {
-		/** the style helper */
-		private final OdsJOpenStyleHelper styleHelper;
-
-		/**
-		 * @param styleHelper
-		 * 			the style helper
-		 * @param sfSpreadSheet
-		 * 			the *internal* spreadsheet, stateful version
-		 */
-		OdsJOpenDocumentWriterDelegate(final OdsJOpenStyleHelper styleHelper,
-				final OdsJOpenStatefulDocument sfSpreadSheet) {
-			super(sfSpreadSheet);
-			this.styleHelper = styleHelper;
-		}
-
-		/** {@inheritDoc} */
-		@Override
-		protected SpreadsheetWriter createNew(
+		private SpreadsheetWriter createNew(
 				/*>>> @UnknownInitialization OdsJOpenDocumentWriterDelegate this, */final Sheet sheet) {
 			return new OdsJOpenWriter(this.styleHelper, sheet);
-		}
 	}
 
-	/** delegation sfSpreadSheet */
-	private final AbstractOdsJOpenDocumentDelegate<SpreadsheetWriter> documentDelegate;
 	/** the logger */
 	private final Logger logger;
-	/** delegation reader */
-	private final OdsJOpenDocumentReader reader;
+
 
 	/** the *internal* workbook */
 	private final OdsJOpenStatefulDocument sfSpreadSheet;
@@ -105,25 +86,8 @@ implements SpreadsheetDocumentWriter {
 					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
-		this.reader = new OdsJOpenDocumentReader(styleHelper, sfSpreadSheet);
 		this.logger = logger;
 		this.sfSpreadSheet = sfSpreadSheet;
-		this.documentDelegate = new OdsJOpenDocumentWriterDelegate(styleHelper, sfSpreadSheet);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(index, sheetName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.documentDelegate.addSheet(sheetName);
 	}
 
 	/** {@inheritDoc} */
@@ -135,13 +99,6 @@ implements SpreadsheetDocumentWriter {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-		this.reader.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public WrapperCellStyle getCellStyle(final String styleName) {
-		return this.reader.getCellStyle(styleName);
 	}
 
 	/** {@inheritDoc} */
@@ -155,30 +112,6 @@ implements SpreadsheetDocumentWriter {
 	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
 			throws SpreadsheetException {
 		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getSheetCount() {
-		return this.reader.getSheetCount();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getSheetNames() {
-		return this.reader.getSheetNames();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final int index) {
-		return this.documentDelegate.getSpreadsheet(index);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final String sheetName) {
-		return this.documentDelegate.getSpreadsheet(sheetName);
 	}
 
 	/** */
@@ -207,5 +140,124 @@ implements SpreadsheetDocumentWriter {
 		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
 		this.styleHelper.addStyle(stylesDoc, styleName, wrapperCellStyle);
 		return true;
+	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** */
+	@Override
+	public List<String> getSheetNames() {
+		final List<String> sheetNames;
+		final int sheetCount = this.getSheetCount();
+		sheetNames = new ArrayList<String>(sheetCount);
+		for (int s = 0; s < sheetCount; s++)
+			sheetNames
+			.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
+		return sheetNames;
+	}
+
+	/**
+	 * @param sheetName
+	 *            the name of the sheet to find
+	 * @throws NoSuchElementException
+	 *             if the workbook does not contains any sheet of this name
+	 * @return the reader/writer
+	 */
+	public SpreadsheetWriter getSpreadsheet(final String sheetName)
+			throws NoSuchElementException {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByName(sheetName))
+			spreadsheet = this.accessor.getByName(sheetName);
+		else
+			spreadsheet = this
+			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+
+		return spreadsheet;
+	}
+
+	private static int getSheetCount(
+			final OdsJOpenStatefulDocument sfSpreadSheet) {
+		int count;
+		if (sfSpreadSheet.isNew())
+			count = 0;
+		else
+			count = sfSpreadSheet.getRawSheetCount();
+		return count;
+	}
+
+	/**
+	 * @param index
+	 *            index of the sheet
+	 * @return the reader/writer
+	 */
+	public SpreadsheetWriter getSpreadsheet(final int index) {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByIndex(index))
+			spreadsheet = this.accessor.getByIndex(index);
+		else {
+			if (this.sfSpreadSheet.isNew() || index < 0
+					|| index >= this.sfSpreadSheet.getRawSheetCount())
+				throw new IndexOutOfBoundsException(String.format(
+						"No sheet at position %d", index));
+
+			final Sheet sheet = this.sfSpreadSheet.getRawSheet(index);
+			spreadsheet = this.createNew(sheet);
+			this.accessor.put(sheet.getName(), index, spreadsheet);
+		}
+		return spreadsheet;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName) {
+		Sheet sheet;
+		if (this.sfSpreadSheet.isNew()
+				&& this.sfSpreadSheet.getRawSheetCount() == 1) {
+			sheet = this.sfSpreadSheet.getRawSheet(0);
+			sheet.setName(sheetName);
+		} else { // ok
+			sheet = this.sfSpreadSheet.getRawSheet(sheetName);
+			if (sheet != null)
+				throw new IllegalArgumentException(String.format(
+						"Sheet %s exists", sheetName));
+
+			sheet = this.sfSpreadSheet.addRawSheet(index, sheetName);
+		}
+		this.sfSpreadSheet.setInitialized();
+		final SpreadsheetWriter spreadsheet = this.createNew(sheet);
+		this.accessor.put(sheetName, index, spreadsheet);
+
+		return spreadsheet;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
+		if (this.sfSpreadSheet.isNew())
+			throw new NoSuchElementException(String.format(
+					"No %s sheet in workbook", sheetName));
+
+		for (int s = 0; s < this.sfSpreadSheet.getRawSheetCount(); s++) {
+			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
+			final String name = sheet.getName();
+			if (name.equals(sheetName)) {
+				final SpreadsheetWriter spreadsheet = this.createNew(sheet);
+				this.accessor.put(sheetName, s, spreadsheet);
+				return spreadsheet;
+			}
+		}
+
+		throw new NoSuchElementException(String.format(
+				"No %s sheet in workbook", sheetName));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getSheetCount() {
+		return getSheetCount(this.sfSpreadSheet);
 	}
 }

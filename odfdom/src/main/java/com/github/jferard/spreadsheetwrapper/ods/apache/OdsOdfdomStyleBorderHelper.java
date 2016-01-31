@@ -1,4 +1,4 @@
-package com.github.jferard.spreadsheetwrapper.ods.odfdom;
+package com.github.jferard.spreadsheetwrapper.ods.apache;
 
 import java.util.HashMap;
 import java.util.Map;

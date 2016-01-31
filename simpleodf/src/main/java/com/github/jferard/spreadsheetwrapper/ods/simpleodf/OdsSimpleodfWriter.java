@@ -31,10 +31,10 @@ import org.odftoolkit.simple.table.Table;
 import org.w3c.dom.Node;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsApacheUtil;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -237,9 +237,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 		if (dateStr == null) {
 			return null;
 		}
-		final Date date = AbstractSpreadsheetInternalReader.parseString(dateStr,
-				"yyyy-MM-dd'T'HH:mm:ss");
-		return date;
+		return OdsApacheUtil.parseString(dateStr);
 	}
 
 	/** {@inheritDoc} */

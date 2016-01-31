@@ -33,6 +33,7 @@ import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 

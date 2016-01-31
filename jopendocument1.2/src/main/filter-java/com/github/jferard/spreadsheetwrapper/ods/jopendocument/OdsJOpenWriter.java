@@ -17,6 +17,7 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -54,17 +55,8 @@ SpreadsheetWriter {
 	 * @param styleHelper the style helper
 	 */
 	OdsJOpenWriter(final OdsJOpenStyleHelper styleHelper, final Sheet sheet) {
-		super(new OdsJOpenReader(styleHelper, sheet));
 		this.styleHelper = styleHelper;
 		this.sheet = sheet;
-
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String getStyleName(final int r, final int c) {
-		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		return cell.getStyleName();
 	}
 
 	/** {@inheritDoc} */
@@ -185,4 +177,178 @@ SpreadsheetWriter {
 		}
 		return this.sheet.getCellAt(c, r);
 	}
-}
+	
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String type = this.getTypeName(cell);
+		if (!OdsConstants.BOOLEAN_TYPE.equals(type))
+			throw new IllegalArgumentException();
+		return (Boolean) cell.getValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Object getCellContent(final int rowIndex,
+			final int colIndex) {
+		final MutableCell<SpreadSheet> cell = this.getCell(rowIndex, colIndex);
+		if (cell == null)
+			return null;
+		final String formula = ${jopendocument.util.cls}.getFormula(cell);
+		if (formula != null && formula.charAt(0) == '=')
+			return formula.substring(1);
+
+		Object value = cell.getValue();
+		if (value instanceof BigDecimal) {
+			final BigDecimal decimal = (BigDecimal) value;
+			try {
+				value = Integer.valueOf(decimal.intValueExact());
+			} catch (final ArithmeticException e) {
+				value = Double.valueOf(decimal.doubleValue());
+			}
+		}
+		return value;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getCellCount(final int r) {
+		if (r >= this.getRowCount())
+			throw new IllegalArgumentException();
+		
+		return this.getCellCountUnsafe(r);
+	}
+		
+	private int getCellCountUnsafe(final int r) {
+		final int columnCount = this.sheet.getColumnCount();
+		for (int c = columnCount - 1; c >= 0; c--) {
+			final MutableCell<SpreadSheet> cell = this.sheet.getCellAt(c, r);
+			if (cell != null && cell.getValue() != null
+					&& !cell.getTextValue().isEmpty())
+				return c + 1;
+		}
+		return 0;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Date getDate(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String type = this.getTypeName(cell);
+		if (!OdsConstants.DATE_TYPE.equals(type)
+				&& !OdsConstants.TIME_TYPE.equals(type))
+			throw new IllegalArgumentException();
+		return (Date) cell.getValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/Double getDouble(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String type = this.getTypeName(cell);
+		if (!OdsConstants.FLOAT_TYPE.equals(type))
+			throw new IllegalArgumentException();
+		final Object value = cell.getValue();
+		if (!(value instanceof BigDecimal))
+			throw new IllegalStateException();
+		final BigDecimal decimal = (BigDecimal) value;
+		return decimal.doubleValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getFormula(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String formula = ${jopendocument.util.cls}.getFormula(cell);
+		if (formula == null || formula.charAt(0) != '=')
+			throw new IllegalArgumentException();
+
+		return formula.substring(1);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String getName() {
+		return this.sheet.getName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getRowCount() {
+		int rowCount = this.sheet.getRowCount();
+		if (rowCount == 1 && this.getCellCountUnsafe(0) == 0)
+			rowCount = 0;
+		return rowCount;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+		
+		return this.styleHelper.getWrapperCellStyle(cell);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getStyleName(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		return cell.getStyleName();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public/*@Nullable*/String getText(final int r, final int c) {
+		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
+		if (cell == null)
+			return null;
+
+		final String type = this.getTypeName(cell);
+		if (!OdsConstants.STRING_TYPE.equals(type))
+			throw new IllegalArgumentException();
+		return (String) cell.getValue();
+	}
+
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return
+	 * @return the cell
+	 */
+	private/*@Nullable*/MutableCell<SpreadSheet> getCell(final int r,
+			final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= this.getRowCount() || c >= this.getCellCount(r))
+			return null;
+
+		return this.sheet.getCellAt(c, r);
+	}
+
+	private String getTypeName(final MutableCell<SpreadSheet> cell) {
+		final ODValueType valueType = cell.getValueType();
+		return valueType == null ? OdsConstants.STRING_TYPE : valueType
+				.getName();
+	}}

@@ -34,9 +34,10 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetInternalReader;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsApacheUtil;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -45,20 +46,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  */
 class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	/** format for dates */
-	private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss";
-
-	private static/*@Nullable*/Date getDate(final OdfTableCell cell) {
-		cell.getDateValue(); // HACK : throws IllegalArgumentException
-		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		final String dateStr = odfElement.getOfficeDateValueAttribute();
-		if (dateStr == null) {
-			return null;
-		}
-		final Date date = AbstractSpreadsheetInternalReader.parseString(
-				dateStr, DATE_FORMAT);
-		return date;
-	}
-
 	private static int getRowCellCount(final OdfTableRow row) {
 		final TableTableRowElement rowElement = row.getOdfElement();
 		return getRowElementCellCount(rowElement);
@@ -442,5 +429,15 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 			this.curR = r;
 		}
 		return this.curRow.getCellByIndex(c);
+	}
+
+	public static/*@Nullable*/Date getDate(final OdfTableCell cell) {
+		cell.getDateValue(); // HACK : throws IllegalArgumentException
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		final String dateStr = odfElement.getOfficeDateValueAttribute();
+		if (dateStr == null) {
+			return null;
+		}
+		return OdsApacheUtil.parseString(dateStr);
 	}
 }

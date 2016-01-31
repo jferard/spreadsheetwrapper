@@ -31,8 +31,9 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.Stateful;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
-import com.github.jferard.spreadsheetwrapper.ods.odfdom.OdsOdfdomStyleHelper;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -75,8 +76,7 @@ public class OdsSimpleodfDocumentFactory extends
 	protected SpreadsheetDocumentReader createReader(
 			final Stateful<SpreadsheetDocument> sfDocument)
 			throws SpreadsheetException {
-		return new OdsSimpleodfDocumentReader(this.styleHelper,
-				new OdsSimpleodfStatefulDocument(sfDocument));
+		return new SpreadsheetDocumentReaderImpl(this.createWriter(sfDocument, new Output()));
 	}
 
 	/** {@inheritDoc} */
