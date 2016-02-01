@@ -13,7 +13,7 @@ import jxl.write.WritableSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
-public class JxlReadableWorkbook extends JxlWorkbook {
+public class JxlReadableWorkbook implements JxlWorkbook {
 	private final Workbook workbook;
 
 	public JxlReadableWorkbook(InputStream inputStream) 
@@ -30,36 +30,44 @@ public class JxlReadableWorkbook extends JxlWorkbook {
 		}
 	}
 
+	
+	/** {@inheritDoc} */
 	@Override
 	public int getNumberOfSheets() {
 		return this.workbook.getNumberOfSheets();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Sheet[] getSheets() {
 		return this.workbook.getSheets();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() {
 		this.workbook.close();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSheetNames() {
 		return this.workbook.getSheetNames();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void write() {
 		throw new UnsupportedOperationException();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Sheet getSheet(String sheetName) {
 		return this.workbook.getSheet(sheetName);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WritableSheet createSheet(String sheetName, int index) {
 		throw new UnsupportedOperationException();

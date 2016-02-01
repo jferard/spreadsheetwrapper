@@ -29,13 +29,37 @@ import java.util.logging.Logger;
 import com.github.jferard.spreadsheetwrapper.DataWrapper;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
+/**
+ * @author Julien
+ *
+ */
 public class ResultSetDataWrapper implements DataWrapper {
+	/**
+	 * column count of the ResultSet.
+	 */
 	private int columnCount;
+	/**
+	 * the logger
+	 */
 	private final Logger logger;
+	/**
+	 * maximum number of lines to be written 
+	 */
 	private final int max;
+	/**
+	 * metadata of the ResultSet.
+	 */
 	private ResultSetMetaData metadata;
+	/**
+	 * the ResultSet.
+	 */
 	private final ResultSet resultSet;
 
+	/**
+	 * @param logger the logger
+	 * @param rs the ResultSet
+	 * @param max maximum number of lines to be written
+	 */
 	public ResultSetDataWrapper(final Logger logger, final ResultSet rs,
 			final int max) {
 		this.logger = logger;
@@ -49,7 +73,7 @@ public class ResultSetDataWrapper implements DataWrapper {
 		}
 	}
 
-	/* {@inheritDoc} */
+	/** {@inheritDoc} */
 	@Override
 	public boolean writeDataTo(final SpreadsheetWriter writer, final int r,
 			final int c) {

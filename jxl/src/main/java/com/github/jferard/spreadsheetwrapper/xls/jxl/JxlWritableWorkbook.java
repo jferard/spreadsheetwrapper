@@ -17,7 +17,7 @@ import jxl.write.WriteException;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
-public class JxlWritableWorkbook extends JxlWorkbook {
+public class JxlWritableWorkbook implements JxlWorkbook {
 
 	private WritableWorkbook writableWorkbook;
 
@@ -70,36 +70,43 @@ public class JxlWritableWorkbook extends JxlWorkbook {
 		}
 	}
 	
+	/** {@inheritDoc} */
 	@Override
 	public int getNumberOfSheets() {
 		return this.writableWorkbook.getNumberOfSheets();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Sheet[] getSheets() {
 		return this.writableWorkbook.getSheets();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void close() throws WriteException, IOException {
 		this.writableWorkbook.close(); // ?
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public String[] getSheetNames() {
 		return this.writableWorkbook.getSheetNames();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public void write() throws IOException {
 		this.writableWorkbook.write();
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public Sheet getSheet(String sheetName) {
 		return this.writableWorkbook.getSheet(sheetName);
 	}
 
+	/** {@inheritDoc} */
 	@Override
 	public WritableSheet createSheet(String sheetName, int index) {
 		return this.writableWorkbook.createSheet(sheetName, index);

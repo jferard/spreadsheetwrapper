@@ -25,6 +25,10 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  * Unit test for Examples.
  */
 public class ExamplesTest {
+	/**
+	 * A simple test using Examples class.
+	 * @throws SpreadsheetException
+	 */
 	@Test
 	public void test() throws SpreadsheetException {
 		Examples.createSimpleDocument();

@@ -7,41 +7,19 @@ import jxl.Sheet;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
 
-public class JxlWorkbook {
+public interface JxlWorkbook {
 
-	public int getNumberOfSheets() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
+	int getNumberOfSheets();
 
-	public Sheet[] getSheets() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	Sheet[] getSheets();
 
-	public void close() throws WriteException, IOException {
-		// TODO Auto-generated method stub
-		
-	}
+	void close() throws WriteException, IOException;
 
-	public String[] getSheetNames() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	String[] getSheetNames();
 
-	public void write() throws IOException {
-		// TODO Auto-generated method stub
-		
-	}
+	void write() throws IOException;
 
-	public Sheet getSheet(String sheetName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	Sheet getSheet(String sheetName);
 
-	public WritableSheet createSheet(String sheetName, int index) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	WritableSheet createSheet(String sheetName, int index);
 }

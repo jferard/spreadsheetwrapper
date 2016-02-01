@@ -12,7 +12,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
-class OdsOdfdomStyleFontHelper {
+final class OdsOdfdomStyleFontHelper {
 	private OdsOdfdomStyleFontHelper() {}
 
 	public final static Map<OdfStyleProperty, String> getFontProperties(

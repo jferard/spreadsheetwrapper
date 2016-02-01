@@ -28,21 +28,30 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 
 public final class Examples {
-	private static final class DataWrapperImplementation implements DataWrapper {
+	/**
+	 * A DataWrapper example : one object per row : toString, class name, hash code
+	 */
+	private static final class DataWrapperExample implements DataWrapper {
+		/** the object to be written */
 		private final Object[] objects;
 
-		public DataWrapperImplementation(final Object... objects) {
+		/**
+		 * @param objects the object to be written
+		 */
+		public DataWrapperExample(final Object... objects) {
 			this.objects = objects;
 		}
 
+		/** {@inheritDoc} */
 		@Override
 		public boolean writeDataTo(final SpreadsheetWriter writer, final int r,
 				final int c) {
 			for (int i = 0; i < this.objects.length; i++) {
-				writer.setText(r + i, c, this.objects[i].toString());
-				writer.setText(r + i, c + 1, this.objects[i].getClass()
+				final Object object = this.objects[i];
+				writer.setText(r + i, c, object.toString());
+				writer.setText(r + i, c + 1, object.getClass()
 						.getName());
-				writer.setInteger(r + i, c + 2, this.objects[i].hashCode());
+				writer.setInteger(r + i, c + 2, object.hashCode());
 			}
 			return true;
 		}
@@ -65,8 +74,12 @@ public final class Examples {
 		documentWriter.saveAs(factory.createNewFile(System.getProperty("java.io.tmpdir"), "createsimpledocument"));
 	}
 
+	/**
+	 * A simple example :of the wrapper. @see DataWrapperExample class.
+	 * @throws SpreadsheetException
+	 */
 	public static void wrapperExample() throws SpreadsheetException {
-		final DataWrapper wrapper = new DataWrapperImplementation(
+		final DataWrapper wrapper = new DataWrapperExample(
 				Integer.valueOf(1), Double.valueOf(2.0), "3", Arrays.asList(4, 5, 6));
 
 		final DocumentFactoryManager manager = new DocumentFactoryManager(
