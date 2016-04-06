@@ -28,11 +28,11 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
-public class SpreadsheetDocumentReaderImpl implements
+class SpreadsheetDocumentReaderImpl implements
 SpreadsheetDocumentReader {
 	private SpreadsheetDocumentWriter spreadsheetDocumentWriter;
 
-	public SpreadsheetDocumentReaderImpl(SpreadsheetDocumentWriter spreadsheetDocumentWriter) {
+	SpreadsheetDocumentReaderImpl(SpreadsheetDocumentWriter spreadsheetDocumentWriter) {
 		this.spreadsheetDocumentWriter = spreadsheetDocumentWriter;
 		
 	}
@@ -76,14 +76,14 @@ SpreadsheetDocumentReader {
 	/** {inheritDoc} */
 	@Override
 	public SpreadsheetReaderCursor getNewCursorByIndex(int index) {
-		return this.spreadsheetDocumentWriter.getNewCursorByIndex(index);
+		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByIndex(index));
 	}
 
 	/** {inheritDoc} */
 	@Override
 	public SpreadsheetReaderCursor getNewCursorByName(String sheetName)
 			throws SpreadsheetException {
-		return this.spreadsheetDocumentWriter.getNewCursorByName(sheetName);
+		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByName(sheetName));
 	}
 	
 }

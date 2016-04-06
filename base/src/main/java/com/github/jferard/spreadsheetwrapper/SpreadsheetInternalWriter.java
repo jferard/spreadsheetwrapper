@@ -27,7 +27,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  *
  */
-public interface SpreadsheetInternalWriter {
+interface SpreadsheetInternalWriter {
 	/**
 	 * @param c
 	 *            index (0..) of the column after the new column

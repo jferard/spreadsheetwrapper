@@ -29,6 +29,7 @@ import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 
 /*>>> import org.checkerframework.checker.nullness.qual.MonotonicNonNull;*/
 
@@ -145,6 +146,20 @@ SpreadsheetDocumentWriter {
 
 		return spreadsheet;
 	}
+	
+	/** {@inheritDoc} */
+	@Override
+	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
+		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName) {
+		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
+	}
+
+	
 
 	/**
 	 * @param index

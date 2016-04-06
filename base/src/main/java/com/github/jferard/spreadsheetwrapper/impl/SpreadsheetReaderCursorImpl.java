@@ -20,8 +20,8 @@ package com.github.jferard.spreadsheetwrapper.impl;
 import java.util.Date;
 
 import com.github.jferard.spreadsheetwrapper.Cursor;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -29,26 +29,18 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  * Builds a cursor form the reader.
  */
-public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
+class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 
 	/** the cursor */
-	private final Cursor cursor;
-	/** the reader */
-	private final SpreadsheetReader reader;
+	private final SpreadsheetWriterCursor cursor;
+
 
 	/**
 	 * @param reader
 	 *            the reader on the sheet
 	 */
-	public SpreadsheetReaderCursorImpl(final SpreadsheetReader reader) {
-		this.reader = reader;
-		this.cursor = new AbstractCursor(reader.getRowCount()) {
-			/** {@inheritDoc} */
-			@Override
-			protected int getCellCount(final int r) {
-				return reader.getCellCount(r);
-			}
-		};
+	SpreadsheetReaderCursorImpl(final SpreadsheetWriterCursor cursor) {
+		this.cursor = cursor;
 	}
 
 	/** {@inheritDoc} */
@@ -90,31 +82,31 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Object getCellContent() {
-		return this.reader.getCellContent(this.getR(), this.getC());
+		return this.cursor.getCellContent();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Date getDate() {
-		return this.reader.getDate(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getDate();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Double getDouble() {
-		return this.reader.getDouble(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getDouble();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getFormula() {
-		return this.reader.getFormula(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getFormula();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Integer getInteger() {
-		return this.reader.getInteger(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getInteger();
 	}
 
 	/** {@inheritDoc} */
@@ -124,26 +116,21 @@ public class SpreadsheetReaderCursorImpl implements SpreadsheetReaderCursor {
 	}
 
 	/** {@inheritDoc} */
-	public int getRowCount() {
-		return this.reader.getRowCount();
-	}
-
-	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle() {
-		return this.reader.getStyle(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getStyle();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName() {
-		return this.reader.getStyleName(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getStyleName();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getText() {
-		return this.reader.getText(this.cursor.getR(), this.cursor.getC());
+		return this.cursor.getText();
 	}
 
 	/** {@inheritDoc} */

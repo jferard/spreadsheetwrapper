@@ -35,9 +35,7 @@ import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>>
@@ -91,26 +89,6 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		final int size = this.getSheetCount();
-		if (index < 0 || index > size) // index == size is ok
-			throw new IndexOutOfBoundsException();
-
-		return this.addSheetWithCheckedIndex(index, sheetName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.addSheetWithCheckedIndex(this.getSheetCount(), sheetName);
-	}
-	
-	
-	/** {@inheritDoc} */
-	@Override
 	public void close() {
 		try {
 			this.output.close();
@@ -118,19 +96,6 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	/** {@inheritDoc} */

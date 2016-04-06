@@ -25,7 +25,7 @@ import java.util.Map;
  * SpreadsheetDocumentFactoryProvider(...); SpreadsheetDocumentFactory sdf =
  * sdfp.getFactory("xls"); SpreadsheetDocumentWriter sdw = sdf.create();
  */
-public class SpreadsheetDocumentFactoryProvider {
+class SpreadsheetDocumentFactoryProvider {
 	/** Map (ods|xls) -> factory */
 	private final Map<String, SpreadsheetDocumentFactory> factoryByExtension;
 
@@ -33,7 +33,7 @@ public class SpreadsheetDocumentFactoryProvider {
 	 * @param factoryByExtension
 	 *            Map (ods|xls) -> factory
 	 */
-	public SpreadsheetDocumentFactoryProvider(
+	SpreadsheetDocumentFactoryProvider(
 			final Map<String, SpreadsheetDocumentFactory> factoryByExtension) {
 		this.factoryByExtension = factoryByExtension;
 	}

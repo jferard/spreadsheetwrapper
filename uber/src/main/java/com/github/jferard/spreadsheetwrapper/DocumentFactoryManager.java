@@ -30,12 +30,11 @@ public class DocumentFactoryManager {
 	 *            simple logger
 	 */
 	public DocumentFactoryManager(final Logger logger) {
-		super();
 		this.logger = logger;
 	}
 
 	/**
-	 * get a factory
+	 * Use reflection to get a factory
 	 *
 	 * @throws ClassNotFoundException
 	 * @throws IllegalAccessException

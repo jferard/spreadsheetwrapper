@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  * Implementation of the writer Cursor, using a writer.
  */
-public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
+class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 		implements SpreadsheetWriterCursor {
 
 	/** the cursor */
@@ -43,7 +43,7 @@ public class SpreadsheetWriterCursorImpl extends AbstractSpreadsheetWriterCell
 	 * @param writer
 	 *            the writer inside the cursor
 	 */
-	public SpreadsheetWriterCursorImpl(final SpreadsheetWriter writer) {
+	SpreadsheetWriterCursorImpl(final SpreadsheetWriter writer) {
 		super();
 		this.writer = writer;
 		this.cursor = new AbstractCursor(writer.getRowCount()) {

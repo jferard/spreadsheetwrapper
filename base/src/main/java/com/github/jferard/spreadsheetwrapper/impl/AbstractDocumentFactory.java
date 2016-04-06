@@ -61,7 +61,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createReader(document);
+		return new SpreadsheetDocumentReaderImpl(this.createWriter(document, new Output()));
 	}
 
 	/** {@inheritDoc} */
@@ -89,17 +89,6 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 		return this.createWriter(document,
 				new Output(outputStream));
 	}
-
-	/**
-	 * create a reader from a *internal* workbook
-	 *
-	 * @param stateful
-	 *            the internal workbook
-	 * @return the value reader
-	 * @throws SpreadsheetException
-	 */
-	protected abstract SpreadsheetDocumentReader createReader(
-			R document) throws SpreadsheetException;
 
 	/**
 	 * create a writer from a *internal* workbook

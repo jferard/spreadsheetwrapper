@@ -39,8 +39,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetReaderCursorImpl;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -98,19 +96,6 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	/** */

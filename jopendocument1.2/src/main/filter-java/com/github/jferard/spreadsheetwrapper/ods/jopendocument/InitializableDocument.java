@@ -26,7 +26,6 @@ import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.UnknownInitialization;
 
 /**
  * Initializable means that there is a marker if the document is unitialized.

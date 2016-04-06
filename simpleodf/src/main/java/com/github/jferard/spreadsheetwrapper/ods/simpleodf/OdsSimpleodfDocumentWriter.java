@@ -40,9 +40,7 @@ import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
@@ -105,19 +103,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
 		this.initializableDocument.close();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	/** {@inheritDoc} */

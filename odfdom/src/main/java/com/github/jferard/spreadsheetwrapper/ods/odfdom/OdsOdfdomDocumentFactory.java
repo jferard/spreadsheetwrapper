@@ -26,12 +26,9 @@ import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 
 import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.UnknownInitialization;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
@@ -66,14 +63,6 @@ SpreadsheetDocumentFactory {
 		super(OdsConstants.EXTENSION);
 		this.logger = logger;
 		this.styleHelper = styleHelper;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	protected SpreadsheetDocumentReader createReader(
-			final OdfSpreadsheetDocument document)
-					throws SpreadsheetException {
-		return new SpreadsheetDocumentReaderImpl(this.createWriter(document, new Output()));
 	}
 
 	/**

@@ -37,10 +37,8 @@ import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
@@ -53,7 +51,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 public class OdsSimpleodsDocumentWriter extends
 		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	
-	private SpreadsheetWriter createNew(final Table table) {
+	private static SpreadsheetWriter createNew(final Table table) {
 		return new OdsSimpleodsWriter(table);
 	}
 
@@ -87,19 +85,6 @@ public class OdsSimpleodsDocumentWriter extends
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	/** {@inheritDoc} */
@@ -193,6 +178,7 @@ public class OdsSimpleodsDocumentWriter extends
 	 *            index of the sheet
 	 * @return the reader/writer
 	 */
+	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
 		final SpreadsheetWriter spreadsheet;
 		if (this.accessor.hasByIndex(index))
@@ -206,7 +192,7 @@ public class OdsSimpleodsDocumentWriter extends
 			try {
 				final String name = this.file.getTableName(index);
 				final Table table = this.getTable(index);
-				spreadsheet = this.createNew(table);
+				spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
 				this.accessor.put(name, index, spreadsheet);
 			} catch (final SimpleOdsException e) {
 				throw new AssertionError(String.format(
@@ -241,7 +227,7 @@ public class OdsSimpleodsDocumentWriter extends
 		try {
 			this.file.addTable(sheetName);
 			final Table table = this.getTable(index);
-			spreadsheet = this.createNew(table);
+			spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
 			this.accessor.put(sheetName, index, spreadsheet);
 		} catch (final SimpleOdsException e) {
 			throw new CantInsertElementInSpreadsheetException(e);
@@ -258,7 +244,7 @@ public class OdsSimpleodsDocumentWriter extends
 					"No %s sheet in workbook", sheetName));
 
 		final Table table = this.getTable(index);
-		final SpreadsheetWriter spreadsheet = this.createNew(table);
+		final SpreadsheetWriter spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
 	}

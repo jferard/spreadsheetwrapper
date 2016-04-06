@@ -27,13 +27,13 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
-public class SpreadsheetReaderImpl implements
+class SpreadsheetReaderImpl implements
 		SpreadsheetReader {
 	
 	/** negative-decorator pattern : less methods than original */
 	private SpreadsheetWriter spreadsheetWriter;
 
-	protected SpreadsheetReaderImpl(SpreadsheetWriter spreadsheetWriter) {
+	SpreadsheetReaderImpl(SpreadsheetWriter spreadsheetWriter) {
 		this.spreadsheetWriter = spreadsheetWriter;
 	}
 

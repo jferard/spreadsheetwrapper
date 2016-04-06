@@ -25,20 +25,18 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
-import jxl.Sheet;
-import jxl.write.WritableCellFormat;
-import jxl.write.WritableSheet;
-import jxl.write.WriteException;
-
 import com.github.jferard.spreadsheetwrapper.Accessor;
 import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
-import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetWriterCursorImpl;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
+
+import jxl.Sheet;
+import jxl.write.WritableCellFormat;
+import jxl.write.WritableSheet;
+import jxl.write.WriteException;
 
 /**
  */
@@ -77,21 +75,6 @@ implements SpreadsheetDocumentWriter {
   		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName) {
-		if (index < 0 || index > this.jxlWorkbook.getNumberOfSheets())
-			throw new IndexOutOfBoundsException();
-		return this.addSheetWithCheckedIndex(index, sheetName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName) {
-		return this.addSheet(this.jxlWorkbook.getNumberOfSheets(),
-				sheetName);
-	}
-
 	/**
 	 * @throws SpreadsheetException
 	 */
@@ -115,18 +98,6 @@ implements SpreadsheetDocumentWriter {
 			return WrapperCellStyle.EMPTY;
 
 		return this.styleHelper.toWrapperCellStyle(cellFormat);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	/** */
