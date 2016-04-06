@@ -19,24 +19,45 @@ package com.github.jferard.spreadsheetwrapper.ods.${jopendocument.pkg};
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.NoSuchElementException;
 
 import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
-import com.github.jferard.spreadsheetwrapper.Stateful;
+import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
+import com.github.jferard.spreadsheetwrapper.UnknownInitialization;
 
 /**
- * Stateful means that there is a marker if the document is unitialized.
+ * Initializable means that there is a marker if the document is unitialized.
  *
  */
-class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
+class InitializableDocument {
+	/** true if initialized */
+	private boolean initialized;
+
+	/** the object */
+	private final SpreadSheet document;
+
+	static final InitializableDocument createInitialized(
+			SpreadSheet document) {
+		return new InitializableDocument(document, true);
+	}
+
+	static final InitializableDocument createUninitialized(
+			SpreadSheet document) {
+		return new InitializableDocument(document, false);
+	}
+	
+	
 	/**
-	 * @param sfDocument
+	 * @param uiDocument
 	 *            the wrapped document
 	 */
-	OdsJOpenStatefulDocument(final Stateful<SpreadSheet> sfDocument) {
-		super(sfDocument.getObject(), sfDocument.isNew());
+	InitializableDocument(final SpreadSheet document,
+			boolean initialized) {
+		this.document = document;
+		this.initialized = initialized;
 	}
 
 	/**
@@ -48,8 +69,22 @@ class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	 *            the name of the new sheet.
 	 * @return the *internal* sheet
 	 */
-	public Sheet addRawSheet(final int index, final String sheetName) {
-		return this.object.addSheet(index, sheetName);
+	public Sheet addSheet(final int index, final String sheetName) {
+		Sheet sheet;
+		if (this.initialized) {
+			sheet = this.getSheet(sheetName);
+			if (sheet != null)
+				throw new IllegalArgumentException(
+						String.format("Sheet %s exists", sheetName));
+
+			sheet = this.document.addSheet(index, sheetName);
+		} else {
+			assert this.document.getSheetCount() == 1 && index == 0;
+			sheet = this.document.getSheet(0);
+			sheet.setName(sheetName);
+			this.initialized = true;
+		}
+		return sheet;
 	}
 
 	/**
@@ -57,8 +92,8 @@ class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	 *            index of the sheet to get
 	 * @return the *internal* sheet
 	 */
-	public Sheet getRawSheet(final int index) {
-		return this.object.getSheet(index);
+	public Sheet getSheet(final int index) {
+		return this.document.getSheet(index);
 	}
 
 	/**
@@ -66,22 +101,27 @@ class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	 *            name of the sheet to get
 	 * @return the *internal* sheet
 	 */
-	public Sheet getRawSheet(final String sheetName) {
-		return this.object.getSheet(sheetName);
+	public Sheet getSheet(final String sheetName) {
+		return this.document.getSheet(sheetName);
 	}
 
 	/**
 	 * @return the number of sheets in the document
 	 */
-	public int getRawSheetCount() {
-		return this.object.getSheetCount();
+	public int getSheetCount() {
+		int count;
+		if (this.initialized)
+			count = this.document.getSheetCount();
+		else // 1 dummy sheet exists
+			count = 0;
+		return count;
 	}
 
 	/**
 	 * @return the *internal* styles.xml document
 	 */
 	public ODXMLDocument getStyles() {
-		return ${jopendocument.util.cls}.getStyles(this.object);
+		return ${jopendocument.util.cls}.getStyles(this.document);
 	}
 
 	/**
@@ -90,6 +130,6 @@ class OdsJOpenStatefulDocument extends Stateful<SpreadSheet> {
 	 * @throws IOException
 	 */
 	public void save(final OutputStream outputStream) throws IOException {
-		this.object.getPackage().save(outputStream);
+		this.document.getPackage().save(outputStream);
 	}
 }

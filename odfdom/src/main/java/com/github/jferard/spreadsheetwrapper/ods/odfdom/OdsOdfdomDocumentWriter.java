@@ -153,7 +153,7 @@ implements SpreadsheetDocumentWriter {
 				throw new IndexOutOfBoundsException(String.format(
 						"No sheet at position %d", index));
 
-			final OdfTable table = this.document.getTableList().get(index);
+			final OdfTable table = tables.get(index);
 			spreadsheet = this.createNew(table);
 			this.accessor.put(table.getTableName(), index, spreadsheet);
 		}

@@ -31,7 +31,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Stateful;
+import com.github.jferard.spreadsheetwrapper.UnknownInitialization;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
@@ -39,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 public class OdsJOpenDocumentFactory extends
-AbstractDocumentFactory<SpreadSheet> implements
+AbstractDocumentFactory<InitializableDocument> implements
 SpreadsheetDocumentFactory {
 	/**
 	 * static method for the manager
@@ -74,8 +74,8 @@ SpreadsheetDocumentFactory {
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
-			final Stateful<SpreadSheet> sfDocument) throws SpreadsheetException {
-		return new SpreadsheetDocumentReaderImpl(this.createWriter(sfDocument, new Output()));
+			InitializableDocument initializableDocument) throws SpreadsheetException {
+		return new SpreadsheetDocumentReaderImpl(this.createWriter(initializableDocument, new Output()));
 	}
 
 	/**
@@ -85,19 +85,19 @@ SpreadsheetDocumentFactory {
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final Stateful<SpreadSheet> sfDocument, final Output output)
+			final InitializableDocument initializableDocument, final Output output)
 					throws SpreadsheetException {
 		return new OdsJOpenDocumentWriter(this.logger, this.styleHelper,
-				new OdsJOpenStatefulDocument(sfDocument), output);
+				initializableDocument, output);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadSheet loadSpreadsheetDocument(final InputStream inputStream)
+	protected InitializableDocument loadSpreadsheetDocument(final InputStream inputStream)
 			throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
-			return ${jopendocument.util.cls}.getSpreadSheet(odPackage);
+			return InitializableDocument.createInitialized(${jopendocument.util.cls}.getSpreadSheet(odPackage));
 		} catch (final IOException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -105,10 +105,10 @@ SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadSheet newSpreadsheetDocument(
+	protected InitializableDocument newSpreadsheetDocument(
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
-		return ${jopendocument.util.cls}.newSpreadsheetDocument();
+		return InitializableDocument.createUninitialized(${jopendocument.util.cls}.newSpreadsheetDocument());
 	}
 
 }

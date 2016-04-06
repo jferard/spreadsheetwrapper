@@ -30,24 +30,11 @@ import java.io.OutputStream;
  * is a way to delay the creation of the outputStream. (If the outputStream is
  * created immediately and the output file is the same as the input file, then
  * the input file while be erased before the spreadsheet is opened).
- */
-/**
+ *
  * @author Julien
  *
  */
 public class Output {
-	/**
-	 * @param outputFile
-	 *            the file to open for write
-	 * @return the output stream on this URL
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 */
-	public static OutputStream getOutputStream(final File outputFile)
-			throws FileNotFoundException {
-		return new FileOutputStream(outputFile);
-	}
-
 	/** file output */
 	private final/*@Nullable*/File outputFile;
 
@@ -112,11 +99,9 @@ public class Output {
 		if (this.outputStream == null) {
 			try {
 				if (this.outputFile != null)
-					this.outputStream = Output.getOutputStream(this.outputFile);
-			} catch (final FileNotFoundException e) { // NOPMD by Julien on
-				// 21/11/15 11:22
-				// do nothing
-			}
+					this.outputStream = 
+							new FileOutputStream(this.outputFile);
+			} catch (final FileNotFoundException e) {}
 		}
 		return this.outputStream;
 	}

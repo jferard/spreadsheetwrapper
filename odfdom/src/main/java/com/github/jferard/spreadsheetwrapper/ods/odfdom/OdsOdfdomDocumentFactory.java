@@ -29,7 +29,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Stateful;
+import com.github.jferard.spreadsheetwrapper.UnknownInitialization;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.SpreadsheetDocumentReaderImpl;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
@@ -71,9 +71,9 @@ SpreadsheetDocumentFactory {
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentReader createReader(
-			final Stateful<OdfSpreadsheetDocument> sfDocument)
+			final OdfSpreadsheetDocument document)
 					throws SpreadsheetException {
-		return new SpreadsheetDocumentReaderImpl(this.createWriter(sfDocument, new Output()));
+		return new SpreadsheetDocumentReaderImpl(this.createWriter(document, new Output()));
 	}
 
 	/**
@@ -83,10 +83,10 @@ SpreadsheetDocumentFactory {
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final Stateful<OdfSpreadsheetDocument> sfDocument,
+			final OdfSpreadsheetDocument document,
 			final Output output) throws SpreadsheetException {
 		return new OdsOdfdomDocumentWriter(this.logger, this.styleHelper,
-				sfDocument.getObject(), output);
+				document, output);
 	}
 
 	/** {@inheritDoc} */

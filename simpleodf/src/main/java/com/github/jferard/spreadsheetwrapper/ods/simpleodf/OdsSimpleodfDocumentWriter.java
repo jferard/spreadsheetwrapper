@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.NoSuchElementException;
@@ -70,7 +69,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	private final Logger logger;
 
 	/** *internal* workbook */
-	private final OdsSimpleodfStatefulDocument sfDocument;
+	private final InitializableDocument initializableDocument;
 
 	/** the style helper */
 	private final OdsOdfdomStyleHelper styleHelper;
@@ -87,13 +86,13 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
-			final OdsSimpleodfStatefulDocument sfDocument, final Output output)
+			final InitializableDocument initializableDocument, final Output output)
 					throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.logger = logger;
-		this.sfDocument = sfDocument;
-		this.documentStyles = this.sfDocument.getStyles();
+		this.initializableDocument = initializableDocument;
+		this.documentStyles = this.initializableDocument.getStyles();
 	}
 
 	/** {@inheritDoc} */
@@ -105,7 +104,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-		this.sfDocument.close();
+		this.initializableDocument.close();
 	}
 
 	/** {@inheritDoc} */
@@ -130,7 +129,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 			if (outputStream == null)
 				throw new IllegalStateException(
 						String.format("Use saveAs when output file is not specified"));
-			this.sfDocument.rawSave(outputStream);
+			this.initializableDocument.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok", outputStream),
@@ -213,41 +212,19 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	/**
 	 * @return a list of internal tables
 	 */
-	/*>>> @RequiresNonNull("sfDocument")*/
+	/*>>> @RequiresNonNull("initializableDocument")*/
 	public final List<Table> getTableList(/*>>> @UnknownInitialization AbstractOdsSimpleodfDocumentDelegate<T> this*/) {
-		final List<Table> tables;
-		if (this.sfDocument.isNew())
-			tables = Collections.emptyList();
-		else
-			tables = this.sfDocument.getRawTableList();
-		return tables;
+		return this.initializableDocument.getTableList();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
-		Table table = this.sfDocument.getRawSheet(sheetName);
-		if (table != null)
-			throw new IllegalArgumentException(String.format("Sheet %s exists",
-					sheetName));
-
-		if (this.sfDocument.isNew()
-				&& this.sfDocument.getRawTableList().size() >= 1) {
-			table = this.sfDocument.getRawSheet(0);
-			table.setTableName(sheetName);
-		} else {
-			if (index == this.getSheetCount())
-				table = this.sfDocument.rawNewTable();
-			else
-				table = this.sfDocument.rawInsertSheet(index);
-			if (table == null)
-				throw new CantInsertElementInSpreadsheetException();
-		}
+		Table table = this.initializableDocument.addTable(index, sheetName);
 		final TableTableElement tableElement = table.getOdfElement();
 		cleanEmptyTable(tableElement);
 
-		this.sfDocument.setInitialized();
 		final SpreadsheetWriter spreadsheet = this.createNew(table);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;

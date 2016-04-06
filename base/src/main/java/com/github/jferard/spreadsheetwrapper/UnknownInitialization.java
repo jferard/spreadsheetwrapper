@@ -18,20 +18,20 @@
 package com.github.jferard.spreadsheetwrapper;
 
 /**
- * The class Stateful is used to keep a trace of the state, new or initialized,
+ * The class UnknownInitialization is used to keep a trace of the state, new or initialized,
  * of an object. See Optional in Guava or Java8 for examples
  *
  * @param <T>
  *            the wrapped object
  */
-public class Stateful<T> {
+public class UnknownInitialization<T> {
 	/**
 	 * @param object
 	 *            the object that is already initialized
 	 * @return the stateful object
 	 */
-	public static <S> Stateful<S> createInitialized(final S object) {
-		return new Stateful<S>(object, false);
+	public static <S> UnknownInitialization<S> createInitialized(final S object) {
+		return new UnknownInitialization<S>(object, true);
 	}
 
 	/**
@@ -39,12 +39,12 @@ public class Stateful<T> {
 	 *            the object that is not initialized (new)
 	 * @return the stateful object
 	 */
-	public static <S> Stateful<S> createNew(final S object) {
-		return new Stateful<S>(object, true);
+	public static <S> UnknownInitialization<S> createUninitialized(final S object) {
+		return new UnknownInitialization<S>(object, false);
 	}
 
 	/** true if the object is not initialized */
-	private boolean newObject;
+	private boolean initialized;
 
 	/** the object */
 	protected final T object;
@@ -52,12 +52,12 @@ public class Stateful<T> {
 	/**
 	 * @param object
 	 *            the object
-	 * @param newObject
+	 * @param initialized
 	 *            true if the object is initialized
 	 */
-	protected Stateful(final T object, final boolean newObject) {
+	protected UnknownInitialization(final T object, final boolean initialized) {
 		this.object = object;
-		this.newObject = newObject;
+		this.initialized = initialized;
 	}
 
 	/**
@@ -69,15 +69,15 @@ public class Stateful<T> {
 
 	/**
 	 * @return true if not initialized
-	 */
-	public boolean isNew() {
-		return this.newObject;
+	 **/
+	public boolean isInitialized() {
+		return this.initialized;
 	}
 
 	/**
 	 * sets the object to initialized
 	 */
 	public void setInitialized() {
-		this.newObject = false;
+		this.initialized = false;
 	}
 }

@@ -51,18 +51,17 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  *
  */
 class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
-		private SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsJOpenDocumentWriterDelegate this, */final Sheet sheet) {
-			return new OdsJOpenWriter(this.styleHelper, sheet);
+		implements SpreadsheetDocumentWriter {
+	private SpreadsheetWriter createNew(
+			/*>>> @UnknownInitialization OdsJOpenDocumentWriterDelegate this, */final Sheet sheet) {
+		return new OdsJOpenWriter(this.styleHelper, sheet);
 	}
 
 	/** the logger */
 	private final Logger logger;
 
-
 	/** the *internal* workbook */
-	private final OdsJOpenStatefulDocument sfSpreadSheet;
+	private final InitializableDocument initializableDocument;
 
 	/** utility for style */
 	private final OdsJOpenStyleHelper styleHelper;
@@ -72,22 +71,22 @@ implements SpreadsheetDocumentWriter {
 	 *            the logger
 	 * @param styleHelper
 	 *            the basic style helper
-	 * @param sfSpreadSheet
+	 * @param initializableDocument
 	 *            the *internal* workbook
 	 * @param output
 	 *            where to write
 	 * @param newDocument
 	 * @throws SpreadsheetException
-	 *             if can't open sfSpreadSheet writer
+	 *             if can't open initializableDocument writer
 	 */
 	OdsJOpenDocumentWriter(final Logger logger,
 			final OdsJOpenStyleHelper styleHelper,
-			final OdsJOpenStatefulDocument sfSpreadSheet, final Output output)
-					throws SpreadsheetException {
+			final InitializableDocument initializableDocument,
+			final Output output) throws SpreadsheetException {
 		super(logger, output);
 		this.styleHelper = styleHelper;
 		this.logger = logger;
-		this.sfSpreadSheet = sfSpreadSheet;
+		this.initializableDocument = initializableDocument;
 	}
 
 	/** {@inheritDoc} */
@@ -121,13 +120,14 @@ implements SpreadsheetDocumentWriter {
 		try {
 			outputStream = this.output.getStream();
 			if (outputStream == null)
-				throw new IllegalStateException(
-						String.format("Use saveAs when output file/stream is not specified at opening"));
+				throw new IllegalStateException(String.format(
+						"Use saveAs when output file/stream is not specified at opening"));
 
-			this.sfSpreadSheet.save(outputStream);
+			this.initializableDocument.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09
-			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+			this.logger.log(Level.SEVERE,
+					String.format("this.spreadsheetDocument.save(%s) not ok",
+							outputStream),
 					e);
 			throw new SpreadsheetException(e);
 		}
@@ -137,11 +137,11 @@ implements SpreadsheetDocumentWriter {
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final ODXMLDocument stylesDoc = this.sfSpreadSheet.getStyles();
+		final ODXMLDocument stylesDoc = this.initializableDocument.getStyles();
 		this.styleHelper.addStyle(stylesDoc, styleName, wrapperCellStyle);
 		return true;
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
@@ -155,8 +155,8 @@ implements SpreadsheetDocumentWriter {
 		final int sheetCount = this.getSheetCount();
 		sheetNames = new ArrayList<String>(sheetCount);
 		for (int s = 0; s < sheetCount; s++)
-			sheetNames
-			.add(this.sfSpreadSheet.getObject().getSheet(s).getName());
+			sheetNames.add(this.initializableDocument.getSheet(s)
+					.getName());
 		return sheetNames;
 	}
 
@@ -174,19 +174,9 @@ implements SpreadsheetDocumentWriter {
 			spreadsheet = this.accessor.getByName(sheetName);
 		else
 			spreadsheet = this
-			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+					.findSpreadsheetAndCreateReaderOrWriter(sheetName);
 
 		return spreadsheet;
-	}
-
-	private static int getSheetCount(
-			final OdsJOpenStatefulDocument sfSpreadSheet) {
-		int count;
-		if (sfSpreadSheet.isNew())
-			count = 0;
-		else
-			count = sfSpreadSheet.getRawSheetCount();
-		return count;
 	}
 
 	/**
@@ -199,12 +189,11 @@ implements SpreadsheetDocumentWriter {
 		if (this.accessor.hasByIndex(index))
 			spreadsheet = this.accessor.getByIndex(index);
 		else {
-			if (this.sfSpreadSheet.isNew() || index < 0
-					|| index >= this.sfSpreadSheet.getRawSheetCount())
-				throw new IndexOutOfBoundsException(String.format(
-						"No sheet at position %d", index));
+			if (index < 0 || index >= this.getSheetCount())
+				throw new IndexOutOfBoundsException(
+						String.format("No sheet at position %d", index));
 
-			final Sheet sheet = this.sfSpreadSheet.getRawSheet(index);
+			final Sheet sheet = this.initializableDocument.getSheet(index);
 			spreadsheet = this.createNew(sheet);
 			this.accessor.put(sheet.getName(), index, spreadsheet);
 		}
@@ -213,51 +202,35 @@ implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName) {
-		Sheet sheet;
-		if (this.sfSpreadSheet.isNew()
-				&& this.sfSpreadSheet.getRawSheetCount() == 1) {
-			sheet = this.sfSpreadSheet.getRawSheet(0);
-			sheet.setName(sheetName);
-		} else { // ok
-			sheet = this.sfSpreadSheet.getRawSheet(sheetName);
-			if (sheet != null)
-				throw new IllegalArgumentException(String.format(
-						"Sheet %s exists", sheetName));
-
-			sheet = this.sfSpreadSheet.addRawSheet(index, sheetName);
-		}
-		this.sfSpreadSheet.setInitialized();
+	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index,
+			final String sheetName) {
+		Sheet sheet = this.initializableDocument.addSheet(index, sheetName);
 		final SpreadsheetWriter spreadsheet = this.createNew(sheet);
 		this.accessor.put(sheetName, index, spreadsheet);
-
 		return spreadsheet;
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
-		if (this.sfSpreadSheet.isNew())
-			throw new NoSuchElementException(String.format(
-					"No %s sheet in workbook", sheetName));
-
-		for (int s = 0; s < this.sfSpreadSheet.getRawSheetCount(); s++) {
-			final Sheet sheet = this.sfSpreadSheet.getRawSheet(s);
+	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(
+			final String sheetName) {
+		for (int index = 0; index < this.initializableDocument.getSheetCount(); index++) {
+			final Sheet sheet = this.initializableDocument.getSheet(index);
 			final String name = sheet.getName();
 			if (name.equals(sheetName)) {
 				final SpreadsheetWriter spreadsheet = this.createNew(sheet);
-				this.accessor.put(sheetName, s, spreadsheet);
+				this.accessor.put(sheetName, index, spreadsheet);
 				return spreadsheet;
 			}
 		}
 
-		throw new NoSuchElementException(String.format(
-				"No %s sheet in workbook", sheetName));
+		throw new NoSuchElementException(
+				String.format("No %s sheet in workbook", sheetName));
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getSheetCount() {
-		return getSheetCount(this.sfSpreadSheet);
+		return this.initializableDocument.getSheetCount();
 	}
 }

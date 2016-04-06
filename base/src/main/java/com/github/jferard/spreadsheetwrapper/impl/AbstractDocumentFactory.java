@@ -28,7 +28,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Stateful;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -53,7 +52,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
-		return this.createWriter(Stateful.createNew(document), new Output(
+		return this.createWriter(document, new Output(
 				outputStream));
 	}
 
@@ -62,7 +61,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createReader(Stateful.createInitialized(document));
+		return this.createReader(document);
 	}
 
 	/** {@inheritDoc} */
@@ -73,7 +72,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 		try {
 			inputStream = new FileInputStream(inputFile);
 			final R document = this.loadSpreadsheetDocument(inputStream);
-			return this.createWriter(Stateful.createInitialized(document),
+			return this.createWriter(document,
 					new Output(outputFile));
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
@@ -87,7 +86,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 			final/*@Nullable*/OutputStream outputStream)
 					throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createWriter(Stateful.createInitialized(document),
+		return this.createWriter(document,
 				new Output(outputStream));
 	}
 
@@ -100,18 +99,18 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	 * @throws SpreadsheetException
 	 */
 	protected abstract SpreadsheetDocumentReader createReader(
-			Stateful<R> stateful) throws SpreadsheetException;
+			R document) throws SpreadsheetException;
 
 	/**
 	 * create a writer from a *internal* workbook
 	 *
-	 * @param stateful
+	 * @param document
 	 *            the internal workbook
 	 * @return the value writer
 	 * @throws SpreadsheetException
 	 */
 	protected abstract SpreadsheetDocumentWriter createWriter(
-			Stateful<R> stateful, Output output) throws SpreadsheetException;
+			R document, Output output) throws SpreadsheetException;
 
 	/**
 	 * @param inputStream
