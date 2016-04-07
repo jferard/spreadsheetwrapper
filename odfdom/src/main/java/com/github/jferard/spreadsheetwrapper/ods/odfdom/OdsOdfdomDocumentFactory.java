@@ -24,11 +24,11 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
@@ -73,9 +73,9 @@ SpreadsheetDocumentFactory {
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
 			final OdfSpreadsheetDocument document,
-			final Output output) throws SpreadsheetException {
+			final OptionalOutput optionalOutput) throws SpreadsheetException {
 		return new OdsOdfdomDocumentWriter(this.logger, this.styleHelper,
-				document, output);
+				document, optionalOutput);
 	}
 
 	/** {@inheritDoc} */

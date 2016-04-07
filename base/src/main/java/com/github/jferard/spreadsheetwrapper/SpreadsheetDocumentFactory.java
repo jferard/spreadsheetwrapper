@@ -29,7 +29,7 @@ import java.io.OutputStream;
 public interface SpreadsheetDocumentFactory {
 
 	/**
-	 * Creates a workbook writer with no output (use saveAs). May throw
+	 * Creates a workbook writer with no optionalOutput (use saveAs). May throw
 	 * UnsupportedOperationException
 	 *
 	 * @return the writer
@@ -114,7 +114,7 @@ public interface SpreadsheetDocumentFactory {
 			throws SpreadsheetException;
 
 	/**
-	 * Open a workbook writer from a existing workbook with no output (use
+	 * Open a workbook writer from a existing workbook with no optionalOutput (use
 	 * saveAs). May throw UnsupportedOperationException
 	 *
 	 * @param inputFile
@@ -139,7 +139,7 @@ public interface SpreadsheetDocumentFactory {
 			final File outputFile) throws SpreadsheetException;
 
 	/**
-	 * Open a workbook writer from a existing workbook with no output (use
+	 * Open a workbook writer from a existing workbook with no optionalOutput (use
 	 * saveAs). May throw UnsupportedOperationException
 	 *
 	 * @param inputStream

@@ -28,11 +28,11 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.style.CellStyleAccessor;
 import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
@@ -77,10 +77,10 @@ public class XlsPoiDocumentFactory extends AbstractDocumentFactory<Workbook>
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final Workbook workbook, final Output output)
+			final Workbook workbook, final OptionalOutput optionalOutput)
 			throws SpreadsheetException {
 		return new XlsPoiDocumentWriter(this.logger, workbook,
-				this.styleHelper, output);
+				this.styleHelper, optionalOutput);
 	}
 
 	/** {@inheritDoc} */

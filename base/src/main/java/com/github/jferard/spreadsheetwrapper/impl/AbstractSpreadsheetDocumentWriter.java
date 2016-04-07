@@ -25,7 +25,6 @@ import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.Accessor;
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
@@ -36,14 +35,14 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 public abstract class AbstractSpreadsheetDocumentWriter implements
 SpreadsheetDocumentWriter {
 
-	/** the output */
-	private/*@MonotonicNonNull*/Output bkpOutput;
+	/** the optionalOutput */
+	private/*@MonotonicNonNull*/OptionalOutput bkpOutput;
 
 	/** the logger */
 	private final Logger logger;
 
 	/** where to write */
-	protected Output output;
+	protected OptionalOutput optionalOutput;
 
 	/**
 	 * @param logger
@@ -52,22 +51,22 @@ SpreadsheetDocumentWriter {
 	 *            where to write
 	 */
 	public AbstractSpreadsheetDocumentWriter(final Logger logger,
-			final Output output) {
+			final OptionalOutput optionalOutput) {
 		super();
 		this.logger = logger;
-		this.output = output;
+		this.optionalOutput = optionalOutput;
 		this.accessor = new Accessor<SpreadsheetWriter>();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public void saveAs(final File outputFile) throws SpreadsheetException {
-		this.bkpOutput = this.output;
+		this.bkpOutput = this.optionalOutput;
 		try {
-			this.output = new Output(outputFile);
+			this.optionalOutput = OptionalOutput.fromFile(outputFile);
 			this.save();
 		} catch (final SpreadsheetException e) {
-			this.output = this.bkpOutput;
+			this.optionalOutput = this.bkpOutput;
 			this.logger.log(Level.SEVERE, String.format(
 					"this.spreadsheetDocument.save(%s) not ok", outputFile), e);
 			throw e;
@@ -78,12 +77,12 @@ SpreadsheetDocumentWriter {
 	@Override
 	public void saveAs(final OutputStream outputStream)
 			throws SpreadsheetException {
-		this.bkpOutput = this.output;
+		this.bkpOutput = this.optionalOutput;
 		try {
-			this.output = new Output(outputStream);
+			this.optionalOutput = OptionalOutput.fromStream(outputStream);
 			this.save();
 		} catch (final SpreadsheetException e) {
-			this.output = this.bkpOutput;
+			this.optionalOutput = this.bkpOutput;
 			throw e;
 		}
 	}
@@ -105,6 +104,7 @@ SpreadsheetDocumentWriter {
 	 * @return the reader/writer
 	 * @throws CantInsertElementInSpreadsheetException
 	 */
+	@Override
 	public SpreadsheetWriter addSheet(final int index, final String sheetName)
 			throws IndexOutOfBoundsException,
 			CantInsertElementInSpreadsheetException {
@@ -123,6 +123,7 @@ SpreadsheetDocumentWriter {
 	 * @return the reader/writer
 	 * @throws CantInsertElementInSpreadsheetException
 	 */
+	@Override
 	public SpreadsheetWriter addSheet(final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
 		return this.addSheetWithCheckedIndex(this.getSheetCount(), sheetName);
@@ -135,6 +136,7 @@ SpreadsheetDocumentWriter {
 	 *             if the workbook does not contains any sheet of this name
 	 * @return the reader/writer
 	 */
+	@Override
 	public SpreadsheetWriter getSpreadsheet(final String sheetName)
 			throws NoSuchElementException {
 		final SpreadsheetWriter spreadsheet;

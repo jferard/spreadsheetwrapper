@@ -33,12 +33,12 @@ import org.simpleods.TableStyle;
 import org.simpleods.TextStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
@@ -70,8 +70,8 @@ public class OdsSimpleodsDocumentWriter extends
 	 *            where to write
 	 */
 	public OdsSimpleodsDocumentWriter(final Logger logger, final OdsFile file,
-			final Output output) {
-		super(logger, output);
+			final OptionalOutput optionalOutput) {
+		super(logger, optionalOutput);
 		this.logger = logger;
 		this.file = file;
 	}
@@ -80,7 +80,7 @@ public class OdsSimpleodsDocumentWriter extends
 	@Override
 	public void close() {
 		try {
-			this.output.close();
+			this.optionalOutput.close();
 		} catch (final IOException e) {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
@@ -90,10 +90,10 @@ public class OdsSimpleodsDocumentWriter extends
 	/** {@inheritDoc} */
 	@Override
 	public void save() throws SpreadsheetException {
-		final OutputStream outputStream = this.output.getStream();
+		final OutputStream outputStream = this.optionalOutput.getStream();
 		if (outputStream == null)
 			throw new IllegalStateException(
-					String.format("Use saveAs when output file/stream is not specified"));
+					String.format("Use saveAs when optionalOutput file/stream is not specified"));
 		if (!this.file.save(outputStream))
 			throw new SpreadsheetException(String.format(
 					"this.spreadsheetDocument.save(%s) not ok", outputStream));

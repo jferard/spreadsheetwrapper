@@ -36,11 +36,11 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
@@ -84,9 +84,9 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
 			final OdsOdfdomStyleHelper styleHelper,
-			final InitializableDocument initializableDocument, final Output output)
+			final InitializableDocument initializableDocument, final OptionalOutput optionalOutput)
 					throws SpreadsheetException {
-		super(logger, output);
+		super(logger, optionalOutput);
 		this.styleHelper = styleHelper;
 		this.logger = logger;
 		this.initializableDocument = initializableDocument;
@@ -97,7 +97,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	@Override
 	public void close() {
 		try {
-			this.output.close();
+			this.optionalOutput.close();
 		} catch (final IOException e) {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
@@ -110,10 +110,10 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	public void save() throws SpreadsheetException {
 		OutputStream outputStream = null;
 		try {
-			outputStream = this.output.getStream();
+			outputStream = this.optionalOutput.getStream();
 			if (outputStream == null)
 				throw new IllegalStateException(
-						String.format("Use saveAs when output file is not specified"));
+						String.format("Use saveAs when optionalOutput file is not specified"));
 			this.initializableDocument.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
 			this.logger.log(Level.SEVERE, String.format(

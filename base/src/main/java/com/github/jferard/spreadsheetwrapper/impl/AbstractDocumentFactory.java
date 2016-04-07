@@ -23,7 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
@@ -36,11 +35,13 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  *            internal workbook
  */
 public abstract class AbstractDocumentFactory<R> extends
-AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
+		AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 
 	/**
 	 * A simple constructor
-	 * @param extension ods of xls
+	 * 
+	 * @param extension
+	 *            ods of xls
 	 */
 	protected AbstractDocumentFactory(final String extension) {
 		super(extension);
@@ -50,10 +51,10 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	@Override
 	public SpreadsheetDocumentWriter create(
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.newSpreadsheetDocument(outputStream);
-		return this.createWriter(document, new Output(
-				outputStream));
+		return this.createWriter(document,
+				OptionalOutput.fromStream(outputStream));
 	}
 
 	/** {@inheritDoc} */
@@ -61,7 +62,8 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	public SpreadsheetDocumentReader openForRead(final InputStream inputStream)
 			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return new SpreadsheetDocumentReaderImpl(this.createWriter(document, new Output()));
+		return new SpreadsheetDocumentReaderImpl(
+				this.createWriter(document, OptionalOutput.EMPTY));
 	}
 
 	/** {@inheritDoc} */
@@ -72,8 +74,7 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 		try {
 			inputStream = new FileInputStream(inputFile);
 			final R document = this.loadSpreadsheetDocument(inputStream);
-			return this.createWriter(document,
-					new Output(outputFile));
+			return this.createWriter(document, OptionalOutput.fromFile(outputFile));
 		} catch (final FileNotFoundException e) {
 			throw new SpreadsheetException(e);
 		}
@@ -81,13 +82,11 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetDocumentWriter openForWrite(
-			final InputStream inputStream,
+	public SpreadsheetDocumentWriter openForWrite(final InputStream inputStream,
 			final/*@Nullable*/OutputStream outputStream)
-					throws SpreadsheetException {
+			throws SpreadsheetException {
 		final R document = this.loadSpreadsheetDocument(inputStream);
-		return this.createWriter(document,
-				new Output(outputStream));
+		return this.createWriter(document, OptionalOutput.fromStream(outputStream));
 	}
 
 	/**
@@ -98,8 +97,8 @@ AbstractBasicDocumentFactory implements SpreadsheetDocumentFactory {
 	 * @return the value writer
 	 * @throws SpreadsheetException
 	 */
-	protected abstract SpreadsheetDocumentWriter createWriter(
-			R document, Output output) throws SpreadsheetException;
+	protected abstract SpreadsheetDocumentWriter createWriter(R document,
+			OptionalOutput optionalOutput) throws SpreadsheetException;
 
 	/**
 	 * @param inputStream

@@ -26,12 +26,12 @@ import java.util.logging.Logger;
 import org.jopendocument.dom.ODPackage;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -76,7 +76,8 @@ SpreadsheetDocumentFactory {
 	 */
 	@Override
 	protected SpreadsheetDocumentWriter createWriter(
-			final InitializableDocument initializableDocument, final Output output)
+			final InitializableDocument initializableDocument, 
+			final OptionalOutput output)
 					throws SpreadsheetException {
 		return new OdsJOpenDocumentWriter(this.logger, this.styleHelper,
 				initializableDocument, output);
@@ -84,8 +85,9 @@ SpreadsheetDocumentFactory {
 
 	/** {@inheritDoc} */
 	@Override
-	protected InitializableDocument loadSpreadsheetDocument(final InputStream inputStream)
-			throws SpreadsheetException {
+	protected InitializableDocument loadSpreadsheetDocument(
+			final InputStream inputStream)
+					throws SpreadsheetException {
 		try {
 			final ODPackage odPackage = new ODPackage(inputStream);
 			return InitializableDocument.createInitialized(${jopendocument.util.cls}.getSpreadSheet(odPackage));

@@ -24,12 +24,12 @@ import java.util.logging.Logger;
 
 import org.simpleods.OdsFile;
 
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentReader;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractBasicDocumentFactory;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -73,8 +73,8 @@ implements SpreadsheetDocumentFactory {
 			return this.create();
 
 		final OdsFile odsFile = new OdsFile(file.getPath());
-		final Output output = new Output(file);
-		return new OdsSimpleodsDocumentWriter(this.logger, odsFile, output);
+		final OptionalOutput optionalOutput = OptionalOutput.fromFile(file);
+		return new OdsSimpleodsDocumentWriter(this.logger, odsFile, optionalOutput);
 	}
 
 	/** {@inheritDoc} */

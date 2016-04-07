@@ -31,7 +31,6 @@ import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.spreadsheet.Sheet;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReader;
@@ -39,6 +38,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
@@ -71,7 +71,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *            the basic style helper
 	 * @param initializableDocument
 	 *            the *internal* workbook
-	 * @param output
+	 * @param optionalOutput
 	 *            where to write
 	 * @param newDocument
 	 * @throws SpreadsheetException
@@ -80,8 +80,8 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	OdsJOpenDocumentWriter(final Logger logger,
 			final OdsJOpenStyleHelper styleHelper,
 			final InitializableDocument initializableDocument,
-			final Output output) throws SpreadsheetException {
-		super(logger, output);
+			final OptionalOutput optionalOutput) throws SpreadsheetException {
+		super(logger, optionalOutput);
 		this.styleHelper = styleHelper;
 		this.logger = logger;
 		this.initializableDocument = initializableDocument;
@@ -91,7 +91,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public void close() {
 		try {
-			this.output.close();
+			this.optionalOutput.close();
 		} catch (final IOException e) {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
@@ -103,10 +103,10 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public void save() throws SpreadsheetException {
 		OutputStream outputStream = null;
 		try {
-			outputStream = this.output.getStream();
+			outputStream = this.optionalOutput.getStream();
 			if (outputStream == null)
 				throw new IllegalStateException(String.format(
-						"Use saveAs when output file/stream is not specified at opening"));
+						"Use saveAs when optionalOutput file/stream is not specified at opening"));
 
 			this.initializableDocument.save(outputStream);
 		} catch (final Exception e) { // NOPMD by Julien on 03/09/15 22:09

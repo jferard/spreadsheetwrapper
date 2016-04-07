@@ -31,11 +31,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>>
@@ -76,8 +76,8 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	 *            where to write
 	 */
 	public XlsPoiDocumentWriter(final Logger logger, final Workbook workbook,
-			final XlsPoiStyleHelper styleHelper, final Output output) {
-		super(logger, output);
+			final XlsPoiStyleHelper styleHelper, final OptionalOutput optionalOutput) {
+		super(logger, optionalOutput);
 		this.logger = logger;
 		this.workbook = workbook;
 		this.styleHelper = styleHelper;
@@ -91,7 +91,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public void close() {
 		try {
-			this.output.close();
+			this.optionalOutput.close();
 		} catch (final IOException e) {
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
@@ -134,10 +134,10 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public void save() throws SpreadsheetException {
 		OutputStream outputStream = null;
 		try {
-			outputStream = this.output.getStream();
+			outputStream = this.optionalOutput.getStream();
 			if (outputStream == null)
 				throw new IllegalStateException(
-						String.format("Use saveAs when output file/stream is not specified"));
+						String.format("Use saveAs when optionalOutput file/stream is not specified"));
 			this.workbook.write(outputStream);
 			outputStream.flush();
 		} catch (final IOException e) {

@@ -15,7 +15,7 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *******************************************************************************/
-package com.github.jferard.spreadsheetwrapper;
+package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,55 +26,54 @@ import java.io.OutputStream;
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
 /**
- * The Ouput class stores one of the possible output (stream, file, URL). This
- * is a way to delay the creation of the outputStream. (If the outputStream is
- * created immediately and the output file is the same as the input file, then
- * the input file while be erased before the spreadsheet is opened).
+ * The Ouput class stores one of the possible optionalOutput (stream, file,
+ * URL). This is a way to delay the creation of the outputStream. (If the
+ * outputStream is created immediately and the optionalOutput file is the same
+ * as the input file, then the input file will be erased before the spreadsheet
+ * is opened).
  *
  * @author Julien
  *
  */
-public class Output {
-	/** file output */
+public class OptionalOutput {
+	/** file optionalOutput */
 	private final/*@Nullable*/File outputFile;
 
-	/** stream output */
+	/** stream optionalOutput */
 	private/*@Nullable*/OutputStream outputStream;
 
 	/**
-	 * Empty output
+	 * Empty optionalOutput
 	 */
-	public Output() {
-		this(null, null);
-	}
+	public static OptionalOutput EMPTY = new OptionalOutput(null, null);
 
 	/**
-	 * Output to a file
+	 * OptionalOutput to a file
 	 *
 	 * @param outputFile
 	 */
-	public Output(final/*@Nullable*/File outputFile) {
-		this(null, outputFile);
+	public static OptionalOutput fromFile(final/*@Nullable*/File outputFile) {
+		return new OptionalOutput(null, outputFile);
 	}
 
 	/**
-	 * Output to a stream
+	 * OptionalOutput to a stream
 	 *
 	 * @param outputStream
 	 */
-	public Output(final/*@Nullable*/OutputStream outputStream) {
-		this(outputStream, null);
+	public static OptionalOutput fromStream(
+			final/*@Nullable*/OutputStream outputStream) {
+		return new OptionalOutput(outputStream, null);
 	}
 
 	/**
-	 * Output to file or stream
+	 * OptionalOutput to file or stream
 	 *
 	 * @param outputStream
 	 * @param outputFile
 	 */
-	private Output(final/*@Nullable*/OutputStream outputStream,
+	private OptionalOutput(final/*@Nullable*/OutputStream outputStream,
 			final/*@Nullable*/File outputFile) {
-		super();
 		this.outputStream = outputStream;
 		this.outputFile = outputFile;
 	}
@@ -96,12 +95,11 @@ public class Output {
 	 * @return the stream or null if it can't be opened
 	 */
 	public/*@Nullable*/OutputStream getStream() {
-		if (this.outputStream == null) {
+		if (this.outputStream == null && this.outputFile != null) {
 			try {
-				if (this.outputFile != null)
-					this.outputStream = 
-							new FileOutputStream(this.outputFile);
-			} catch (final FileNotFoundException e) {}
+				this.outputStream = new FileOutputStream(this.outputFile);
+			} catch (final FileNotFoundException e) {
+			}
 		}
 		return this.outputStream;
 	}

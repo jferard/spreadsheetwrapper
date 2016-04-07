@@ -26,11 +26,11 @@ import java.util.NoSuchElementException;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.Accessor;
-import com.github.jferard.spreadsheetwrapper.Output;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
+import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 import jxl.Sheet;
@@ -57,7 +57,7 @@ implements SpreadsheetDocumentWriter {
 	 */
 	XlsJxlDocumentWriter(final Logger logger,
 			final XlsJxlStyleHelper styleHelper, final JxlWorkbook writableWorkbook) {
-		super(logger, new Output());
+		super(logger, OptionalOutput.EMPTY);
 		this.styleHelper = styleHelper;
 		this.jxlWorkbook = writableWorkbook;
 		this.accessor = new Accessor<SpreadsheetWriter>();
