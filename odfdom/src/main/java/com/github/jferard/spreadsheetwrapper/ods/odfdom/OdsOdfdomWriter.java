@@ -37,7 +37,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsApacheUtil;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -235,11 +234,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final OdfTableCell odfCell = this.getOdfCell(r, c);
-		if (odfCell == null)
-			return null;
-
-		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
-		return this.styleHelper.getWrapperCellStyle(odfElement);
+		return this.styleHelper.getStyle(odfCell);
 	}
 
 	/** {@inheritDoc} */
@@ -349,12 +344,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final OdfTableCell odfCell = this.getOrCreateOdfCell(r, c);
-		if (odfCell == null)
-			return false;
-
-		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
-		this.styleHelper.setWrapperCellStyle(odfElement, wrapperCellStyle);
-		return true;
+		return this.styleHelper.setWrapperCellStyle(odfCell, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */

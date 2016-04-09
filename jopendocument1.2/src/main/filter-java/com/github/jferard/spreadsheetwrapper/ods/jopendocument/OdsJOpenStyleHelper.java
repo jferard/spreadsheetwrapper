@@ -26,6 +26,7 @@ import org.jopendocument.dom.ODXMLDocument;
 import org.jopendocument.dom.StyledNode;
 import org.jopendocument.dom.spreadsheet.CellStyle;
 import org.jopendocument.dom.spreadsheet.CellStyle.${jopendocument.styletablecellproperties.cls};
+import org.jopendocument.dom.spreadsheet.MutableCell;
 import org.jopendocument.dom.spreadsheet.SpreadSheet;
 import org.jopendocument.dom.text.TextStyle.${jopendocument.styletextproperties.cls};
 
@@ -93,7 +94,7 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 		return style;
 	}
 
-	public void addStyle(ODXMLDocument stylesDoc, String styleName, 
+	public boolean addStyle(ODXMLDocument stylesDoc, String styleName, 
 			WrapperCellStyle wrapperCellStyle) {
 		final Element namedStyles = stylesDoc.getChild("styles", true);
 		@SuppressWarnings("unchecked")
@@ -107,6 +108,7 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 			newStyle.removeContent();
 
 		this.fillStyle(newStyle, wrapperCellStyle);
+		return true;
 	}
 	
 	
@@ -264,6 +266,13 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 		return style == null ? WrapperCellStyle.EMPTY : this.toWrapperCellStyle(style);
 	}
 
+	public String getStyleName(MutableCell<SpreadSheet> cell) {
+		if (cell == null)
+			return null;
+		
+		return cell.getStyleName();
+	}
+
 	@Override
 	public void setWrapperCellStyle(StyledNode<CellStyle, SpreadSheet> element,
 			WrapperCellStyle wrapperCellStyle) {
@@ -274,4 +283,25 @@ class OdsJOpenStyleHelper implements StyleHelper<CellStyle, StyledNode<CellStyle
 		if (cellStyle != null)
 		this.setCellStyle(cellStyle, wrapperCellStyle);
 	}
+	
+	public boolean setStyleName(StyledNode<CellStyle, SpreadSheet> element,
+			String styleName) {
+		element.setStyleName(styleName);
+		return true;
+	}
+	
+	public /*@Nullable*/WrapperCellStyle getStyle(StyledNode<CellStyle, SpreadSheet> node) {
+		if (node == null)
+			return null;
+		
+		return this.getWrapperCellStyle(node);
+	}
+	
+	public boolean setStyle(StyledNode<CellStyle, SpreadSheet> element,
+			WrapperCellStyle wrapperCellStyle) {
+		this.setWrapperCellStyle(element, wrapperCellStyle);
+		return true;
+	}
+	
+	
 }

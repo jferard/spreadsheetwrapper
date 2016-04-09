@@ -26,7 +26,7 @@ public final class OdsSimpleodsTestProperties {
 	 * create the properties
 	 */
 	private static TestProperties properties = new TestProperties(
-			new OdsSimpleodsDocumentFactory(Logger.getGlobal()));
+			new OdsSimpleodsDocumentFactory(Logger.getGlobal(), new OdsSimpleodsStyleHelper()));
 
 	/**
 	 * @return the properties for test classes

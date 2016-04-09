@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
 public final class OdsSimpleodfTestProperties {
 	/**
@@ -28,7 +27,7 @@ public final class OdsSimpleodfTestProperties {
 	 */
 	private static TestProperties properties = new TestProperties(
 			new OdsSimpleodfDocumentFactory(Logger.getGlobal(),
-					new OdsOdfdomStyleHelper()));
+					new OdsSimpleodfStyleHelper()));
 
 	/**
 	 * @return the properties for test classes

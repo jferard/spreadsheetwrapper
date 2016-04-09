@@ -216,11 +216,7 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
-		if (cell == null)
-			return null;
-
-		final CellFormat cellFormat = cell.getCellFormat();
-		return this.styleHelper.toWrapperCellStyle(cellFormat);
+		return this.styleHelper.getStyle(cell);
 	}
 
 	/** {@inheritDoc} */
@@ -334,25 +330,14 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final WritableCell cell = this.getOrCreateJxlCell(r, c);
-		if (cell == null)
-			return false;
-
-		this.styleHelper.setWrapperCellStyle(cell, wrapperCellStyle);
-		return true;
+		return this.styleHelper.setStyle(cell, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final WritableCellFormat cellFormat = this.styleHelper
-				.getCellFormat(styleName);
-		if (cellFormat == null)
-			return false;
-		else {
-			final WritableCell cell = this.getOrCreateJxlCell(r, c);
-			cell.setCellFormat(cellFormat);
-			return true;
-		}
+		final WritableCell cell = this.getOrCreateJxlCell(r, c);
+		return this.styleHelper.setStyleName(cell, styleName);
 	}
 
 	/** {@inheritDoc} */

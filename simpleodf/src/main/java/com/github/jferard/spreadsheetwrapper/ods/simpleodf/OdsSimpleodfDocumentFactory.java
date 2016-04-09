@@ -30,7 +30,7 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractDocumentFactory;
 import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
+import com.github.jferard.spreadsheetwrapper.ods.apache.OdsApacheStyleHelper;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
 
@@ -46,14 +46,14 @@ public class OdsSimpleodfDocumentFactory
 	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
 		return new OdsSimpleodfDocumentFactory(logger,
-				new OdsOdfdomStyleHelper());
+				new OdsSimpleodfStyleHelper());
 	}
 
 	/** simple logger */
 	private final Logger logger;
 
 	/** style helper */
-	private final OdsOdfdomStyleHelper styleHelper;
+	private final OdsSimpleodfStyleHelper styleHelper;
 
 	/**
 	 * @param logger
@@ -62,7 +62,7 @@ public class OdsSimpleodfDocumentFactory
 	 *            the style helper
 	 */
 	public OdsSimpleodfDocumentFactory(final Logger logger,
-			final OdsOdfdomStyleHelper styleHelper) {
+			final OdsSimpleodfStyleHelper styleHelper) {
 		super(OdsConstants.EXTENSION);
 		this.logger = logger;
 		this.styleHelper = styleHelper;

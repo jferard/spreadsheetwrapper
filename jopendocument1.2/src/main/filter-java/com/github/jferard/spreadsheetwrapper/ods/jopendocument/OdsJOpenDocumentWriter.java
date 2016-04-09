@@ -123,8 +123,7 @@ class OdsJOpenDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
 		final ODXMLDocument stylesDoc = this.initializableDocument.getStyles();
-		this.styleHelper.addStyle(stylesDoc, styleName, wrapperCellStyle);
-		return true;
+		return this.styleHelper.addStyle(stylesDoc, styleName, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */

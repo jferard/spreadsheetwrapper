@@ -152,21 +152,13 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = this.styleHelper.toCellStyle(this.workbook,
-				wrapperCellStyle);
-		this.styleHelper.putCellStyle(styleName, cellStyle);
-		return true;
+		return this.styleHelper.setStyle(this.workbook, styleName, wrapperCellStyle);
 	}
 	
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getCellStyle(final String styleName) {
-		final CellStyle cellStyle = this.styleHelper.getCellStyle(
-				this.workbook, styleName);
-		if (cellStyle == null)
-			return null;
-
-		return this.styleHelper.toWrapperCellStyle(this.workbook, cellStyle);
+		return this.styleHelper.getWrapperCellStyle(this.workbook, styleName);
 	}
 
 	/** {@inheritDoc} */

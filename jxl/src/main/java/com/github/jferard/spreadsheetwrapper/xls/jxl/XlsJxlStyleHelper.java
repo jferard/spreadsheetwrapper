@@ -19,6 +19,7 @@ package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
 import java.util.HashMap;
 
+import jxl.Cell;
 import jxl.format.CellFormat;
 import jxl.format.Colour;
 import jxl.write.WritableCell;
@@ -58,7 +59,8 @@ class XlsJxlStyleHelper implements StyleHelper<CellFormat, WritableCell> {
 	 *            the name of the style
 	 * @return the internal style
 	 */
-	public/*@Nullable*/WritableCellFormat getCellFormat(final String styleName) {
+	public/*@Nullable*/WritableCellFormat getCellFormat(
+			final String styleName) {
 		final WritableCellFormat cellFormat = this.cellStyleAccessor
 				.getCellStyle(styleName);
 		return cellFormat;
@@ -99,15 +101,16 @@ class XlsJxlStyleHelper implements StyleHelper<CellFormat, WritableCell> {
 			final WrapperCellStyle wrapperCellStyle) {
 		final WritableCellFormat cellFormat = new WritableCellFormat();
 		try {
-			WritableFont /*@Nullable*/cellFont = this
-					.fontHelper.toCellFont(wrapperCellStyle);
+			WritableFont /*@Nullable*/ cellFont = this.fontHelper
+					.toCellFont(wrapperCellStyle);
 			if (cellFont != null)
 				cellFormat.setFont(cellFont);
 
 			final WrapperColor backgroundColor = wrapperCellStyle
 					.getBackgroundColor();
 			if (backgroundColor != null) {
-				final Colour jxlColor = this.colorHelper.toJxlColor(backgroundColor);
+				final Colour jxlColor = this.colorHelper
+						.toJxlColor(backgroundColor);
 				if (jxlColor != null)
 					cellFormat.setBackground(jxlColor);
 			}
@@ -132,8 +135,8 @@ class XlsJxlStyleHelper implements StyleHelper<CellFormat, WritableCell> {
 			return WrapperCellStyle.EMPTY;
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle();
 
-		WrapperColor backgroundColor = this.colorHelper.toWrapperColor(cellFormat
-				.getBackgroundColour());
+		WrapperColor backgroundColor = this.colorHelper
+				.toWrapperColor(cellFormat.getBackgroundColour());
 		if (WrapperColor.DEFAULT_BACKGROUND.equals(backgroundColor))
 			backgroundColor = null;
 		if (backgroundColor != null)
@@ -143,10 +146,11 @@ class XlsJxlStyleHelper implements StyleHelper<CellFormat, WritableCell> {
 		if (borders != null)
 			wrapperCellStyle.setBorders(borders);
 
-		final WrapperFont wrapperFont = this.fontHelper.toWrapperFont(cellFormat);
+		final WrapperFont wrapperFont = this.fontHelper
+				.toWrapperFont(cellFormat);
 		if (wrapperFont != null)
 			wrapperCellStyle.setCellFont(wrapperFont);
-		
+
 		return wrapperCellStyle;
 	}
 
@@ -161,4 +165,48 @@ class XlsJxlStyleHelper implements StyleHelper<CellFormat, WritableCell> {
 			WrapperCellStyle wrapperCellStyle) {
 		cell.setCellFormat(this.toCellFormat(wrapperCellStyle));
 	}
+
+	public WrapperCellStyle getCellStyle(final String styleName) {
+		final WritableCellFormat cellFormat = this.getCellFormat(styleName);
+		if (cellFormat == null)
+			return WrapperCellStyle.EMPTY;
+
+		return this.toWrapperCellStyle(cellFormat);
+	}
+
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
+		final WritableCellFormat cellFormat = this
+				.toCellFormat(wrapperCellStyle);
+		this.putCellStyle(styleName, cellFormat);
+		return true;
+	}
+
+	public WrapperCellStyle getStyle(Cell cell) {
+		if (cell == null)
+			return null;
+
+		final CellFormat cellFormat = cell.getCellFormat();
+		return this.toWrapperCellStyle(cellFormat);
+	}
+
+	public boolean setStyle(WritableCell cell,
+			WrapperCellStyle wrapperCellStyle) {
+		if (cell == null)
+			return false;
+
+		this.setWrapperCellStyle(cell, wrapperCellStyle);
+		return true;
+	}
+
+	public boolean setStyleName(WritableCell cell, String styleName) {
+		final WritableCellFormat cellFormat = this.getCellFormat(styleName);
+		if (cellFormat == null)
+			return false;
+		else {
+			cell.setCellFormat(cellFormat);
+			return true;
+		}
+	}
+
 }

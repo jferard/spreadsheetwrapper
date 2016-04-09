@@ -11,8 +11,8 @@ import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 
-final class OdsOdfdomStyleBorderHelper {
-	private OdsOdfdomStyleBorderHelper() {}
+final class OdsApacheStyleBorderHelper {
+	private OdsApacheStyleBorderHelper() {}
 
 	public static Borders toCellBorders(
 			final Map<OdfStyleProperty, String> propertyByAttrName) {

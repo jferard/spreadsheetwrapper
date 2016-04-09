@@ -22,9 +22,11 @@ import java.util.Map;
 
 import org.odftoolkit.odfdom.dom.element.style.StyleStyleElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
+import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.dom.style.OdfStylePropertySet;
 import org.odftoolkit.odfdom.dom.style.props.OdfStyleProperty;
 import org.odftoolkit.odfdom.dom.style.props.OdfTableCellProperties;
+import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
 import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 
 import com.github.jferard.spreadsheetwrapper.StyleHelper;
@@ -37,7 +39,7 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
  * A little style utility for odftoolkit files
  *
  */
-public class OdsOdfdomStyleHelper implements
+public class OdsApacheStyleHelper implements
 		StyleHelper<OdfStylePropertySet, TableTableCellElementBase> {
 	/** @return the cell style from the element */
 	@Override
@@ -65,7 +67,7 @@ public class OdsOdfdomStyleHelper implements
 		final Map<OdfStyleProperty, String> properties = new HashMap<OdfStyleProperty, String>();
 		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
 		if (wrapperFont != null)
-			properties.putAll(OdsOdfdomStyleFontHelper
+			properties.putAll(OdsApacheStyleFontHelper
 					.getFontProperties(wrapperFont));
 
 		final WrapperColor backgroundColor = wrapperCellStyle
@@ -76,7 +78,7 @@ public class OdsOdfdomStyleHelper implements
 		}
 		final Borders borders = wrapperCellStyle.getBorders();
 		if (borders != null)
-			properties.putAll(OdsOdfdomStyleBorderHelper
+			properties.putAll(OdsApacheStyleBorderHelper
 					.getBordersProperties(borders));
 
 		return properties;
@@ -89,13 +91,13 @@ public class OdsOdfdomStyleHelper implements
 	 */
 	@Override
 	public WrapperCellStyle toWrapperCellStyle(final OdfStylePropertySet style) {
-		return OdsOdfdomStyleHelper.toWrapperCellStyle(style.getProperties(style
+		return OdsApacheStyleHelper.toWrapperCellStyle(style.getProperties(style
 				.getStrictProperties()));
 	}
 
 	private static WrapperCellStyle toWrapperCellStyle(
 			Map<OdfStyleProperty, String> propertyByAttrName) {
-		WrapperFont wrapperFont = OdsOdfdomStyleFontHelper.toWrapperCellFont(propertyByAttrName);
+		WrapperFont wrapperFont = OdsApacheStyleFontHelper.toWrapperCellFont(propertyByAttrName);
 		final WrapperCellStyle wrapperStyle = new WrapperCellStyle()
 				.setCellFont(wrapperFont);
 
@@ -104,7 +106,7 @@ public class OdsOdfdomStyleHelper implements
 		if (backgroundColor != null)
 			wrapperStyle.setBackgroundColor(WrapperColor.stringToColor(backgroundColor));
 
-		Borders borders = OdsOdfdomStyleBorderHelper
+		Borders borders = OdsApacheStyleBorderHelper
 				.toCellBorders(propertyByAttrName);
 		wrapperStyle.setBorders(borders);
 
@@ -114,15 +116,29 @@ public class OdsOdfdomStyleHelper implements
 	@Override
 	public void setWrapperCellStyle(TableTableCellElementBase element,
 			WrapperCellStyle wrapperCellStyle) {
-		Map<OdfStyleProperty, String> properties = OdsOdfdomStyleHelper
+		Map<OdfStyleProperty, String> properties = OdsApacheStyleHelper
 				.toProperties(wrapperCellStyle);
 		element.setProperties(properties);
 	}
 
 	public void setWrapperCellStyle(OdfStyle style,
 			WrapperCellStyle wrapperCellStyle) {
-		Map<OdfStyleProperty, String> properties = OdsOdfdomStyleHelper
+		Map<OdfStyleProperty, String> properties = OdsApacheStyleHelper
 				.toProperties(wrapperCellStyle);
 		style.setProperties(properties);
 	}
-}
+	
+	public WrapperCellStyle getCellStyle(final OdfOfficeStyles documentStyles, final String styleName) {
+		final OdfStyle existingStyle = documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return this.toWrapperCellStyle(existingStyle);
+	}
+
+	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
+			WrapperCellStyle wrapperCellStyle) {
+		final OdfStyle newStyle = documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		this.setWrapperCellStyle(newStyle, wrapperCellStyle);
+		return true;
+	}
+}	

@@ -161,24 +161,14 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final Cell poiCell = this.getOrCreatePOICell(r, c);
-		final CellStyle cellStyle = this.styleHelper.toCellStyle(
-				this.sheet.getWorkbook(), wrapperCellStyle);
-		poiCell.setCellStyle(cellStyle);
-		return true;
+		return this.styleHelper.setStyle(this.sheet.getWorkbook(), poiCell, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final CellStyle cellStyle = this.styleHelper.getCellStyle(
-				this.sheet.getWorkbook(), styleName);
-		if (cellStyle == null)
-			return false;
-		else {
-			final Cell cell = this.getOrCreatePOICell(r, c);
-			cell.setCellStyle(cellStyle);
-			return true;
-		}
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		return this.styleHelper.setSyleName(this.sheet.getWorkbook(), cell, styleName);
 	}
 
 	/** */
@@ -348,23 +338,14 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell poiCell = this.getPOICell(r, c);
-		if (poiCell == null)
-			return null;
-
-		final CellStyle cellStyle = poiCell.getCellStyle();
-		return this.styleHelper.toWrapperCellStyle(this.sheet.getWorkbook(),
-				cellStyle);
+		return this.styleHelper.getStyle(this.sheet.getWorkbook(), poiCell);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
-			return null;
-
-		final CellStyle cellStyle = cell.getCellStyle();
-		return this.styleHelper.getStyleName(cellStyle);
+		return this.styleHelper.getStyleName(cell);
 	}
 
 	/** {@inheritDoc} */

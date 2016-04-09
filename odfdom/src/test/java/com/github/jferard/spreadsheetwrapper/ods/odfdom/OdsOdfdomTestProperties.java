@@ -20,7 +20,6 @@ package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 import java.util.logging.Logger;
 
 import com.github.jferard.spreadsheetwrapper.TestProperties;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 
 public final class OdsOdfdomTestProperties {
 	/**

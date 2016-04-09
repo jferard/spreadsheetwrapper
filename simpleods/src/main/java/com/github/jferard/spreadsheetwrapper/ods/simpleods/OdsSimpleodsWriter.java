@@ -51,11 +51,15 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	/** the *internal* table */
 	private final Table table;
 
+	private OdsSimpleodsStyleHelper styleHelper;
+
 	/**
+	 * @param styleHelper 
 	 * @param table
 	 *            *internal* sheet
 	 */
-	OdsSimpleodsWriter(final Table table) {
+	OdsSimpleodsWriter(OdsSimpleodsStyleHelper styleHelper, final Table table) {
+		this.styleHelper = styleHelper;
 		this.table = table;
 
 	}
@@ -158,8 +162,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
-		simpleCell.setStyle(styleName);
-		return true;
+		return this.styleHelper.setStyle(simpleCell, styleName);
 	}
 
 	/** {@inheritDoc} */
@@ -321,10 +324,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final TableCell simpleCell = this.getSimpleCell(r, c);
-		if (simpleCell == null)
-			return null;
-
-		return simpleCell.getStyle();
+		return this.styleHelper.getStyleName(simpleCell);
 	}
 
 	/** {@inheritDoc} */

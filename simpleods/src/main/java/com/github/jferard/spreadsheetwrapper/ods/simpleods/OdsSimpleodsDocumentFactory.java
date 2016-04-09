@@ -44,19 +44,22 @@ implements SpreadsheetDocumentFactory {
 	 * @return the factory
 	 */
 	public static SpreadsheetDocumentFactory create(final Logger logger) {
-		return new OdsSimpleodsDocumentFactory(logger);
+		return new OdsSimpleodsDocumentFactory(logger, new OdsSimpleodsStyleHelper());
 	}
 
 	/** the logger */
 	private final Logger logger;
+	private OdsSimpleodsStyleHelper styleHelper;
 
 	/**
 	 * @param logger
 	 *            the logger
+	 * @param styleHelper 
 	 */
-	public OdsSimpleodsDocumentFactory(final Logger logger) {
+	public OdsSimpleodsDocumentFactory(final Logger logger, OdsSimpleodsStyleHelper styleHelper) {
 		super(OdsConstants.EXTENSION);
 		this.logger = logger;
+		this.styleHelper = styleHelper;
 	}
 
 	/** {@inheritDoc} */
@@ -74,7 +77,7 @@ implements SpreadsheetDocumentFactory {
 
 		final OdsFile odsFile = new OdsFile(file.getPath());
 		final OptionalOutput optionalOutput = OptionalOutput.fromFile(file);
-		return new OdsSimpleodsDocumentWriter(this.logger, odsFile, optionalOutput);
+		return new OdsSimpleodsDocumentWriter(this.logger, this.styleHelper, odsFile, optionalOutput);
 	}
 
 	/** {@inheritDoc} */

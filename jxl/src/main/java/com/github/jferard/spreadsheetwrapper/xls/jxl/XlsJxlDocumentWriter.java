@@ -41,7 +41,7 @@ import jxl.write.WriteException;
 /**
  */
 class XlsJxlDocumentWriter extends AbstractSpreadsheetDocumentWriter
-implements SpreadsheetDocumentWriter {
+		implements SpreadsheetDocumentWriter {
 	/** a Spreadsheet writer accessor by name and by index */
 	private final Accessor<SpreadsheetWriter> accessor;
 
@@ -56,7 +56,8 @@ implements SpreadsheetDocumentWriter {
 	 *            *internal* workbook
 	 */
 	XlsJxlDocumentWriter(final Logger logger,
-			final XlsJxlStyleHelper styleHelper, final JxlWorkbook writableWorkbook) {
+			final XlsJxlStyleHelper styleHelper,
+			final JxlWorkbook writableWorkbook) {
 		super(logger, OptionalOutput.EMPTY);
 		this.styleHelper = styleHelper;
 		this.jxlWorkbook = writableWorkbook;
@@ -72,7 +73,7 @@ implements SpreadsheetDocumentWriter {
 					// 16:09
 					styleHelper);
 			this.accessor.put(name, n, reader);
-  		}
+		}
 	}
 
 	/**
@@ -92,12 +93,7 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
-		final WritableCellFormat cellFormat = this.styleHelper
-				.getCellFormat(styleName);
-		if (cellFormat == null)
-			return WrapperCellStyle.EMPTY;
-
-		return this.styleHelper.toWrapperCellStyle(cellFormat);
+		return this.styleHelper.getCellStyle(styleName);
 	}
 
 	/** */
@@ -109,8 +105,8 @@ implements SpreadsheetDocumentWriter {
 	/** */
 	@Override
 	public List<String> getSheetNames() {
-		return new ArrayList<String>(Arrays.asList(this.jxlWorkbook
-				.getSheetNames()));
+		return new ArrayList<String>(
+				Arrays.asList(this.jxlWorkbook.getSheetNames()));
 	}
 
 	/** {@inheritDoc} */
@@ -122,8 +118,8 @@ implements SpreadsheetDocumentWriter {
 		else {
 			final Sheet[] sheets = this.jxlWorkbook.getSheets();
 			if (index < 0 || index >= sheets.length)
-				throw new IndexOutOfBoundsException(String.format(
-						"No sheet at position %d", index));
+				throw new IndexOutOfBoundsException(
+						String.format("No sheet at position %d", index));
 
 			final Sheet sheet = sheets[index];
 			spreadsheet = new XlsJxlWriter(sheet, this.styleHelper);
@@ -164,10 +160,7 @@ implements SpreadsheetDocumentWriter {
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final WritableCellFormat cellFormat = this.styleHelper
-				.toCellFormat(wrapperCellStyle);
-		this.styleHelper.putCellStyle(styleName, cellFormat);
-		return true;
+		return this.styleHelper.setStyle(styleName, wrapperCellStyle);
 	}
 
 	private SpreadsheetWriter findSpreadsheetNotYetInAccessor(
@@ -189,8 +182,8 @@ implements SpreadsheetDocumentWriter {
 				return spreadsheet;
 			}
 		}
-		throw new NoSuchElementException(String.format(
-				"No %s sheet in jxlWorkbook", sheetName));
+		throw new NoSuchElementException(
+				String.format("No %s sheet in jxlWorkbook", sheetName));
 	}
 
 	@Override
@@ -198,36 +191,19 @@ implements SpreadsheetDocumentWriter {
 			String sheetName) {
 		if (this.jxlWorkbook.getSheet(sheetName) != null)
 			throw new IllegalArgumentException();
-		final WritableSheet createSheet = this.jxlWorkbook.createSheet(
-				sheetName, index);
+		final WritableSheet createSheet = this.jxlWorkbook
+				.createSheet(sheetName, index);
 		return new XlsJxlWriter(createSheet, this.styleHelper);
 	}
 
 	@Override
 	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(
 			String sheetName) throws NoSuchElementException {
-		// TODO Auto-generated method stub
-		return null;
+		final Sheet sheet = this.jxlWorkbook.getSheet(sheetName);
+		if (sheet == null)
+				throw new NoSuchElementException();
+		
+		return new XlsJxlWriter(sheet, this.styleHelper);
 	}
-	
-//	private SpreadsheetReader findSpreadsheet(final String sheetName) {
-//		final SpreadsheetReader spreadsheet;
-//
-//		final Sheet[] sheets = this.workbook.getSheets();
-//		for (int n = 0; n < sheets.length; n++) {
-//			final Sheet sheet = sheets[n];
-//
-//			if (sheet.getName().equals(sheetName)) {
-//				spreadsheet = new XlsJxlReader(sheet, this.styleHelper); // NOPMD
-//				// by
-//				// Julien
-//				// on
-//				// 03/09/15 21:57
-//				this.accessor.put(sheetName, n, spreadsheet);
-//				return spreadsheet;
-//			}
-//		}
-//		throw new NoSuchElementException(String.format(
-//				"No %s sheet in workbook", sheetName));
-//	}
+
 }

@@ -134,16 +134,14 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperStyle) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		this.styleHelper.setWrapperCellStyle(cell, wrapperStyle);
-		return true;
+		return this.styleHelper.setStyle(cell, wrapperStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean setStyleName(final int r, final int c, final String styleName) {
 		final MutableCell<SpreadSheet> cell = this.getOrCreateCell(r, c);
-		cell.setStyleName(styleName);
-		return true;
+		return this.styleHelper.setStyleName(cell, styleName);
 	}
 
 	/** {@inheritDoc} */
@@ -298,20 +296,14 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		if (cell == null)
-			return null;
-		
-		return this.styleHelper.getWrapperCellStyle(cell);
+		return this.styleHelper.getStyle(cell);
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/String getStyleName(final int r, final int c) {
 		final MutableCell<SpreadSheet> cell = this.getCell(r, c);
-		if (cell == null)
-			return null;
-
-		return cell.getStyleName();
+		return this.styleHelper.getStyleName(cell);
 	}
 
 	/** {@inheritDoc} */

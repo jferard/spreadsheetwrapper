@@ -34,7 +34,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
 import com.github.jferard.spreadsheetwrapper.ods.apache.OdsApacheUtil;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
@@ -54,7 +53,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	private/*@Nullable*/Row curRow;
 
 	/** the style helper */
-	private final OdsOdfdomStyleHelper styleHelper;
+	private final OdsSimpleodfStyleHelper styleHelper;
 
 	/** internal table */
 	private final Table table;
@@ -64,7 +63,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	 *            the *internal* table
 	 * @param delegateStyleHelper
 	 */
-	OdsSimpleodfWriter(final Table table, final OdsOdfdomStyleHelper styleHelper) {
+	OdsSimpleodfWriter(final Table table, final OdsSimpleodfStyleHelper styleHelper) {
 		this.styleHelper = styleHelper;
 		this.table = table;
 	}
@@ -163,12 +162,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final Cell cell = this.getOrCreateSimpleCell(r, c);
-		if (cell == null)
-			return false;
-
-		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		this.styleHelper.setWrapperCellStyle(odfElement, wrapperCellStyle);
-		return true;
+		return this.styleHelper.setStyle(cell, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -360,11 +354,7 @@ class OdsSimpleodfWriter extends AbstractSpreadsheetWriter implements
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
 		final Cell cell = this.getSimpleCell(r, c);
-		if (cell == null)
-			return null;
-
-		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		return this.styleHelper.getWrapperCellStyle(odfElement);
+		return this.styleHelper.getStyle(cell);
 	}
 
 	/** {@inheritDoc} */

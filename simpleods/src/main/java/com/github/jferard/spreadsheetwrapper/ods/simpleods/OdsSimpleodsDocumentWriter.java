@@ -25,24 +25,17 @@ import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.simpleods.BorderStyle;
 import org.simpleods.OdsFile;
 import org.simpleods.SimpleOdsException;
 import org.simpleods.Table;
-import org.simpleods.TableStyle;
-import org.simpleods.TextStyle;
 
 import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
-import com.github.jferard.spreadsheetwrapper.Util;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
-import com.github.jferard.spreadsheetwrapper.style.Borders;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
-import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
-import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 /*>>> import org.checkerframework.checker.initialization.qual.UnknownInitialization;*/
 
@@ -51,8 +44,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 public class OdsSimpleodsDocumentWriter extends
 		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	
-	private static SpreadsheetWriter createNew(final Table table) {
-		return new OdsSimpleodsWriter(table);
+	private SpreadsheetWriter createNew(final Table table) {
+		return new OdsSimpleodsWriter(this.styleHelper, table);
 	}
 
 	/** *internal* workbook */
@@ -61,18 +54,22 @@ public class OdsSimpleodsDocumentWriter extends
 	/** logger */
 	private final Logger logger;
 
+	private OdsSimpleodsStyleHelper styleHelper;
+
 	/**
 	 * @param logger
 	 *            simple logger
+	 * @param styleHelper 
 	 * @param file
 	 *            *internal* value
 	 * @param outputURL
 	 *            where to write
 	 */
-	public OdsSimpleodsDocumentWriter(final Logger logger, final OdsFile file,
+	public OdsSimpleodsDocumentWriter(final Logger logger, OdsSimpleodsStyleHelper styleHelper, final OdsFile file,
 			final OptionalOutput optionalOutput) {
 		super(logger, optionalOutput);
 		this.logger = logger;
+		this.styleHelper = styleHelper;
 		this.file = file;
 	}
 
@@ -103,48 +100,7 @@ public class OdsSimpleodsDocumentWriter extends
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
-				styleName, this.file);
-		final WrapperFont wrapperFont = wrapperCellStyle.getCellFont();
-		if (wrapperFont != null) {
-			final TextStyle textStyle = newStyle.getTextStyle();
-			final WrapperColor fontColor = wrapperFont.getColor();
-			final int bold = wrapperFont.getBold();
-			final int italic = wrapperFont.getItalic();
-			final double size = wrapperFont.getSize();
-			final String family = wrapperFont.getFamily();
-
-			if (fontColor != null)
-				textStyle.setFontColor(fontColor.toHex());
-			if (bold == WrapperCellStyle.YES) {
-				textStyle.setFontWeightBold();
-				if (italic == WrapperCellStyle.YES)
-					textStyle.setFontWeightItalic();
-			} else {
-				if (italic == WrapperCellStyle.YES)
-					textStyle.setFontWeightItalic();
-				else
-					textStyle.setFontWeightNormal();
-			}
-			if (!Util.almostEqual(size, WrapperCellStyle.DEFAULT))
-				textStyle.setFontSize((int) size);
-			if (family != null)
-				textStyle.setFontName(family);
-
-		}
-		final WrapperColor backgroundColor = wrapperCellStyle
-				.getBackgroundColor();
-		final Borders borders = wrapperCellStyle.getBorders();
-		if (backgroundColor != null)
-			newStyle.setBackgroundColor(backgroundColor.toHex());
-		if (borders != null) {
-			final double borderLineWidth = borders.getLineWidth();
-			if (borderLineWidth != WrapperCellStyle.DEFAULT)
-				newStyle.addBorderStyle(Double.valueOf(borderLineWidth) + "pt",
-						"#000000", BorderStyle.BORDER_SOLID,
-						BorderStyle.POSITION_ALL);
-		}
-		return true;
+		return this.styleHelper.setStyle(this.file, styleName, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -192,7 +148,7 @@ public class OdsSimpleodsDocumentWriter extends
 			try {
 				final String name = this.file.getTableName(index);
 				final Table table = this.getTable(index);
-				spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
+				spreadsheet = this.createNew(table);
 				this.accessor.put(name, index, spreadsheet);
 			} catch (final SimpleOdsException e) {
 				throw new AssertionError(String.format(
@@ -227,7 +183,7 @@ public class OdsSimpleodsDocumentWriter extends
 		try {
 			this.file.addTable(sheetName);
 			final Table table = this.getTable(index);
-			spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
+			spreadsheet = this.createNew(table);
 			this.accessor.put(sheetName, index, spreadsheet);
 		} catch (final SimpleOdsException e) {
 			throw new CantInsertElementInSpreadsheetException(e);
@@ -244,7 +200,7 @@ public class OdsSimpleodsDocumentWriter extends
 					"No %s sheet in workbook", sheetName));
 
 		final Table table = this.getTable(index);
-		final SpreadsheetWriter spreadsheet = OdsSimpleodsDocumentWriter.createNew(table);
+		final SpreadsheetWriter spreadsheet = this.createNew(table);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
 	}

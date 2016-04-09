@@ -31,9 +31,7 @@ import org.odftoolkit.odfdom.doc.OdfSpreadsheetDocument;
 import org.odftoolkit.odfdom.doc.table.OdfTable;
 import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
-import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -42,7 +40,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>>
@@ -104,9 +101,7 @@ implements SpreadsheetDocumentWriter {
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
-		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
-				OdfStyleFamily.TableCell);
-		return this.styleHelper.toWrapperCellStyle(existingStyle);
+		return this.styleHelper.getCellStyle(this.documentStyles, styleName);
 	}
 
 	/** {@inheritDoc} */
@@ -167,10 +162,8 @@ implements SpreadsheetDocumentWriter {
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		this.styleHelper.setWrapperCellStyle(newStyle, wrapperCellStyle);
-		return true;
+		return this.styleHelper.setStyle(this.documentStyles, styleName,
+				wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */

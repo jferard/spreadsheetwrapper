@@ -28,9 +28,7 @@ import java.util.logging.Logger;
 
 import org.odftoolkit.odfdom.dom.element.table.TableTableColumnElement;
 import org.odftoolkit.odfdom.dom.element.table.TableTableElement;
-import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
-import org.odftoolkit.odfdom.incubator.doc.style.OdfStyle;
 import org.odftoolkit.simple.table.Table;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -41,7 +39,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriter;
 import com.github.jferard.spreadsheetwrapper.impl.AbstractSpreadsheetDocumentWriter;
 import com.github.jferard.spreadsheetwrapper.impl.OptionalOutput;
-import com.github.jferard.spreadsheetwrapper.ods.apache.OdsOdfdomStyleHelper;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /*>>>
@@ -70,7 +67,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	private final InitializableDocument initializableDocument;
 
 	/** the style helper */
-	private final OdsOdfdomStyleHelper styleHelper;
+	private final OdsSimpleodfStyleHelper styleHelper;
 
 	/**
 	 * @param logger
@@ -83,7 +80,7 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	 *             if the value writer can't be created
 	 */
 	public OdsSimpleodfDocumentWriter(final Logger logger,
-			final OdsOdfdomStyleHelper styleHelper,
+			final OdsSimpleodfStyleHelper styleHelper,
 			final InitializableDocument initializableDocument, final OptionalOutput optionalOutput)
 					throws SpreadsheetException {
 		super(logger, optionalOutput);
@@ -127,19 +124,15 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	@Override
 	public boolean setStyle(final String styleName,
 			final WrapperCellStyle wrapperCellStyle) {
-		final OdfStyle newStyle = this.documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		this.styleHelper.setWrapperCellStyle(newStyle, wrapperCellStyle);
-		return true;
+		return this.styleHelper.setStyle(this.documentStyles, styleName,
+				wrapperCellStyle);
 	}
 	
 	
 	/** {@inheritDoc} */
 	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
-		final OdfStyle existingStyle = this.documentStyles.getStyle(styleName,
-				OdfStyleFamily.TableCell);
-		return this.styleHelper.toWrapperCellStyle(existingStyle);
+		return this.styleHelper.getCellStyle(this.documentStyles, styleName);
 	}
 
 	/** {@inheritDoc} */

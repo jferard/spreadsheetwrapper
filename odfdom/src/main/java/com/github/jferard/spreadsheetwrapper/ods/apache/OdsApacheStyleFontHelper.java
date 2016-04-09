@@ -12,8 +12,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
-final class OdsOdfdomStyleFontHelper {
-	private OdsOdfdomStyleFontHelper() {}
+final class OdsApacheStyleFontHelper {
+	private OdsApacheStyleFontHelper() {}
 
 	public final static Map<OdfStyleProperty, String> getFontProperties(
 			final WrapperFont wrapperFont) {
@@ -24,12 +24,12 @@ final class OdsOdfdomStyleFontHelper {
 		final WrapperColor fontColor = wrapperFont.getColor();
 		final String fontFamily = wrapperFont.getFamily();
 		if (bold == WrapperCellStyle.YES) {
-			OdsOdfdomStyleFontHelper.setProperties(fontProperties,
+			OdsApacheStyleFontHelper.setProperties(fontProperties,
 					OdsConstants.BOLD_ATTR_VALUE, OdfTextProperties.FontWeight,
 					OdfTextProperties.FontWeightAsian,
 					OdfTextProperties.FontWeightComplex);
 		} else if (bold == WrapperCellStyle.NO) {
-			OdsOdfdomStyleFontHelper.setProperties(fontProperties,
+			OdsApacheStyleFontHelper.setProperties(fontProperties,
 					OdsConstants.NORMAL_ATTR_VALUE,
 					OdfTextProperties.FontWeight,
 					OdfTextProperties.FontWeightAsian,
@@ -37,13 +37,13 @@ final class OdsOdfdomStyleFontHelper {
 		}
 	
 		if (italic == WrapperCellStyle.YES) {
-			OdsOdfdomStyleFontHelper.setProperties(fontProperties,
+			OdsApacheStyleFontHelper.setProperties(fontProperties,
 					OdsConstants.ITALIC_ATTR_VALUE,
 					OdfTextProperties.FontStyle,
 					OdfTextProperties.FontStyleAsian,
 					OdfTextProperties.FontStyleComplex);
 		} else if (italic == WrapperCellStyle.NO) {
-			OdsOdfdomStyleFontHelper.setProperties(fontProperties,
+			OdsApacheStyleFontHelper.setProperties(fontProperties,
 					OdsConstants.NORMAL_ATTR_VALUE,
 					OdfTextProperties.FontStyle,
 					OdfTextProperties.FontStyleAsian,
@@ -60,7 +60,7 @@ final class OdsOdfdomStyleFontHelper {
 		}
 	
 		if (fontFamily != null) {
-			OdsOdfdomStyleFontHelper.setProperties(fontProperties, fontFamily,
+			OdsApacheStyleFontHelper.setProperties(fontProperties, fontFamily,
 					OdfTextProperties.FontFamily, OdfTextProperties.FontName,
 					OdfTextProperties.FontFamilyAsian,
 					OdfTextProperties.FontNameAsian,
