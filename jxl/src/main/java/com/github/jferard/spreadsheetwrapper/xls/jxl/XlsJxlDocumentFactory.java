@@ -52,6 +52,19 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 				new XlsJxlStyleBorderHelper(colorHelper)));
 	}
 
+	private static WorkbookSettings getReadSettings() {
+		final WorkbookSettings settings = new WorkbookSettings();
+		settings.setLocale(Locale.US);
+		settings.setEncoding("windows-1252");
+		return settings;
+	}
+
+	private static WorkbookSettings getWriteSettings() {
+		final WorkbookSettings settings = getReadSettings();
+		settings.setWriteAccess("spreadsheetwrapper");
+		return settings;
+	}
+
 	/** simple logger */
 	private final Logger logger;
 
@@ -116,19 +129,6 @@ public class XlsJxlDocumentFactory extends AbstractBasicDocumentFactory
 				outputStream);
 		return new XlsJxlDocumentWriter(this.logger, this.styleHelper,
 				jxlWorkbook);
-	}
-
-	private static WorkbookSettings getWriteSettings() {
-		final WorkbookSettings settings = getReadSettings();
-		settings.setWriteAccess("spreadsheetwrapper");
-		return settings;
-	}
-
-	private static WorkbookSettings getReadSettings() {
-		final WorkbookSettings settings = new WorkbookSettings();
-		settings.setLocale(Locale.US);
-		settings.setEncoding("windows-1252");
-		return settings;
 	}
 
 }

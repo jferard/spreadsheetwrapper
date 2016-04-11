@@ -45,6 +45,11 @@ SpreadsheetDocumentWriter {
 	protected OptionalOutput optionalOutput;
 
 	/**
+	 * An accessor on readers/writers, by name and index.
+	 */
+	protected final Accessor<SpreadsheetWriter> accessor;
+
+	/**
 	 * @param logger
 	 *            the loggier
 	 * @param outputStream
@@ -58,6 +63,75 @@ SpreadsheetDocumentWriter {
 		this.accessor = new Accessor<SpreadsheetWriter>();
 	}
 
+	/**
+	 * Adds a sheet to the value
+	 *
+	 * @param index
+	 *            (0..n) the sheet is inserted before this index
+	 * @param sheetName
+	 *            the namee of the sheet
+	 * @throws IndexOutOfBoundsException
+	 *             if index < 0 or index > sheetCount
+	 * @return the reader/writer
+	 * @throws CantInsertElementInSpreadsheetException
+	 */
+	@Override
+	public SpreadsheetWriter addSheet(final int index, final String sheetName)
+			throws IndexOutOfBoundsException,
+			CantInsertElementInSpreadsheetException {
+		final int size = this.getSheetCount();
+		if (index < 0 || index > size) // index == size is ok
+			throw new IndexOutOfBoundsException();
+
+		return this.addSheetWithCheckedIndex(index, sheetName);
+	}
+	
+	/**
+	 * Adds a sheet at the end of the workbook
+	 *
+	 * @param sheetName
+	 *            the name of the sheet
+	 * @return the reader/writer
+	 * @throws CantInsertElementInSpreadsheetException
+	 */
+	@Override
+	public SpreadsheetWriter addSheet(final String sheetName)
+			throws CantInsertElementInSpreadsheetException {
+		return this.addSheetWithCheckedIndex(this.getSheetCount(), sheetName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
+		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName) {
+		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
+	}
+
+	/**
+	 * @param sheetName
+	 *            the name of the sheet to find
+	 * @throws NoSuchElementException
+	 *             if the workbook does not contains any sheet of this name
+	 * @return the reader/writer
+	 */
+	@Override
+	public SpreadsheetWriter getSpreadsheet(final String sheetName)
+			throws NoSuchElementException {
+		final SpreadsheetWriter spreadsheet;
+		if (this.accessor.hasByName(sheetName))
+			spreadsheet = this.accessor.getByName(sheetName);
+		else
+			spreadsheet = this
+			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
+
+		return spreadsheet;
+	}
+	
 	/** {@inheritDoc} */
 	@Override
 	public void saveAs(final File outputFile) throws SpreadsheetException {
@@ -85,80 +159,6 @@ SpreadsheetDocumentWriter {
 			this.optionalOutput = this.bkpOutput;
 			throw e;
 		}
-	}
-	
-	/**
-	 * An accessor on readers/writers, by name and index.
-	 */
-	protected final Accessor<SpreadsheetWriter> accessor;
-
-	/**
-	 * Adds a sheet to the value
-	 *
-	 * @param index
-	 *            (0..n) the sheet is inserted before this index
-	 * @param sheetName
-	 *            the namee of the sheet
-	 * @throws IndexOutOfBoundsException
-	 *             if index < 0 or index > sheetCount
-	 * @return the reader/writer
-	 * @throws CantInsertElementInSpreadsheetException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final int index, final String sheetName)
-			throws IndexOutOfBoundsException,
-			CantInsertElementInSpreadsheetException {
-		final int size = this.getSheetCount();
-		if (index < 0 || index > size) // index == size is ok
-			throw new IndexOutOfBoundsException();
-
-		return this.addSheetWithCheckedIndex(index, sheetName);
-	}
-
-	/**
-	 * Adds a sheet at the end of the workbook
-	 *
-	 * @param sheetName
-	 *            the name of the sheet
-	 * @return the reader/writer
-	 * @throws CantInsertElementInSpreadsheetException
-	 */
-	@Override
-	public SpreadsheetWriter addSheet(final String sheetName)
-			throws CantInsertElementInSpreadsheetException {
-		return this.addSheetWithCheckedIndex(this.getSheetCount(), sheetName);
-	}
-
-	/**
-	 * @param sheetName
-	 *            the name of the sheet to find
-	 * @throws NoSuchElementException
-	 *             if the workbook does not contains any sheet of this name
-	 * @return the reader/writer
-	 */
-	@Override
-	public SpreadsheetWriter getSpreadsheet(final String sheetName)
-			throws NoSuchElementException {
-		final SpreadsheetWriter spreadsheet;
-		if (this.accessor.hasByName(sheetName))
-			spreadsheet = this.accessor.getByName(sheetName);
-		else
-			spreadsheet = this
-			.findSpreadsheetAndCreateReaderOrWriter(sheetName);
-
-		return spreadsheet;
-	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByIndex(final int index) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(index));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public SpreadsheetWriterCursor getNewCursorByName(final String sheetName) {
-		return new SpreadsheetWriterCursorImpl(this.getSpreadsheet(sheetName));
 	}
 
 	

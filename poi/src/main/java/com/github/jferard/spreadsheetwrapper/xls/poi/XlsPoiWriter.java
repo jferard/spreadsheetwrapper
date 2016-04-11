@@ -69,146 +69,6 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void insertCol(final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertRow(final int r) {
-		this.sheet.shiftRows(r, this.getRowCount(), 1);
-		this.sheet.createRow(r);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> removeCol(final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> removeRow(final int r) {
-		final List</*@Nullable*/Object> ret = this.getRowContents(r);
-		final Row row = this.sheet.getRow(r);
-		this.sheet.removeRow(row);
-		this.sheet.shiftRows(r, this.getRowCount(), 1);
-		return ret;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
-	@Override
-	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		cell.setCellValue(value);
-		return value;
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	public Date setDate(final int r, final int c, final Date date) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		cell.setCellValue(date);
-		if (this.dateCellStyle != null)
-			cell.setCellStyle(this.dateCellStyle);
-		return date;
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	public Double setDouble(final int r, final int c, final Number value) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		final double retValue = value.doubleValue();
-		cell.setCellValue(retValue);
-		return retValue;
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	public String setFormula(final int r, final int c, final String formula) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		try {
-			cell.setCellFormula(formula);
-		} catch (final FormulaParseException e) {
-			throw new IllegalArgumentException(e);
-		}
-		return formula;
-	}
-
-	/**
-	 * @return
-	 */
-	@Override
-	public Integer setInteger(final int r, final int c, final Number value) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		final int retValue = value.intValue();
-		cell.setCellValue(retValue);
-		return retValue;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(final int r, final int c,
-			final WrapperCellStyle wrapperCellStyle) {
-		final Cell poiCell = this.getOrCreatePOICell(r, c);
-		return this.styleHelper.setStyle(this.sheet.getWorkbook(), poiCell, wrapperCellStyle);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		return this.styleHelper.setSyleName(this.sheet.getWorkbook(), cell, styleName);
-	}
-
-	/** */
-	@Override
-	public String setText(final int r, final int c, final String text) {
-		final Cell cell = this.getOrCreatePOICell(r, c);
-		cell.setCellValue(text);
-		return text;
-	}
-
-	/**
-	 * Simple optimization hidden inside a method.
-	 *
-	 * @param r
-	 *            the row index
-	 * @param c
-	 *            the column index
-	 * @return the cell
-	 */
-	protected Cell getOrCreatePOICell(final int r, final int c) {
-		if (r < 0 || c < 0)
-			throw new IllegalArgumentException();
-		if (r >= XlsConstants.MAX_ROWS_PER_SHEET
-				|| c >= XlsConstants.MAX_COLUMNS)
-			throw new UnsupportedOperationException();
-
-		if (r != this.curR || this.curRow == null) {
-			this.curRow = this.sheet.getRow(r);
-			if (this.curRow == null)
-				this.curRow = this.sheet.createRow(r);
-			this.curR = r;
-		}
-		Cell cell = this.curRow.getCell(c);
-		if (cell == null)
-			cell = this.curRow.createCell(c);
-		return cell;
-	}
-
-	/** {@inheritDoc} */
-	@Override
 	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
 		if (cell == null)
@@ -323,17 +183,6 @@ SpreadsheetWriter {
 		return rowCount;
 	}
 
-	private int getCellCountUnsafe(final int r) {
-		final Row row = this.sheet.getRow(r);
-		final short count;
-		if (row == null)
-			count = 0;
-		else
-			count = row.getLastCellNum(); // 1-based
-
-		return count;
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/WrapperCellStyle getStyle(final int r, final int c) {
@@ -361,6 +210,129 @@ SpreadsheetWriter {
 		return cell.getStringCellValue();
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean insertCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean insertRow(final int r) {
+		this.sheet.shiftRows(r, this.getRowCount(), 1);
+		this.sheet.createRow(r);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		final List</*@Nullable*/Object> ret = this.getRowContents(r);
+		final Row row = this.sheet.getRow(r);
+		this.sheet.removeRow(row);
+		this.sheet.shiftRows(r, this.getRowCount(), 1);
+		return ret;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
+	@Override
+	public Boolean setBoolean(final int r, final int c, final Boolean value) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		cell.setCellValue(value);
+		return value;
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public Date setDate(final int r, final int c, final Date date) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		cell.setCellValue(date);
+		if (this.dateCellStyle != null)
+			cell.setCellStyle(this.dateCellStyle);
+		return date;
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public Double setDouble(final int r, final int c, final Number value) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		final double retValue = value.doubleValue();
+		cell.setCellValue(retValue);
+		return retValue;
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public String setFormula(final int r, final int c, final String formula) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		try {
+			cell.setCellFormula(formula);
+		} catch (final FormulaParseException e) {
+			throw new IllegalArgumentException(e);
+		}
+		return formula;
+	}
+
+	/**
+	 * @return
+	 */
+	@Override
+	public Integer setInteger(final int r, final int c, final Number value) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		final int retValue = value.intValue();
+		cell.setCellValue(retValue);
+		return retValue;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperCellStyle) {
+		final Cell poiCell = this.getOrCreatePOICell(r, c);
+		return this.styleHelper.setStyle(this.sheet.getWorkbook(), poiCell, wrapperCellStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c, final String styleName) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		return this.styleHelper.setSyleName(this.sheet.getWorkbook(), cell, styleName);
+	}
+
+	/** */
+	@Override
+	public String setText(final int r, final int c, final String text) {
+		final Cell cell = this.getOrCreatePOICell(r, c);
+		cell.setCellValue(text);
+		return text;
+	}
+
+	private int getCellCountUnsafe(final int r) {
+		final Row row = this.sheet.getRow(r);
+		final short count;
+		if (row == null)
+			count = 0;
+		else
+			count = row.getLastCellNum(); // 1-based
+
+		return count;
+	}
+
 	/**
 	 * Simple optimization hidden inside a method.
 	 *
@@ -380,6 +352,34 @@ SpreadsheetWriter {
 			this.curRow = this.sheet.getRow(r);
 			assert this.curRow != null; // else this.curRow =
 			// this.sheet.createRow(r);
+			this.curR = r;
+		}
+		Cell cell = this.curRow.getCell(c);
+		if (cell == null)
+			cell = this.curRow.createCell(c);
+		return cell;
+	}
+
+	/**
+	 * Simple optimization hidden inside a method.
+	 *
+	 * @param r
+	 *            the row index
+	 * @param c
+	 *            the column index
+	 * @return the cell
+	 */
+	protected Cell getOrCreatePOICell(final int r, final int c) {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+		if (r >= XlsConstants.MAX_ROWS_PER_SHEET
+				|| c >= XlsConstants.MAX_COLUMNS)
+			throw new UnsupportedOperationException();
+
+		if (r != this.curR || this.curRow == null) {
+			this.curRow = this.sheet.getRow(r);
+			if (this.curRow == null)
+				this.curRow = this.sheet.createRow(r);
 			this.curR = r;
 		}
 		Cell cell = this.curRow.getCell(c);

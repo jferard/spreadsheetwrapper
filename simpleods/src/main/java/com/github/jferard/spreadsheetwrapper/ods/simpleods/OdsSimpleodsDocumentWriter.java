@@ -44,10 +44,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 public class OdsSimpleodsDocumentWriter extends
 		AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 	
-	private SpreadsheetWriter createNew(final Table table) {
-		return new OdsSimpleodsWriter(this.styleHelper, table);
-	}
-
 	/** *internal* workbook */
 	private final OdsFile file;
 
@@ -82,25 +78,6 @@ public class OdsSimpleodsDocumentWriter extends
 			final String message = e.getMessage();
 			this.logger.log(Level.SEVERE, message == null ? "" : message, e);
 		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void save() throws SpreadsheetException {
-		final OutputStream outputStream = this.optionalOutput.getStream();
-		if (outputStream == null)
-			throw new IllegalStateException(
-					String.format("Use saveAs when optionalOutput file/stream is not specified"));
-		if (!this.file.save(outputStream))
-			throw new SpreadsheetException(String.format(
-					"this.spreadsheetDocument.save(%s) not ok", outputStream));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(final String styleName,
-			final WrapperCellStyle wrapperCellStyle) {
-		return this.styleHelper.setStyle(this.file, styleName, wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
@@ -156,6 +133,29 @@ public class OdsSimpleodsDocumentWriter extends
 			}
 		}
 		return spreadsheet;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void save() throws SpreadsheetException {
+		final OutputStream outputStream = this.optionalOutput.getStream();
+		if (outputStream == null)
+			throw new IllegalStateException(
+					String.format("Use saveAs when optionalOutput file/stream is not specified"));
+		if (!this.file.save(outputStream))
+			throw new SpreadsheetException(String.format(
+					"this.spreadsheetDocument.save(%s) not ok", outputStream));
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
+		return this.styleHelper.setStyle(this.file, styleName, wrapperCellStyle);
+	}
+
+	private SpreadsheetWriter createNew(final Table table) {
+		return new OdsSimpleodsWriter(this.styleHelper, table);
 	}
 
 	private Table getTable(

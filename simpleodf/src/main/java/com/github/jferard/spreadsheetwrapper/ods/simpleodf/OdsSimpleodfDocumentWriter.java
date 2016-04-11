@@ -51,10 +51,23 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 public class OdsSimpleodfDocumentWriter extends
 AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
-		/*@RequiresNonNull("delegateStyleHelper")*/
-		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterDelegate this, */final Table table) {
-			return new OdsSimpleodfWriter(table, this.styleHelper);
+		private static void cleanEmptyTable(final TableTableElement tableElement) {
+			final NodeList colsList = tableElement
+					.getElementsByTagName("table:table-column");
+			assert colsList.getLength() == 1;
+			final TableTableColumnElement column = (TableTableColumnElement) colsList
+					.item(0);
+			column.setTableNumberColumnsRepeatedAttribute(1);
+			final NodeList rowList = tableElement
+					.getElementsByTagName("table:table-row");
+			while (rowList.getLength() > 1) {
+				final Node item = rowList.item(1);
+				tableElement.removeChild(item);
+			}
+			final NodeList rowListAfter = tableElement
+					.getElementsByTagName("table:table-row");
+			final int lengthAfter = rowListAfter.getLength();
+			assert lengthAfter == 1;
 		}
 
 	/** internal styles */
@@ -104,37 +117,17 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void save() throws SpreadsheetException {
-		OutputStream outputStream = null;
-		try {
-			outputStream = this.optionalOutput.getStream();
-			if (outputStream == null)
-				throw new IllegalStateException(
-						String.format("Use saveAs when optionalOutput file is not specified"));
-			this.initializableDocument.save(outputStream);
-		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
-			this.logger.log(Level.SEVERE, String.format(
-					"this.spreadsheetDocument.save(%s) not ok", outputStream),
-					e);
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(final String styleName,
-			final WrapperCellStyle wrapperCellStyle) {
-		return this.styleHelper.setStyle(this.documentStyles, styleName,
-				wrapperCellStyle);
-	}
-	
-	
-	/** {@inheritDoc} */
-	@Override
 	public WrapperCellStyle getCellStyle(final String styleName) {
 		return this.styleHelper.getCellStyle(this.documentStyles, styleName);
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public int getSheetCount() {
+		return this.getTableList().size();
+	}
+	
+	
 	/** {@inheritDoc} */
 	@Override
 	public List<String> getSheetNames() {
@@ -143,25 +136,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		for (final Table table : tables)
 			sheetNames.add(table.getTableName());
 		return sheetNames;
-	}
-
-	private static void cleanEmptyTable(final TableTableElement tableElement) {
-		final NodeList colsList = tableElement
-				.getElementsByTagName("table:table-column");
-		assert colsList.getLength() == 1;
-		final TableTableColumnElement column = (TableTableColumnElement) colsList
-				.item(0);
-		column.setTableNumberColumnsRepeatedAttribute(1);
-		final NodeList rowList = tableElement
-				.getElementsByTagName("table:table-row");
-		while (rowList.getLength() > 1) {
-			final Node item = rowList.item(1);
-			tableElement.removeChild(item);
-		}
-		final NodeList rowListAfter = tableElement
-				.getElementsByTagName("table:table-row");
-		final int lengthAfter = rowListAfter.getLength();
-		assert lengthAfter == 1;
 	}
 
 	/**
@@ -197,6 +171,32 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 
 	/** {@inheritDoc} */
 	@Override
+	public void save() throws SpreadsheetException {
+		OutputStream outputStream = null;
+		try {
+			outputStream = this.optionalOutput.getStream();
+			if (outputStream == null)
+				throw new IllegalStateException(
+						String.format("Use saveAs when optionalOutput file is not specified"));
+			this.initializableDocument.save(outputStream);
+		} catch (final Exception e) { // NOPMD by Julien on 02/09/15 22:55
+			this.logger.log(Level.SEVERE, String.format(
+					"this.spreadsheetDocument.save(%s) not ok", outputStream),
+					e);
+			throw new SpreadsheetException(e);
+		}
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(final String styleName,
+			final WrapperCellStyle wrapperCellStyle) {
+		return this.styleHelper.setStyle(this.documentStyles, styleName,
+				wrapperCellStyle);
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	protected SpreadsheetWriter addSheetWithCheckedIndex(final int index, final String sheetName)
 			throws CantInsertElementInSpreadsheetException {
 		Table table = this.initializableDocument.addTable(index, sheetName);
@@ -206,6 +206,12 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		final SpreadsheetWriter spreadsheet = this.createNew(table);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
+	}
+
+	/*@RequiresNonNull("delegateStyleHelper")*/
+	protected SpreadsheetWriter createNew(
+			/*>>> @UnknownInitialization OdsSimpleodfDocumentWriterDelegate this, */final Table table) {
+		return new OdsSimpleodfWriter(table, this.styleHelper);
 	}
 
 	/** {@inheritDoc} */
@@ -226,12 +232,6 @@ AbstractSpreadsheetDocumentWriter implements SpreadsheetDocumentWriter {
 		}
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in workbook", sheetName));
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getSheetCount() {
-		return this.getTableList().size();
 	}
 	
 }

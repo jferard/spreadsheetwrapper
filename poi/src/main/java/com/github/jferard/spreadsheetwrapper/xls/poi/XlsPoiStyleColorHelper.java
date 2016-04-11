@@ -46,6 +46,13 @@ class XlsPoiStyleColorHelper {
 
 	}
 
+	public HSSFColor getHSSFColor(final short fontColorIndex) {
+		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
+		final HSSFColor poiFontColor = indexHash.get(Integer
+				.valueOf(fontColorIndex));
+		return poiFontColor;
+	}
+
 	/**
 	 * @param wrapperColor
 	 *            the color to convert
@@ -59,19 +66,7 @@ class XlsPoiStyleColorHelper {
 			hssfColor = new HSSFColor.WHITE();
 		return hssfColor;
 	}
-
-	public HSSFColor getHSSFColor(final short fontColorIndex) {
-		final Map<Integer, HSSFColor> indexHash = HSSFColor.getIndexHash();
-		final HSSFColor poiFontColor = indexHash.get(Integer
-				.valueOf(fontColorIndex));
-		return poiFontColor;
-	}
 	
-	public WrapperColor toWrapperColor(final HSSFColor hssfColor) {
-		return this.colorByHssfColor.get(hssfColor);
-	}
-	
-
 	public WrapperColor toWrapperColor(CellStyle cellStyle) {
 		WrapperColor wrapperColor = null;
 		final short backgroundColorIndex = cellStyle.getFillForegroundColor();
@@ -84,6 +79,11 @@ class XlsPoiStyleColorHelper {
 			wrapperColor = null;
 
 		return wrapperColor;
+	}
+	
+
+	public WrapperColor toWrapperColor(final HSSFColor hssfColor) {
+		return this.colorByHssfColor.get(hssfColor);
 	}
 
 }

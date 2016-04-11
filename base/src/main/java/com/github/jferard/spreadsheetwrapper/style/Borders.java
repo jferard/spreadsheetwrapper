@@ -25,20 +25,46 @@ public class Borders {
 	 */
 	private Border borderRight;
 
-	/**
-	 * @param borderLineWidth the width to set
-	 * @return the Borders objets (fluent style)
-	 */
-	public Borders setLineWidth(final double borderLineWidth) {
-		this.borderTop = (this.borderTop == null ? new Border()
-				: this.borderTop).setLineWidth(borderLineWidth);
-		this.borderBottom = (this.borderBottom == null ? new Border()
-				: this.borderBottom).setLineWidth(borderLineWidth);
-		this.borderLeft = (this.borderLeft == null ? new Border()
-				: this.borderLeft).setLineWidth(borderLineWidth);
-		this.borderRight = (this.borderRight == null ? new Border()
-				: this.borderRight).setLineWidth(borderLineWidth);
-		return this;
+	/** {@inheritDoc} */
+	@Override
+	public boolean equals(final/*@Nullable*/Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Borders))
+			return false;
+
+		final Borders other = (Borders) obj;
+		return Util.equal(this.borderBottom, other.borderBottom)
+				&& Util.equal(this.borderLeft, other.borderLeft)
+				&& Util.equal(this.borderRight, other.borderRight)
+				&& Util.equal(this.borderTop, other.borderTop);
+	}
+
+	public Border getBorderBottom() {
+		return this.borderBottom;
+	}
+
+	public Border getBorderLeft() {
+		return this.borderLeft;
+	}
+
+	public Border getBorderRight() {
+		return this.borderRight;
+	}
+
+	public Border getBorderTop() {
+		return this.borderTop;
+	}
+
+	public WrapperColor getLineColor() {
+		WrapperColor color = this.borderTop == null ? null : this.borderTop
+				.getLineColor();
+		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft,
+				this.borderRight)) {
+			if (!(border == null || Util.equal(color, border.getLineColor())))
+				return null;
+		}
+		return color;
 	}
 
 	public double getLineWidth() {
@@ -53,37 +79,9 @@ public class Borders {
 		return lineWidth;
 	}
 
-	public WrapperColor getLineColor() {
-		WrapperColor color = this.borderTop == null ? null : this.borderTop
-				.getLineColor();
-		for (Border border : Arrays.asList(this.borderBottom, this.borderLeft,
-				this.borderRight)) {
-			if (!(border == null || Util.equal(color, border.getLineColor())))
-				return null;
-		}
-		return color;
-	}
-
-	public Border getBorderTop() {
-		return this.borderTop;
-	}
-
-	public Borders setBorderTop(final Border borderTop) {
-		this.borderTop = borderTop;
-		return this;
-	}
-
-	public Border getBorderBottom() {
-		return this.borderBottom;
-	}
-
 	public Borders setBorderBottom(Border borderBottom) {
 		this.borderBottom = borderBottom;
 		return this;
-	}
-
-	public Border getBorderLeft() {
-		return this.borderLeft;
 	}
 
 	public Borders setBorderLeft(final Border borderLeft) {
@@ -91,24 +89,13 @@ public class Borders {
 		return this;
 	}
 
-	public Border getBorderRight() {
-		return this.borderRight;
-	}
-
 	public Borders setBorderRight(final Border borderRight) {
 		this.borderRight = borderRight;
 		return this;
 	}
 
-	public Borders setLineType(final Object lineType) {
-		this.borderTop = (this.borderTop == null ? new Border()
-				: this.borderTop).setLineType(lineType);
-		this.borderBottom = (this.borderBottom == null ? new Border()
-				: this.borderBottom).setLineType(lineType);
-		this.borderLeft = (this.borderLeft == null ? new Border() : this.borderLeft)
-				.setLineType(lineType);
-		this.borderRight = (this.borderRight == null ? new Border() : this.borderRight)
-				.setLineType(lineType);
+	public Borders setBorderTop(final Border borderTop) {
+		this.borderTop = borderTop;
 		return this;
 	}
 
@@ -124,19 +111,32 @@ public class Borders {
 		return this;
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public boolean equals(final/*@Nullable*/Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof Borders))
-			return false;
+	public Borders setLineType(final Object lineType) {
+		this.borderTop = (this.borderTop == null ? new Border()
+				: this.borderTop).setLineType(lineType);
+		this.borderBottom = (this.borderBottom == null ? new Border()
+				: this.borderBottom).setLineType(lineType);
+		this.borderLeft = (this.borderLeft == null ? new Border() : this.borderLeft)
+				.setLineType(lineType);
+		this.borderRight = (this.borderRight == null ? new Border() : this.borderRight)
+				.setLineType(lineType);
+		return this;
+	}
 
-		final Borders other = (Borders) obj;
-		return Util.equal(this.borderBottom, other.borderBottom)
-				&& Util.equal(this.borderLeft, other.borderLeft)
-				&& Util.equal(this.borderRight, other.borderRight)
-				&& Util.equal(this.borderTop, other.borderTop);
+	/**
+	 * @param borderLineWidth the width to set
+	 * @return the Borders objets (fluent style)
+	 */
+	public Borders setLineWidth(final double borderLineWidth) {
+		this.borderTop = (this.borderTop == null ? new Border()
+				: this.borderTop).setLineWidth(borderLineWidth);
+		this.borderBottom = (this.borderBottom == null ? new Border()
+				: this.borderBottom).setLineWidth(borderLineWidth);
+		this.borderLeft = (this.borderLeft == null ? new Border()
+				: this.borderLeft).setLineWidth(borderLineWidth);
+		this.borderRight = (this.borderRight == null ? new Border()
+				: this.borderRight).setLineWidth(borderLineWidth);
+		return this;
 	}
 
 	/** {@inheritDoc} */

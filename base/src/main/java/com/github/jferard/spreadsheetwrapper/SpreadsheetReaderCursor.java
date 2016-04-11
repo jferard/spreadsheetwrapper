@@ -26,58 +26,42 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 public interface SpreadsheetReaderCursor extends Cursor {
 
 	/**
-	 * Get the content of the cell at the current position
-	 *
-	 * @return the content
+	 * {@link SpreadsheetReader.getCellContent}
 	 */
 	/*@Nullable*/Object getCellContent();
 
 	/**
-	 * Get the date at the current position
-	 *
-	 * @return the date
+	 * {@link SpreadsheetReader.getDate}
 	 */
 	/*@Nullable*/Date getDate();
 
 	/**
-	 * Get the Double at the current position
-	 *
-	 * @return the Double
+	 * {@link SpreadsheetReader.getDouble}
 	 */
 	/*@Nullable*/Double getDouble();
 
 	/**
-	 * Get the formula at the current position
-	 *
-	 * @return the formula text (english)
+	 * {@link SpreadsheetReader.getFormula}
 	 */
 	/*@Nullable*/String getFormula();
 
 	/**
-	 * Get the integer at the current position
-	 *
-	 * @return the integer
+	 * {@link SpreadsheetReader.getInteger}
 	 */
 	/*@Nullable*/Integer getInteger();
 
 	/**
-	 * Get thee format at the current position
-	 *
-	 * @return the style at the current position
+	 * {@link SpreadsheetReader.getStyle}
 	 */
 	/*@Nullable*/WrapperCellStyle getStyle();
 
 	/**
-	 * Get thee format at the current position
-	 *
-	 * @return the name of the format
+	 * {@link SpreadsheetReader.getStyleName}
 	 */
 	/*@Nullable*/String getStyleName();
 
 	/**
-	 * Get the text at the current position
-	 *
-	 * @return the text
+	 * {@link SpreadsheetReader.getText}
 	 */
 	/*@Nullable*/String getText();
 }

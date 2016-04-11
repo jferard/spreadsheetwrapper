@@ -50,6 +50,8 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 	/** the sheet writer */
 	protected SpreadsheetWriter sheetWriter;
 
+	private static final int BIG_INDEX = 9999;
+
 	/** set the test up */
 	@Before
 	public void setUp() {
@@ -103,11 +105,23 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 		Assert.assertEquals(4, this.sheetWriter.getCellCount(1));
 	}
 
-	/** a set does not change the col count of the next row */
+	/** */
+	@Test
+	public void testGetObjetAtBigIndex() {
+		this.sheetWriter.getCellContent(0, BIG_INDEX);
+	}
+
+	/** */
 	@Test(expected = IllegalArgumentException.class)
+	public void testGetObjetAtNegativeIndex() {
+		this.sheetWriter.getCellContent(0, -1);
+	}
+
+	/** a set does not change the col count of the next row */
+	@Test
 	public void testNonExistingRowCellCountK11() {
 		this.sheetWriter.setText(10, 10, "10:10");
-		this.sheetWriter.getCellCount(11);
+		Assert.assertEquals(0, this.sheetWriter.getCellCount(11));
 	}
 
 	/**
@@ -137,6 +151,19 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 		this.sheetWriter.setInteger(1, 3, 1);
 		Assert.assertEquals(2, this.sheetWriter.getRowCount());
 		Assert.assertEquals(4, this.sheetWriter.getCellCount(1));
+	}
+
+	/** */
+	@Test
+	public void testSetObjetAtBigIndex() {
+		Assert.assertEquals(Integer.valueOf(1), this.sheetWriter.setCellContent(0, BIG_INDEX,
+				Integer.valueOf(1)));
+	}
+
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void testSetObjetAtNegativeIndex() {
+		this.sheetWriter.setCellContent(0, -1, Integer.valueOf(1));
 	}
 
 	/**

@@ -34,12 +34,6 @@ import com.github.jferard.spreadsheetwrapper.CantInsertElementInSpreadsheetExcep
  */
 class InitializableDocument {
 
-	/** true if initialized */
-	private boolean initialized;
-
-	/** the object */
-	private final SpreadsheetDocument document;
-
 	static final InitializableDocument createInitialized(
 			SpreadsheetDocument document) {
 		return new InitializableDocument(document, true);
@@ -49,6 +43,12 @@ class InitializableDocument {
 			SpreadsheetDocument document) {
 		return new InitializableDocument(document, false);
 	}
+
+	/** true if initialized */
+	private boolean initialized;
+
+	/** the object */
+	private final SpreadsheetDocument document;
 	
 	/**
 	 * @param document
@@ -59,32 +59,6 @@ class InitializableDocument {
 			boolean initialized) {
 		this.document = document;
 		this.initialized = initialized;
-	}
-
-	/**
-	 * close the document
-	 */
-	public void close() {
-		this.document.close();
-	}
-
-	/**
-	 * @return the list of the sheets in the document
-	 */
-	public List<Table> getTableList() {
-		final List<Table> tables;
-		if (this.initialized)
-			tables = this.document.getTableList();
-		else
-			tables = Collections.emptyList();
-		return tables;
-	}
-
-	/**
-	 * @return the document with the odf styles
-	 */
-	public OdfOfficeStyles getStyles() {
-		return this.document.getDocumentStyles();
 	}
 
 	/** Adds a table at an index */
@@ -112,6 +86,32 @@ class InitializableDocument {
 			this.initialized = true;
 		}
 		return table;
+	}
+
+	/**
+	 * close the document
+	 */
+	public void close() {
+		this.document.close();
+	}
+
+	/**
+	 * @return the document with the odf styles
+	 */
+	public OdfOfficeStyles getStyles() {
+		return this.document.getDocumentStyles();
+	}
+
+	/**
+	 * @return the list of the sheets in the document
+	 */
+	public List<Table> getTableList() {
+		final List<Table> tables;
+		if (this.initialized)
+			tables = this.document.getTableList();
+		else
+			tables = Collections.emptyList();
+		return tables;
 	}
 
 	/**

@@ -35,8 +35,6 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
  *
  */
 final class OdsJopenDocument1_3Util {
-	private OdsJopenDocument1_3Util() {}
-	
 	/**
 	 * @param cell
 	 *           the cell
@@ -45,7 +43,7 @@ final class OdsJopenDocument1_3Util {
 	public static String getFormula(final MutableCell<SpreadSheet> cell) {
 		return cell.getFormula();
 	}
-
+	
 	/**
 	 * @param odPackage
 	 *           the zip file representation
@@ -87,4 +85,6 @@ final class OdsJopenDocument1_3Util {
 			final ODValueType type, final Object value) {
 		cell.setValue(value);
 	}
+
+	private OdsJopenDocument1_3Util() {}
 }

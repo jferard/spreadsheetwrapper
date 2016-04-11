@@ -7,33 +7,6 @@ public class Border {
 	private WrapperColor color;
 	private Object lineType;
 
-	public Border setLineWidth(double borderLineWidth) {
-		this.borderLineWidth = borderLineWidth;
-		return this;
-	}
-
-	public double getLineWidth() {
-		return this.borderLineWidth;		
-	}
-
-	public Border setLineColor(WrapperColor color) {
-		this.color = color;
-		return this;
-	}
-
-	public WrapperColor getLineColor() {
-		return this.color;
-	}
-	
-	public Object getLineType() {
-		return this.lineType;
-	}
-	
-	public Border setLineType(Object lineType) {
-		this.lineType = lineType;
-		return this;
-	}
-	
 	/** {@inheritDoc} */
 	@Override
 	public boolean equals(final/*@Nullable*/Object obj) {
@@ -46,6 +19,33 @@ public class Border {
 		return Util.almostEqual(this.borderLineWidth, other.borderLineWidth)
 				&& Util.equal(this.color, other.color)
 				&& Util.equal(this.lineType, other.lineType);
+	}
+
+	public WrapperColor getLineColor() {
+		return this.color;
+	}
+
+	public Object getLineType() {
+		return this.lineType;
+	}
+
+	public double getLineWidth() {
+		return this.borderLineWidth;		
+	}
+	
+	public Border setLineColor(WrapperColor color) {
+		this.color = color;
+		return this;
+	}
+	
+	public Border setLineType(Object lineType) {
+		this.lineType = lineType;
+		return this;
+	}
+	
+	public Border setLineWidth(double borderLineWidth) {
+		this.borderLineWidth = borderLineWidth;
+		return this;
 	}
 	
 	/** {@inheritDoc} */

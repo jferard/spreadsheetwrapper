@@ -41,8 +41,6 @@ import com.github.jferard.spreadsheetwrapper.ods.OdsConstants;
  *
  */
 final class OdsJopenDocument1_2Util {
-	private OdsJopenDocument1_2Util() {} 
-	
 	/**
 	 * @param cell
 	 *           the cell
@@ -52,8 +50,8 @@ final class OdsJopenDocument1_2Util {
 		final Element element = cell.getElement();
 		return element.getAttributeValue(OdsConstants.FORMULA_ATTR_NAME,
 				element.getNamespace());
-	}
-
+	} 
+	
 	/**
 	 * @param odPackage
 	 *           the zip file representation
@@ -133,4 +131,6 @@ final class OdsJopenDocument1_2Util {
 
 		return new Document(root);
 	}
+
+	private OdsJopenDocument1_2Util() {}
 }

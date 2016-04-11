@@ -19,37 +19,20 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
 public class JxlWritableWorkbook implements JxlWorkbook {
 
+	private static WorkbookSettings getReadSettings() {
+		final WorkbookSettings settings = new WorkbookSettings();
+		settings.setLocale(Locale.US);
+		settings.setEncoding("windows-1252");
+		return settings;
+	}
+
+	private static WorkbookSettings getWriteSettings() {
+		final WorkbookSettings settings = JxlWritableWorkbook.getReadSettings();
+		settings.setWriteAccess("spreadsheetwrapper");
+		return settings;
+	}
+
 	private WritableWorkbook writableWorkbook;
-
-	public JxlWritableWorkbook(OutputStream outputStream) throws SpreadsheetException {
-		try {
-			this.writableWorkbook = Workbook.createWorkbook(outputStream,
-					JxlWritableWorkbook.getWriteSettings());
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
-
-	public JxlWritableWorkbook(InputStream inputStream,
-			OutputStream outputStream) throws SpreadsheetException {
-		if (outputStream == null)
-			throw new UnsupportedOperationException();
-
-		try {
-			final Workbook workbook = Workbook.getWorkbook(inputStream,
-					getReadSettings());
-			this.writableWorkbook = Workbook.createWorkbook(
-					outputStream, workbook, getWriteSettings());
-		} catch (final FileNotFoundException e) {
-			throw new SpreadsheetException(e);
-		} catch (final IOException e) {
-			throw new SpreadsheetException(e);
-		} catch (final BiffException e) {
-			throw new SpreadsheetException(e);
-		}
-	}
 
 	public JxlWritableWorkbook(File inputFile,
 			File outputFile) throws SpreadsheetException {
@@ -70,16 +53,34 @@ public class JxlWritableWorkbook implements JxlWorkbook {
 		}
 	}
 	
-	/** {@inheritDoc} */
-	@Override
-	public int getNumberOfSheets() {
-		return this.writableWorkbook.getNumberOfSheets();
+	public JxlWritableWorkbook(InputStream inputStream,
+			OutputStream outputStream) throws SpreadsheetException {
+		if (outputStream == null)
+			throw new UnsupportedOperationException();
+
+		try {
+			final Workbook workbook = Workbook.getWorkbook(inputStream,
+					getReadSettings());
+			this.writableWorkbook = Workbook.createWorkbook(
+					outputStream, workbook, getWriteSettings());
+		} catch (final FileNotFoundException e) {
+			throw new SpreadsheetException(e);
+		} catch (final IOException e) {
+			throw new SpreadsheetException(e);
+		} catch (final BiffException e) {
+			throw new SpreadsheetException(e);
+		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public Sheet[] getSheets() {
-		return this.writableWorkbook.getSheets();
+	public JxlWritableWorkbook(OutputStream outputStream) throws SpreadsheetException {
+		try {
+			this.writableWorkbook = Workbook.createWorkbook(outputStream,
+					JxlWritableWorkbook.getWriteSettings());
+		} catch (final FileNotFoundException e) {
+			throw new SpreadsheetException(e);
+		} catch (final IOException e) {
+			throw new SpreadsheetException(e);
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -90,14 +91,14 @@ public class JxlWritableWorkbook implements JxlWorkbook {
 
 	/** {@inheritDoc} */
 	@Override
-	public String[] getSheetNames() {
-		return this.writableWorkbook.getSheetNames();
+	public WritableSheet createSheet(String sheetName, int index) {
+		return this.writableWorkbook.createSheet(sheetName, index);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void write() throws IOException {
-		this.writableWorkbook.write();
+	public int getNumberOfSheets() {
+		return this.writableWorkbook.getNumberOfSheets();
 	}
 
 	/** {@inheritDoc} */
@@ -108,20 +109,19 @@ public class JxlWritableWorkbook implements JxlWorkbook {
 
 	/** {@inheritDoc} */
 	@Override
-	public WritableSheet createSheet(String sheetName, int index) {
-		return this.writableWorkbook.createSheet(sheetName, index);
+	public String[] getSheetNames() {
+		return this.writableWorkbook.getSheetNames();
 	}
 
-	private static WorkbookSettings getWriteSettings() {
-		final WorkbookSettings settings = JxlWritableWorkbook.getReadSettings();
-		settings.setWriteAccess("spreadsheetwrapper");
-		return settings;
+	/** {@inheritDoc} */
+	@Override
+	public Sheet[] getSheets() {
+		return this.writableWorkbook.getSheets();
 	}
 	
-	private static WorkbookSettings getReadSettings() {
-		final WorkbookSettings settings = new WorkbookSettings();
-		settings.setLocale(Locale.US);
-		settings.setEncoding("windows-1252");
-		return settings;
+	/** {@inheritDoc} */
+	@Override
+	public void write() throws IOException {
+		this.writableWorkbook.write();
 	}
 }

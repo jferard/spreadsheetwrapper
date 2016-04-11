@@ -37,7 +37,6 @@ import jxl.write.DateTime;
 import jxl.write.Formula;
 import jxl.write.Label;
 import jxl.write.WritableCell;
-import jxl.write.WritableCellFormat;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
@@ -240,13 +239,13 @@ SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public void insertCol(final int c) {
+	public boolean insertCol(final int c) {
 		((WritableSheet) this.sheet).insertColumn(c);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void insertRow(final int r) {
+	public boolean insertRow(final int r) {
 		((WritableSheet) this.sheet).insertRow(r);
 	}
 

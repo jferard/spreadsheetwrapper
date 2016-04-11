@@ -38,14 +38,74 @@ import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
  */
 public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	/**
+	 * @param dateString
+	 *            the date as a String (e.g "2015-01-01")
+	 * @param format
+	 *            the format
+	 * @return the date, null if can't parse
+	 */
+	public static/*@Nullable*/Date parseString(final String dateString,
+			final String format) {
+		final SimpleDateFormat simpleFormat = new SimpleDateFormat(format,
+				Locale.US);
+		Date simpleDate;
+		try {
+			simpleDate = simpleFormat.parse(dateString);
+		} catch (final ParseException e) {
+			String message = e.getMessage();
+			if (message == null)
+				message = "???";
+			Logger.getLogger(AbstractSpreadsheetWriter.class.getName()).log(
+					Level.SEVERE, message, e);
+			simpleDate = null;
+		}
+		return simpleDate;
+	}
+
+	/**
 	 */
 	public AbstractSpreadsheetWriter() {
 	}
 
 	/** {@inheritDoc} */
 	@Override
+	public final List</*@Nullable*/Object> getColContents(final int colIndex) {
+		if (colIndex < 0)
+			throw new IllegalArgumentException();
+		
+		final int rowCount = this.getRowCount();
+		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
+				rowCount);
+		for (int r = 0; r < rowCount; r++) {
+			cellContents.add(this.getCellContent(r, colIndex));
+		}
+		return cellContents;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final/*@Nullable*/Integer getInteger(final int r, final int c) {
+		final Double value = this.getDouble(r, c);
+		if (value == null)
+			return null;
+		return value.intValue();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriterCursor getNewCursor() {
 		return new SpreadsheetWriterCursorImpl(this);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public final List</*@Nullable*/Object> getRowContents(final int r) {
+		final int colCount = this.getCellCount(r);
+		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
+				colCount);
+		for (int c = 0; c < colCount; c++)
+			cellContents.add(this.getCellContent(r, c));
+		return cellContents;
 	}
 
 	/** {@inheritDoc} */
@@ -170,62 +230,5 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	public boolean writeDataFrom(final int r, final int c,
 			final DataWrapper dataWrapper) {
 		return dataWrapper.writeDataTo(this, r, c);
-	}
-
-	/**
-	 * @param dateString
-	 *            the date as a String (e.g "2015-01-01")
-	 * @param format
-	 *            the format
-	 * @return the date, null if can't parse
-	 */
-	public static/*@Nullable*/Date parseString(final String dateString,
-			final String format) {
-		final SimpleDateFormat simpleFormat = new SimpleDateFormat(format,
-				Locale.US);
-		Date simpleDate;
-		try {
-			simpleDate = simpleFormat.parse(dateString);
-		} catch (final ParseException e) {
-			String message = e.getMessage();
-			if (message == null)
-				message = "???";
-			Logger.getLogger(AbstractSpreadsheetWriter.class.getName()).log(
-					Level.SEVERE, message, e);
-			simpleDate = null;
-		}
-		return simpleDate;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final List</*@Nullable*/Object> getColContents(final int colIndex) {
-		final int rowCount = this.getRowCount();
-		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
-				rowCount);
-		for (int r = 0; r < rowCount; r++) {
-			cellContents.add(this.getCellContent(r, colIndex));
-		}
-		return cellContents;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final/*@Nullable*/Integer getInteger(final int r, final int c) {
-		final Double value = this.getDouble(r, c);
-		if (value == null)
-			return null;
-		return value.intValue();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public final List</*@Nullable*/Object> getRowContents(final int rowIndex) {
-		final int colCount = this.getCellCount(rowIndex);
-		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
-				colCount);
-		for (int c = 0; c < colCount; c++)
-			cellContents.add(this.getCellContent(rowIndex, c));
-		return cellContents;
 	}	
 }

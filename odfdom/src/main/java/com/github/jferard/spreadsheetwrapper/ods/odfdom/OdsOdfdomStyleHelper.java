@@ -43,20 +43,20 @@ public class OdsOdfdomStyleHelper {
 		return this.styleHelperDelegate.toWrapperCellStyle(existingStyle);
 	}
 
-	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
-			WrapperCellStyle wrapperCellStyle) {
-		final OdfStyle newStyle = documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		this.styleHelperDelegate.setWrapperCellStyle(newStyle, wrapperCellStyle);
-		return true;
-	}
-
 	public /*@Nullable*/ WrapperCellStyle getStyle(OdfTableCell odfCell) {
 		if (odfCell == null)
 			return null;
 
 		final TableTableCellElementBase odfElement = odfCell.getOdfElement();
 		return this.styleHelperDelegate.getWrapperCellStyle(odfElement);
+	}
+
+	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
+			WrapperCellStyle wrapperCellStyle) {
+		final OdfStyle newStyle = documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		this.styleHelperDelegate.setWrapperCellStyle(newStyle, wrapperCellStyle);
+		return true;
 	}
 
 	public boolean setWrapperCellStyle(OdfTableCell odfCell,

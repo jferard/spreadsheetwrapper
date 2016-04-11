@@ -50,21 +50,14 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
 public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		implements SpreadsheetDocumentWriter {
 
-		/*@RequiresNonNull("delegateStyleHelper")*/
-		protected SpreadsheetWriter createNew(
-				/*>>> @UnknownInitialization XlsPoiDocumentWriterDelegate this, */final Sheet sheet) {
-			return new XlsPoiWriter(sheet, this.styleHelper,
-					this.dateCellStyle);
-		}
-
-	/** simple logger */
-	private final Logger logger;
+		/** simple logger */
+		private final Logger logger;
 
 	/** for delegation */
 	private final XlsPoiStyleHelper styleHelper;
+
 	/** *internal* workbook */
 	private final Workbook workbook;
-
 	private CellStyle dateCellStyle;
 
 	/**
@@ -100,6 +93,28 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 
 	/** {@inheritDoc} */
 	@Override
+	public/*@Nullable*/WrapperCellStyle getCellStyle(final String styleName) {
+		return this.styleHelper.getWrapperCellStyle(this.workbook, styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public int getSheetCount() {
+		return this.workbook.getNumberOfSheets();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List<String> getSheetNames() {
+		final int sheetCount = this.getSheetCount();
+		final List<String> sheetNames = new ArrayList<String>(sheetCount);
+		for (int i = 0; i < sheetCount; i++)
+			sheetNames.add(this.workbook.getSheetName(i));
+		return sheetNames;
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public SpreadsheetWriter getSpreadsheet(final int index) {
 		final SpreadsheetWriter spreadsheet;
 		if (this.accessor.hasByIndex(index))
@@ -128,7 +143,7 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		
 		return spreadsheet;
 	}
-
+	
 	/** */
 	@Override
 	public void save() throws SpreadsheetException {
@@ -154,28 +169,6 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 			final WrapperCellStyle wrapperCellStyle) {
 		return this.styleHelper.setStyle(this.workbook, styleName, wrapperCellStyle);
 	}
-	
-	/** {@inheritDoc} */
-	@Override
-	public/*@Nullable*/WrapperCellStyle getCellStyle(final String styleName) {
-		return this.styleHelper.getWrapperCellStyle(this.workbook, styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public int getSheetCount() {
-		return this.workbook.getNumberOfSheets();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List<String> getSheetNames() {
-		final int sheetCount = this.getSheetCount();
-		final List<String> sheetNames = new ArrayList<String>(sheetCount);
-		for (int i = 0; i < sheetCount; i++)
-			sheetNames.add(this.workbook.getSheetName(i));
-		return sheetNames;
-	}
 
 	@Override
 	protected SpreadsheetWriter addSheetWithCheckedIndex(int index,
@@ -190,6 +183,13 @@ public class XlsPoiDocumentWriter extends AbstractSpreadsheetDocumentWriter
 		final SpreadsheetWriter spreadsheet = this.createNew(sheet);
 		this.accessor.put(sheetName, index, spreadsheet);
 		return spreadsheet;
+	}
+
+	/*@RequiresNonNull("delegateStyleHelper")*/
+	protected SpreadsheetWriter createNew(
+			/*>>> @UnknownInitialization XlsPoiDocumentWriterDelegate this, */final Sheet sheet) {
+		return new XlsPoiWriter(sheet, this.styleHelper,
+				this.dateCellStyle);
 	}
 
 	@Override

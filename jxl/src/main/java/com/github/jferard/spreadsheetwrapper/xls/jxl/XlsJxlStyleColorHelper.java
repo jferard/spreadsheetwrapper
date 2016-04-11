@@ -9,8 +9,16 @@ import jxl.format.RGB;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 
 class XlsJxlStyleColorHelper {
+	static boolean colorEquals(final Colour color1, final Colour color2) {
+		final RGB rgb1 = color1.getDefaultRGB();
+		final RGB rgb2 = color2.getDefaultRGB();
+		return rgb1.getRed() == rgb2.getRed()
+				&& rgb1.getGreen() == rgb2.getGreen()
+				&& rgb1.getBlue() == rgb2.getBlue();
+	}
 	/** wrapper -> internal */
 	private final Map<WrapperColor, Colour> jxlColorByWrapperColor;
+
 	/** internal -> wrapper */
 	private final Map<Colour, WrapperColor> wrapperColorByJxlColor;
 
@@ -51,14 +59,6 @@ class XlsJxlStyleColorHelper {
 	 */
 	public /*@Nullable*/Colour toJxlColor(final WrapperColor wrapperColor) {
 		return this.jxlColorByWrapperColor.get(wrapperColor);
-	}
-
-	static boolean colorEquals(final Colour color1, final Colour color2) {
-		final RGB rgb1 = color1.getDefaultRGB();
-		final RGB rgb2 = color2.getDefaultRGB();
-		return rgb1.getRed() == rgb2.getRed()
-				&& rgb1.getGreen() == rgb2.getGreen()
-				&& rgb1.getBlue() == rgb2.getBlue();
 	}
 
 	/**

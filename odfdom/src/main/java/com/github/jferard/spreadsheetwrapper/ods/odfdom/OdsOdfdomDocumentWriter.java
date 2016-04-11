@@ -53,6 +53,36 @@ import org.checkerframework.checker.nullness.qual.RequiresNonNull;
  */
 class OdsOdfdomDocumentWriter extends AbstractSpreadsheetDocumentWriter
 implements SpreadsheetDocumentWriter {
+	/**
+	 * Cleans the table : remove everything that odftoolkit adds, but let
+	 * <table:table>
+	 * <table:table-column number-columns-repeated="1" />
+	 * </table:table>
+	 *
+	 * @param tableElement
+	 *            the odf element
+	 */
+	private static void cleanEmptyTable(final TableTableElement tableElement) {
+		final NodeList colsList = tableElement
+				.getElementsByTagName("table:table-column");
+		final TableTableColumnElement column = (TableTableColumnElement) colsList
+				.item(0);
+		while (colsList.getLength() > 1) {
+			final Node item = colsList.item(1);
+			tableElement.removeChild(item);
+		}
+		column.setTableNumberColumnsRepeatedAttribute(1);
+		final NodeList rowList = tableElement
+				.getElementsByTagName("table:table-row");
+		while (rowList.getLength() > 0) {
+			final Node item = rowList.item(0);
+			tableElement.removeChild(item);
+		}
+		final NodeList rowListAfter = tableElement
+				.getElementsByTagName("table:table-row");
+		assert rowListAfter.getLength() == 0;
+	}
+
 	/** the *internal* workbook */
 	private final OdfSpreadsheetDocument document;
 
@@ -204,7 +234,7 @@ implements SpreadsheetDocumentWriter {
 	protected SpreadsheetWriter createNew(final OdfTable table) {
 		return new OdsOdfdomWriter(table, this.styleHelper);
 	}
-
+	
 	/** {@inheritDoc} */
 	@Override
 	protected SpreadsheetWriter findSpreadsheetAndCreateReaderOrWriter(final String sheetName) {
@@ -223,36 +253,6 @@ implements SpreadsheetDocumentWriter {
 		}
 		throw new NoSuchElementException(String.format(
 				"No %s sheet in workbook", sheetName));
-	}
-	
-	/**
-	 * Cleans the table : remove everything that odftoolkit adds, but let
-	 * <table:table>
-	 * <table:table-column number-columns-repeated="1" />
-	 * </table:table>
-	 *
-	 * @param tableElement
-	 *            the odf element
-	 */
-	private static void cleanEmptyTable(final TableTableElement tableElement) {
-		final NodeList colsList = tableElement
-				.getElementsByTagName("table:table-column");
-		final TableTableColumnElement column = (TableTableColumnElement) colsList
-				.item(0);
-		while (colsList.getLength() > 1) {
-			final Node item = colsList.item(1);
-			tableElement.removeChild(item);
-		}
-		column.setTableNumberColumnsRepeatedAttribute(1);
-		final NodeList rowList = tableElement
-				.getElementsByTagName("table:table-row");
-		while (rowList.getLength() > 0) {
-			final Node item = rowList.item(0);
-			tableElement.removeChild(item);
-		}
-		final NodeList rowListAfter = tableElement
-				.getElementsByTagName("table:table-row");
-		assert rowListAfter.getLength() == 0;
 	}
 	
 }

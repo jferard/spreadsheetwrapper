@@ -29,6 +29,11 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
  */
 interface SpreadsheetInternalWriter {
 	/**
+	 * @return the number of rows in the sheet, table, ...
+	 */
+	int getRowCount();
+
+	/**
 	 * @param c
 	 *            index (0..) of the column after the new column
 	 */
@@ -245,7 +250,7 @@ interface SpreadsheetInternalWriter {
 	 *            the style name
 	 */
 	String setText(int r, int c, String text, String styleName);
-
+	
 	/**
 	 * @param r
 	 *            row index (0..)
@@ -255,9 +260,4 @@ interface SpreadsheetInternalWriter {
 	 *            the data to put
 	 */
 	boolean writeDataFrom(int r, int c, DataWrapper dataWrapper);
-	
-	/**
-	 * @return the number of rows in the sheet, table, ...
-	 */
-	int getRowCount();
 }

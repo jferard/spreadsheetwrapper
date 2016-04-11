@@ -14,6 +14,13 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 public class OdsSimpleodsStyleHelper {
 
+	public String getStyleName(TableCell simpleCell) {
+		if (simpleCell == null)
+			return null;
+
+		return simpleCell.getStyle();
+	}
+
 	public boolean setStyle(OdsFile file, String styleName,
 			WrapperCellStyle wrapperCellStyle) {
 		final TableStyle newStyle = new TableStyle(TableStyle.STYLE_TABLECELL,
@@ -63,13 +70,6 @@ public class OdsSimpleodsStyleHelper {
 	public boolean setStyle(TableCell simpleCell, String styleName) {
 		simpleCell.setStyle(styleName);
 		return true;
-	}
-
-	public String getStyleName(TableCell simpleCell) {
-		if (simpleCell == null)
-			return null;
-
-		return simpleCell.getStyle();
 	}
 
 }

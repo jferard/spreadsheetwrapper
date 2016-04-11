@@ -80,6 +80,23 @@ class XlsPoiStyleHelper {
 		return cellStyle;
 	}
 
+	public WrapperCellStyle getStyle(Workbook workbook, Cell poiCell) {
+		if (poiCell == null)
+			return null;
+
+		final CellStyle cellStyle = poiCell.getCellStyle();
+		return this.toWrapperCellStyle(workbook,
+				cellStyle);
+	}
+
+	public String getStyleName(Cell cell) {
+		if (cell == null)
+			return null;
+
+		final CellStyle cellStyle = cell.getCellStyle();
+		return this.getStyleName(cellStyle);
+	}
+
 	/**
 	 * @param cellStyle
 	 *            the internal style
@@ -93,6 +110,16 @@ class XlsPoiStyleHelper {
 			return name;
 	}
 
+	public WrapperCellStyle getWrapperCellStyle(Workbook workbook,
+			String styleName) {
+		final CellStyle cellStyle = this.getCellStyle(
+				workbook, styleName);
+		if (cellStyle == null)
+			return null;
+
+		return this.toWrapperCellStyle(workbook, cellStyle);
+	}
+
 	/**
 	 * Create or update style
 	 *
@@ -103,6 +130,33 @@ class XlsPoiStyleHelper {
 	 */
 	public void putCellStyle(final String styleName, final CellStyle cellStyle) {
 		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
+	}
+
+	public boolean setStyle(Workbook workbook, Cell poiCell,
+			WrapperCellStyle wrapperCellStyle) {
+		final CellStyle cellStyle = this.toCellStyle(workbook,
+				wrapperCellStyle);
+		poiCell.setCellStyle(cellStyle);
+		return true;
+	}
+
+	public boolean setStyle(Workbook workbook, String styleName,
+			WrapperCellStyle wrapperCellStyle) {		
+		CellStyle cellStyle = this.toCellStyle(workbook, wrapperCellStyle);
+		
+		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
+		return true;
+	}
+
+	public boolean setSyleName(Workbook workbook, Cell cell, String styleName) {
+		final CellStyle cellStyle = this.getCellStyle(
+				workbook, styleName);
+		if (cellStyle == null)
+			return false;
+		else {
+			cell.setCellStyle(cellStyle);
+			return true;
+		}
 	}
 
 	/**
@@ -160,59 +214,5 @@ class XlsPoiStyleHelper {
 			wrapperCellStyle.setBorders(borders);
 
 		return wrapperCellStyle;
-	}
-
-	public WrapperCellStyle getWrapperCellStyle(Workbook workbook,
-			String styleName) {
-		final CellStyle cellStyle = this.getCellStyle(
-				workbook, styleName);
-		if (cellStyle == null)
-			return null;
-
-		return this.toWrapperCellStyle(workbook, cellStyle);
-	}
-
-	public boolean setStyle(Workbook workbook, Cell poiCell,
-			WrapperCellStyle wrapperCellStyle) {
-		final CellStyle cellStyle = this.toCellStyle(workbook,
-				wrapperCellStyle);
-		poiCell.setCellStyle(cellStyle);
-		return true;
-	}
-
-	public boolean setSyleName(Workbook workbook, Cell cell, String styleName) {
-		final CellStyle cellStyle = this.getCellStyle(
-				workbook, styleName);
-		if (cellStyle == null)
-			return false;
-		else {
-			cell.setCellStyle(cellStyle);
-			return true;
-		}
-	}
-
-	public WrapperCellStyle getStyle(Workbook workbook, Cell poiCell) {
-		if (poiCell == null)
-			return null;
-
-		final CellStyle cellStyle = poiCell.getCellStyle();
-		return this.toWrapperCellStyle(workbook,
-				cellStyle);
-	}
-
-	public String getStyleName(Cell cell) {
-		if (cell == null)
-			return null;
-
-		final CellStyle cellStyle = cell.getCellStyle();
-		return this.getStyleName(cellStyle);
-	}
-
-	public boolean setStyle(Workbook workbook, String styleName,
-			WrapperCellStyle wrapperCellStyle) {		
-		CellStyle cellStyle = this.toCellStyle(workbook, wrapperCellStyle);
-		
-		this.cellStyleAccessor.putCellStyle(styleName, cellStyle);
-		return true;
 	}
 }

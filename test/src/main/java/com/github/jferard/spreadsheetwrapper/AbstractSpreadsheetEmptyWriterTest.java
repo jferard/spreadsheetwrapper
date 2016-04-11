@@ -61,6 +61,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	/** the writer */
 	protected SpreadsheetWriter sheetWriter;
 
+	private static final int BIG_INDEX = 9999;
+
 	/** set the test up */
 	@Before
 	public void setUp() {
@@ -97,9 +99,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
 				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(2, 2, "Tail");
@@ -134,9 +136,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
 				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail");
@@ -159,9 +161,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperFont wrapperFont = new WrapperFont().setBold();
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
 				.setBackgroundColor(WrapperColor.AQUA).setCellFont(wrapperFont);
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 		this.sheetWriter.setCellContent(1, 0, "Tail", "");
@@ -188,46 +190,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
 				.setCellFont(wrapperFont).setBorders(borders);
 
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
-		try {
-			this.sheetWriter.setCellContent(0, 0, "From name",
-					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
-			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
-					0);
-			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (final UnsupportedOperationException e) {
-			this.logger.log(Level.INFO, "", e);
-			Assume.assumeNoException(e);
-		}
-
-		try {
-			this.sheetWriter.setCellContent(1, 0, "From Style");
-			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);
-			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1,
-					0);
-			Assert.assertEquals(wrapperCellStyle, newCellStyle);
-		} catch (final UnsupportedOperationException e) {
-			this.logger.log(Level.INFO, "", e);
-			Assume.assumeNoException(e);
-		}
-	}
-
-	/**
-	 * must create a A1 blue bold head cell and a A2 simple tail cell
-	 */
-	@Test
-	public final void testCreateStyleWithBorders() {
-		final WrapperFont wrapperFont = new WrapperFont().setItalic()
-				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
-		final Borders borders = new Borders().setLineWidth(WrapperCellStyle.MEDIUM_LINE).setLineColor(WrapperColor.BLUE);
-		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
-				.setCellFont(wrapperFont).setBorders(borders);
-
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		try {
 			this.sheetWriter.setCellContent(0, 0, "From name",
 					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
@@ -260,9 +225,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 				.setSize(20).setColor(WrapperColor.ORANGE);
 		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
 				.setCellFont(wrapperFont);
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		try {
 			this.sheetWriter.setCellContent(0, 0, "From name",
 					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
@@ -292,16 +257,55 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	@Test
 	public final void testCreateStyleFromStringAndSetStyle() {
 		final StyleUtility utility = new StyleUtility();
-		final WrapperCellStyle wrapperCellStyle = utility
-				.toWrapperCellStyle("background-color:#999999;font-weight:bold");
-		this.documentWriter
-				.setStyle(AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
-						wrapperCellStyle);
+		final WrapperCellStyle wrapperCellStyle = utility.toWrapperCellStyle(
+				"background-color:#999999;font-weight:bold");
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
 		this.sheetWriter.setCellContent(0, 0, "Head",
 				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
 
 		try {
 			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
+					0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/**
+	 * must create a A1 blue bold head cell and a A2 simple tail cell
+	 */
+	@Test
+	public final void testCreateStyleWithBorders() {
+		final WrapperFont wrapperFont = new WrapperFont().setItalic()
+				.setSize(20).setFamily(WrapperFont.COURIER_NAME);
+		final Borders borders = new Borders()
+				.setLineWidth(WrapperCellStyle.MEDIUM_LINE)
+				.setLineColor(WrapperColor.BLUE);
+		final WrapperCellStyle wrapperCellStyle = new WrapperCellStyle()
+				.setCellFont(wrapperFont).setBorders(borders);
+
+		this.documentWriter.setStyle(
+				AbstractSpreadsheetEmptyWriterTest.STYLE_NAME,
+				wrapperCellStyle);
+		try {
+			this.sheetWriter.setCellContent(0, 0, "From name",
+					AbstractSpreadsheetEmptyWriterTest.STYLE_NAME);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(0,
+					0);
+			Assert.assertEquals(wrapperCellStyle, newCellStyle);
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+
+		try {
+			this.sheetWriter.setCellContent(1, 0, "From Style");
+			this.sheetWriter.setStyle(1, 0, wrapperCellStyle);
+			final WrapperCellStyle newCellStyle = this.sheetWriter.getStyle(1,
 					0);
 			Assert.assertEquals(wrapperCellStyle, newCellStyle);
 		} catch (final UnsupportedOperationException e) {
@@ -349,11 +353,9 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final Date dateNotTruncated = new Date(DAY + HOUR_MIN_AND_SEC + MILLIS);
 
 		final Date dateSet = this.sheetWriter.setDate(2, 2, dateNotTruncated);
-		Assert.assertTrue(
-				String.format("%d not in (%d, %d, %d)", dateSet.getTime(),
-						dateNotTruncated.getTime(),
-						dateTruncatedtoSecond.getTime(),
-						dateTruncatedToDay.getTime()),
+		Assert.assertTrue(String.format("%d not in (%d, %d, %d)",
+				dateSet.getTime(), dateNotTruncated.getTime(),
+				dateTruncatedtoSecond.getTime(), dateTruncatedToDay.getTime()),
 				dateSet.equals(dateNotTruncated)
 						|| dateSet.equals(dateTruncatedtoSecond)
 						|| dateSet.equals(dateTruncatedToDay));
@@ -456,7 +458,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		try {
 			for (colIndex = 0; colIndex < 1000; colIndex += 100) {
 				this.sheetWriter.setText(1, colIndex, "10");
-				Assert.assertEquals("10", this.sheetWriter.getText(1, colIndex));
+				Assert.assertEquals("10",
+						this.sheetWriter.getText(1, colIndex));
 			}
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -498,7 +501,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		try {
 			for (rowIndex = 0; rowIndex < 100000; rowIndex += 20000) {
 				this.sheetWriter.setText(rowIndex, 1, "10");
-				Assert.assertEquals("10", this.sheetWriter.getText(rowIndex, 1));
+				Assert.assertEquals("10",
+						this.sheetWriter.getText(rowIndex, 1));
 			}
 		} catch (final UnsupportedOperationException e) {
 			this.logger.log(Level.INFO, "", e);
@@ -528,8 +532,8 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 		final String set = this.sheetWriter.setText(
 				XlsConstants.MAX_ROWS_PER_SHEET - 1, 1, setAndExpected);
 		Assert.assertEquals(setAndExpected, set);
-		Assert.assertEquals(setAndExpected, this.sheetWriter.getText(
-				XlsConstants.MAX_ROWS_PER_SHEET - 1, 1));
+		Assert.assertEquals(setAndExpected, this.sheetWriter
+				.getText(XlsConstants.MAX_ROWS_PER_SHEET - 1, 1));
 	}
 
 	/**
@@ -545,4 +549,72 @@ public abstract class AbstractSpreadsheetEmptyWriterTest {
 	 * @return the properties of the API for the test
 	 */
 	protected abstract TestProperties getProperties();
+
+	/** */
+	@Test
+	public void testRowInsertAtBigIndex() {
+		try {
+			Assert.assertFalse(this.sheetWriter.insertRow(BIG_INDEX));
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void testRowInsertAtNegativeIndex() {
+		this.sheetWriter.insertRow(-1);
+	}
+
+	/** */
+	@Test
+	public void testRowRemoveAtBigIndex() {
+		try {
+			Assert.assertNull(this.sheetWriter.removeRow(BIG_INDEX));
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void testRowRemoveAtNegativeIndex() {
+		this.sheetWriter.removeRow(-1);
+	}
+
+	/** */
+	@Test
+	public void testColInsertAtBigIndex() {
+		try {
+			Assert.assertFalse(this.sheetWriter.insertCol(BIG_INDEX));
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void testColInsertAtNegativeIndex() {
+		this.sheetWriter.insertCol(-1);
+	}
+
+	/** */
+	@Test
+	public void testColRemoveAtBigIndex() {
+		try {
+			Assert.assertNull(this.sheetWriter.removeCol(BIG_INDEX));
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+	}
+
+	/** */
+	@Test(expected = IllegalArgumentException.class)
+	public void testColRemoveAtNegativeIndex() {
+		this.sheetWriter.removeCol(-1);
+	}
 }

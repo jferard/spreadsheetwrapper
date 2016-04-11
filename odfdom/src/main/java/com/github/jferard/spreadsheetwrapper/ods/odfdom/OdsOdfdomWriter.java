@@ -18,6 +18,7 @@
 package com.github.jferard.spreadsheetwrapper.ods.odfdom;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -43,7 +44,18 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
 /**
  */
-class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWriter {
+class OdsOdfdomWriter extends AbstractSpreadsheetWriter
+		implements SpreadsheetWriter {
+	public static/*@Nullable*/Date getDate(final OdfTableCell cell) {
+		cell.getDateValue(); // HACK : throws IllegalArgumentException
+		final TableTableCellElementBase odfElement = cell.getOdfElement();
+		final String dateStr = odfElement.getOfficeDateValueAttribute();
+		if (dateStr == null) {
+			return null;
+		}
+		return OdsApacheUtil.parseString(dateStr);
+	}
+
 	/** format for dates */
 	private static int getRowCellCount(final OdfTableRow row) {
 		final TableTableRowElement rowElement = row.getOdfElement();
@@ -72,6 +84,18 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 		return cellCount;
 	}
 
+	private static boolean nullCellOrInvalidType(
+			final /*@Nullable*/ OdfTableCell cell, final String... validTypes) {
+		if (cell != null) {
+			final String cellType = cell.getValueType();
+			for (final String validType : validTypes) {
+				if (validType.equals(cellType))
+					return false;
+			}
+		}
+		return true;
+	}
+
 	/** index of current row, -1 if none */
 	private int curR;
 
@@ -88,7 +112,8 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 	 * @param table
 	 *            the *internal* sheet
 	 */
-	OdsOdfdomWriter(final OdfTable table, final OdsOdfdomStyleHelper styleHelper) {
+	OdsOdfdomWriter(final OdfTable table,
+			final OdsOdfdomStyleHelper styleHelper) {
 		super();
 		this.table = table;
 		this.styleHelper = styleHelper;
@@ -99,13 +124,14 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
+		final Boolean ret;
 		final OdfTableCell cell = this.getOdfCell(r, c);
-		if (cell == null)
-			return null;
-
-		if (!OdsConstants.BOOLEAN_TYPE.equals(cell.getValueType()))
-			throw new IllegalArgumentException();
-		return cell.getBooleanValue();
+		if (OdsOdfdomWriter.nullCellOrInvalidType(cell,
+				OdsConstants.BOOLEAN_TYPE))
+			ret = null;
+		else
+			ret = cell.getBooleanValue();
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -115,74 +141,74 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 		final OdfTableCell cell = this.getOdfCell(rowIndex, colIndex);
 		if (cell == null)
 			return null;
+
 		final String formula = cell.getFormula();
 		if (formula != null && formula.charAt(0) == '=')
 			return formula.substring(1);
 
 		final String type = cell.getValueType();
-		Object result;
+		Object ret;
 
 		// from the doc
 		// The type can be "boolean", "currency", "date", "float", "percentage",
 		// "string" or "time".
 		if (type == null)
-			result = null;
+			ret = null;
 		else if (type.equals(OdsConstants.BOOLEAN_TYPE))
-			result = cell.getBooleanValue();
+			ret = cell.getBooleanValue();
 		else if (type.equals(OdsConstants.DATE_TYPE)
 				|| type.equals(OdsConstants.TIME_TYPE))
-			result = getDate(cell);
+			ret = getDate(cell);
 		else if (type.equals(OdsConstants.FLOAT_TYPE)
 				|| type.equals(OdsConstants.CURRENCY_TYPE)
 				|| type.equals(OdsConstants.PERCENTAGE_TYPE)) {
 			final double value = cell.getDoubleValue();
 			if (value == Math.rint(value))
-				result = Integer.valueOf((int) value);
+				ret = Integer.valueOf((int) value);
 			else
-				result = Double.valueOf(value);
+				ret = Double.valueOf(value);
 		} else if (type.equals(OdsConstants.STRING_TYPE))
-			result = cell.getStringValue();
+			ret = cell.getStringValue();
 		else
-			throw new IllegalArgumentException(String.format(
-					"Unknown type of cell %s", type));
-		return result;
+			throw new IllegalStateException(
+					String.format("Unknown type of cell %s", type));
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		if (r < 0 || r >= this.getRowCount())
+		final int ret;
+		if (r < 0)
 			throw new IllegalArgumentException();
 
-		final OdfTableRow row = this.table.getRowByIndex(r);
-		return getRowCellCount(row);
+		if (r < this.getRowCount()) {
+			final OdfTableRow row = this.table.getRowByIndex(r);
+			ret = OdsOdfdomWriter.getRowCellCount(row);
+		} else
+			ret = 0;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
-		if (cell == null)
+		if (OdsOdfdomWriter.nullCellOrInvalidType(cell, OdsConstants.DATE_TYPE,
+				OdsConstants.TIME_TYPE))
 			return null;
 
-		if (!"date".equals(cell.getValueType())
-				&& !"time".equals(cell.getValueType()))
-			throw new IllegalArgumentException();
-		final Date date = getDate(cell);
-		if (date == null)
-			throw new IllegalArgumentException();
-		return date;
+		return OdsOdfdomWriter.getDate(cell); // null if no date
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
-		if (cell == null)
+		if (OdsOdfdomWriter.nullCellOrInvalidType(cell,
+				OdsConstants.FLOAT_TYPE))
 			return null;
 
-		if (!OdsConstants.FLOAT_TYPE.equals(cell.getValueType()))
-			throw new IllegalArgumentException();
 		return cell.getDoubleValue();
 	}
 
@@ -195,7 +221,7 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 
 		final String formula = cell.getFormula();
 		if (formula == null || formula.charAt(0) != '=')
-			throw new IllegalArgumentException();
+			return null;
 
 		return formula.substring(1);
 	}
@@ -251,40 +277,57 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
 		final OdfTableCell cell = this.getOdfCell(r, c);
-		if (cell == null)
+		if (OdsOdfdomWriter.nullCellOrInvalidType(cell,
+				OdsConstants.STRING_TYPE))
 			return null;
 
-		if (!OdsConstants.STRING_TYPE.equals(cell.getValueType()))
-			throw new IllegalArgumentException();
 		return cell.getStringValue();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void insertCol(final int c) {
-		this.table.insertColumnsBefore(c, 1);
+	public boolean insertCol(final int c) {
+		try {
+			this.table.insertColumnsBefore(c, 1); // throws IllegalArgumentException if c < 0
+			return true;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void insertRow(final int r) {
-		this.table.insertRowsBefore(r, 1);
+	public boolean insertRow(final int r) {
+		try {
+			this.table.insertRowsBefore(r, 1); // throws IllegalArgumentException if r < 0
+			return true;
+		} catch (IndexOutOfBoundsException e) {
+			return false;
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
 		final List</*@Nullable*/Object> retValue = this.getColContents(c);
-		this.table.removeColumnsByIndex(c, 1);
-		return retValue;
+		try {
+			this.table.removeColumnsByIndex(c, 1);
+			return retValue;
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
 		final List</*@Nullable*/Object> retValue = this.getRowContents(r);
-		this.table.removeRowsByIndex(r, 1);
-		return retValue;
+		try {
+			this.table.removeRowsByIndex(r, 1);
+			return retValue;
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 	}
 
 	/** {@inheritDoc} */
@@ -349,7 +392,8 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyleName(final int r, final int c, final String styleName) {
+	public boolean setStyleName(final int r, final int c,
+			final String styleName) {
 		final OdfTableCell cell = this.getOrCreateOdfCell(r, c);
 		cell.getOdfElement().setStyleName(styleName);
 		return true;
@@ -402,8 +446,8 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 			// 2. clean style
 			final int lastIndex = this.table.getRowCount() - 1;
 			if (r > lastIndex) {
-				final List<OdfTableRow> resultList = this.table.appendRows(r
-						- lastIndex);
+				final List<OdfTableRow> resultList = this.table
+						.appendRows(r - lastIndex);
 				final String tableNameSpace = OdfDocumentNamespace.TABLE
 						.getUri();
 				for (final OdfTableRow row : resultList) {
@@ -419,15 +463,5 @@ class OdsOdfdomWriter extends AbstractSpreadsheetWriter implements SpreadsheetWr
 			this.curR = r;
 		}
 		return this.curRow.getCellByIndex(c);
-	}
-
-	public static/*@Nullable*/Date getDate(final OdfTableCell cell) {
-		cell.getDateValue(); // HACK : throws IllegalArgumentException
-		final TableTableCellElementBase odfElement = cell.getOdfElement();
-		final String dateStr = odfElement.getOfficeDateValueAttribute();
-		if (dateStr == null) {
-			return null;
-		}
-		return OdsApacheUtil.parseString(dateStr);
 	}
 }

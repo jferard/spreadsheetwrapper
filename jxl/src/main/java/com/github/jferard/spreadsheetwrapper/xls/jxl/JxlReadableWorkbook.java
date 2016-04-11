@@ -14,8 +14,16 @@ import jxl.write.WritableSheet;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 
 public class JxlReadableWorkbook implements JxlWorkbook {
+	private static WorkbookSettings getReadSettings() {
+		final WorkbookSettings settings = new WorkbookSettings();
+		settings.setLocale(Locale.US);
+		settings.setEncoding("windows-1252");
+		return settings;
+	}
+
 	private final Workbook workbook;
 
+	
 	public JxlReadableWorkbook(InputStream inputStream) 
 			throws SpreadsheetException {
 		try {
@@ -30,19 +38,6 @@ public class JxlReadableWorkbook implements JxlWorkbook {
 		}
 	}
 
-	
-	/** {@inheritDoc} */
-	@Override
-	public int getNumberOfSheets() {
-		return this.workbook.getNumberOfSheets();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public Sheet[] getSheets() {
-		return this.workbook.getSheets();
-	}
-
 	/** {@inheritDoc} */
 	@Override
 	public void close() {
@@ -51,14 +46,14 @@ public class JxlReadableWorkbook implements JxlWorkbook {
 
 	/** {@inheritDoc} */
 	@Override
-	public String[] getSheetNames() {
-		return this.workbook.getSheetNames();
+	public WritableSheet createSheet(String sheetName, int index) {
+		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void write() {
-		throw new UnsupportedOperationException();
+	public int getNumberOfSheets() {
+		return this.workbook.getNumberOfSheets();
 	}
 
 	/** {@inheritDoc} */
@@ -69,14 +64,19 @@ public class JxlReadableWorkbook implements JxlWorkbook {
 
 	/** {@inheritDoc} */
 	@Override
-	public WritableSheet createSheet(String sheetName, int index) {
-		throw new UnsupportedOperationException();
+	public String[] getSheetNames() {
+		return this.workbook.getSheetNames();
 	}
 
-	private static WorkbookSettings getReadSettings() {
-		final WorkbookSettings settings = new WorkbookSettings();
-		settings.setLocale(Locale.US);
-		settings.setEncoding("windows-1252");
-		return settings;
+	/** {@inheritDoc} */
+	@Override
+	public Sheet[] getSheets() {
+		return this.workbook.getSheets();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public void write() {
+		throw new UnsupportedOperationException();
 	}
 }

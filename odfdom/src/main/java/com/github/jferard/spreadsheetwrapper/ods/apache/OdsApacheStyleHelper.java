@@ -41,22 +41,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
  */
 public class OdsApacheStyleHelper implements
 		StyleHelper<OdfStylePropertySet, TableTableCellElementBase> {
-	/** @return the cell style from the element */
-	@Override
-	public WrapperCellStyle getWrapperCellStyle(
-			final TableTableCellElementBase odfElement) {
-		StyleStyleElement style = odfElement.getAutomaticStyle();
-
-		if (style == null) {
-			style = odfElement.reuseDocumentStyle(odfElement.getStyleName());
-		}
-
-		if (style != null) {
-			return this.toWrapperCellStyle(style);
-		} else
-			return WrapperCellStyle.EMPTY;
-	}
-
 	/**
 	 * @param wrapperCellStyle
 	 *            the new style format
@@ -84,17 +68,6 @@ public class OdsApacheStyleHelper implements
 		return properties;
 	}
 
-	/**
-	 * @param style
-	 *            *internal* cell style
-	 * @return the new cell style format
-	 */
-	@Override
-	public WrapperCellStyle toWrapperCellStyle(final OdfStylePropertySet style) {
-		return OdsApacheStyleHelper.toWrapperCellStyle(style.getProperties(style
-				.getStrictProperties()));
-	}
-
 	private static WrapperCellStyle toWrapperCellStyle(
 			Map<OdfStyleProperty, String> propertyByAttrName) {
 		WrapperFont wrapperFont = OdsApacheStyleFontHelper.toWrapperCellFont(propertyByAttrName);
@@ -113,12 +86,34 @@ public class OdsApacheStyleHelper implements
 		return wrapperStyle;
 	}
 
+	public WrapperCellStyle getCellStyle(final OdfOfficeStyles documentStyles, final String styleName) {
+		final OdfStyle existingStyle = documentStyles.getStyle(styleName,
+				OdfStyleFamily.TableCell);
+		return this.toWrapperCellStyle(existingStyle);
+	}
+
+	/** @return the cell style from the element */
 	@Override
-	public void setWrapperCellStyle(TableTableCellElementBase element,
+	public WrapperCellStyle getWrapperCellStyle(
+			final TableTableCellElementBase odfElement) {
+		StyleStyleElement style = odfElement.getAutomaticStyle();
+
+		if (style == null) {
+			style = odfElement.reuseDocumentStyle(odfElement.getStyleName());
+		}
+
+		if (style != null) {
+			return this.toWrapperCellStyle(style);
+		} else
+			return WrapperCellStyle.EMPTY;
+	}
+
+	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
 			WrapperCellStyle wrapperCellStyle) {
-		Map<OdfStyleProperty, String> properties = OdsApacheStyleHelper
-				.toProperties(wrapperCellStyle);
-		element.setProperties(properties);
+		final OdfStyle newStyle = documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		this.setWrapperCellStyle(newStyle, wrapperCellStyle);
+		return true;
 	}
 
 	public void setWrapperCellStyle(OdfStyle style,
@@ -128,17 +123,22 @@ public class OdsApacheStyleHelper implements
 		style.setProperties(properties);
 	}
 	
-	public WrapperCellStyle getCellStyle(final OdfOfficeStyles documentStyles, final String styleName) {
-		final OdfStyle existingStyle = documentStyles.getStyle(styleName,
-				OdfStyleFamily.TableCell);
-		return this.toWrapperCellStyle(existingStyle);
+	@Override
+	public void setWrapperCellStyle(TableTableCellElementBase element,
+			WrapperCellStyle wrapperCellStyle) {
+		Map<OdfStyleProperty, String> properties = OdsApacheStyleHelper
+				.toProperties(wrapperCellStyle);
+		element.setProperties(properties);
 	}
 
-	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
-			WrapperCellStyle wrapperCellStyle) {
-		final OdfStyle newStyle = documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		this.setWrapperCellStyle(newStyle, wrapperCellStyle);
-		return true;
+	/**
+	 * @param style
+	 *            *internal* cell style
+	 * @return the new cell style format
+	 */
+	@Override
+	public WrapperCellStyle toWrapperCellStyle(final OdfStylePropertySet style) {
+		return OdsApacheStyleHelper.toWrapperCellStyle(style.getProperties(style
+				.getStrictProperties()));
 	}
 }	

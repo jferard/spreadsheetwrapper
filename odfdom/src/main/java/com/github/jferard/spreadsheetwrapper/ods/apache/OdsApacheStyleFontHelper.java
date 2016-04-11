@@ -13,8 +13,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperFont;
 
 final class OdsApacheStyleFontHelper {
-	private OdsApacheStyleFontHelper() {}
-
 	public final static Map<OdfStyleProperty, String> getFontProperties(
 			final WrapperFont wrapperFont) {
 		final Map<OdfStyleProperty, String> fontProperties = new HashMap<OdfStyleProperty, String>(); // NOPMD
@@ -70,14 +68,6 @@ final class OdsApacheStyleFontHelper {
 		return fontProperties;
 	}
 
-	private static void setProperties(
-			final Map<OdfStyleProperty, String> properties,
-			final String attributeValue,
-			final OdfStyleProperty... propertyArray) {
-		for (final OdfStyleProperty property : propertyArray)
-			properties.put(property, attributeValue);
-	}
-
 	public static WrapperFont toWrapperCellFont(
 			final Map<OdfStyleProperty, String> propertyByAttrName) {
 		final WrapperFont wrapperFont = new WrapperFont();
@@ -111,5 +101,15 @@ final class OdsApacheStyleFontHelper {
 		}
 		return wrapperFont;
 	}
+
+	private static void setProperties(
+			final Map<OdfStyleProperty, String> properties,
+			final String attributeValue,
+			final OdfStyleProperty... propertyArray) {
+		for (final OdfStyleProperty property : propertyArray)
+			properties.put(property, attributeValue);
+	}
+
+	private OdsApacheStyleFontHelper() {}
 
 }

@@ -16,32 +16,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 
 class XlsJxlStyleBorderHelper {
-	private XlsJxlStyleColorHelper colorHelper;
-
-	XlsJxlStyleBorderHelper(XlsJxlStyleColorHelper colorHelper) {
-		this.colorHelper = colorHelper;
-	}
-
-	private WrapperColor getBorderColor(CellFormat cellFormat) {
-		final List<Border> list = Arrays.asList(Border.RIGHT, Border.TOP,
-				Border.BOTTOM);
-		final Colour borderColor = cellFormat.getBorderColour(Border.LEFT);
-		for (final Border border : list) {
-			if (!XlsJxlStyleColorHelper.colorEquals(borderColor,
-					cellFormat.getBorderColour(border))) {
-				return null;
-			}
-		}
-	
-		if (XlsJxlStyleColorHelper.colorEquals(borderColor, Colour.BLACK)
-				|| XlsJxlStyleColorHelper.colorEquals(borderColor,
-						Colour.PALETTE_BLACK)
-				|| XlsJxlStyleColorHelper.colorEquals(borderColor, Colour.AUTOMATIC))
-			return null;
-	
-		return this.colorHelper.toWrapperColor(borderColor);
-	}
-
 	private static Double getBorderLineWidth(CellFormat cellFormat) {
 		final List<Border> list = Arrays.asList(Border.RIGHT, Border.TOP,
 				Border.BOTTOM);
@@ -62,6 +36,25 @@ class XlsJxlStyleBorderHelper {
 		else
 			borderLineWidth = null;
 		return borderLineWidth;
+	}
+
+	private XlsJxlStyleColorHelper colorHelper;
+
+	XlsJxlStyleBorderHelper(XlsJxlStyleColorHelper colorHelper) {
+		this.colorHelper = colorHelper;
+	}
+
+	public Borders getBorders(CellFormat cellFormat) {
+		Borders borders = new Borders();
+		WrapperColor borderColor = this.getBorderColor(cellFormat);
+		if (borderColor != null)
+			borders.setLineColor(borderColor);
+		
+		Double borderLineWidth = XlsJxlStyleBorderHelper.getBorderLineWidth(cellFormat);
+		if (borderLineWidth != null && borderLineWidth > 0.0)
+			borders.setLineWidth(borderLineWidth);
+		
+		return borders;
 	}
 
 	public void setBorders(final WritableCellFormat cellFormat,
@@ -88,17 +81,24 @@ class XlsJxlStyleBorderHelper {
 		}
 	}
 
-	public Borders getBorders(CellFormat cellFormat) {
-		Borders borders = new Borders();
-		WrapperColor borderColor = this.getBorderColor(cellFormat);
-		if (borderColor != null)
-			borders.setLineColor(borderColor);
-		
-		Double borderLineWidth = XlsJxlStyleBorderHelper.getBorderLineWidth(cellFormat);
-		if (borderLineWidth != null && borderLineWidth > 0.0)
-			borders.setLineWidth(borderLineWidth);
-		
-		return borders;
+	private WrapperColor getBorderColor(CellFormat cellFormat) {
+		final List<Border> list = Arrays.asList(Border.RIGHT, Border.TOP,
+				Border.BOTTOM);
+		final Colour borderColor = cellFormat.getBorderColour(Border.LEFT);
+		for (final Border border : list) {
+			if (!XlsJxlStyleColorHelper.colorEquals(borderColor,
+					cellFormat.getBorderColour(border))) {
+				return null;
+			}
+		}
+	
+		if (XlsJxlStyleColorHelper.colorEquals(borderColor, Colour.BLACK)
+				|| XlsJxlStyleColorHelper.colorEquals(borderColor,
+						Colour.PALETTE_BLACK)
+				|| XlsJxlStyleColorHelper.colorEquals(borderColor, Colour.AUTOMATIC))
+			return null;
+	
+		return this.colorHelper.toWrapperColor(borderColor);
 	} 
 
 }

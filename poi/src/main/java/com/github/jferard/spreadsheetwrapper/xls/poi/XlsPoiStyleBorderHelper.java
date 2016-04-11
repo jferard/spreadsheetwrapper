@@ -12,34 +12,6 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperColor;
 
 class XlsPoiStyleBorderHelper {
 	
-	private XlsPoiStyleColorHelper colorHelper;
-
-	XlsPoiStyleBorderHelper(XlsPoiStyleColorHelper colorHelper) {
-		this.colorHelper = colorHelper;
-	}
-
-	private WrapperColor getBorderLineColor(final CellStyle cellStyle) {
-		final short borderBottomColor = cellStyle.getBottomBorderColor();
-		final short borderTopColor = cellStyle.getTopBorderColor();
-		final short borderLeftColor = cellStyle.getLeftBorderColor();
-		final short borderRightColor = cellStyle.getRightBorderColor();
-	
-		for (final short borderColor : Arrays.asList(borderTopColor,
-				borderLeftColor, borderRightColor)) {
-			if (borderColor != borderBottomColor)
-				return null;
-		}
-	
-		HSSFColor hssfColor = this.colorHelper.getHSSFColor(borderBottomColor);
-		if (hssfColor == null)
-			return null;
-		
-		if (hssfColor.getHexString().equals("0:0:0"))
-			return null;
-	
-		return this.colorHelper.toWrapperColor(hssfColor);
-	}
-
 	private static double getBorderLineSize(final CellStyle cellStyle) {
 		final short borderBottom = cellStyle.getBorderBottom();
 		final short borderTop = cellStyle.getBorderTop();
@@ -78,6 +50,12 @@ class XlsPoiStyleBorderHelper {
 		cellStyle.setBorderTop(border);
 		cellStyle.setBorderLeft(border);
 		cellStyle.setBorderRight(border);
+	}
+
+	private XlsPoiStyleColorHelper colorHelper;
+
+	XlsPoiStyleBorderHelper(XlsPoiStyleColorHelper colorHelper) {
+		this.colorHelper = colorHelper;
 	}
 
 	public void setCellBorders(final WrapperCellStyle wrapperCellStyle,
@@ -120,6 +98,28 @@ class XlsPoiStyleBorderHelper {
 			borders.setLineColor(color);
 		return borders;
 	
+	}
+
+	private WrapperColor getBorderLineColor(final CellStyle cellStyle) {
+		final short borderBottomColor = cellStyle.getBottomBorderColor();
+		final short borderTopColor = cellStyle.getTopBorderColor();
+		final short borderLeftColor = cellStyle.getLeftBorderColor();
+		final short borderRightColor = cellStyle.getRightBorderColor();
+	
+		for (final short borderColor : Arrays.asList(borderTopColor,
+				borderLeftColor, borderRightColor)) {
+			if (borderColor != borderBottomColor)
+				return null;
+		}
+	
+		HSSFColor hssfColor = this.colorHelper.getHSSFColor(borderBottomColor);
+		if (hssfColor == null)
+			return null;
+		
+		if (hssfColor.getHexString().equals("0:0:0"))
+			return null;
+	
+		return this.colorHelper.toWrapperColor(hssfColor);
 	}
 
 }

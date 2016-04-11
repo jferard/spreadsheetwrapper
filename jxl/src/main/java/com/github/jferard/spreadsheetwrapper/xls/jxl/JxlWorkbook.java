@@ -1,25 +1,23 @@
 package com.github.jferard.spreadsheetwrapper.xls.jxl;
 
 import java.io.IOException;
-import java.util.List;
-
 import jxl.Sheet;
 import jxl.write.WritableSheet;
 import jxl.write.WriteException;
 
 public interface JxlWorkbook {
 
-	int getNumberOfSheets();
-
-	Sheet[] getSheets();
-
 	void close() throws WriteException, IOException;
 
-	String[] getSheetNames();
+	WritableSheet createSheet(String sheetName, int index);
 
-	void write() throws IOException;
+	int getNumberOfSheets();
 
 	Sheet getSheet(String sheetName);
 
-	WritableSheet createSheet(String sheetName, int index);
+	String[] getSheetNames();
+
+	Sheet[] getSheets();
+
+	void write() throws IOException;
 }

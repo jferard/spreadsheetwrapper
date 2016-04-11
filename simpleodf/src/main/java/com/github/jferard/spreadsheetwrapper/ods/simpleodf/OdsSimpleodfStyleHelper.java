@@ -17,7 +17,6 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.simpleodf;
 
-import org.odftoolkit.odfdom.doc.table.OdfTableCell;
 import org.odftoolkit.odfdom.dom.element.table.TableTableCellElementBase;
 import org.odftoolkit.odfdom.dom.style.OdfStyleFamily;
 import org.odftoolkit.odfdom.incubator.doc.office.OdfOfficeStyles;
@@ -44,14 +43,6 @@ public class OdsSimpleodfStyleHelper {
 		return this.styleHelperDelegate.toWrapperCellStyle(existingStyle);
 	}
 
-	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
-			WrapperCellStyle wrapperCellStyle) {
-		final OdfStyle newStyle = documentStyles.newStyle(styleName,
-				OdfStyleFamily.TableCell);
-		this.styleHelperDelegate.setWrapperCellStyle(newStyle, wrapperCellStyle);
-		return true;
-	}
-
 	public /*@Nullable*/ WrapperCellStyle getStyle(Cell cell) {
 		if (cell == null)
 			return null;
@@ -66,6 +57,14 @@ public class OdsSimpleodfStyleHelper {
 
 		final TableTableCellElementBase odfElement = cell.getOdfElement();
 		this.styleHelperDelegate.setWrapperCellStyle(odfElement, wrapperCellStyle);
+		return true;
+	}
+
+	public boolean setStyle(OdfOfficeStyles documentStyles, String styleName,
+			WrapperCellStyle wrapperCellStyle) {
+		final OdfStyle newStyle = documentStyles.newStyle(styleName,
+				OdfStyleFamily.TableCell);
+		this.styleHelperDelegate.setWrapperCellStyle(newStyle, wrapperCellStyle);
 		return true;
 	}
 }	

@@ -36,12 +36,6 @@ import java.io.OutputStream;
  *
  */
 public class OptionalOutput {
-	/** file optionalOutput */
-	private final/*@Nullable*/File outputFile;
-
-	/** stream optionalOutput */
-	private/*@Nullable*/OutputStream outputStream;
-
 	/**
 	 * Empty optionalOutput
 	 */
@@ -65,6 +59,12 @@ public class OptionalOutput {
 			final/*@Nullable*/OutputStream outputStream) {
 		return new OptionalOutput(outputStream, null);
 	}
+
+	/** file optionalOutput */
+	private final/*@Nullable*/File outputFile;
+
+	/** stream optionalOutput */
+	private/*@Nullable*/OutputStream outputStream;
 
 	/**
 	 * OptionalOutput to file or stream

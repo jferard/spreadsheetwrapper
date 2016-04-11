@@ -92,6 +92,13 @@ public class WrapperCellStyle {
 	}
 
 	/**
+	 * @return the borders
+	 */
+	public /*@Nullable*/ Borders getBorders() {
+		return this.borders;
+	}
+
+	/**
 	 * @return the text font in the cell
 	 */
 	public/*@Nullable*/WrapperFont getCellFont() {
@@ -115,7 +122,8 @@ public class WrapperCellStyle {
 		this.backgoundColor = wrapperColor;
 		return this;
 	}
-
+	
+	
 	/**
 	 * @param borders the borders
 	 * @return this (fluent style)
@@ -123,14 +131,6 @@ public class WrapperCellStyle {
 	public WrapperCellStyle setBorders(final Borders borders) {
 		this.borders = borders;
 		return this;
-	}
-	
-	
-	/**
-	 * @return the borders
-	 */
-	public /*@Nullable*/ Borders getBorders() {
-		return this.borders;
 	}
 
 	/**

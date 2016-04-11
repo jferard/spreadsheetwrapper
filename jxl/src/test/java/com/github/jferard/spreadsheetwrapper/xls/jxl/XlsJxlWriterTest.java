@@ -31,12 +31,12 @@ import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.Before;
 
-import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterLevel2Test;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterTest;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetException;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetTestHelper;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class XlsJxlWriterTest extends AbstractSpreadsheetWriterLevel2Test { // NOPMD
+public class XlsJxlWriterTest extends AbstractSpreadsheetWriterTest { // NOPMD
 	// by
 	// Julien
 	// on

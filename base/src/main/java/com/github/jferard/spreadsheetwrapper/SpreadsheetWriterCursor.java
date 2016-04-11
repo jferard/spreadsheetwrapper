@@ -21,129 +21,77 @@ import java.util.Date;
 
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 
+/*>>> import org.checkerframework.checker.nullness.qual.Nullable;*/
+
 public interface SpreadsheetWriterCursor extends SpreadsheetReaderCursor {
 	/**
-	 * Set a value at the current position
-	 *
-	 * @param content
-	 *            the value
+	 * {@link SpreadsheetWriter.setCellContent(int, int, Object)}
 	 */
-	Object setCellContent(Object content);
+	/*@Nullable*/ Object setCellContent(Object content);
 
 	/**
-	 * Set a value at the current position
-	 *
-	 * @param content
-	 *            the value
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setCellContent(int, int, Object, String)}
 	 */
-	Object setCellContent(Object content, String styleName);
+	/*@Nullable*/ Object setCellContent(Object content, String styleName);
 
 	/**
-	 * Set a date at the current position
-	 *
-	 * @param date
-	 *            the date
+	 * {@link SpreadsheetWriter.setDate(int, int, Date)}
 	 */
-	Date setDate(Date date);
+	/*@Nullable*/ Date setDate(Date date);
 
 	/**
-	 * Set a date at the current position
-	 *
-	 * @param date
-	 *            the date
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setDate(int, int, Date, String)}
 	 */
-	Date setDate(Date date, String styleName);
+	/*@Nullable*/Date setDate(Date date, String styleName);
 
 	/**
-	 * set a Double at the current position
-	 *
-	 * @param value
-	 *            Double
+	 * {@link SpreadsheetWriter.setDouble(int, int, Double)}
 	 */
-	Double setDouble(Number value);
+	/*@Nullable*/Double setDouble(Number value);
 
 	/**
-	 * set a Double at the current position
-	 *
-	 * @param value
-	 *            Double
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setDouble(int, int, Number, String)}
 	 */
-	Double setDouble(Number value, String styleName);
+	/*@Nullable*/Double setDouble(Number value, String styleName);
 
 	/**
-	 * Set a formula at the current position
-	 *
-	 * @param formula
-	 *            the formula text (english)
+	 * {@link SpreadsheetWriter.setFormula(int, int, String)}
 	 */
-	String setFormula(String formula);
+	/*@Nullable*/String setFormula(String formula);
 
 	/**
-	 * Set a formula at the current position
-	 *
-	 * @param formula
-	 *            the formula text (english)
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setFormula(int, int, String, String)}
 	 */
-	String setFormula(String formula, String styleName);
+	/*@Nullable*/String setFormula(String formula, String styleName);
 
 	/**
-	 * Set an integer at the current position
-	 *
-	 * @param value
-	 *            the integer
+	 * {@link SpreadsheetWriter.setInteger(int, int, Number)}
 	 */
-	Integer setInteger(Number value);
+	/*@Nullable*/Integer setInteger(Number value);
 
 	/**
-	 * Set an integer at the current position
-	 *
-	 * @param value
-	 *            the integer
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setInteger(int, int, Number, String)}
 	 */
-	Integer setInteger(Number value, String styleName);
+	/*@Nullable*/Integer setInteger(Number value, String styleName);
 
 	/**
-	 * Set a format at the current position
-	 *
-	 * @param wrapperStyle
-	 *            the format
+	 * {@link SpreadsheetWriter.setStyle(int, int, WrapperCellStyle)}
 	 */
 	boolean setStyle(WrapperCellStyle wrapperStyle);
 
 	/**
-	 * Set a format at the current position
-	 *
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setStyleName(int, int, String)}
 	 */
 	boolean setStyleName(String styleName);
 
 	/**
-	 * Set a text at the current position
-	 *
-	 * @param text
-	 *            the text
+	 * {@link SpreadsheetWriter.setText(int, int, String)}
 	 */
-	String setText(String text);
+	/*@Nullable*/String setText(String text);
 
 	/**
-	 * Set a text at the current position
-	 *
-	 * @param text
-	 *            the text
-	 * @param styleName
-	 *            the name of the format
+	 * {@link SpreadsheetWriter.setText(int, int, String, String)}
 	 */
-	String setText(String text, String styleName);
+	/*@Nullable*/String setText(String text, String styleName);
 
 }

@@ -51,6 +51,19 @@ SpreadsheetDocumentReader {
 
 	/** {inheritDoc} */
 	@Override
+	public SpreadsheetReaderCursor getNewCursorByIndex(int index) {
+		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByIndex(index));
+	}
+
+	/** {inheritDoc} */
+	@Override
+	public SpreadsheetReaderCursor getNewCursorByName(String sheetName)
+			throws SpreadsheetException {
+		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByName(sheetName));
+	}
+
+	/** {inheritDoc} */
+	@Override
 	public int getSheetCount() {
 		return this.spreadsheetDocumentWriter.getSheetCount();
 	}
@@ -60,7 +73,7 @@ SpreadsheetDocumentReader {
 	public List<String> getSheetNames() {
 		return this.spreadsheetDocumentWriter.getSheetNames();
 	}
-
+	
 	/** {inheritDoc} */
 	@Override
 	public SpreadsheetReader getSpreadsheet(int index) {
@@ -71,19 +84,6 @@ SpreadsheetDocumentReader {
 	@Override
 	public SpreadsheetReader getSpreadsheet(String name) {
 		return new SpreadsheetReaderImpl(this.spreadsheetDocumentWriter.getSpreadsheet(name));
-	}
-	
-	/** {inheritDoc} */
-	@Override
-	public SpreadsheetReaderCursor getNewCursorByIndex(int index) {
-		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByIndex(index));
-	}
-
-	/** {inheritDoc} */
-	@Override
-	public SpreadsheetReaderCursor getNewCursorByName(String sheetName)
-			throws SpreadsheetException {
-		return new SpreadsheetReaderCursorImpl(this.spreadsheetDocumentWriter.getNewCursorByName(sheetName));
 	}
 	
 }

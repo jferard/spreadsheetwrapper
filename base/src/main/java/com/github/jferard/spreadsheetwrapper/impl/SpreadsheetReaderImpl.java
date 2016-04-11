@@ -37,16 +37,21 @@ class SpreadsheetReaderImpl implements
 		this.spreadsheetWriter = spreadsheetWriter;
 	}
 
-	/** {@inheritDoc} */
 	@Override
-	public Boolean getBoolean(int r, int c) {
-		return this.spreadsheetWriter.getBoolean(r, c);
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof SpreadsheetReaderImpl))
+			return false;
+
+		SpreadsheetReaderImpl other = (SpreadsheetReaderImpl) obj;
+		return this.spreadsheetWriter.equals(other.spreadsheetWriter);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public SpreadsheetWriterCursor getNewCursor() {
-		return this.spreadsheetWriter.getNewCursor();
+	public Boolean getBoolean(int r, int c) {
+		return this.spreadsheetWriter.getBoolean(r, c);
 	}
 
 	/** {@inheritDoc} */
@@ -99,6 +104,12 @@ class SpreadsheetReaderImpl implements
 
 	/** {@inheritDoc} */
 	@Override
+	public SpreadsheetWriterCursor getNewCursor() {
+		return this.spreadsheetWriter.getNewCursor();
+	}
+
+	/** {@inheritDoc} */
+	@Override
 	public List<Object> getRowContents(int rowIndex) {
 		return this.spreadsheetWriter.getRowContents(rowIndex);
 	}
@@ -130,16 +141,5 @@ class SpreadsheetReaderImpl implements
 	@Override
 	public int hashCode() {
 		return this.spreadsheetWriter.hashCode();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof SpreadsheetReaderImpl))
-			return false;
-
-		SpreadsheetReaderImpl other = (SpreadsheetReaderImpl) obj;
-		return this.spreadsheetWriter.equals(other.spreadsheetWriter);
 	}
 }

@@ -39,8 +39,8 @@ import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
 /**
  * writer for simpleods
  */
-class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
-		SpreadsheetWriter {
+class OdsSimpleodsWriter extends AbstractSpreadsheetWriter
+		implements SpreadsheetWriter {
 
 	/** index of current row, -1 if none */
 	private int curR;
@@ -54,7 +54,7 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	private OdsSimpleodsStyleHelper styleHelper;
 
 	/**
-	 * @param styleHelper 
+	 * @param styleHelper
 	 * @param table
 	 *            *internal* sheet
 	 */
@@ -62,147 +62,6 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		this.styleHelper = styleHelper;
 		this.table = table;
 
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertCol(final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public void insertRow(final int r) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> removeCol(final int c) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public List</*@Nullable*/Object> removeRow(final int r) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public Boolean setBoolean(final int r, final int c, final Boolean value) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
-	@Override
-	public Date setDate(final int r, final int c, final Date date) {
-		final TableCell cell = this.getOrCreateSimpleCell(r, c);
-		final TimeZone timeZone = TimeZone.getTimeZone("UTC");
-		final Calendar cal = Calendar.getInstance(timeZone);
-		cal.setTime(date);
-		cell.setDateValue(cal);
-		final Date retDate = new Date();
-		retDate.setTime(date.getTime() / 86400000 * 86400000);
-		return retDate;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
-	@Override
-	public Double setDouble(final int r, final int c, final Number value) {
-		final TableCell cell = this.getOrCreateSimpleCell(r, c);
-		final double retValue = value.doubleValue();
-		cell.setValue(Double.toString(retValue));
-		cell.setValueType(TableCell.STYLE_FLOAT);
-		return retValue;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
-	@Override
-	public String setFormula(final int r, final int c, final String formula) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 *
-	 * @return
-	 */
-	@Override
-	public Integer setInteger(final int r, final int c, final Number value) {
-		final TableCell cell = this.getOrCreateSimpleCell(r, c);
-		final int retValue = value.intValue();
-		cell.setValue(Integer.toString(retValue));
-		cell.setValueType(TableCell.STYLE_FLOAT);
-		return retValue;
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyle(final int r, final int c,
-			final WrapperCellStyle wrapperStyle) {
-		throw new UnsupportedOperationException();
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public boolean setStyleName(final int r, final int c, final String styleName) {
-		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
-		return this.styleHelper.setStyle(simpleCell, styleName);
-	}
-
-	/** {@inheritDoc} */
-	@Override
-	public String setText(final int r, final int c, final String text) {
-		final TableCell cell = this.getOrCreateSimpleCell(r, c);
-		cell.setText(text);
-		cell.setValue(text);
-		return text;
-	}
-
-	/**
-	 * @param r
-	 *            row index
-	 * @param c
-	 *            column index
-	 * @return the *internal* cell
-	 * @throws IllegalArgumentException
-	 *             if the row does not exist
-	 */
-	protected TableCell getOrCreateSimpleCell(final int r, final int c)
-			throws IllegalArgumentException {
-		if (r < 0 || c < 0)
-			throw new IllegalArgumentException();
-
-		if (r != this.curR || this.curRow == null) {
-			final ObjectQueue rowsQueue = this.table.getRows();
-			this.curRow = (TableRow) rowsQueue.get(r);
-			if (this.curRow == null) {
-				final TableRow row = new TableRow();
-				if (rowsQueue.setAt(r, row))
-					this.curRow = row;
-				else {
-					this.curR = -1;
-					throw new IllegalArgumentException();
-				}
-			}
-			this.curR = r;
-		}
-		return this.curRow.getCell(c);
 	}
 
 	/** {@inheritDoc} */
@@ -237,8 +96,8 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 			result = cell.getText();
 			break;
 		default:
-			throw new IllegalArgumentException(String.format(
-					"Unknown type of cell %s", type));
+			throw new IllegalArgumentException(
+					String.format("Unknown type of cell %s", type));
 		}
 		return result;
 	}
@@ -248,8 +107,8 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 	public int getCellCount(final int r) {
 		final ObjectQueue rows = this.table.getRows();
 		if (r >= rows.size())
-			throw new IllegalArgumentException();
-		
+			return 0;
+
 		final TableRow row = (TableRow) rows.get(r);
 		final int count;
 		if (row == null)
@@ -340,6 +199,129 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		throw new IllegalArgumentException();
 	}
 
+	/** {@inheritDoc} */
+	@Override
+	public boolean insertCol(final int c) {
+		if (c < 0)
+			throw new IllegalArgumentException();
+		else
+			throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean insertRow(final int r) {
+		if (r < 0)
+			throw new IllegalArgumentException();
+		else
+			throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List</*@Nullable*/Object> removeCol(final int c) {
+		if (c < 0)
+			throw new IllegalArgumentException();
+		else
+			throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public List</*@Nullable*/Object> removeRow(final int r) {
+		if (r < 0)
+			throw new IllegalArgumentException();
+		else
+			throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Boolean setBoolean(final int r, final int c, final Boolean value) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
+	@Override
+	public Date setDate(final int r, final int c, final Date date) {
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
+		final TimeZone timeZone = TimeZone.getTimeZone("UTC");
+		final Calendar cal = Calendar.getInstance(timeZone);
+		cal.setTime(date);
+		cell.setDateValue(cal);
+		final Date retDate = new Date();
+		retDate.setTime(date.getTime() / 86400000 * 86400000);
+		return retDate;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
+	@Override
+	public Double setDouble(final int r, final int c, final Number value) {
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
+		final double retValue = value.doubleValue();
+		cell.setValue(Double.toString(retValue));
+		cell.setValueType(TableCell.STYLE_FLOAT);
+		return retValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
+	@Override
+	public String setFormula(final int r, final int c, final String formula) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @return
+	 */
+	@Override
+	public Integer setInteger(final int r, final int c, final Number value) {
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
+		final int retValue = value.intValue();
+		cell.setValue(Integer.toString(retValue));
+		cell.setValueType(TableCell.STYLE_FLOAT);
+		return retValue;
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyle(final int r, final int c,
+			final WrapperCellStyle wrapperStyle) {
+		throw new UnsupportedOperationException();
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public boolean setStyleName(final int r, final int c,
+			final String styleName) {
+		final TableCell simpleCell = this.getOrCreateSimpleCell(r, c);
+		return this.styleHelper.setStyle(simpleCell, styleName);
+	}
+
+	/** {@inheritDoc} */
+	@Override
+	public String setText(final int r, final int c, final String text) {
+		final TableCell cell = this.getOrCreateSimpleCell(r, c);
+		cell.setText(text);
+		cell.setValue(text);
+		return text;
+	}
+
 	/**
 	 * @param r
 	 *            row index
@@ -371,5 +353,36 @@ class OdsSimpleodsWriter extends AbstractSpreadsheetWriter implements
 		}
 		return this.curRow.getCell(c);
 	}
-	
+
+	/**
+	 * @param r
+	 *            row index
+	 * @param c
+	 *            column index
+	 * @return the *internal* cell
+	 * @throws IllegalArgumentException
+	 *             if the row does not exist
+	 */
+	protected TableCell getOrCreateSimpleCell(final int r, final int c)
+			throws IllegalArgumentException {
+		if (r < 0 || c < 0)
+			throw new IllegalArgumentException();
+
+		if (r != this.curR || this.curRow == null) {
+			final ObjectQueue rowsQueue = this.table.getRows();
+			this.curRow = (TableRow) rowsQueue.get(r);
+			if (this.curRow == null) {
+				final TableRow row = new TableRow();
+				if (rowsQueue.setAt(r, row))
+					this.curRow = row;
+				else {
+					this.curR = -1;
+					throw new IllegalArgumentException();
+				}
+			}
+			this.curR = r;
+		}
+		return this.curRow.getCell(c);
+	}
+
 }

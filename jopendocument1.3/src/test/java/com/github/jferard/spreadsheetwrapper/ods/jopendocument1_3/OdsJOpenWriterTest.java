@@ -17,10 +17,10 @@
  *******************************************************************************/
 package com.github.jferard.spreadsheetwrapper.ods.jopendocument1_3;
 
-import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterLevel2Test;
+import com.github.jferard.spreadsheetwrapper.AbstractSpreadsheetWriterTest;
 import com.github.jferard.spreadsheetwrapper.TestProperties;
 
-public class OdsJOpenWriterTest extends AbstractSpreadsheetWriterLevel2Test {
+public class OdsJOpenWriterTest extends AbstractSpreadsheetWriterTest {
 	/** {@inheritDoc} */
 	@Override
 	protected TestProperties getProperties() {

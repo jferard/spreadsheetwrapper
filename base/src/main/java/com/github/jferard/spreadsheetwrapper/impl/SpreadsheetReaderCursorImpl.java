@@ -19,7 +19,6 @@ package com.github.jferard.spreadsheetwrapper.impl;
 
 import java.util.Date;
 
-import com.github.jferard.spreadsheetwrapper.Cursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetReaderCursor;
 import com.github.jferard.spreadsheetwrapper.SpreadsheetWriterCursor;
 import com.github.jferard.spreadsheetwrapper.style.WrapperCellStyle;
