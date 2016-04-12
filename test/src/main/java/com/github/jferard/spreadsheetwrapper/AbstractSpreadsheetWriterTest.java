@@ -43,10 +43,10 @@ public abstract class AbstractSpreadsheetWriterTest extends AbstractSpreadsheetR
 
 	
 	/** the document writer */
-	private SpreadsheetDocumentWriter documentWriter;
+	protected SpreadsheetDocumentWriter documentWriter;
 
 	/** the sheet writer */
-	private SpreadsheetWriter sheetWriter;
+	protected SpreadsheetWriter sheetWriter;
 
 	/** set the test up */
 	@Before

@@ -54,10 +54,12 @@ class XlsJxlWriter extends AbstractSpreadsheetWriter implements
 SpreadsheetWriter {
 
 	private static Date getDate(final Cell cell) {
+		final Date ret;
 		if (cell instanceof DateCell)
-			return ((DateCell) cell).getDate();
-
-		throw new IllegalArgumentException();
+			ret = ((DateCell) cell).getDate();
+		else
+			ret = null;
+		return ret;
 	}
 
 	/** current row index, -1 if none */
@@ -88,13 +90,12 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
-		if (cell == null)
-			return null;
-
+		final Boolean ret;
 		if (cell instanceof BooleanCell)
-			return ((BooleanCell) cell).getValue();
-
-		throw new IllegalArgumentException();
+			ret = ((BooleanCell) cell).getValue();
+		else
+			ret = null;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -146,10 +147,15 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		if (r >= this.sheet.getRows())
-			throw new IllegalArgumentException(); 
+		if (r < 0)
+			throw new IllegalArgumentException();
 		
-		return this.sheet.getRow(r).length;
+		final int ret;
+		if (r < this.sheet.getRows())
+			ret =  this.sheet.getRow(r).length;
+		else
+			ret = 0;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -166,13 +172,12 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
-		if (cell == null)
-			return null;
-
+		final Double ret;
 		if (cell instanceof NumberCell)
-			return ((NumberCell) cell).getValue();
-
-		throw new IllegalArgumentException();
+			ret = ((NumberCell) cell).getValue();
+		else
+			ret = null;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
@@ -194,7 +199,7 @@ SpreadsheetWriter {
 		else if (cell instanceof Formula) // write
 			formula = ((Formula) cell).getContents();
 		else
-			throw new IllegalArgumentException(cell.toString());
+			formula = null;
 
 		return formula;
 	}
@@ -228,30 +233,47 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
 		final Cell cell = this.getJxlCell(r, c);
-		if (cell == null)
-			return null;
-
-		if (!(cell instanceof LabelCell))
-			throw new IllegalArgumentException(cell.toString());
-
-		return ((LabelCell) cell).getString();
+		final String ret;
+		if (cell instanceof LabelCell)
+			ret = ((LabelCell) cell).getString();
+		else
+			ret = null;
+		
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean insertCol(final int c) {
-		((WritableSheet) this.sheet).insertColumn(c);
+		if (c < 0)
+			throw new IllegalArgumentException();
+		
+		if (c < this.sheet.getColumns()) {
+			((WritableSheet) this.sheet).insertColumn(c);
+			return true;
+		} else
+			return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean insertRow(final int r) {
-		((WritableSheet) this.sheet).insertRow(r);
+		if (r < 0)
+			throw new IllegalArgumentException();
+		
+		if (r < this.sheet.getRows()) {
+			((WritableSheet) this.sheet).insertRow(r);
+			return true;
+		} else
+			return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
+		if (c >= ((WritableSheet) this.sheet).getColumns())
+			return null;
+		
 		final List</*@Nullable*/Object> ret = this.getColContents(c);
 		((WritableSheet) this.sheet).removeColumn(c);
 		return ret;
@@ -260,6 +282,9 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
+		if (r >= this.getRowCount())
+			return null;
+
 		final List</*@Nullable*/Object> ret = this.getRowContents(r);
 		((WritableSheet) this.sheet).removeRow(r);
 		return ret;

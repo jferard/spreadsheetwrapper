@@ -18,7 +18,7 @@
 	<parent>
 		<artifactId>spreadsheetwrapper-parent</artifactId>
 		<groupId>com.github.jferard</groupId>
-		<version>1.0.1-SNAPSHOT</version>
+		<version>1.0.2</version>
 	</parent>
 
 	<dependencies>
@@ -173,7 +173,7 @@
 							<goal>shade</goal>
 						</goals>
 						<configuration>
-							<!-- <finalName>spreadsheetwrapper-1.0.1-SNAPSHOT</finalName> <shadedArtifactAttached>true</shadedArtifactAttached> 
+							<!-- <finalName>spreadsheetwrapper-1.0.2</finalName> <shadedArtifactAttached>true</shadedArtifactAttached> 
 								<shadedClassifierName>toto</shadedClassifierName> --><!-- <artifactSet> <includes> <include>com.github.jferard:*</include> 
 								<include>org.checkerframework:checker-qual</include> </includes> </artifactSet> -->
 						</configuration>

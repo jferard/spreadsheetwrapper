@@ -55,8 +55,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 			String message = e.getMessage();
 			if (message == null)
 				message = "???";
-			Logger.getLogger(AbstractSpreadsheetWriter.class.getName()).log(
-					Level.SEVERE, message, e);
+			Logger.getLogger(AbstractSpreadsheetWriter.class.getName())
+					.log(Level.SEVERE, message, e);
 			simpleDate = null;
 		}
 		return simpleDate;
@@ -72,7 +72,7 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	public final List</*@Nullable*/Object> getColContents(final int colIndex) {
 		if (colIndex < 0)
 			throw new IllegalArgumentException();
-		
+
 		final int rowCount = this.getRowCount();
 		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
 				rowCount);
@@ -99,7 +99,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public final List</*@Nullable*/Object> getRowContents(final int r) {
+	public final List</*@Nullable*/Object> getRowContents(
+			final int r) {
 		final int colCount = this.getCellCount(r);
 		final List</*@Nullable*/Object> cellContents = new ArrayList</*@Nullable*/Object>(
 				colCount);
@@ -119,7 +120,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object setCellContent(final int r, final int c, final Object content) {
+	public Object setCellContent(final int r, final int c,
+			final Object content) {
 		if (content == null)
 			throw new IllegalArgumentException();
 
@@ -145,8 +147,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public Object setCellContent(final int r, final int c,
-			final Object content, final String styleName) {
+	public Object setCellContent(final int r, final int c, final Object content,
+			final String styleName) {
 		final Object ret = this.setCellContent(r, c, content);
 		this.setStyleName(r, c, styleName);
 		return ret;
@@ -154,7 +156,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public List<Object> setColContents(final int c, final List<Object> contents) {
+	public List<Object> setColContents(final int c,
+			final List<Object> contents) {
 		final List<Object> ret = new ArrayList<Object>(contents.size());
 		final int rowCount = this.getRowCount();
 		for (int r = 0; r < rowCount; r++) {
@@ -212,7 +215,8 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyleName(final int r, final int c, final String styleName) {
+	public boolean setStyleName(final int r, final int c,
+			final String styleName) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -230,5 +234,5 @@ public abstract class AbstractSpreadsheetWriter implements SpreadsheetWriter {
 	public boolean writeDataFrom(final int r, final int c,
 			final DataWrapper dataWrapper) {
 		return dataWrapper.writeDataTo(this, r, c);
-	}	
+	}
 }

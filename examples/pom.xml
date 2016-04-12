@@ -4,7 +4,7 @@
 
 	<groupId>com.github.jferard</groupId>
 	<artifactId>spreadsheetwrapper-examples</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.2</version>
 	<name>spreadsheetwrapper-examples</name>
 	<packaging>jar</packaging>
 	<url>http://maven.apache.org</url>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>com.github.jferard</groupId>
 			<artifactId>spreadsheetwrapper</artifactId>
-			<version>1.0.1-SNAPSHOT</version>
+			<version>1.0.2</version>
 		</dependency>
 
 		<dependency>

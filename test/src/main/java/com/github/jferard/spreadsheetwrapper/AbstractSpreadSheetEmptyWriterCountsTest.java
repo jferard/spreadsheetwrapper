@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -156,8 +157,14 @@ public abstract class AbstractSpreadSheetEmptyWriterCountsTest {
 	/** */
 	@Test
 	public void testSetObjetAtBigIndex() {
-		Assert.assertEquals(Integer.valueOf(1), this.sheetWriter.setCellContent(0, BIG_INDEX,
-				Integer.valueOf(1)));
+		try {
+			Assert.assertEquals(Integer.valueOf(1), this.sheetWriter
+					.setCellContent(0, BIG_INDEX, Integer.valueOf(1)));
+		} catch (final UnsupportedOperationException e) {
+			this.logger.log(Level.INFO, "", e);
+			Assume.assumeNoException(e);
+		}
+
 	}
 
 	/** */

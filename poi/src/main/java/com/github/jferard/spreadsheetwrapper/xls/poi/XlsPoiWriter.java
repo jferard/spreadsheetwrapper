@@ -36,8 +36,8 @@ import com.github.jferard.spreadsheetwrapper.xls.XlsConstants;
 
 /**
  */
-class XlsPoiWriter extends AbstractSpreadsheetWriter implements
-SpreadsheetWriter {
+class XlsPoiWriter extends AbstractSpreadsheetWriter
+		implements SpreadsheetWriter {
 	/** current row index, -1 if none */
 	private int curR;
 
@@ -56,6 +56,18 @@ SpreadsheetWriter {
 	/** helper for style */
 	private final XlsPoiStyleHelper styleHelper;
 
+	private static boolean nullCellOrInvalidType(final /*@Nullable*/ Cell cell,
+			final int... validTypes) {
+		if (cell != null) {
+			final int cellType = cell.getCellType();
+			for (final int validType : validTypes) {
+				if (validType == cellType)
+					return false;
+			}
+		}
+		return true;
+	}
+
 	/**
 	 * @param delegateStyleHelper
 	 */
@@ -71,12 +83,9 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/Boolean getBoolean(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
+		if (XlsPoiWriter.nullCellOrInvalidType(cell, Cell.CELL_TYPE_BOOLEAN))
 			return null;
 
-		if (cell.getCellType() != Cell.CELL_TYPE_BOOLEAN)
-			throw new IllegalArgumentException(
-					"This cell does not contain a boolean");
 		return cell.getBooleanCellValue();
 	}
 
@@ -117,8 +126,8 @@ SpreadsheetWriter {
 			result = cell.getStringCellValue();
 			break;
 		default:
-			throw new IllegalArgumentException(String.format(
-					"Unknown type of cell %d", cell.getCellType()));
+			throw new IllegalArgumentException(String
+					.format("Unknown type of cell %d", cell.getCellType()));
 		}
 		return result;
 	}
@@ -126,20 +135,24 @@ SpreadsheetWriter {
 	/** {@inheritDoc} */
 	@Override
 	public int getCellCount(final int r) {
-		if (r >= this.getRowCount())
+		if (r < 0)
 			throw new IllegalArgumentException();
-		return this.getCellCountUnsafe(r);
+		
+		final int ret;
+		if (r < this.getRowCount())
+			ret = this.getCellCountUnsafe(r);
+		else
+			ret = 0;
+		return ret;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public/*@Nullable*/Date getDate(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
+		if (cell == null || !this.isDate(cell))
 			return null;
 
-		if (!this.isDate(cell))
-			throw new IllegalArgumentException();
 		return cell.getDateCellValue();
 	}
 
@@ -147,11 +160,8 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/Double getDouble(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
+		if (cell == null || !this.isDouble(cell))
 			return null;
-
-		if (!this.isDouble(cell))
-			throw new IllegalArgumentException();
 
 		return cell.getNumericCellValue();
 	}
@@ -160,11 +170,9 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/String getFormula(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
+		if (XlsPoiWriter.nullCellOrInvalidType(cell, Cell.CELL_TYPE_FORMULA))
 			return null;
 
-		if (cell.getCellType() != Cell.CELL_TYPE_FORMULA)
-			throw new IllegalArgumentException();
 		return cell.getCellFormula();
 	}
 
@@ -201,42 +209,59 @@ SpreadsheetWriter {
 	@Override
 	public/*@Nullable*/String getText(final int r, final int c) {
 		final Cell cell = this.getPOICell(r, c);
-		if (cell == null)
+		if (XlsPoiWriter.nullCellOrInvalidType(cell, Cell.CELL_TYPE_STRING))
 			return null;
-
-		if (cell.getCellType() != Cell.CELL_TYPE_STRING)
-			throw new IllegalArgumentException(
-					"This cell does not contain text");
+		
 		return cell.getStringCellValue();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean insertCol(final int c) {
+		if (c < 0)
+			throw new IllegalArgumentException();
+
 		throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public boolean insertRow(final int r) {
-		this.sheet.shiftRows(r, this.getRowCount(), 1);
-		this.sheet.createRow(r);
+		if (r < 0)
+			throw new IllegalArgumentException();
+
+		final int rowCount = this.getRowCount();
+		if (r < rowCount) {
+			this.sheet.shiftRows(r, rowCount, 1);
+			this.sheet.createRow(r);
+			return true;
+		} else
+			return false;
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeCol(final int c) {
-		throw new UnsupportedOperationException();
+		if (c < 0)
+			throw new IllegalArgumentException();
+		else
+			throw new UnsupportedOperationException();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public List</*@Nullable*/Object> removeRow(final int r) {
-		final List</*@Nullable*/Object> ret = this.getRowContents(r);
-		final Row row = this.sheet.getRow(r);
-		this.sheet.removeRow(row);
-		this.sheet.shiftRows(r, this.getRowCount(), 1);
-		return ret;
+		if (r < 0)
+			throw new IllegalArgumentException();
+		
+		if (r < this.getRowCount()) {
+			final List</*@Nullable*/Object> ret = this.getRowContents(r);
+			final Row row = this.sheet.getRow(r);
+			this.sheet.removeRow(row);
+			this.sheet.shiftRows(r, this.getRowCount(), 1);
+			return ret;
+		} else
+			return null;
 	}
 
 	/**
@@ -304,14 +329,17 @@ SpreadsheetWriter {
 	public boolean setStyle(final int r, final int c,
 			final WrapperCellStyle wrapperCellStyle) {
 		final Cell poiCell = this.getOrCreatePOICell(r, c);
-		return this.styleHelper.setStyle(this.sheet.getWorkbook(), poiCell, wrapperCellStyle);
+		return this.styleHelper.setStyle(this.sheet.getWorkbook(), poiCell,
+				wrapperCellStyle);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public boolean setStyleName(final int r, final int c, final String styleName) {
+	public boolean setStyleName(final int r, final int c,
+			final String styleName) {
 		final Cell cell = this.getOrCreatePOICell(r, c);
-		return this.styleHelper.setSyleName(this.sheet.getWorkbook(), cell, styleName);
+		return this.styleHelper.setSyleName(this.sheet.getWorkbook(), cell,
+				styleName);
 	}
 
 	/** */
