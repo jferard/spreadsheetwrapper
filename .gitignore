@@ -3,6 +3,9 @@
 .classpath
 .pmd
 .ruleset
+*.iml
+*.ods
+.idea
 
 # old and ignoreme
 *.old

@@ -32,6 +32,16 @@
 			<version>0.8.7</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jopendocument</groupId>
+			<artifactId>jOpenDocument</artifactId>
+			<version>1.2</version>
+		</dependency>
 
+		<dependency>
+			<groupId>org.simpleods</groupId>
+			<artifactId>simpleODS</artifactId>
+			<version>0.5.3</version>
+		</dependency>
 	</dependencies>
 </project>
